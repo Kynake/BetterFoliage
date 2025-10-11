@@ -1,8 +1,18 @@
 [{
-  "modid": "BetterFoliage",
-  "name": "Better Foliage",
-  "version": "$version",
-  "mcversion": "$mcversion",
+  "modid": "${modId}",
+  "name": "${modName}",
+  "version": "${modVersion}",
+  "mcversion": "${minecraftVersion}",
   "description": "Leafier leaves and grassier grass",
-  "authorList" : ["octarine-noise (code)", "Meringue (textures)"]
+  "url": "https://github.com/Kynake/BetterFoliage",
+  "updateUrl": "",
+  "authorList" : ["octarine-noise (code)", "Meringue (textures)"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "parent": "",
+  "requiredMods": [],
+  "dependencies": [],
+  "dependants": [],
+  "useDependencyInformation": false
 }]

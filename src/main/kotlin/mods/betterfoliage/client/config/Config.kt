@@ -20,7 +20,7 @@ fun biomeList(defaults: (BiomeGenBase) -> Boolean) = intList {
 // Biome filter methods
 private fun BiomeGenBase.filterTemp(min: Float?, max: Float?) = (min == null || min <= temperature) && (max == null || max >= temperature)
 private fun BiomeGenBase.filterRain(min: Float?, max: Float?) = (min == null || min <= rainfall) && (max == null || max >= rainfall)
-private fun BiomeGenBase.filterClass(vararg name: String) = name.any { it in this.javaClass.name.toLowerCase() }
+private fun BiomeGenBase.filterClass(vararg name: String) = name.any { it in this.javaClass.name.lowercase() }
 
 // Config singleton
 @SideOnly(Side.CLIENT)

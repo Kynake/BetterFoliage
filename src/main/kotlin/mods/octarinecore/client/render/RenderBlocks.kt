@@ -34,7 +34,6 @@ class ExtendedRenderBlocks : RenderBlocks() {
     /**
      * Render a block face, saving relevant data if appropriate.
      */
-    @Suppress("NON_EXHAUSTIVE_WHEN")
     fun renderFace(face: ForgeDirection, block: Block?, x: Double, y: Double, z: Double, icon: IIcon?) {
         if (capture.isCorrectPass(face)) {
             saveAllShading(face); capture.icons[face.ordinal] = icon
@@ -46,6 +45,7 @@ class ExtendedRenderBlocks : RenderBlocks() {
             DOWN -> super.renderFaceYNeg(block, x, y, z, icon)
             SOUTH -> super.renderFaceZPos(block, x, y, z, icon)
             NORTH -> super.renderFaceZNeg(block, x, y, z, icon)
+            else -> {}
         }
     }
 

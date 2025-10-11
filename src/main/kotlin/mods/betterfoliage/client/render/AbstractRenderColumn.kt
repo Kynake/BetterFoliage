@@ -52,7 +52,6 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
         LARGE_RADIUS -> extendTopRoundLarge.model
         SQUARE -> extendTopSquare.model
         INVISIBLE -> extendTopSquare.model
-        else -> null
     }
 
     val extendBottomSquare = model { columnSideSquare(-0.5 - radiusLarge, -0.5, bottomExtension(radiusLarge)) }
@@ -63,7 +62,6 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
         LARGE_RADIUS -> extendBottomRoundLarge.model
         SQUARE -> extendBottomSquare.model
         INVISIBLE -> extendBottomSquare.model
-        else -> null
     }
 
     val topSquare = model { columnLidSquare() }
@@ -74,10 +72,9 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
         LARGE_RADIUS -> topRoundLarge.model
         SQUARE -> topSquare.model
         INVISIBLE -> topSquare.model
-        else -> null
     }
 
-    val bottomSquare = model { columnLidSquare() { it.rotate(rot(EAST) * 2 + rot(UP)) } }
+    val bottomSquare = model { columnLidSquare { it.rotate(rot(EAST) * 2 + rot(UP)) } }
     val bottomRoundSmall = model { columnLid(radiusSmall) { it.rotate(rot(EAST) * 2 + rot(UP)) } }
     val bottomRoundLarge = model { columnLid(radiusLarge) { it.rotate(rot(EAST) * 2 + rot(UP)) } }
     inline fun flatBottom(type: QuadrantType) = when(type) {
@@ -85,7 +82,6 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
         LARGE_RADIUS -> bottomRoundLarge.model
         SQUARE -> bottomSquare.model
         INVISIBLE -> bottomSquare.model
-        else -> null
     }
 
     val transitionTop = model { mix(sideRoundLarge.model, sideRoundSmall.model) { it > 1 } }
@@ -178,6 +174,7 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
                             }
                         }
                     }
+                    SOLID -> {}
                 }
                 when (downType) {
                     NONSOLID -> downModel = flatBottom(quadrants[idx])
@@ -196,6 +193,7 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
                             downModel = bottomSquare.model
                         }
                     }
+                    SOLID -> {}
                 }
 
                 if (upModel != null) modelRenderer.render(
@@ -225,7 +223,7 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
         if (this[idx].ordinal < value.ordinal) this[idx] = value
     }
 
-    /** Fill the array of [QuadrantType]s based on the blocks to the sides of this one. */
+    /** Fill the array with [QuadrantType]s based on the blocks to the sides of this one. */
     fun Array<QuadrantType>.checkNeighbors(ctx: BlockContext, rotation: Rotation, logAxis: Axis, yOff: Int): Array<QuadrantType> {
         val blkS = ctx.blockType(rotation, logAxis, Int3(0, yOff, 1))
         val blkE = ctx.blockType(rotation, logAxis, Int3(1, yOff, 0))

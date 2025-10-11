@@ -48,7 +48,7 @@ abstract class TextureGenerator(domain: String) : ParameterBasedGenerator(domain
             if (listOf("dom", "path").all { it in params })
                 ResourceLocation(params["dom"]!!, params["path"]!!)
             else return null
-        return when(params.value?.toLowerCase()) {
+        return when(params.value?.lowercase()) {
             "generate.png" -> COLOR to baseTexture + ".png"
             "generate.png.mcmeta" -> METADATA to baseTexture + ".png.mcmeta"
             "generate_n.png" -> NORMAL to baseTexture + "_n.png"
