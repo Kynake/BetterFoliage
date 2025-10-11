@@ -18,8 +18,8 @@ import net.minecraft.client.Minecraft
 import org.apache.logging.log4j.Level
 
 /**
- * Object responsible for initializing (and holding a reference to) all the infrastructure of the mod
- * except for the call hooks.
+ * Object responsible for initializing (and holding a reference to) all the infrastructure of the
+ * mod except for the call hooks.
  *
  * This and all other singletons are annotated [SideOnly] to avoid someone accidentally partially
  * initializing the mod on a server environment.
@@ -27,51 +27,46 @@ import org.apache.logging.log4j.Level
 @SideOnly(Side.CLIENT)
 object Client {
 
-    val configKey = KeyHandler(BetterFoliageMod.MOD_NAME, 66, "key.betterfoliage.gui") {
-        FMLClientHandler.instance().showGuiScreen(
-            ConfigGuiFactory.ConfigGuiBetterFoliage(Minecraft.getMinecraft().currentScreen)
-        )
-    }
+  val configKey =
+      KeyHandler(BetterFoliageMod.MOD_NAME, 66, "key.betterfoliage.gui") {
+        FMLClientHandler.instance()
+            .showGuiScreen(
+                ConfigGuiFactory.ConfigGuiBetterFoliage(Minecraft.getMinecraft().currentScreen))
+      }
 
-    val genGrass = GrassGenerator("bf_gen_grass")
-    val genLeaves = LeafGenerator("bf_gen_leaves")
-    val genReeds = CenteringTextureGenerator("bf_gen_reeds", 1, 2)
+  val genGrass = GrassGenerator("bf_gen_grass")
+  val genLeaves = LeafGenerator("bf_gen_leaves")
+  val genReeds = CenteringTextureGenerator("bf_gen_reeds", 1, 2)
 
-    val generatorPack = GeneratorPack(
-        "Better Foliage generated",
-        genGrass,
-        genLeaves,
-        genReeds
-    )
+  val generatorPack = GeneratorPack("Better Foliage generated", genGrass, genLeaves, genReeds)
 
-    val logRenderer = RenderLog()
+  val logRenderer = RenderLog()
 
-    val renderers = listOf(
-        RenderGrass(),
-        RenderMycelium(),
-        RenderLeaves(),
-        RenderCactus(),
-        RenderLilypad(),
-        RenderReeds(),
-        RenderAlgae(),
-        RenderCoral(),
-        logRenderer,
-        RenderNetherrack(),
-        RenderConnectedGrass(),
-        RenderConnectedGrassLog()
-    )
+  val renderers =
+      listOf(
+          RenderGrass(),
+          RenderMycelium(),
+          RenderLeaves(),
+          RenderCactus(),
+          RenderLilypad(),
+          RenderReeds(),
+          RenderAlgae(),
+          RenderCoral(),
+          logRenderer,
+          RenderNetherrack(),
+          RenderConnectedGrass(),
+          RenderConnectedGrassLog())
 
-    val singletons = listOf(
-        LeafRegistry,
-        GrassRegistry,
-        LeafWindTracker,
-        RisingSoulTextures,
-        TFCIntegration,
-        ShadersModIntegration,
-        CLCIntegration,
-        IC2Integration
-    )
+  val singletons =
+      listOf(
+          LeafRegistry,
+          GrassRegistry,
+          LeafWindTracker,
+          RisingSoulTextures,
+          TFCIntegration,
+          ShadersModIntegration,
+          CLCIntegration,
+          IC2Integration)
 
-    fun log(level: Level, msg: String) = BetterFoliageMod.log!!.log(level, msg)
+  fun log(level: Level, msg: String) = BetterFoliageMod.log!!.log(level, msg)
 }
-

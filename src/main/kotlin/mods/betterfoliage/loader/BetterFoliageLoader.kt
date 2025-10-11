@@ -1,4 +1,4 @@
-﻿package mods.betterfoliage.loader
+package mods.betterfoliage.loader
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin
 import mods.octarinecore.metaprog.ASMPlugin
@@ -8,6 +8,5 @@ import mods.octarinecore.metaprog.ASMPlugin
     "mods.betterfoliage.loader",
     "mods.octarinecore.metaprog",
     "kotlin",
-    "mods.betterfoliage.kotlin"
-)
+    "mods.betterfoliage.kotlin")
 class BetterFoliageLoader : ASMPlugin(BetterFoliageTransformer::class.java)

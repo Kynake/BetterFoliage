@@ -8,24 +8,24 @@ import net.minecraftforge.common.util.ForgeDirection.*
 
 class RenderConnectedGrassLog : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
 
-    val grassCheckDirs = listOf(EAST, WEST, NORTH, SOUTH)
+  val grassCheckDirs = listOf(EAST, WEST, NORTH, SOUTH)
 
-    override fun isEligible(ctx: BlockContext) =
-        Config.enabled && Config.roundLogs.enabled && Config.roundLogs.connectGrass &&
-        Config.blocks.dirt.matchesID(ctx.block) &&
-        Config.blocks.logs.matchesID(ctx.block(up1))
+  override fun isEligible(ctx: BlockContext) =
+      Config.enabled &&
+          Config.roundLogs.enabled &&
+          Config.roundLogs.connectGrass &&
+          Config.blocks.dirt.matchesID(ctx.block) &&
+          Config.blocks.logs.matchesID(ctx.block(up1))
 
-    override fun render(ctx: BlockContext, parent: RenderBlocks): Boolean {
-        val grassDir = grassCheckDirs.find {
-            Config.blocks.grass.matchesID(ctx.block(it.offset))
-        }
+  override fun render(ctx: BlockContext, parent: RenderBlocks): Boolean {
+    val grassDir = grassCheckDirs.find { Config.blocks.grass.matchesID(ctx.block(it.offset)) }
 
-        return if (grassDir != null) {
-            ctx.withOffset(Int3.zero, grassDir.offset) {
-                renderWorldBlockBase(parent, face = alwaysRender)
-            }
-        } else {
-            renderWorldBlockBase(parent, face = alwaysRender)
-        }
+    return if (grassDir != null) {
+      ctx.withOffset(Int3.zero, grassDir.offset) {
+        renderWorldBlockBase(parent, face = alwaysRender)
+      }
+    } else {
+      renderWorldBlockBase(parent, face = alwaysRender)
     }
+  }
 }
