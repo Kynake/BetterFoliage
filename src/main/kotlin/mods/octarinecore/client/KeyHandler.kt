@@ -7,9 +7,9 @@ import cpw.mods.fml.common.gameevent.InputEvent
 import net.minecraft.client.settings.KeyBinding
 
 class KeyHandler(
-    val modId: String,
-    val defaultKey: Int,
-    val lang: String,
+    modId: String,
+    defaultKey: Int,
+    lang: String,
     val action: (InputEvent.KeyInputEvent) -> Unit,
 ) {
 
