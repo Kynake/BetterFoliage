@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger
 @Mod(
     modid = BetterFoliageMod.MOD_ID,
     name = BetterFoliageMod.MOD_NAME,
+    version = Tags.VERSION,
     acceptedMinecraftVersions = BetterFoliageMod.MC_VERSIONS,
     guiFactory = BetterFoliageMod.GUI_FACTORY,
 )
