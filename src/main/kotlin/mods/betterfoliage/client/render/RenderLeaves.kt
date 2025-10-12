@@ -1,5 +1,7 @@
 package mods.betterfoliage.client.render
 
+import kotlin.math.cos
+import kotlin.math.sin
 import mods.betterfoliage.BetterFoliageMod
 import mods.betterfoliage.client.config.Config
 import mods.betterfoliage.client.integration.ShadersModIntegration
@@ -22,8 +24,6 @@ import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraftforge.common.util.ForgeDirection.DOWN
 import net.minecraftforge.common.util.ForgeDirection.UP
-import java.lang.Math.cos
-import java.lang.Math.sin
 
 class RenderLeaves : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
 

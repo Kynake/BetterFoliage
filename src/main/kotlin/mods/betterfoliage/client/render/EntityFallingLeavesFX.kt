@@ -21,10 +21,10 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection.DOWN
 import net.minecraftforge.event.world.WorldEvent
 import org.lwjgl.opengl.GL11
-import java.lang.Math.abs
-import java.lang.Math.cos
-import java.lang.Math.sin
 import java.util.Random
+import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.sin
 
 class EntityFallingLeavesFX(world: World, x: Int, y: Int, z: Int) : AbstractEntityFX(world, x.toDouble() + 0.5, y.toDouble(), z.toDouble() + 0.5) {
 

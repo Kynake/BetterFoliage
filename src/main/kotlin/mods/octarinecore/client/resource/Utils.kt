@@ -2,6 +2,14 @@
 
 package mods.octarinecore.client.resource
 
+import java.awt.image.BufferedImage
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
+import javax.imageio.ImageIO
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
 import mods.octarinecore.PI2
 import mods.octarinecore.client.render.HSB
 import mods.octarinecore.tryDefault
@@ -11,14 +19,6 @@ import net.minecraft.client.resources.IResource
 import net.minecraft.client.resources.IResourceManager
 import net.minecraft.client.resources.SimpleReloadableResourceManager
 import net.minecraft.util.ResourceLocation
-import java.awt.image.BufferedImage
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
-import java.lang.Math.atan2
-import java.lang.Math.cos
-import java.lang.Math.sin
-import javax.imageio.ImageIO
 
 /** Concise getter for the Minecraft resource manager. */
 val resourceManager: SimpleReloadableResourceManager
@@ -80,8 +80,8 @@ val TextureAtlasSprite.averageColor: Int?
         var sumHueY = 0.0
         var sumSaturation = 0.0f
         var sumBrightness = 0.0f
-        for (x in 0..image.width - 1) {
-            for (y in 0..image.height - 1) {
+        for (x in 0..<image.width) {
+            for (y in 0..<image.height) {
                 val pixel = image[x, y]
                 val alpha = (pixel shr 24) and 255
                 val hsb = HSB.fromColor(pixel)
@@ -96,7 +96,7 @@ val TextureAtlasSprite.averageColor: Int?
         }
 
         // circular average - transform sum vector to polar angle
-        val avgHue = (atan2(sumHueY.toDouble(), sumHueX.toDouble()) / PI2 + 0.5).toFloat()
+        val avgHue = (atan2(sumHueY, sumHueX) / PI2 + 0.5).toFloat()
         return HSB(avgHue, sumSaturation / numOpaque.toFloat(), sumBrightness / numOpaque.toFloat())
             .asColor
     }

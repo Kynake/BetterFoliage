@@ -1,7 +1,7 @@
 package mods.octarinecore.client.render
 
+import kotlin.math.min
 import net.minecraftforge.common.util.ForgeDirection
-import java.lang.Math.min
 
 typealias EdgeShaderFactory = (ForgeDirection, ForgeDirection) -> Shader
 

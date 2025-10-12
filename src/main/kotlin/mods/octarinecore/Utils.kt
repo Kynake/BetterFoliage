@@ -3,13 +3,12 @@
 
 package mods.octarinecore
 
-import net.minecraft.util.ResourceLocation
-import java.lang.Math.PI
-import java.lang.Math.max
-import java.lang.Math.min
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.reflect.KProperty
+import net.minecraft.util.ResourceLocation
 
-const val PI2 = 2.0 * PI
+const val PI2 = 2.0 * kotlin.math.PI
 
 inline fun String.stripStart(str: String) = if (startsWith(str)) substring(str.length) else this
 
@@ -53,7 +52,7 @@ class ThreadLocalDelegate<T>(init: () -> T) {
 inline fun <reified T> Iterable<T>.forEachPairIndexed(func: (Int, T, T) -> Unit) {
     var previous: T? = null
     forEachIndexed { idx, current ->
-        if (previous != null) func(idx, current, previous!!)
+        if (previous != null) func(idx, current, previous)
         previous = current
     }
 }
