@@ -31,7 +31,7 @@ object TFCIntegration {
     val grass =
         object : SimpleBlockMatcher() {
             override fun matchesClass(block: Block) = Config.blocks.grass.matchesClass(block) &&
-                block.javaClass.name.let { it.startsWith("com.bioxx.tfc") }
+                block.javaClass.name.startsWith("com.bioxx.tfc")
         }
 
     init {

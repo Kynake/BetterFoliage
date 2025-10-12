@@ -42,9 +42,7 @@ class GeneratorPack(val name: String, vararg val generators: GeneratorBase) : IR
     } else {
         generators
             .filter { it.domain == location.resourceDomain && it.resourceExists(location) }
-            .map { it.getInputStream(location) }
-            .filterNotNull()
-            .first()
+            .firstNotNullOf { it.getInputStream(location) }
     }
 
     operator fun get(location: ResourceLocation?) = getInputStream(location)
