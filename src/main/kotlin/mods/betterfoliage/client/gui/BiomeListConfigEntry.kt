@@ -10,13 +10,13 @@ import net.minecraft.world.biome.BiomeGenBase
 class BiomeListConfigEntry(
     owningScreen: GuiConfig,
     owningEntryList: GuiConfigEntries,
-    configElement: IConfigElement<*>
+    configElement: IConfigElement<*>,
 ) : IdListConfigEntry<BiomeGenBase>(owningScreen, owningEntryList, configElement) {
 
-  override val baseSet: List<BiomeGenBase>
-    get() = BiomeGenBase.getBiomeGenArray().filterNotNull()
-  override val BiomeGenBase.itemId: Int
-    get() = this.biomeID
-  override val BiomeGenBase.itemName: String
-    get() = this.biomeName
+    override val baseSet: List<BiomeGenBase>
+        get() = BiomeGenBase.getBiomeGenArray().filterNotNull()
+    override val BiomeGenBase.itemId: Int
+        get() = this.biomeID
+    override val BiomeGenBase.itemName: String
+        get() = this.biomeName
 }

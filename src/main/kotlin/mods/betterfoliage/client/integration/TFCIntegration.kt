@@ -14,38 +14,40 @@ import org.apache.logging.log4j.Level
 @SideOnly(Side.CLIENT)
 object TFCIntegration {
 
-  @JvmStatic val vanillaLogAxis = Client.logRenderer.axisFunc
-  @JvmStatic val isAvailable = Loader.isModLoaded("terrafirmacraft")
+    @JvmStatic val vanillaLogAxis = Client.logRenderer.axisFunc
 
-  val horizontalLogs =
-      object : SimpleBlockMatcher() {
-        override fun matchesClass(block: Block) =
-            Config.blocks.logs.matchesClass(block) &&
+    @JvmStatic val isAvailable = Loader.isModLoaded("terrafirmacraft")
+
+    val horizontalLogs =
+        object : SimpleBlockMatcher() {
+            override fun matchesClass(block: Block) = Config.blocks.logs.matchesClass(block) &&
                 block.javaClass.name.let { it.startsWith("com.bioxx.tfc") && it.contains("Horiz") }
-      }
-  val verticalLogs =
-      object : SimpleBlockMatcher() {
-        override fun matchesClass(block: Block) =
-            Config.blocks.logs.matchesClass(block) &&
+        }
+    val verticalLogs =
+        object : SimpleBlockMatcher() {
+            override fun matchesClass(block: Block) = Config.blocks.logs.matchesClass(block) &&
                 block.javaClass.name.let { it.startsWith("com.bioxx.tfc") && !it.contains("Horiz") }
-      }
-  val grass =
-      object : SimpleBlockMatcher() {
-        override fun matchesClass(block: Block) =
-            Config.blocks.grass.matchesClass(block) &&
+        }
+    val grass =
+        object : SimpleBlockMatcher() {
+            override fun matchesClass(block: Block) = Config.blocks.grass.matchesClass(block) &&
                 block.javaClass.name.let { it.startsWith("com.bioxx.tfc") }
-      }
+        }
 
-  init {
-    if (isAvailable) {
-      Client.log(Level.INFO, "TerraFirmaCraft found - setting up compatibility")
+    init {
+        if (isAvailable) {
+            Client.log(Level.INFO, "TerraFirmaCraft found - setting up compatibility")
 
-      // patch axis detection for log blocks to support TFC logs
-      Client.logRenderer.axisFunc = { block: Block, meta: Int ->
-        if (horizontalLogs.matchesID(block)) {
-          if (meta shr 3 == 0) Axis.Z else Axis.X
-        } else if (verticalLogs.matchesID(block)) Axis.Y else vanillaLogAxis(block, meta)
-      }
+            // patch axis detection for log blocks to support TFC logs
+            Client.logRenderer.axisFunc = { block: Block, meta: Int ->
+                if (horizontalLogs.matchesID(block)) {
+                    if (meta shr 3 == 0) Axis.Z else Axis.X
+                } else if (verticalLogs.matchesID(block)) {
+                    Axis.Y
+                } else {
+                    vanillaLogAxis(block, meta)
+                }
+            }
+        }
     }
-  }
 }

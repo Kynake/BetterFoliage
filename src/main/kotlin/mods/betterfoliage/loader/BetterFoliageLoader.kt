@@ -8,5 +8,6 @@ import mods.octarinecore.metaprog.ASMPlugin
     "mods.betterfoliage.loader",
     "mods.octarinecore.metaprog",
     "kotlin",
-    "mods.betterfoliage.kotlin")
+    "mods.betterfoliage.kotlin",
+)
 class BetterFoliageLoader : ASMPlugin(BetterFoliageTransformer::class.java)

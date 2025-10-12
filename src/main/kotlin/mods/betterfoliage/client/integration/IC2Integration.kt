@@ -14,24 +14,24 @@ import org.apache.logging.log4j.Level
 @SideOnly(Side.CLIENT)
 object IC2Integration {
 
-  @JvmStatic val vanillaLogAxis = Client.logRenderer.axisFunc
-  @JvmStatic val isAvailable = Loader.isModLoaded("IC2")
+    @JvmStatic val vanillaLogAxis = Client.logRenderer.axisFunc
 
-  val ic2Logs =
-      object : SimpleBlockMatcher() {
-        override fun matchesClass(block: Block) =
-            Config.blocks.logs.matchesClass(block) &&
+    @JvmStatic val isAvailable = Loader.isModLoaded("IC2")
+
+    val ic2Logs =
+        object : SimpleBlockMatcher() {
+            override fun matchesClass(block: Block) = Config.blocks.logs.matchesClass(block) &&
                 block.javaClass.name.equals("ic2.core.block.BlockRubWood")
-      }
+        }
 
-  init {
-    if (isAvailable) {
-      Client.log(Level.INFO, "IndustrialCraft 2 found - setting up compatibility")
+    init {
+        if (isAvailable) {
+            Client.log(Level.INFO, "IndustrialCraft 2 found - setting up compatibility")
 
-      // patch axis detection for log blocks to support IC2 logs
-      Client.logRenderer.axisFunc = { block: Block, meta: Int ->
-        if (ic2Logs.matchesID(block)) Axis.Y else TFCIntegration.vanillaLogAxis(block, meta)
-      }
+            // patch axis detection for log blocks to support IC2 logs
+            Client.logRenderer.axisFunc = { block: Block, meta: Int ->
+                if (ic2Logs.matchesID(block)) Axis.Y else TFCIntegration.vanillaLogAxis(block, meta)
+            }
+        }
     }
-  }
 }
