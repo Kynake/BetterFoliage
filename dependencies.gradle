@@ -36,5 +36,4 @@
 dependencies {
     shadowCompile "com.github.GTNewHorizons:Forgelin:2.0.3-GTNH"
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.7.69-GTNH:dev")
-    //shadowImplementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.1"
 }
