@@ -1,9 +1,0 @@
-apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'org.jetbrains.kotlin.kapt'
-apply plugin: 'com.github.gmazzo.buildconfig'
-
-buildConfig {
-    packageName("mods.betterfoliage")
-    buildConfigField('String', 'MODVER', "\"${project.modVersion}\"")
-    useKotlinOutput { topLevelConstants = true }
-}
