@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.sugar.Local;
 
 import mods.betterfoliage.client.Hooks;
 
@@ -20,9 +19,7 @@ public abstract class MixinRenderBlocks {
     @ModifyExpressionValue(
         method = "renderBlockByRenderType",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getRenderType()I"))
-    private int betterfoliage$getRenderTypeOverride(int originalRenderType, @Local(argsOnly = true) Block block,
-        @Local(ordinal = 0, argsOnly = true) int x, @Local(ordinal = 1, argsOnly = true) int y,
-        @Local(ordinal = 2, argsOnly = true) int z) {
+    private int betterfoliage$getRenderTypeOverride(int originalRenderType, Block block, int x, int y, int z) {
         return Hooks
             .getRenderTypeOverride(((RenderBlocks) (Object) this).blockAccess, x, y, z, block, originalRenderType);
     }
