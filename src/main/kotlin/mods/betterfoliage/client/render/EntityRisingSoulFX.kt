@@ -2,8 +2,6 @@ package mods.betterfoliage.client.render
 
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
-import java.util.Deque
-import java.util.LinkedList
 import mods.betterfoliage.BetterFoliageMod
 import mods.betterfoliage.client.Client
 import mods.betterfoliage.client.config.Config
@@ -15,6 +13,8 @@ import net.minecraft.client.renderer.Tessellator
 import net.minecraft.util.MathHelper
 import net.minecraft.world.World
 import org.apache.logging.log4j.Level
+import java.util.Deque
+import java.util.LinkedList
 
 class EntityRisingSoulFX(world: World, x: Int, y: Int, z: Int) : AbstractEntityFX(world, x.toDouble() + 0.5, y.toDouble() + 1.0, z.toDouble() + 0.5) {
 

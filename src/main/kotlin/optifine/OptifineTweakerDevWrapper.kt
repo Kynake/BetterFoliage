@@ -1,9 +1,9 @@
 package optifine
 
-import java.io.File
 import net.minecraft.launchwrapper.IClassTransformer
 import net.minecraft.launchwrapper.ITweaker
 import net.minecraft.launchwrapper.LaunchClassLoader
+import java.io.File
 
 @Suppress("unused")
 class OptifineTweakerDevWrapper : ITweaker {

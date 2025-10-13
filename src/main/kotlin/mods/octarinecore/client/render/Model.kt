@@ -1,10 +1,10 @@
 package mods.octarinecore.client.render
 
-import kotlin.math.max
-import kotlin.math.min
 import mods.octarinecore.minmax
 import mods.octarinecore.replace
 import net.minecraftforge.common.util.ForgeDirection
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Vertex UV coordinates

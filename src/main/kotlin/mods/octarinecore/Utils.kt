@@ -3,10 +3,10 @@
 
 package mods.octarinecore
 
+import net.minecraft.util.ResourceLocation
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.reflect.KProperty
-import net.minecraft.util.ResourceLocation
 
 const val PI2 = 2.0 * kotlin.math.PI
 

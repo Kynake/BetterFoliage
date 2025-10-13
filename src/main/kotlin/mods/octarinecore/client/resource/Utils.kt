@@ -2,14 +2,6 @@
 
 package mods.octarinecore.client.resource
 
-import java.awt.image.BufferedImage
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
-import javax.imageio.ImageIO
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
 import mods.octarinecore.PI2
 import mods.octarinecore.client.render.HSB
 import mods.octarinecore.tryDefault
@@ -19,6 +11,14 @@ import net.minecraft.client.resources.IResource
 import net.minecraft.client.resources.IResourceManager
 import net.minecraft.client.resources.SimpleReloadableResourceManager
 import net.minecraft.util.ResourceLocation
+import java.awt.image.BufferedImage
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
+import javax.imageio.ImageIO
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
 
 /** Concise getter for the Minecraft resource manager. */
 val resourceManager: SimpleReloadableResourceManager
