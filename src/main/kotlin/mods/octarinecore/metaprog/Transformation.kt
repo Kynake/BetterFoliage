@@ -1,6 +1,5 @@
 package mods.octarinecore.metaprog
 
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin
 import net.minecraft.launchwrapper.IClassTransformer
 import org.apache.logging.log4j.LogManager
 import org.objectweb.asm.ClassReader
@@ -12,15 +11,6 @@ import org.objectweb.asm.tree.FieldInsnNode
 import org.objectweb.asm.tree.MethodInsnNode
 import org.objectweb.asm.tree.MethodNode
 import org.objectweb.asm.tree.VarInsnNode
-
-@IFMLLoadingPlugin.TransformerExclusions("mods.octarinecore.metaprog", "kotlin")
-open class ASMPlugin(vararg val classes: Class<*>) : IFMLLoadingPlugin {
-    override fun getASMTransformerClass() = classes.map { it.canonicalName }.toTypedArray()
-    override fun getAccessTransformerClass() = null
-    override fun getModContainerClass() = null
-    override fun getSetupClass() = null
-    override fun injectData(data: Map<String, Any>) {}
-}
 
 /** Base class for convenient bytecode transformers. */
 open class Transformer : IClassTransformer {
