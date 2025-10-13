@@ -1,0 +1,7 @@
+﻿{
+  "required": true,
+  "minVersion": "0.8.5-GTNH",
+  "refmap": "mixins.BetterFoliage.refmap.json",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8"
+}
