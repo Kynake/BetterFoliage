@@ -16,24 +16,6 @@ class BetterFoliageTransformer : Transformer() {
     }
 
     fun setupClient() {
-        // where: RenderBlocks.renderBlockByRenderType()
-        // what: invoke BF code to overrule the return value of Block.getRenderType()
-        // why: allows us to use custom block renderers for any block, without touching block code
-        transformMethod(Refs.renderBlockByRenderType) {
-            find(varinsn(ISTORE, 5))?.insertAfter {
-                log.info("Applying block render type override")
-                varinsn(ALOAD, 0)
-                getField(Refs.blockAccess)
-                varinsn(ILOAD, 2)
-                varinsn(ILOAD, 3)
-                varinsn(ILOAD, 4)
-                varinsn(ALOAD, 1)
-                varinsn(ILOAD, 5)
-                invokeStatic(Refs.getRenderTypeOverride)
-                varinsn(ISTORE, 5)
-            } ?: log.warn("Failed to apply block render type override!")
-        }
-
         // TODO Commented out for now: Crashes on world load
         // where: WorldClient.doVoidFogParticles(), right before the end of the loop
         // what: invoke BF code for every random display tick
