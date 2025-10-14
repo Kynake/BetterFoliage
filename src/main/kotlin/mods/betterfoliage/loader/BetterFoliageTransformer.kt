@@ -7,7 +7,6 @@ import org.objectweb.asm.Opcodes.FRETURN
 import org.objectweb.asm.Opcodes.IASTORE
 import org.objectweb.asm.Opcodes.ILOAD
 import org.objectweb.asm.Opcodes.IRETURN
-import org.objectweb.asm.Opcodes.ISTORE
 
 class BetterFoliageTransformer : Transformer() {
 
@@ -16,22 +15,6 @@ class BetterFoliageTransformer : Transformer() {
     }
 
     fun setupClient() {
-        // TODO Commented out for now: Crashes on world load
-        // where: WorldClient.doVoidFogParticles(), right before the end of the loop
-        // what: invoke BF code for every random display tick
-        // why: allows us to catch random display ticks, without touching block code
-//        transformMethod(Refs.doVoidFogParticles) {
-//            find(IINC)?.insertBefore {
-//                log.info("Applying random display tick call hook")
-//                varinsn(ALOAD, 10)
-//                varinsn(ALOAD, 0)
-//                varinsn(ILOAD, 7)
-//                varinsn(ILOAD, 8)
-//                varinsn(ILOAD, 9)
-//                invokeStatic(Refs.onRandomDisplayTick)
-//            } ?: log.warn("Failed to apply random display tick call hook!")
-//        }
-
         // where: shadersmodcore.client.Shaders.pushEntity()
         // what: invoke BF code to overrule block data
         // why: allows us to change the block ID seen by shader programs
