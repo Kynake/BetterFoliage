@@ -3,10 +3,7 @@ package mods.betterfoliage.loader
 import cpw.mods.fml.relauncher.FMLLaunchHandler
 import mods.octarinecore.metaprog.Transformer
 import org.objectweb.asm.Opcodes.ALOAD
-import org.objectweb.asm.Opcodes.FRETURN
 import org.objectweb.asm.Opcodes.IASTORE
-import org.objectweb.asm.Opcodes.ILOAD
-import org.objectweb.asm.Opcodes.IRETURN
 
 class BetterFoliageTransformer : Transformer() {
 
@@ -24,45 +21,6 @@ class BetterFoliageTransformer : Transformer() {
                 varinsn(ALOAD, 1)
                 invokeStatic(Refs.getBlockIdOverride)
             } ?: log.warn("Failed to apply Shaders.pushEntity() block id override!")
-        }
-
-        // where: Block.getAmbientOcclusionLightValue()
-        // what: invoke BF code to overrule AO transparency value
-        // why: allows us to have light behave properly on non-solid log blocks without
-        //      messing with isOpaqueBlock(), which could have gameplay effects
-        transformMethod(Refs.getAmbientOcclusionLightValue) {
-            find(FRETURN)?.insertBefore {
-                log.info("Applying Block.getAmbientOcclusionLightValue() override")
-                varinsn(ALOAD, 0)
-                invokeStatic(Refs.getAmbientOcclusionLightValueOverride)
-            } ?: log.warn("Failed to apply Block.getAmbientOcclusionLightValue() override!")
-        }
-
-        // where: Block.getUseNeighborBrightness()
-        // what: invoke BF code to overrule _useNeighborBrightness_
-        // why: allows us to have light behave properly on non-solid log blocks
-        transformMethod(Refs.getUseNeighborBrightness) {
-            find(IRETURN)?.insertBefore {
-                log.info("Applying Block.getUseNeighborBrightness() override")
-                varinsn(ALOAD, 0)
-                invokeStatic(Refs.getUseNeighborBrightnessOverride)
-            } ?: log.warn("Failed to apply Block.getUseNeighborBrightness() override!")
-        }
-
-        // where: Block.shouldSideBeRendered()
-        // what: invoke BF code to overrule condition
-        // why: allows us to make log blocks non-solid without
-        //      messing with isOpaqueBlock(), which could have gameplay effects
-        transformMethod(Refs.shouldSideBeRendered) {
-            find(IRETURN)?.insertBefore {
-                log.info("Applying Block.shouldSideBeRendered() override")
-                varinsn(ALOAD, 1)
-                varinsn(ILOAD, 2)
-                varinsn(ILOAD, 3)
-                varinsn(ILOAD, 4)
-                varinsn(ILOAD, 5)
-                invokeStatic(Refs.shouldRenderBlockSideOverride)
-            } ?: log.warn("Failed to apply Block.shouldSideBeRendered() override!")
         }
     }
 }

@@ -10,6 +10,7 @@ public enum Mixins implements IMixins {
     // spotless:off
     BETTER_FOLIAGE(new MixinBuilder()
         .addClientMixins(
+            "minecraft.MixinBlock",
             "minecraft.MixinRenderBlocks",
             "minecraft.MixinWorldClient")
         .setPhase(Phase.EARLY));
