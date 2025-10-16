@@ -13,7 +13,8 @@ public enum Mixins implements IMixins {
             "minecraft.MixinBlock",
             "minecraft.MixinRenderBlocks",
             "minecraft.MixinWorldClient")
-        .setPhase(Phase.EARLY));
+        .setPhase(Phase.EARLY)),
+    ;
     // spotless:on
     private final MixinBuilder builder;
 
