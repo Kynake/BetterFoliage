@@ -5,13 +5,15 @@ import mods.octarinecore.metaprog.Transformer
 import org.objectweb.asm.Opcodes.ALOAD
 import org.objectweb.asm.Opcodes.IASTORE
 
+@Deprecated("ASM Transforms were converted to mixins. Once ShadersMod support is removed this class will be deleted")
 class BetterFoliageTransformer : Transformer() {
 
     init {
-        if (FMLLaunchHandler.side().isClient) setupClient()
+        if (FMLLaunchHandler.side().isClient) asmTransformShadersMod()
     }
 
-    fun setupClient() {
+    @Deprecated("ShadersMod is very old at this point. Expect compatibility with it to be removed once this feature set is ported to other shader mods (Angelica, Swansong, _maybe_ Optifine).")
+    fun asmTransformShadersMod() {
         // where: shadersmodcore.client.Shaders.pushEntity()
         // what: invoke BF code to overrule block data
         // why: allows us to change the block ID seen by shader programs

@@ -11,6 +11,7 @@ import net.minecraft.init.Blocks
 import org.apache.logging.log4j.Level
 
 /** Integration for ShadersMod. */
+@Deprecated("ShadersMod is very old at this point. Expect compatibility with it to be removed once this feature set is ported to other shader mods (Angelica, Swansong, _maybe_ Optifine).")
 @SideOnly(Side.CLIENT)
 object ShadersModIntegration {
 
@@ -26,6 +27,7 @@ object ShadersModIntegration {
      * Called from transformed ShadersMod code.
      * @see mods.betterfoliage.loader.BetterFoliageTransformer
      */
+    @Suppress("unused")
     @JvmStatic
     fun getBlockIdOverride(original: Int, block: Block): Int {
         if (Config.blocks.leaves.matchesID(original and 65535)) return leavesEntityData
