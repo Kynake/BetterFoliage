@@ -10,8 +10,10 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 
 import mods.betterfoliage.client.Hooks;
 
+// Angelica / NotFine overwrite 'shouldSideBeRendered',
+// so we make sure to mixin _after_ that happens
 @SuppressWarnings("UnusedMixin")
-@Mixin(Block.class)
+@Mixin(value = Block.class, priority = 1500)
 public abstract class MixinBlock {
 
     // What: Invoke BF code to overrule AO transparency value
