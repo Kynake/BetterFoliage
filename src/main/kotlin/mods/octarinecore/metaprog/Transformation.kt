@@ -13,6 +13,7 @@ import org.objectweb.asm.tree.MethodNode
 import org.objectweb.asm.tree.VarInsnNode
 
 /** Base class for convenient bytecode transformers. */
+@Deprecated("No longer used for new integrations. To be removed.")
 open class Transformer : IClassTransformer {
 
     val log = LogManager.getLogger(this)

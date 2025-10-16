@@ -19,7 +19,10 @@ object Refs {
     val IIcon = ClassRef("net.minecraft.util.IIcon", "rf")
 
     // Shaders mod
+    @Deprecated("ShadersMod support is deprecated")
     val Shaders = ClassRef("shadersmodcore.client.Shaders")
+
+    @Deprecated("ShadersMod support is deprecated")
     val pushEntity =
         MethodRef(
             Shaders,
