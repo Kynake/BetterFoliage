@@ -16,6 +16,7 @@ import mods.betterfoliage.loader.BetterFoliageTransformer;
 
 @SuppressWarnings("unused")
 @IFMLLoadingPlugin.MCVersion("1.7.10")
+@IFMLLoadingPlugin.Name("Better Foliage core plugin / early mixin loader")
 public class EarlyMixinsLoader implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     // TODO remove once everything is mixins
