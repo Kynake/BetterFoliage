@@ -35,5 +35,12 @@
  */
 dependencies {
     api "com.github.GTNewHorizons:Forgelin:2.0.3-GTNH"
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.14-GTNH:dev")
+    runtimeOnlyNonPublishable "com.github.GTNewHorizons:NotEnoughItems:2.8.15-GTNH:dev"
+
+    // Test with Angelica
+    //runtimeOnly "com.github.GTNewHorizons:Angelica:1.0.0-beta62:dev"
+
+    // Test with SwanSong
+    //runtimeOnly "curse.maven:swansong-1349982:7113984"
+    //runtimeOnly "curse.maven:fplib-665627:7053321"
 }
