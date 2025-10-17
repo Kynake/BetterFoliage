@@ -3,7 +3,6 @@ package mods.betterfoliage.client.render
 import mods.betterfoliage.BetterFoliageMod
 import mods.betterfoliage.client.Client
 import mods.betterfoliage.client.config.Config
-import mods.betterfoliage.client.integration.ShadersModIntegration
 import mods.octarinecore.client.render.AbstractBlockRenderingHandler
 import mods.octarinecore.client.render.BlockContext
 import mods.octarinecore.client.render.Rotation
@@ -39,15 +38,14 @@ class RenderAlgae : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
 
         val rand = ctx.semiRandomArray(3)
 
-        ShadersModIntegration.grass(Config.algae.shaderWind) {
-            modelRenderer.render(
-                algaeModels[rand[2]],
-                Rotation.identity,
-                icon = { _, qi, _ -> algaeIcons[rand[qi and 1]]!! },
-                rotateUV = { 0 },
-                postProcess = noPost,
-            )
-        }
+        modelRenderer.render(
+            algaeModels[rand[2]],
+            Rotation.identity,
+            icon = { _, qi, _ -> algaeIcons[rand[qi and 1]]!! },
+            rotateUV = { 0 },
+            postProcess = noPost,
+        )
+
         return true
     }
 }

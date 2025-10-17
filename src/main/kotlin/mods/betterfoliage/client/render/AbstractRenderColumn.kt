@@ -1,6 +1,5 @@
 package mods.betterfoliage.client.render
 
-import mods.betterfoliage.client.integration.ShadersModIntegration
 import mods.octarinecore.client.render.AbstractBlockRenderingHandler
 import mods.octarinecore.client.render.Axis
 import mods.octarinecore.client.render.BlockContext
@@ -153,117 +152,115 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
         val quadrantsBottom = Array(4) { QuadrantType.SMALL_RADIUS }
         if (downType == BlockType.PARALLEL) quadrantsBottom.checkNeighbors(ctx, baseRotation, logAxis, -1)
 
-        ShadersModIntegration.renderAs(ctx.block) {
-            quadrantRotations.forEachIndexed { idx, quadrantRotation ->
-                // set rotation for the current quadrant
-                val rotation = baseRotation + quadrantRotation
+        quadrantRotations.forEachIndexed { idx, quadrantRotation ->
+            // set rotation for the current quadrant
+            val rotation = baseRotation + quadrantRotation
 
-                // disallow sharp discontinuities in the chamfer radius, or tapering-in where inappropriate
-                if (quadrants[idx] == QuadrantType.LARGE_RADIUS &&
-                    upType == BlockType.PARALLEL &&
-                    quadrantsTop[idx] != QuadrantType.LARGE_RADIUS &&
-                    downType == BlockType.PARALLEL &&
-                    quadrantsBottom[idx] != QuadrantType.LARGE_RADIUS
-                ) {
-                    quadrants[idx] = QuadrantType.SMALL_RADIUS
-                }
+            // disallow sharp discontinuities in the chamfer radius, or tapering-in where inappropriate
+            if (quadrants[idx] == QuadrantType.LARGE_RADIUS &&
+                upType == BlockType.PARALLEL &&
+                quadrantsTop[idx] != QuadrantType.LARGE_RADIUS &&
+                downType == BlockType.PARALLEL &&
+                quadrantsBottom[idx] != QuadrantType.LARGE_RADIUS
+            ) {
+                quadrants[idx] = QuadrantType.SMALL_RADIUS
+            }
 
-                // render side of current quadrant
-                val sideModel =
-                    when (quadrants[idx]) {
-                        QuadrantType.SMALL_RADIUS -> sideRoundSmall.model
-                        QuadrantType.LARGE_RADIUS ->
-                            if (upType == BlockType.PARALLEL && quadrantsTop[idx] == QuadrantType.SMALL_RADIUS) {
-                                transitionTop.model
-                            } else if (downType == BlockType.PARALLEL && quadrantsBottom[idx] == QuadrantType.SMALL_RADIUS) {
-                                transitionBottom.model
-                            } else {
-                                sideRoundLarge.model
-                            }
-                        QuadrantType.SQUARE -> sideSquare.model
-                        else -> null
-                    }
-
-                if (sideModel != null) {
-                    modelRenderer.render(
-                        sideModel,
-                        rotation,
-                        blockContext.blockCenter,
-                        icon = sideTexture,
-                        rotateUV = { 0 },
-                        postProcess = noPost,
-                    )
-                }
-
-                // render top and bottom end of current quadrant
-                var upModel: Model? = null
-                var downModel: Model? = null
-                var upIcon = upTexture
-                var downIcon = downTexture
-                var shouldRotateUp = true
-                var shouldRotateDown = true
-
-                when (upType) {
-                    BlockType.NONSOLID -> upModel = flatTop(quadrants[idx])
-                    BlockType.PERPENDICULAR -> {
-                        if (!connectPerpendicular) {
-                            upModel = flatTop(quadrants[idx])
+            // render side of current quadrant
+            val sideModel =
+                when (quadrants[idx]) {
+                    QuadrantType.SMALL_RADIUS -> sideRoundSmall.model
+                    QuadrantType.LARGE_RADIUS ->
+                        if (upType == BlockType.PARALLEL && quadrantsTop[idx] == QuadrantType.SMALL_RADIUS) {
+                            transitionTop.model
+                        } else if (downType == BlockType.PARALLEL && quadrantsBottom[idx] == QuadrantType.SMALL_RADIUS) {
+                            transitionBottom.model
                         } else {
-                            upIcon = sideTexture
-                            upModel = extendTop(quadrants[idx])
-                            shouldRotateUp = false
+                            sideRoundLarge.model
                         }
-                    }
-                    BlockType.PARALLEL -> {
-                        if (!continuous(quadrants[idx], quadrantsTop[idx])) {
-                            if (quadrants[idx] == QuadrantType.SQUARE || quadrants[idx] == QuadrantType.INVISIBLE) {
-                                upModel = topSquare.model
-                            }
-                        }
-                    }
-                    BlockType.SOLID -> {}
-                }
-                when (downType) {
-                    BlockType.NONSOLID -> downModel = flatBottom(quadrants[idx])
-                    BlockType.PERPENDICULAR -> {
-                        if (!connectPerpendicular) {
-                            downModel = flatBottom(quadrants[idx])
-                        } else {
-                            downIcon = sideTexture
-                            downModel = extendBottom(quadrants[idx])
-                            shouldRotateDown = false
-                        }
-                    }
-                    BlockType.PARALLEL -> {
-                        if (!continuous(quadrants[idx], quadrantsBottom[idx]) &&
-                            (quadrants[idx] == QuadrantType.SQUARE || quadrants[idx] == QuadrantType.INVISIBLE)
-                        ) {
-                            downModel = bottomSquare.model
-                        }
-                    }
-                    BlockType.SOLID -> {}
+                    QuadrantType.SQUARE -> sideSquare.model
+                    else -> null
                 }
 
-                if (upModel != null) {
-                    modelRenderer.render(
-                        upModel,
-                        rotation,
-                        blockContext.blockCenter,
-                        icon = upIcon,
-                        rotateUV = { if (shouldRotateUp) idx else 0 },
-                        postProcess = noPost,
-                    )
+            if (sideModel != null) {
+                modelRenderer.render(
+                    sideModel,
+                    rotation,
+                    blockContext.blockCenter,
+                    icon = sideTexture,
+                    rotateUV = { 0 },
+                    postProcess = noPost,
+                )
+            }
+
+            // render top and bottom end of current quadrant
+            var upModel: Model? = null
+            var downModel: Model? = null
+            var upIcon = upTexture
+            var downIcon = downTexture
+            var shouldRotateUp = true
+            var shouldRotateDown = true
+
+            when (upType) {
+                BlockType.NONSOLID -> upModel = flatTop(quadrants[idx])
+                BlockType.PERPENDICULAR -> {
+                    if (!connectPerpendicular) {
+                        upModel = flatTop(quadrants[idx])
+                    } else {
+                        upIcon = sideTexture
+                        upModel = extendTop(quadrants[idx])
+                        shouldRotateUp = false
+                    }
                 }
-                if (downModel != null) {
-                    modelRenderer.render(
-                        downModel,
-                        rotation,
-                        blockContext.blockCenter,
-                        icon = downIcon,
-                        rotateUV = { if (shouldRotateDown) 3 - idx else 0 },
-                        postProcess = noPost,
-                    )
+                BlockType.PARALLEL -> {
+                    if (!continuous(quadrants[idx], quadrantsTop[idx])) {
+                        if (quadrants[idx] == QuadrantType.SQUARE || quadrants[idx] == QuadrantType.INVISIBLE) {
+                            upModel = topSquare.model
+                        }
+                    }
                 }
+                BlockType.SOLID -> {}
+            }
+            when (downType) {
+                BlockType.NONSOLID -> downModel = flatBottom(quadrants[idx])
+                BlockType.PERPENDICULAR -> {
+                    if (!connectPerpendicular) {
+                        downModel = flatBottom(quadrants[idx])
+                    } else {
+                        downIcon = sideTexture
+                        downModel = extendBottom(quadrants[idx])
+                        shouldRotateDown = false
+                    }
+                }
+                BlockType.PARALLEL -> {
+                    if (!continuous(quadrants[idx], quadrantsBottom[idx]) &&
+                        (quadrants[idx] == QuadrantType.SQUARE || quadrants[idx] == QuadrantType.INVISIBLE)
+                    ) {
+                        downModel = bottomSquare.model
+                    }
+                }
+                BlockType.SOLID -> {}
+            }
+
+            if (upModel != null) {
+                modelRenderer.render(
+                    upModel,
+                    rotation,
+                    blockContext.blockCenter,
+                    icon = upIcon,
+                    rotateUV = { if (shouldRotateUp) idx else 0 },
+                    postProcess = noPost,
+                )
+            }
+            if (downModel != null) {
+                modelRenderer.render(
+                    downModel,
+                    rotation,
+                    blockContext.blockCenter,
+                    icon = downIcon,
+                    rotateUV = { if (shouldRotateDown) 3 - idx else 0 },
+                    postProcess = noPost,
+                )
             }
         }
 

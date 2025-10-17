@@ -7,7 +7,6 @@ import mods.betterfoliage.BetterFoliageMod
 import mods.betterfoliage.client.gui.ConfigGuiFactory
 import mods.betterfoliage.client.integration.CLCIntegration
 import mods.betterfoliage.client.integration.IC2Integration
-import mods.betterfoliage.client.integration.ShadersModIntegration
 import mods.betterfoliage.client.integration.TFCIntegration
 import mods.betterfoliage.client.render.LeafWindTracker
 import mods.betterfoliage.client.render.RenderAlgae
@@ -80,7 +79,6 @@ object Client {
             LeafWindTracker,
             RisingSoulTextures,
             TFCIntegration,
-            ShadersModIntegration,
             CLCIntegration,
             IC2Integration,
         )

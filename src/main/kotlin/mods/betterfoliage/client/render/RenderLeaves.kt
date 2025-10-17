@@ -2,7 +2,6 @@ package mods.betterfoliage.client.render
 
 import mods.betterfoliage.BetterFoliageMod
 import mods.betterfoliage.client.config.Config
-import mods.betterfoliage.client.integration.ShadersModIntegration
 import mods.betterfoliage.client.texture.LeafRegistry
 import mods.octarinecore.PI2
 import mods.octarinecore.client.render.AbstractBlockRenderingHandler
@@ -56,28 +55,26 @@ class RenderLeaves : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
 
         val leafInfo = LeafRegistry.leaves[ctx.icon(DOWN)]
         if (leafInfo != null) {
-            ShadersModIntegration.leaves {
-                val rand = ctx.semiRandomArray(2)
-                (if (Config.leaves.dense) denseLeavesRot else normalLeavesRot).forEach { rotation ->
-                    modelRenderer.render(
-                        leavesModel.model,
-                        rotation,
-                        ctx.blockCenter + perturbs[rand[0]],
-                        icon = { _, _, _ -> leafInfo.roundLeafTexture },
-                        rotateUV = { rand[1] },
-                        postProcess = noPost,
-                    )
-                }
-                if (isSnowed && Config.leaves.snowEnabled) {
-                    modelRenderer.render(
-                        leavesModel.model,
-                        Rotation.identity,
-                        ctx.blockCenter + perturbs[rand[0]],
-                        icon = { _, _, _ -> snowedIcon[rand[1]]!! },
-                        rotateUV = { 0 },
-                        postProcess = whitewash,
-                    )
-                }
+            val rand = ctx.semiRandomArray(2)
+            (if (Config.leaves.dense) denseLeavesRot else normalLeavesRot).forEach { rotation ->
+                modelRenderer.render(
+                    leavesModel.model,
+                    rotation,
+                    ctx.blockCenter + perturbs[rand[0]],
+                    icon = { _, _, _ -> leafInfo.roundLeafTexture },
+                    rotateUV = { rand[1] },
+                    postProcess = noPost,
+                )
+            }
+            if (isSnowed && Config.leaves.snowEnabled) {
+                modelRenderer.render(
+                    leavesModel.model,
+                    Rotation.identity,
+                    ctx.blockCenter + perturbs[rand[0]],
+                    icon = { _, _, _ -> snowedIcon[rand[1]]!! },
+                    rotateUV = { 0 },
+                    postProcess = whitewash,
+                )
             }
         }
 

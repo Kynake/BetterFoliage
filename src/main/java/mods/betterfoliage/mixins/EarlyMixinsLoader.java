@@ -8,21 +8,15 @@ import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-import mods.betterfoliage.loader.BetterFoliageTransformer;
-
-// TODO remove once everything is mixins
-@IFMLLoadingPlugin.TransformerExclusions({ "mods.betterfoliage.loader", "mods.betterfoliage.mixins",
-    "mods.octarinecore.metaprog", "kotlin", })
 
 @SuppressWarnings("unused")
 @IFMLLoadingPlugin.MCVersion("1.7.10")
 @IFMLLoadingPlugin.Name("Better Foliage core plugin / early mixin loader")
 public class EarlyMixinsLoader implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
-    // TODO remove once everything is mixins
     @Override
     public final String[] getASMTransformerClass() {
-        return new String[] { BetterFoliageTransformer.class.getCanonicalName() };
+        return null;
     }
 
     @Override

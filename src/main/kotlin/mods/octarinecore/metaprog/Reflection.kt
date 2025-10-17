@@ -41,15 +41,13 @@ val Any.reflectNestedObjects: List<Pair<String, Any>>
  * @return [Pair]s of (field name, instance)
  */
 fun Any.reflectFieldsOfType(vararg types: Class<*>) = this.javaClass.declaredFields
-    .filter { field -> types.any { it.isAssignableFrom(field.type) } }
-    .map { field ->
+    .filter { field -> types.any { it.isAssignableFrom(field.type) } }.mapNotNull { field ->
         field.name to
             field.let {
                 it.isAccessible = true
                 it.get(this)
             }
     }
-    .filterNotNull()
 
 enum class Namespace {
     OBF,
@@ -84,7 +82,7 @@ open class ClassRef(val mcpName: String, val obfName: String) : Resolvable<Class
     fun name(namespace: Namespace) = if (namespace == Namespace.OBF) obfName else mcpName
     open fun asmDescriptor(namespace: Namespace) = "L${name(namespace).replace(".", "/")};"
 
-    override fun resolve() = listOf(mcpName, obfName).map { getJavaClass(it) }.filterNotNull().firstOrNull()
+    override fun resolve() = listOf(mcpName, obfName).firstNotNullOfOrNull { getJavaClass(it) }
 }
 
 /**
@@ -130,16 +128,19 @@ class MethodRef(
         Namespace.SRG -> srgName!!
         Namespace.MCP -> mcpName
     }
-    fun asmDescriptor(namespace: Namespace) = "(${argTypes.map { it.asmDescriptor(namespace) }.fold(""){ s1, s2 -> s1 + s2 } })${returnType.asmDescriptor(namespace)}"
 
     override fun resolve(): Method? = if (parentClass.element == null || argTypes.any { it.element == null }) {
         null
     } else {
         val args = argTypes.map { it.element!! }.toTypedArray()
-        listOf(srgName!!, mcpName)
-            .map { tryDefault(null) { parentClass.element!!.getDeclaredMethod(it, *args) } }
-            .filterNotNull()
-            .firstOrNull()
+        listOf(srgName!!, mcpName).firstNotNullOfOrNull {
+            tryDefault(null) {
+                parentClass.element!!.getDeclaredMethod(
+                    it,
+                    *args,
+                )
+            }
+        }
             ?.apply { isAccessible = true }
     }
 
@@ -177,15 +178,14 @@ class FieldRef(
         Namespace.SRG -> srgName!!
         Namespace.MCP -> mcpName
     }
-    fun asmDescriptor(namespace: Namespace) = type!!.asmDescriptor(namespace)
 
     override fun resolve(): Field? = if (parentClass.element == null) {
         null
     } else {
-        listOf(srgName!!, mcpName)
-            .map { tryDefault(null) { parentClass.element!!.getDeclaredField(it) } }
-            .filterNotNull()
-            .firstOrNull()
+        listOf(
+            srgName!!,
+            mcpName,
+        ).firstNotNullOfOrNull { tryDefault(null) { parentClass.element!!.getDeclaredField(it) } }
             ?.apply { isAccessible = true }
     }
 

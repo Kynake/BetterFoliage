@@ -3,7 +3,6 @@ package mods.betterfoliage.client.render
 import mods.betterfoliage.BetterFoliageMod
 import mods.betterfoliage.client.Client
 import mods.betterfoliage.client.config.Config
-import mods.betterfoliage.client.integration.ShadersModIntegration
 import mods.octarinecore.client.render.AbstractBlockRenderingHandler
 import mods.octarinecore.client.render.BlockContext
 import mods.octarinecore.client.render.FlatOffsetNoColor
@@ -76,16 +75,14 @@ class RenderReeds : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
         if (renderWorldBlockBase(parent, face = alwaysRender)) return true
 
         val iconVar = ctx.random(1)
-        ShadersModIntegration.grass(Config.reed.shaderWind) {
-            modelRenderer.render(
-                reedModels[ctx.random(0)],
-                Rotation.identity,
-                forceFlat = true,
-                icon = { _, _, _ -> reedIcons[iconVar]!! },
-                rotateUV = { 0 },
-                postProcess = noPost,
-            )
-        }
+        modelRenderer.render(
+            reedModels[ctx.random(0)],
+            Rotation.identity,
+            forceFlat = true,
+            icon = { _, _, _ -> reedIcons[iconVar]!! },
+            rotateUV = { 0 },
+            postProcess = noPost,
+        )
         return true
     }
 }
