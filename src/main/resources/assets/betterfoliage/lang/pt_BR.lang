@@ -1,0 +1,214 @@
+key.betterfoliage.gui=Abrir Configurações
+
+betterfoliage.global.enabled=Habilitar o Mod
+betterfoliage.global.enabled.tooltip=Caso falso, BetterFoliage não irá renderizar nada
+
+betterfoliage.enabled=Habilitar
+betterfoliage.enabled.tooltip=Esta característica está habilitada?
+betterfoliage.hOffset=Deslocamento horizontal
+betterfoliage.hOffset.tooltip=A distância que esse elemento é deslocado horizontalmente, em blocos
+betterfoliage.vOffset=Deslocamento vertical
+betterfoliage.vOffset.tooltip=A distância que esse elemento é deslocado verticalmente, em blocos
+betterfoliage.size=Tamanho
+betterfoliage.size.tooltip=Tamanho desse elemento
+betterfoliage.heightMin=Altura mínima
+betterfoliage.heightMin.tooltip=Altura mínima do elemento
+betterfoliage.heightMax=Altura máxima
+betterfoliage.heightMax.tooltip=Altura máxima do elemento
+betterfoliage.population=População
+betterfoliage.population.tooltip=Probabilidade (N em 64) que um bloco adequado terá esta característica
+betterfoliage.shaderWind=Efeitos de vento do Shader
+betterfoliage.shaderWind.tooltip=Aplicar efeitos de vento dos shaders do ShaderMod neste elemento?
+betterfoliage.distance=Distância limite
+betterfoliage.distance.tooltip=Distância máxima do jogador para renderizar esta característica
+
+betterfoliage.blocks=Tipos de Bloco
+betterfoliage.blocks.tooltip=Configure listas de classes de blocos que terão características específicas aplicadas
+
+betterfoliage.blocks.dirtWhitelist=Lista branca de Terra
+betterfoliage.blocks.dirtBlacklist=Lista negra de Terra
+betterfoliage.blocks.dirtWhitelist.arrayEntry=%d entradas
+betterfoliage.blocks.dirtBlacklist.arrayEntry=%d entradas
+
+betterfoliage.blocks.grassWhitelist=Lista branca de Grama
+betterfoliage.blocks.grassBlacklist=Lista negra de Grama
+betterfoliage.blocks.grassWhitelist.arrayEntry=%d entradas
+betterfoliage.blocks.grassBlacklist.arrayEntry=%d entradas
+
+betterfoliage.blocks.leavesWhitelist=Lista branca de Folhas
+betterfoliage.blocks.leavesBlacklist=Lista negra de Folhas
+betterfoliage.blocks.leavesWhitelist.arrayEntry=%d entradas
+betterfoliage.blocks.leavesBlacklist.arrayEntry=%d entradas
+
+betterfoliage.blocks.cropsWhitelist=Lista branca de Colheita
+betterfoliage.blocks.cropsBlacklist=Lista negra de Colheita
+betterfoliage.blocks.cropsWhitelist.arrayEntry=%d entradas
+betterfoliage.blocks.cropsBlacklist.arrayEntry=%d entradas
+
+betterfoliage.blocks.logsWhitelist=Lista branca de Tronco
+betterfoliage.blocks.logsBlacklist=Lista negra de Tronco
+betterfoliage.blocks.logsWhitelist.arrayEntry=%d entradas
+betterfoliage.blocks.logsBlacklist.arrayEntry=%d entradas
+
+betterfoliage.blocks.sandWhitelist=Lista branca de Areia
+betterfoliage.blocks.sandBlacklist=Lista negra de Areia
+betterfoliage.blocks.sandWhitelist.arrayEntry=%d entradas
+betterfoliage.blocks.sandBlacklist.arrayEntry=%d entradas
+
+betterfoliage.blocks.lilypadWhitelist=Lista branca de Vitória-Régia
+betterfoliage.blocks.lilypadBlacklist=Lista negra de Vitória-Régia
+betterfoliage.blocks.lilypadWhitelist.arrayEntry=%d entradas
+betterfoliage.blocks.lilypadBlacklist.arrayEntry=%d entradas
+
+betterfoliage.blocks.cactusWhitelist=Lista branca de Cacto
+betterfoliage.blocks.cactusBlacklist=Lista negra de Cacto
+betterfoliage.blocks.cactusWhitelist.arrayEntry=%d entradas
+betterfoliage.blocks.cactusBlacklist.arrayEntry=%d entradas
+
+
+betterfoliage.blocks.dirtWhitelist.tooltip=Blocos reconhecidos como Terra. Afeta Juncos, Algas e Grama Conectada
+betterfoliage.blocks.dirtBlacklist.tooltip=Blocos nunca aceitos como Terra. Afeta Juncos, Algas e Grama Conectada
+betterfoliage.blocks.grassWhitelist.tooltip=Blocos reconhecidos como Grama. Afeta Grama Curta e Grama Conectada
+betterfoliage.blocks.grassBlacklist.tooltip=Blocos  como Grama. Afeta Grama Curta e Grama Conectada
+betterfoliage.blocks.leavesWhitelist.tooltip=Blocos reconhecidos como Folhas. Afeta Folhas Extras e Folhas caindo. Folhas serão renderizadas com o ID do bloco de folhas em programas de Shader
+betterfoliage.blocks.leavesBlacklist.tooltip=Blocos nunca aceitos como Folhas. Afeta Folhas Extras e Folhas caindo. Folhas serão renderizadas com o ID do bloco de folhas em programas de Shader
+betterfoliage.blocks.cropsWhitelist.tooltip=Blocos reconhecidos como Colheita. Colheitas serão renderizadas com o ID do bloco de grama alta em programas de Shader
+betterfoliage.blocks.cropsBlacklist.tooltip=Blocos nunca aceitos como Colheita. Colheitas serão renderizadas com o ID do bloco de grama alta em programas de Shader
+betterfoliage.blocks.logsWhitelist.tooltip=Blocos reconhecidos como Troncos. Afeta Troncos Arredondados
+betterfoliage.blocks.logsBlacklist.tooltip=Blocos nunca aceitos como Troncos. Afeta Troncos Arredondados
+betterfoliage.blocks.sandWhitelist.tooltip=Blocos reconhecidos como Areia. Afeta Coral
+betterfoliage.blocks.sandBlacklist.tooltip=Blocos nunca aceitos como Areia. Afeta Coral
+betterfoliage.blocks.lilypadWhitelist.tooltip=Blocos reconhecidos como Vitória-Régia. Afeta Vitória-Régia Melhor
+betterfoliage.blocks.lilypadBlacklist.tooltip=Blocos nunca aceitos como Vitória-Régia. Afeta Vitória-Régia Melhor
+betterfoliage.blocks.cactusWhitelist.tooltip=Blocos reconhecidos como Cacto. Afeta Cacto Melhor
+betterfoliage.blocks.cactusBlacklist.tooltip=Blocos nunca aceitos como Cacto. Afeta Cacto Melhor
+
+betterfoliage.leaves=Folhas Extras
+betterfoliage.leaves.tooltip=Folhas arredondadas extras em blocos de folhas
+betterfoliage.leaves.dense=Modo denso
+betterfoliage.leaves.dense.tooltip=Modo denso tem folhas mais arredondadas
+betterfoliage.leaves.snowEnabled=Habilitar neve
+betterfoliage.leaves.snowEnabled.tooltip=Habilitar neve nas folhas extras?
+
+betterfoliage.shortGrass=Grama Curta e Micélio
+betterfoliage.shortGrass.tooltip=Tufo de grama ou micélio no topo de blocos adequados
+betterfoliage.shortGrass.useGenerated=Usar textura gerada para a grama
+betterfoliage.shortGrass.useGenerated.tooltip=A textura gerada é feita cortando a textura da grama alta do pacote de recursos ativo ao meio
+betterfoliage.shortGrass.myceliumEnabled=Habilitar Micélio
+betterfoliage.shortGrass.myceliumEnabled.tooltip=Esta característica está habilitada para blocos de micélio?
+betterfoliage.shortGrass.grassEnabled=Habilitar Grama
+betterfoliage.shortGrass.grassEnabled.tooltip=Esta característica está habilitada para blocos de grama?
+betterfoliage.shortGrass.snowEnabled=Habilitar abaixo da neve
+betterfoliage.shortGrass.snowEnabled.tooltip=Habilitar em blocos de grama nevada?
+betterfoliage.shortGrass.saturationThreshold=Limiar de saturação
+betterfoliage.shortGrass.saturationThreshold.tooltip=Limite de saturação de cor entre blocos "incolores" (usando a cor do bioma) e blocos "coloridos" (usando sua própria cor específica)
+
+betterfoliage.hangingGrass=Grama Pendurada
+betterfoliage.hangingGrass.tooltip=Tufos de grama pendurados nas bordas superiores de blocos de grama
+betterfoliage.hangingGrass.separation=Separação
+betterfoliage.hangingGrass.separation.tooltip=O quanto a grama pendurada se destaca do bloco
+
+betterfoliage.cactus=Cacto Melhor
+betterfoliage.cactus.tooltip=Realce o cacto com pedaços extras e sombreamento suave
+betterfoliage.cactus.sizeVariation=Variação de tamanho
+betterfoliage.cactus.sizeVariation.tooltip=Quantidade de variação aleatória no tamanho do cacto
+
+betterfoliage.lilypad=Vitória-Régia Melhor
+betterfoliage.lilypad.tooltip=Realce a vitória-régia com raízes e flores ocasionais
+betterfoliage.lilypad.flowerChance=Probabilidade de flor
+betterfoliage.lilypad.flowerChance.tooltip=Probabilidade (N em 64) de uma vitória-régia ter uma flor
+
+betterfoliage.reed=Juncos
+betterfoliage.reed.tooltip=Juncos em blocos de terra em águas rasas
+betterfoliage.reed.biomes=Lista de Biomas
+betterfoliage.reed.biomes.tooltip=Configure em quais biomas junco pode aparecer
+betterfoliage.reed.biomes.tooltip.element=O junco deveria aparecer no bioma de %s?
+
+betterfoliage.algae=Algas
+betterfoliage.algae.tooltip=Algas em blocos de terra em águas profundas
+betterfoliage.algae.biomes=Lista de Biomas
+betterfoliage.algae.biomes.tooltip=Configure em quais biomas algas podem aparecer
+betterfoliage.algae.biomes.tooltip.element=Algas deveriam aparecer no bioma de %s?
+
+betterfoliage.coral=Coral
+betterfoliage.coral.tooltip=Coral em blocos de areia em águas profundas
+betterfoliage.coral.size=Tamanho do coral
+betterfoliage.coral.size.tooltip=Tamanho dos pedaços de coral que se projetam
+betterfoliage.coral.crustSize=Tamanho da crosta
+betterfoliage.coral.crustSize.tooltip=Tamanho da parte plana do coral
+betterfoliage.coral.chance=Probabilidade de corais
+betterfoliage.coral.chance.tooltip=Probabilidade (N em 64) de uma face específica do bloco ter um coral
+betterfoliage.coral.biomes=Lista de Biomas
+betterfoliage.coral.biomes.tooltip=Configure em quais biomas corais podem aparecer
+betterfoliage.coral.biomes.tooltip.element=Corais deveriam aparecer no bioma de %s?
+betterfoliage.coral.shallowWater=Coral de águas rasas
+betterfoliage.coral.shallowWater.tooltip=Os corais devem aparecer em água de 1 bloco de profundidade?
+
+betterfoliage.netherrack=Videiras de Rocha do Nether
+betterfoliage.netherrack.tooltip=Videiras penduradas abaixo de Rochas do Nether
+
+betterfoliage.fallingLeaves=Folhas caindo
+betterfoliage.fallingLeaves.tooltip=Partículas de folhas caíndo serão emitidas da parte inferior de blocos de folhas
+betterfoliage.fallingLeaves.speed=Velocidade da partícula
+betterfoliage.fallingLeaves.speed.tooltip=Velocidade geral das partículas
+betterfoliage.fallingLeaves.windStrength=Força do vento
+betterfoliage.fallingLeaves.windStrength.tooltip=Magnitude dos efeitos do vento em bom tempo (dispersão da distribuição normal centrada em 0)
+betterfoliage.fallingLeaves.stormStrength=Força do vento chuvoso
+betterfoliage.fallingLeaves.stormStrength.tooltip=Magnitude adicional dos efeitos do vento em tempo chuvoso (dispersão da distribuição normal centrada em 0)
+betterfoliage.fallingLeaves.size=Tamanho da partícula
+betterfoliage.fallingLeaves.chance=Probabilidade de partículas
+betterfoliage.fallingLeaves.chance.tooltip=Probabilidade de cada bloco de folhas atingido por um tique de renderização aleatório gerar uma partícula
+betterfoliage.fallingLeaves.perturb=Perturbação
+betterfoliage.fallingLeaves.perturb.tooltip=Magnitude do efeito da perturbação. Adiciona um movimento similar ao de um saca-rolhas à partícula, sincronizado à sua rotação
+betterfoliage.fallingLeaves.lifetime=Tempo de vida máximo
+betterfoliage.fallingLeaves.lifetime.tooltip=Tempo de vida máximo da partícula em segundos. O tempo de vida mínimo é 60% deste valor
+betterfoliage.fallingLeaves.opacityHack=Partículas opacas
+betterfoliage.fallingLeaves.opacityHack.tooltip=Impede que blocos transparentes ocultem partículas, mesmo quando estas estão à frente. AVISO: pode causar falhas
+
+betterfoliage.risingSoul=Almas ascendentes
+betterfoliage.risingSoul.tooltip=Partículas de almas ascendentes serão emitidas do topo de blocos de areia de almas
+betterfoliage.risingSoul.chance=Probabilidade de partículas
+betterfoliage.risingSoul.chance.tooltip=Probabilidade de cada bloco de areia de almas atingido por um tique de renderização aleatório gerar uma partícula
+betterfoliage.risingSoul.speed=Velocidade da partícula
+betterfoliage.risingSoul.speed.tooltip=Velocidade vertical da partícula de alma
+betterfoliage.risingSoul.perturb=Perturbação
+betterfoliage.risingSoul.perturb.tooltip=Magnitude do efeito da perturbação. Adiciona um movimento similar ao de um saca-rolhas à partícula
+betterfoliage.risingSoul.headSize=Tamanho da alma
+betterfoliage.risingSoul.headSize.tooltip=Tamanho da partícula de alma
+betterfoliage.risingSoul.trailSize=Tamanho da trilha
+betterfoliage.risingSoul.trailSize.tooltip=Tamanho inicial da trilha da partícula
+betterfoliage.risingSoul.opacity=Opacidade
+betterfoliage.risingSoul.opacity.tooltip=Opacidade do efeito da partícula
+betterfoliage.risingSoul.sizeDecay=Decaimento de tamanho
+betterfoliage.risingSoul.sizeDecay.tooltip=Tamanho da partícula de trilha em relação ao seu tamanho no tique anterior
+betterfoliage.risingSoul.opacityDecay=Decaimento de opacidade
+betterfoliage.risingSoul.opacityDecay.tooltip=Opacidade da partícula de trilha em relação a sua opacidade no tique anterior
+betterfoliage.risingSoul.lifetime=Tempo de vida máximo
+betterfoliage.risingSoul.lifetime.tooltip=Tempo de vida máximo da partícula em segundos. O tempo de vida mínimo é 60% deste valor
+betterfoliage.risingSoul.trailLength=Comprimento da trilha
+betterfoliage.risingSoul.trailLength.tooltip=Número de posições anteriores que a partícula lembra, em tiques
+betterfoliage.risingSoul.trailDensity=Densidade da trilha
+betterfoliage.risingSoul.trailDensity.tooltip=Renderizar cada enésima posição anterior na trilha de partículas
+
+betterfoliage.connectedGrass=Texturas de grama conectada
+betterfoliage.connectedGrass.enabled=Habilitar
+betterfoliage.connectedGrass.enabled.tooltip=Se houver um bloco de grama em cima de um bloco de terra: Desenhe a textura de grama em todos os lados do bloco de grama
+
+betterfoliage.roundLogs=Troncos Arredondados
+betterfoliage.roundLogs.tooltip=Conectar blocos arredondados a blocos sólidos inteiros?
+betterfoliage.roundLogs.connectSolids=Conectar a sólido
+betterfoliage.roundLogs.connectSolids.tooltip=Conectar blocos arredondados a blocos sólidos inteiros?
+betterfoliage.roundLogs.connectPerpendicular=Conectar a blocos perpendiculares
+betterfoliage.roundLogs.connectPerpendicular.tooltip=Conectar troncos arredondados a troncos perpendiculares ao longo de seu eixo?
+betterfoliage.roundLogs.lenientConnect=Arredondamento leniente
+betterfoliage.roundLogs.lenientConnect.tooltip=Conectar troncos arredondados em forma de L também, não apenas 2x2
+betterfoliage.roundLogs.connectGrass=Grama Conectada
+betterfoliage.roundLogs.connectGrass.tooltip=Renderizar blocos de grama sob as árvores em vez de terra se houver grama por perto
+betterfoliage.roundLogs.radiusSmall=Raio do chanfro
+betterfoliage.roundLogs.radiusSmall.tooltip=Quanto cortar do canto do tronco
+betterfoliage.roundLogs.radiusLarge=Raio do chanfro conectado
+betterfoliage.roundLogs.radiusLarge.tooltip=Quanto cortar do canto externo dos troncos conectados
+betterfoliage.roundLogs.dimming=Escurecimento
+betterfoliage.roundLogs.dimming.tooltip=Quantidade para escurecer faces obscurecidas do tronco
+betterfoliage.roundLogs.zProtection=Proteção contra Z-fighting
+betterfoliage.roundLogs.zProtection.tooltip=Fator de escala de peças conectoras de troncos paralelos para evitar Z-fighting (interferência entre texturas). Tente defini-lo o mais alto possível sem encontrar falhas.
