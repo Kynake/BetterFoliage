@@ -189,8 +189,8 @@ class BlockContext {
     val cameraDistance: Int
         get() {
             val camera = Minecraft.getMinecraft().renderViewEntity ?: return 0
-            return Math.abs(x - MathHelper.floor_double(camera.posX)) +
-                Math.abs(y - MathHelper.floor_double(camera.posY)) +
-                Math.abs(z - MathHelper.floor_double(camera.posZ))
+            return abs(x - MathHelper.floor_double(camera.posX)) +
+                abs(y - MathHelper.floor_double(camera.posY)) +
+                abs(z - MathHelper.floor_double(camera.posZ))
         }
 }
