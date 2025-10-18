@@ -4,6 +4,8 @@ package mods.octarinecore.client.render
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler
 import cpw.mods.fml.client.registry.RenderingRegistry
+import gregtech.common.pollution.Pollution
+import mods.betterfoliage.client.integration.CompatibleMod
 import mods.betterfoliage.client.integration.OptifineCTM
 import mods.betterfoliage.loader.Refs
 import mods.octarinecore.ThreadLocalDelegate
@@ -15,6 +17,7 @@ import net.minecraft.util.IIcon
 import net.minecraft.util.MathHelper
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
+import kotlin.math.abs
 
 /**
  * [ThreadLocal] instance of [ExtendedRenderBlocks] used instead of the vanilla [RenderBlocks] to
@@ -120,6 +123,23 @@ abstract class AbstractBlockRenderingHandler(modId: String) :
  * block in block-relative coordinates.
  */
 class BlockContext {
+    companion object {
+        @JvmStatic private fun blockColor(block: Block, world: IBlockAccess?, x: Int, y: Int, z: Int) = block.colorMultiplier(world, x, y, z).let {
+            if (!CompatibleMod.GT5U.isModLoaded()) {
+                it
+            } else {
+                when (block.renderType) {
+                    0 -> Pollution.standardBlocks.matchesID(block)
+                    1 -> Pollution.crossedSquares.matchesID(block)
+                    4 -> Pollution.liquidBlocks.matchesID(block)
+                    20 -> Pollution.blockVine.matchesID(block)
+                    40 -> Pollution.doublePlants.matchesID(block)
+                    else -> null
+                }?.getColor(it, x, z) ?: it
+            }
+        }
+    }
+
     var world: IBlockAccess? = null
     var x: Int = 0
     var y: Int = 0
@@ -135,7 +155,7 @@ class BlockContext {
     /** Get the [Block] at the given offset. */
     val block: Block
         get() = world!!.getBlock(x, y, z)
-    fun block(offset: Int3) = world!!.getBlock(x + offset.x, y + offset.y, z + offset.z)
+    fun block(offset: Int3) = world!!.getBlock(x + offset.x, y + offset.y, z + offset.z)!!
 
     /** Get the metadata at the given offset. */
     val meta: Int
@@ -144,8 +164,8 @@ class BlockContext {
 
     /** Get the block color multiplier at the given offset. */
     val blockColor: Int
-        get() = block.colorMultiplier(world, x, y, z)
-    fun blockColor(offset: Int3) = block(offset).colorMultiplier(world, x + offset.x, y + offset.y, z + offset.z)
+        get() = blockColor(block, world, x, y, z)
+    fun blockColor(offset: Int3) = blockColor(block(offset), world, x + offset.x, y + offset.y, z + offset.z)
 
     /** Get the block brightness at the given offset. */
     val blockBrightness: Int
@@ -161,7 +181,7 @@ class BlockContext {
     /** Get the texture on a given face of the block at the given offset. */
     fun icon(face: ForgeDirection, offset: Int3 = Int3.zero) = block(offset).getIcon(world, x + offset.x, y + offset.y, z + offset.z, face.ordinal).let {
         if (!OptifineCTM.isAvailable) {
-            it
+            it!!
         } else {
             Refs.getConnectedTexture.invokeStatic(world!!, block(offset), x + offset.x, y + offset.y, z + offset.z, face.ordinal, it)
                 as IIcon

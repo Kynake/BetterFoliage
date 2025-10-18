@@ -34,13 +34,17 @@
  * For more details, see https://docs.gradle.org/8.0.1/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
-    api "com.github.GTNewHorizons:Forgelin:2.0.3-GTNH"
-    runtimeOnlyNonPublishable "com.github.GTNewHorizons:NotEnoughItems:2.8.15-GTNH:dev"
+    api("com.github.GTNewHorizons:Forgelin:2.0.3-GTNH")
+    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.57:dev") { transitive = false }
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.18-GTNH:dev")
 
     // Test with Angelica
-    //runtimeOnly "com.github.GTNewHorizons:Angelica:1.0.0-beta62:dev"
+    //runtimeOnly("com.github.GTNewHorizons:Angelica:1.0.0-beta62:dev")
 
     // Test with SwanSong
-    //runtimeOnly "curse.maven:swansong-1349982:7113984"
-    //runtimeOnly "curse.maven:fplib-665627:7053321"
+    //runtimeOnly("curse.maven:swansong-1349982:7113984")
+    //runtimeOnly("curse.maven:fplib-665627:7053321")
+
+    // Test with GT5U
+    //runtimeOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.57:dev")
 }
