@@ -124,7 +124,7 @@ abstract class AbstractBlockRenderingHandler(modId: String) :
  */
 class BlockContext {
     companion object {
-        @JvmStatic private fun blockColor(block: Block, world: IBlockAccess?, x: Int, y: Int, z: Int) = block.colorMultiplier(world, x, y, z).let {
+        @JvmStatic fun blockColor(block: Block, world: IBlockAccess?, x: Int, y: Int, z: Int) = block.colorMultiplier(world, x, y, z).let {
             if (!CompatibleMod.GT5U.isModLoaded()) {
                 it
             } else {

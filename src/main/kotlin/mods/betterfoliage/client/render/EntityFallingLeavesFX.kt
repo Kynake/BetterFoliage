@@ -9,6 +9,7 @@ import mods.betterfoliage.client.config.Config
 import mods.betterfoliage.client.texture.LeafRegistry
 import mods.octarinecore.PI2
 import mods.octarinecore.client.render.AbstractEntityFX
+import mods.octarinecore.client.render.BlockContext
 import mods.octarinecore.client.render.Double3
 import mods.octarinecore.client.render.HSB
 import mods.octarinecore.minmax
@@ -24,6 +25,7 @@ import org.lwjgl.opengl.GL11
 import java.util.Random
 import kotlin.math.abs
 import kotlin.math.cos
+import kotlin.math.max
 import kotlin.math.sin
 
 class EntityFallingLeavesFX(world: World, x: Int, y: Int, z: Int) : AbstractEntityFX(world, x.toDouble() + 0.5, y.toDouble(), z.toDouble() + 0.5) {
@@ -46,7 +48,10 @@ class EntityFallingLeavesFX(world: World, x: Int, y: Int, z: Int) : AbstractEnti
         val block = world.getBlock(x, y, z)
         LeafRegistry.leaves[block.getIcon(world, x, y, z, DOWN.ordinal)]?.let {
             particleIcon = it.particleTextures[rand.nextInt(1024)]
-            calculateParticleColor(it.averageColor, block.colorMultiplier(world, x, y, z))
+            calculateParticleColor(
+                it.averageColor,
+                BlockContext.blockColor(block, world, x, y, z),
+            )
         }
     }
 
@@ -60,7 +65,7 @@ class EntityFallingLeavesFX(world: World, x: Int, y: Int, z: Int) : AbstractEnti
         if (onGround || wasOnGround) {
             velocity.setTo(0.0, 0.0, 0.0)
             if (!wasOnGround) {
-                particleAge = Math.max(particleAge, particleMaxAge - 20)
+                particleAge = max(particleAge, particleMaxAge - 20)
                 wasOnGround = true
             }
         } else {
@@ -111,18 +116,16 @@ object LeafWindTracker {
         FMLCommonHandler.instance().bus().register(this)
     }
 
-    fun changeWind(world: World) {
-        nextChange = world.worldInfo.worldTime + 120 + random.nextInt(80)
-        val direction = PI2 * random.nextDouble()
-        val speed =
-            abs(random.nextGaussian()) * Config.fallingLeaves.windStrength +
-                (
-                    if (!world.isRaining) {
-                        0.0
-                    } else {
-                        abs(random.nextGaussian()) * Config.fallingLeaves.stormStrength
-                    }
-                    )
+    fun changeWind(world: World) = with(random) {
+        nextChange = world.worldInfo.worldTime + 120 + nextInt(80)
+        val direction = PI2 * nextDouble()
+        val speed = abs(nextGaussian()) * Config.fallingLeaves.windStrength +
+            if (world.isRaining) {
+                abs(nextGaussian()) * Config.fallingLeaves.stormStrength
+            } else {
+                0.0
+            }
+
         target.setTo(cos(direction) * speed, 0.0, sin(direction) * speed)
     }
 
