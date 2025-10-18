@@ -16,8 +16,8 @@ import org.apache.logging.log4j.Logger
     modid = BetterFoliageMod.MOD_ID,
     name = BetterFoliageMod.MOD_NAME,
     version = Tags.VERSION,
-    acceptedMinecraftVersions = BetterFoliageMod.MC_VERSIONS,
-    guiFactory = BetterFoliageMod.GUI_FACTORY,
+    acceptedMinecraftVersions = "[1.7.10]",
+    guiFactory = "mods.betterfoliage.client.gui.ConfigGuiFactory",
 )
 object BetterFoliageMod {
 
@@ -25,8 +25,6 @@ object BetterFoliageMod {
     const val MOD_NAME = "Better Foliage"
     const val DOMAIN = "betterfoliage"
     const val LEGACY_DOMAIN = "bettergrassandleaves"
-    const val MC_VERSIONS = "[1.7.10]"
-    const val GUI_FACTORY = "mods.betterfoliage.client.gui.ConfigGuiFactory"
 
     var log: Logger? = null
     var config: Configuration? = null
