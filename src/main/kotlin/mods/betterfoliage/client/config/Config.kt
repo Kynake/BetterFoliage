@@ -134,8 +134,9 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
         val distance by distanceLimit()
         val hOffset by double(max = 0.25, default = 0.1).lang("hOffset")
         val size by double(min = 0.5, max = 1.5, default = 1.0).lang("size")
-        //val heightMin by double(min = 0.1, max = 1.5, default = 0.5).lang("heightMin")
-        //val heightMax by double(min = 0.1, max = 1.5, default = 1.0).lang("heightMax")
+
+        // val heightMin by double(min = 0.1, max = 1.5, default = 0.5).lang("heightMin")
+        // val heightMax by double(min = 0.1, max = 1.5, default = 1.0).lang("heightMax")
         val population by int(max = 64, default = 48).lang("population")
         val biomes by biomeList { it.filterClass("river", "ocean") }
         // val shaderWind by boolean(true).lang("shaderWind")
