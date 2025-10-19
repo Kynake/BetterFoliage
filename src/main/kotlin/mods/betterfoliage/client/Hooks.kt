@@ -24,10 +24,6 @@ fun getRenderTypeOverride(
     original: Int,
 ): Int {
     if (!Config.enabled) return original
-
-    // universal sign for DON'T RENDER ME!
-    if (original == -1) return original
-
     return blockContext.let { ctx ->
         ctx.set(blockAccess, x, y, z)
         Client.renderers.find { it.isEligible(ctx) }?.renderId ?: original
