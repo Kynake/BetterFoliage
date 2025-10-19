@@ -5,10 +5,11 @@ import com.gtnewhorizon.gtnhmixins.builders.TargetModBuilder
 import cpw.mods.fml.common.Loader
 import mods.octarinecore.metaprog.getJavaClass
 
-enum class CompatibleMod(val modID: String?, val coreModClass: String?, val targetClass: String?) :
+enum class CompatibleMod(val modID: String?, val modName: String, val coreModClass: String?, val targetClass: String?) :
     IMod,
     ITargetMod {
-    GT5U("gregtech", "gregtech.asm.GTCorePlugin", null),
+    GT5U("gregtech", "GregTech", "gregtech.asm.GTCorePlugin", "gregtech.GTMod"),
+    IC2("IC2", "IndustrialCraft 2", "ic2.core.coremod.IC2core", "ic2.core.IC2"),
     ;
 
     private val modBuilder by lazy {

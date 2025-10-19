@@ -1,6 +1,5 @@
 package mods.betterfoliage.client.integration
 
-import cpw.mods.fml.common.Loader
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import mods.betterfoliage.client.Client
@@ -14,10 +13,6 @@ import org.apache.logging.log4j.Level
 @SideOnly(Side.CLIENT)
 object IC2Integration {
 
-    @JvmStatic val vanillaLogAxis = Client.logRenderer.axisFunc
-
-    @JvmStatic val isAvailable = Loader.isModLoaded("IC2")
-
     val ic2Logs =
         object : SimpleBlockMatcher() {
             override fun matchesClass(block: Block) = Config.blocks.logs.matchesClass(block) &&
@@ -25,12 +20,14 @@ object IC2Integration {
         }
 
     init {
-        if (isAvailable) {
-            Client.log(Level.INFO, "IndustrialCraft 2 found - setting up compatibility")
+        if (CompatibleMod.IC2.isModLoaded()) {
+            Client.log(Level.INFO, "${CompatibleMod.IC2.modName} found - setting up compatibility")
+
+            val originalFunc = Client.logRenderer.axisFunc
 
             // patch axis detection for log blocks to support IC2 logs
             Client.logRenderer.axisFunc = { block: Block, meta: Int ->
-                if (ic2Logs.matchesID(block)) Axis.Y else TFCIntegration.vanillaLogAxis(block, meta)
+                if (ic2Logs.matchesID(block)) Axis.Y else originalFunc(block, meta)
             }
         }
     }
