@@ -11,7 +11,7 @@ enum class CompatibleMod(val modID: String?, val coreModClass: String?, val targ
     GT5U("gregtech", "gregtech.asm.GTCorePlugin", null),
     ;
 
-    private val builder: TargetModBuilder by lazy {
+    private val modBuilder by lazy {
         TargetModBuilder().setCoreModClass(coreModClass).setTargetClass(targetClass).setModId(modID)!!
     }
 
@@ -28,7 +28,7 @@ enum class CompatibleMod(val modID: String?, val coreModClass: String?, val targ
         return isLoaded
     }
 
-    override fun getBuilder() = builder
+    override fun getBuilder() = modBuilder
 }
 
 interface IMod {
