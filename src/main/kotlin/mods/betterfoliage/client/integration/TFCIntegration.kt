@@ -1,6 +1,5 @@
 package mods.betterfoliage.client.integration
 
-import cpw.mods.fml.common.Loader
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import mods.betterfoliage.client.Client
@@ -14,10 +13,6 @@ import org.apache.logging.log4j.Level
 @SideOnly(Side.CLIENT)
 object TFCIntegration {
 
-    @JvmStatic val vanillaLogAxis = Client.logRenderer.axisFunc
-
-    @JvmStatic val isAvailable = Loader.isModLoaded("terrafirmacraft")
-
     val horizontalLogs =
         object : SimpleBlockMatcher() {
             override fun matchesClass(block: Block) = Config.blocks.logs.matchesClass(block) &&
@@ -28,6 +23,8 @@ object TFCIntegration {
             override fun matchesClass(block: Block) = Config.blocks.logs.matchesClass(block) &&
                 block.javaClass.name.let { it.startsWith("com.bioxx.tfc") && !it.contains("Horiz") }
         }
+
+    // TODO TFC Grass rendering is currently bugged
     val grass =
         object : SimpleBlockMatcher() {
             override fun matchesClass(block: Block) = Config.blocks.grass.matchesClass(block) &&
@@ -35,8 +32,10 @@ object TFCIntegration {
         }
 
     init {
-        if (isAvailable) {
-            Client.log(Level.INFO, "TerraFirmaCraft found - setting up compatibility")
+        if (CompatibleMod.TFC.isModLoaded()) {
+            Client.log(Level.INFO, "${CompatibleMod.TFC.modName} found - setting up compatibility")
+
+            val originalFunc = Client.logRenderer.axisFunc
 
             // patch axis detection for log blocks to support TFC logs
             Client.logRenderer.axisFunc = { block: Block, meta: Int ->
@@ -45,7 +44,7 @@ object TFCIntegration {
                 } else if (verticalLogs.matchesID(block)) {
                     Axis.Y
                 } else {
-                    vanillaLogAxis(block, meta)
+                    originalFunc(block, meta)
                 }
             }
         }
