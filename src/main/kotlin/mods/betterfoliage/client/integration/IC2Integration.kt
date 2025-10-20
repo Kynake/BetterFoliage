@@ -16,10 +16,8 @@ object IC2Integration {
 
     val ic2Logs by lazy {
         object : SimpleBlockMatcher() {
-            override fun matchesClass(block: Block) =
-                block.javaClass.name.equals(BlockRubWood::class.java.name) &&
-                    Config.blocks.logs.matchesClass(block)
-
+            override fun matchesClass(block: Block) = block.javaClass.name.equals(BlockRubWood::class.java.name) &&
+                Config.blocks.logs.matchesClass(block)
         }
     }
 
