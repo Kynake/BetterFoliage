@@ -56,11 +56,13 @@ object Client {
 
     val logRenderer = RenderLog()
 
+    val leafRenderer = RenderLeaves()
+
     val renderers =
         listOf(
             RenderGrass(),
             RenderMycelium(),
-            RenderLeaves(),
+            leafRenderer,
             RenderCactus(),
             RenderLilypad(),
             RenderReeds(),
