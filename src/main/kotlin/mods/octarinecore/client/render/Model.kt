@@ -102,7 +102,7 @@ data class Quad(val v1: Vertex, val v2: Vertex, val v3: Vertex, val v4: Vertex) 
  * The model should be positioned so that (0,0,0) is the block center. The block extends to (-0.5,
  * 0.5) in all directions (inclusive).
  */
-class Model() {
+class Model() : Cloneable {
     constructor(other: List<Quad>) : this() {
         quads.addAll(other)
     }
@@ -151,6 +151,14 @@ class Model() {
             Vertex(base - top - left, UV.bottomRight),
             Vertex(base + top - left, UV.topRight),
         )
+    }
+
+    public override fun clone(): Model {
+        val quadsCopy = buildList(quads.size) {
+            for (quad in quads) add(quad.copy())
+        }
+
+        return Model(quadsCopy)
     }
 }
 
