@@ -2,6 +2,7 @@ package mods.betterfoliage.client.integration
 
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
+import ic2.core.block.BlockRubWood
 import mods.betterfoliage.client.Client
 import mods.betterfoliage.client.config.Config
 import mods.betterfoliage.client.config.SimpleBlockMatcher
@@ -13,11 +14,14 @@ import org.apache.logging.log4j.Level
 @SideOnly(Side.CLIENT)
 object IC2Integration {
 
-    val ic2Logs =
+    val ic2Logs by lazy {
         object : SimpleBlockMatcher() {
-            override fun matchesClass(block: Block) = Config.blocks.logs.matchesClass(block) &&
-                block.javaClass.name.equals("ic2.core.block.BlockRubWood")
+            override fun matchesClass(block: Block) =
+                block.javaClass.name.equals(BlockRubWood::class.java.name) &&
+                    Config.blocks.logs.matchesClass(block)
+
         }
+    }
 
     init {
         if (CompatibleMod.IC2.isModLoaded()) {
