@@ -3,6 +3,7 @@
 package mods.octarinecore.client.resource
 
 import mods.octarinecore.PI2
+import mods.octarinecore.client.render.Double3
 import mods.octarinecore.client.render.HSB
 import mods.octarinecore.tryDefault
 import net.minecraft.client.Minecraft
@@ -10,6 +11,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.client.resources.IResource
 import net.minecraft.client.resources.IResourceManager
 import net.minecraft.client.resources.SimpleReloadableResourceManager
+import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.ResourceLocation
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
@@ -109,3 +111,21 @@ fun textureLocation(iconName: String) = ResourceLocation(iconName).let {
         ResourceLocation(it.resourceDomain, "textures/blocks/${it.resourcePath}")
     }
 }
+
+/** Extensions of [net.minecraft.util.AxisAlignedBB] */
+
+/** Get the center of the AABB */
+val AxisAlignedBB.center: Double3
+    get() = Double3(
+        (minX + maxX) / 2.0,
+        (minY + maxY) / 2.0,
+        (minZ + maxZ) / 2.0,
+    )
+
+/** Get the scale for each axis of the AABB. Assumes a normal block is the default scale of (1, 1, 1) */
+val AxisAlignedBB.scale: Double3
+    get() = Double3(
+        maxX - minX,
+        maxY - minY,
+        maxZ - minZ,
+    )
