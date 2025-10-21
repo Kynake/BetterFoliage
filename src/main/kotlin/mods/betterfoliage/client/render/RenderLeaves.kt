@@ -2,7 +2,10 @@ package mods.betterfoliage.client.render
 
 import mods.betterfoliage.BetterFoliageMod
 import mods.betterfoliage.client.config.Config
+import mods.betterfoliage.client.integration.NaturaIntegration
+import mods.betterfoliage.client.integration.NaturaIntegration.getBerryBushData
 import mods.betterfoliage.client.texture.LeafRegistry
+import mods.natura.blocks.crops.BerryBush
 import mods.octarinecore.PI2
 import mods.octarinecore.client.render.AbstractBlockRenderingHandler
 import mods.octarinecore.client.render.BlockContext
@@ -57,14 +60,26 @@ class RenderLeaves : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
         if (leafInfo != null) {
             val rand = ctx.semiRandomArray(2)
             (if (Config.leaves.dense) denseLeavesRot else normalLeavesRot).forEach { rotation ->
-                modelRenderer.render(
-                    leavesModel.model,
-                    rotation,
-                    ctx.blockCenter + perturbs[rand[0]],
-                    icon = { _, _, _ -> leafInfo.roundLeafTexture },
-                    rotateUV = { rand[1] },
-                    postProcess = noPost,
-                )
+                if (NaturaIntegration.isBerryBush(ctx.block)) {
+                    val (scale, center, model) = (ctx.block as BerryBush).getBerryBushData(ctx)
+                    modelRenderer.render(
+                        model,
+                        rotation,
+                        center + (perturbs[rand[0]] * scale),
+                        icon = { _, _, _ -> leafInfo.roundLeafTexture },
+                        rotateUV = { rand[1] },
+                        postProcess = noPost,
+                    )
+                } else {
+                    modelRenderer.render(
+                        leavesModel.model,
+                        rotation,
+                        ctx.blockCenter + perturbs[rand[0]],
+                        icon = { _, _, _ -> leafInfo.roundLeafTexture },
+                        rotateUV = { rand[1] },
+                        postProcess = noPost,
+                    )
+                }
             }
             if (isSnowed && Config.leaves.snowEnabled) {
                 modelRenderer.render(
