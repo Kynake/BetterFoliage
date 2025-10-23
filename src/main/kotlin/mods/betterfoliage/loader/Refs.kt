@@ -18,30 +18,6 @@ object Refs {
 
     val IIcon = ClassRef("net.minecraft.util.IIcon", "rf")
 
-    // Shaders mod
-    @Deprecated("ShadersMod support is deprecated")
-    val Shaders = ClassRef("shadersmodcore.client.Shaders")
-
-    @Deprecated("ShadersMod support is deprecated")
-    val pushEntity =
-        MethodRef(
-            Shaders,
-            "pushEntity",
-            ClassRef.void,
-            RenderBlocks,
-            Block,
-            ClassRef.int,
-            ClassRef.int,
-            ClassRef.int,
-        )
-    val pushEntity_I = MethodRef(Shaders, "pushEntity", ClassRef.void, ClassRef.int)
-    val popEntity = MethodRef(Shaders, "popEntity", ClassRef.void)
-
-    val ShadersModIntegration =
-        ClassRef("mods.betterfoliage.client.integration.ShadersModIntegration")
-    val getBlockIdOverride =
-        MethodRef(ShadersModIntegration, "getBlockIdOverride", ClassRef.int, ClassRef.int, Block)
-
     // Optifine
     val ConnectedTextures = ClassRef("ConnectedTextures")
     val getConnectedTexture =
