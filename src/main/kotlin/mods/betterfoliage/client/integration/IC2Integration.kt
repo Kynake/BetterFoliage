@@ -22,8 +22,8 @@ object IC2Integration {
     }
 
     init {
-        if (CompatibleMod.IC2.isModLoaded()) {
-            Client.log(Level.INFO, "${CompatibleMod.IC2.modName} found - setting up compatibility")
+        if (Mod.IC2.isModLoaded()) {
+            Client.log(Level.INFO, "${Mod.IC2.modName} found - setting up compatibility")
 
             val originalFunc = Client.logRenderer.axisFunc
 

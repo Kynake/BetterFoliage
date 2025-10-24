@@ -5,7 +5,7 @@ import com.gtnewhorizon.gtnhmixins.builders.TargetModBuilder
 import cpw.mods.fml.common.Loader
 import mods.octarinecore.metaprog.getJavaClass
 
-enum class CompatibleMod(val modID: String?, val modName: String, val coreModClass: String?, val targetClass: String?) :
+enum class Mod(val modID: String?, val modName: String, val coreModClass: String?, val targetClass: String?) :
     IMod,
     ITargetMod {
     FORESTRY("forestry", "Forestry", null, "forestry.Forestry"),
