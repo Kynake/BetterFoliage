@@ -10,6 +10,7 @@ enum class CompatibleMod(val modID: String?, val modName: String, val coreModCla
     ITargetMod {
     FORESTRY("forestry", "Forestry", null, "forestry.Forestry"),
     GT5U("gregtech_nh", "GregTech GTNH", "gregtech.asm.GTCorePlugin", "gregtech.GTNHMod"),
+    GT6("gregtech", "GregTech 6", "gregtech.asm.GT_ASM", "gregtech.GT6_Main"),
     IC2("IC2", "IndustrialCraft 2", "ic2.core.coremod.IC2core", "ic2.core.IC2"),
     NATURA("Natura", "Natura", null, "mods.natura.Natura"),
     TFC("terrafirmacraft", "TerraFirmaCraft", "com.bioxx.tfc.TFCASMLoadingPlugin", "com.bioxx.tfc.TerraFirmaCraft"),

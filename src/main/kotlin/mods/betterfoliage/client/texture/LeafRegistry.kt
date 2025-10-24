@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly
 import mods.betterfoliage.client.Client
 import mods.betterfoliage.client.config.Config
 import mods.betterfoliage.client.integration.ForestryIntegration
+import mods.betterfoliage.client.integration.GT6Integration
 import mods.betterfoliage.client.integration.OptifineCTM
 import mods.octarinecore.client.resource.IconSet
 import mods.octarinecore.client.resource.averageColor
@@ -97,6 +98,7 @@ object LeafRegistry {
         }
 
         ForestryIntegration.registerLeafTextures(event)
+        GT6Integration.registerLeafTextures(event)
     }
 
     fun registerLeaf(atlas: TextureMap, icon: TextureAtlasSprite) {
