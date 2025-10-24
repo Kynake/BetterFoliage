@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import mods.betterfoliage.client.Client
 import mods.betterfoliage.client.config.Config
+import mods.betterfoliage.client.integration.ForestryIntegration
 import mods.betterfoliage.client.integration.OptifineCTM
 import mods.octarinecore.client.resource.IconSet
 import mods.octarinecore.client.resource.averageColor
@@ -95,16 +96,7 @@ object LeafRegistry {
             }
         }
 
-        listOf("deciduous", "conifers", "jungle", "willow", "maple", "palm").forEach { leafType ->
-            listOf("plain", "fancy", "changed").forEach { renderType ->
-                val location = "forestry:leaves/$leafType.$renderType"
-                val original = event.map.getTextureExtry(location)
-                if (original != null) {
-                    Client.log(Level.INFO, "Found Forestry leaf texture: $location")
-                    registerLeaf(event.map, original)
-                }
-            }
-        }
+        ForestryIntegration.registerLeafTextures(event)
     }
 
     fun registerLeaf(atlas: TextureMap, icon: TextureAtlasSprite) {
