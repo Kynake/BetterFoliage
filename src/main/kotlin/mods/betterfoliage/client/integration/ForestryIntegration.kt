@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Level
 
 object ForestryIntegration {
     fun registerLeafTextures(event: TextureStitchEvent.Pre) {
-        if (!Mod.FORESTRY.isModLoaded()) return
+        if (!Mod.FORESTRY.isLoaded) return
         listOf("deciduous", "conifers", "jungle", "willow", "maple", "palm").forEach { leafType ->
             listOf("plain", "fancy", "changed").forEach { renderType ->
                 val location = "${Mod.FORESTRY.modID}:leaves/$leafType.$renderType"

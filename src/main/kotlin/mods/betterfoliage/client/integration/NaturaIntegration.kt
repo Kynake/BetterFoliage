@@ -23,7 +23,7 @@ object NaturaIntegration {
 
     @JvmStatic val naturaLeavesModel: Array<Model?> by lazy { arrayOfNulls(BUSH_GROWTH_STAGES - 1) }
 
-    fun isBerryBush(block: Block) = Mod.NATURA.isModLoaded() && block is BerryBush
+    fun isBerryBush(block: Block) = Mod.NATURA.isLoaded && block is BerryBush
 
     fun BerryBush.getBerryBushData(ctx: BlockContext): BerryBushData {
         val world = Minecraft.getMinecraft().theWorld

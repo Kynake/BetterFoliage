@@ -5,9 +5,7 @@ import com.gtnewhorizon.gtnhmixins.builders.TargetModBuilder
 import cpw.mods.fml.common.Loader
 import mods.octarinecore.metaprog.getJavaClass
 
-enum class Mod(val modID: String?, val modName: String, val coreModClass: String?, val targetClass: String?) :
-    IMod,
-    ITargetMod {
+enum class Mod(val modID: String?, val modName: String, val coreModClass: String?, val targetClass: String?) : ITargetMod {
     FORESTRY("forestry", "Forestry", null, "forestry.Forestry"),
     GT5U("gregtech_nh", "GregTech GTNH", "gregtech.asm.GTCorePlugin", "gregtech.GTNHMod"),
     GT6("gregtech", "GregTech 6", "gregtech.asm.GT_ASM", "gregtech.GT6_Main"),
@@ -20,24 +18,21 @@ enum class Mod(val modID: String?, val modName: String, val coreModClass: String
         TargetModBuilder().setCoreModClass(coreModClass).setTargetClass(targetClass).setModId(modID)!!
     }
 
-    private var isLoaded = false
+    private var isLoadedCache = false
     private var isChecked = false
 
-    override fun isModLoaded(): Boolean {
-        if (isChecked) return isLoaded
-        isChecked = true
+    val isLoaded: Boolean
+        get() {
+            if (isChecked) return isLoadedCache
+            isChecked = true
 
-        // If a field is null it is ignored, otherwise it is checked and MUST be true.
-        isLoaded = modID?.let { Loader.isModLoaded(it) } ?: true
-        isLoaded = isLoaded && coreModClass?.let { getJavaClass(it) != null } ?: true
-        isLoaded = isLoaded && targetClass?.let { getJavaClass(it) != null } ?: true
+            // If a field is null it is ignored, otherwise it is checked and MUST be true.
+            isLoadedCache = modID?.let { Loader.isModLoaded(it) } ?: true
+            isLoadedCache = isLoadedCache && coreModClass?.let { getJavaClass(it) != null } ?: true
+            isLoadedCache = isLoadedCache && targetClass?.let { getJavaClass(it) != null } ?: true
 
-        return isLoaded
-    }
+            return isLoadedCache
+        }
 
     override fun getBuilder() = modBuilder
-}
-
-interface IMod {
-    fun isModLoaded(): Boolean
 }

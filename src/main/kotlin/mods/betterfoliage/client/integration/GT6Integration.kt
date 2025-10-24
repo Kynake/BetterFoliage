@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Level
 object GT6Integration {
 
     fun registerLeafTextures(event: TextureStitchEvent.Pre) {
-        if (!Mod.GT6.isModLoaded()) return
+        if (!Mod.GT6.isLoaded) return
         listOf("BLUEMAHOE", "BLUESPRUCE", "BLUESPRUCE_XMAS", "CINNAMON", "COCONUT", "HAZEL", "MAPLE", "MAPLE_BROWN", "MAPLE_ORANGE", "MAPLE_RED", "MAPLE_YELLOW", "RAINBOWOOD", "RUBBER", "WILLOW").forEach { leafType ->
             listOf("", "OPAQUE_").forEach { renderTypePrefix ->
                 val location = "${Mod.GT6.modID}:iconsets/LEAVES_$renderTypePrefix$leafType"

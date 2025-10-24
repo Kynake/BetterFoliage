@@ -11,7 +11,7 @@ object GT5UIntegration {
     private const val DOUBLE_PLANT_TYPE = 40
 
     @JvmStatic fun tryTintWithPollution(originalColor: Int, block: Block, x: Int, z: Int): Int {
-        if (!Mod.GT5U.isModLoaded()) return originalColor
+        if (!Mod.GT5U.isLoaded) return originalColor
         return when (block.renderType) {
             STANDARD_TYPE -> Pollution.standardBlocks.matchesID(block)
             CROSSED_SQUARES_TYPE -> Pollution.crossedSquares.matchesID(block)
@@ -19,6 +19,6 @@ object GT5UIntegration {
             VINE_TYPE -> Pollution.blockVine.matchesID(block)
             DOUBLE_PLANT_TYPE -> Pollution.doublePlants.matchesID(block)
             else -> return originalColor
-        }?.getColor(originalColor, x, z)?: originalColor
+        }?.getColor(originalColor, x, z) ?: originalColor
     }
 }

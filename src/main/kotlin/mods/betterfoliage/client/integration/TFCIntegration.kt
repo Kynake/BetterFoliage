@@ -32,7 +32,7 @@ object TFCIntegration {
         }
 
     init {
-        if (Mod.TFC.isModLoaded()) {
+        if (Mod.TFC.isLoaded) {
             Client.log(Level.INFO, "${Mod.TFC.modName} found - setting up compatibility")
 
             val originalFunc = Client.logRenderer.axisFunc
