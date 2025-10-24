@@ -20,14 +20,16 @@ enum class CompatibleMod(val modID: String?, val modName: String, val coreModCla
     }
 
     private var isLoaded = false
+    private var isChecked = false
 
     override fun isModLoaded(): Boolean {
-        if (isLoaded) return true
+        if (isChecked) return isLoaded
+        isChecked = true
 
-        isLoaded = modID?.let { Loader.isModLoaded(it) }
-            ?: coreModClass?.let { getJavaClass(it) != null }
-            ?: targetClass?.let { getJavaClass(it) != null }
-            ?: false
+        // If a field is null it is ignored, otherwise it is checked and MUST be true.
+        isLoaded = modID?.let { Loader.isModLoaded(it) } ?: true
+        isLoaded = isLoaded && coreModClass?.let { getJavaClass(it) != null } ?: true
+        isLoaded = isLoaded && targetClass?.let { getJavaClass(it) != null } ?: true
 
         return isLoaded
     }
