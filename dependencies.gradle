@@ -66,3 +66,51 @@ dependencies {
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Mantle:0.5.1:dev")
 
 }
+
+def jarUrl(String sourceURL) {
+    String cacheDir = "$project.gradle.gradleUserHomeDir/caches"
+
+    URL url = URI.create(sourceURL).toURL()
+    String rawFileName = url.getFile()
+
+    String fileName = URLDecoder.decode(rawFileName, "UTF-8")
+
+    // get rid of directories:
+    int lastSlash = fileName.lastIndexOf("/")
+    if (lastSlash > 0) {
+        fileName = fileName.substring(lastSlash + 1)
+    }
+
+    // get rid of extension:
+    if (fileName.endsWith(".jar")) {
+        fileName = fileName.substring(0, fileName.lastIndexOf("."))
+    }
+
+    String hostName = url.getHost()
+    if (hostName.startsWith("www.")) {
+        hostName = hostName.substring(4)
+    }
+    List parts = Arrays.asList(hostName.split("\\."))
+    Collections.reverse(parts)
+    hostName = String.join(".", parts)
+
+    String jar = "$cacheDir/modules-2/files-2.1/${hostName}/${fileName}.jar"
+
+    if(System.properties['os.name'].toLowerCase().contains('windows')) {
+        jar = jar.replace("/", "\\")
+    }
+
+    if (file(jar).exists()) {
+        return files(jar)
+    }
+
+    download.run {
+        src sourceURL
+        dest jar
+        overwrite false
+    }
+
+    print("Download location: ${jar}\n")
+
+    return files(jar)
+}
