@@ -1,9 +1,10 @@
-BetterFoliage
+BetterFoliage - Legacy Edition
 =============
 
-Minecraft mod that alters the appearance of leaves & grass
+Modern fork of Better Foliage for Minecraft 1.7.10.
+This mod alters the appearance of leaves & grass.
 
-Requires [UniMixins](https://github.com/LegacyModdingMC/UniMixins) and [Forgelin](https://github.com/GTNewHorizons/Forgelin)
+Requires [UniMixins](https://github.com/LegacyModdingMC/UniMixins/releases) and [Forgelin](https://github.com/GTNewHorizons/Forgelin/releases)
 
 
 Things to do:
