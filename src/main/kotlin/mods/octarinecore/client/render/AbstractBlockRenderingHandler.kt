@@ -122,6 +122,12 @@ abstract class AbstractBlockRenderingHandler(modId: String) :
  * block in block-relative coordinates.
  */
 class BlockContext {
+    companion object {
+        @JvmStatic fun blockColor(block: Block, world: IBlockAccess?, x: Int, y: Int, z: Int) = block.colorMultiplier(world, x, y, z).let {
+            GT5UIntegration.tryTintWithPollution(it, block, x, z)
+        }
+    }
+
     var world: IBlockAccess? = null
     var x: Int = 0
     var y: Int = 0
@@ -148,10 +154,6 @@ class BlockContext {
     val blockColor: Int
         get() = blockColor(block, world, x, y, z)
     fun blockColor(offset: Int3) = blockColor(block(offset), world, x + offset.x, y + offset.y, z + offset.z)
-
-    private fun blockColor(block: Block, world: IBlockAccess?, x: Int, y: Int, z: Int) = block.colorMultiplier(world, x, y, z).let {
-        GT5UIntegration.tryTintWithPollution(it, block, x, z)
-    }
 
     /** Get the block brightness at the given offset. */
     val blockBrightness: Int
