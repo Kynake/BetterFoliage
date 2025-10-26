@@ -69,13 +69,13 @@ object LeafRegistry {
             if (Config.blocks.leaves.matchesClass(block as Block)) {
                 block.registerBlockIcons { location ->
                     val original = event.map.getTextureExtry(location)
-                    Client.log(Level.INFO, "Found leaf texture: $location")
+                    Client.log(Level.INFO, "Registering leaf texture: $location")
                     registerLeaf(event.map, original)
 
                     if (OptifineCTM.isAvailable) {
                         OptifineCTM.getAllCTM(original).let { ctmIcons ->
                             if (ctmIcons.isNotEmpty()) {
-                                Client.log(Level.INFO, "Found ${ctmIcons.size} CTM variants for texture ${original.iconName}")
+                                Client.log(Level.INFO, "Registering ${ctmIcons.size} CTM variants for texture ${original.iconName}")
                                 ctmIcons.forEach { registerLeaf(event.map, it as TextureAtlasSprite) }
                             }
                         }
@@ -106,7 +106,7 @@ object LeafRegistry {
         val generated =
             atlas.registerIcon(Client.genLeaves.generatedResource(icon.iconName, "type" to leafType).toString())
         leafType = registerParticle(atlas, leafType)
-        leaves.put(icon, LeafInfo(generated as TextureAtlasSprite, leafType))
+        leaves[icon] = LeafInfo(generated as TextureAtlasSprite, leafType)
     }
 
     fun registerParticle(atlas: TextureMap, leafType: String): String {
@@ -117,7 +117,7 @@ object LeafRegistry {
                 Client.log(Level.WARN, "Leaf particle textures not found for leaf type: $leafType")
                 return "default"
             } else {
-                particles.put(leafType, particleSet)
+                particles[leafType] = particleSet
             }
         }
         return leafType
