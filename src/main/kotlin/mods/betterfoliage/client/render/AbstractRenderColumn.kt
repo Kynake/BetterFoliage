@@ -30,7 +30,6 @@ const val NW = 2
 /** Index of SOUTH-WEST quadrant. */
 const val SW = 3
 
-@Suppress("NOTHING_TO_INLINE")
 abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandler(modId) {
 
     enum class BlockType {
@@ -75,7 +74,7 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
     val extendTopRoundLarge = model {
         columnSide(radiusLarge, 0.5, 0.5 + radiusLarge, topExtension(radiusLarge))
     }
-    inline fun extendTop(type: QuadrantType) = when (type) {
+    fun extendTop(type: QuadrantType) = when (type) {
         QuadrantType.SMALL_RADIUS -> extendTopRoundSmall.model
         QuadrantType.LARGE_RADIUS -> extendTopRoundLarge.model
         QuadrantType.SQUARE -> extendTopSquare.model
@@ -91,7 +90,7 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
     val extendBottomRoundLarge = model {
         columnSide(radiusLarge, -0.5 - radiusLarge, -0.5, bottomExtension(radiusLarge))
     }
-    inline fun extendBottom(type: QuadrantType) = when (type) {
+    fun extendBottom(type: QuadrantType) = when (type) {
         QuadrantType.SMALL_RADIUS -> extendBottomRoundSmall.model
         QuadrantType.LARGE_RADIUS -> extendBottomRoundLarge.model
         QuadrantType.SQUARE -> extendBottomSquare.model
@@ -101,7 +100,7 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
     val topSquare = model { columnLidSquare() }
     val topRoundSmall = model { columnLid(radiusSmall) }
     val topRoundLarge = model { columnLid(radiusLarge) }
-    inline fun flatTop(type: QuadrantType) = when (type) {
+    fun flatTop(type: QuadrantType) = when (type) {
         QuadrantType.SMALL_RADIUS -> topRoundSmall.model
         QuadrantType.LARGE_RADIUS -> topRoundLarge.model
         QuadrantType.SQUARE -> topSquare.model
@@ -111,7 +110,7 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
     val bottomSquare = model { columnLidSquare { it.rotate(rot(ForgeDirection.EAST) * 2 + rot(ForgeDirection.UP)) } }
     val bottomRoundSmall = model { columnLid(radiusSmall) { it.rotate(rot(ForgeDirection.EAST) * 2 + rot(ForgeDirection.UP)) } }
     val bottomRoundLarge = model { columnLid(radiusLarge) { it.rotate(rot(ForgeDirection.EAST) * 2 + rot(ForgeDirection.UP)) } }
-    inline fun flatBottom(type: QuadrantType) = when (type) {
+    fun flatBottom(type: QuadrantType) = when (type) {
         QuadrantType.SMALL_RADIUS -> bottomRoundSmall.model
         QuadrantType.LARGE_RADIUS -> bottomRoundLarge.model
         QuadrantType.SQUARE -> bottomSquare.model
@@ -127,12 +126,11 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
     val upTexture: QuadIconResolver = { ctx, _, _ -> ctx.icon(ForgeDirection.UP) }
     val downTexture: QuadIconResolver = { ctx, _, _ -> ctx.icon(ForgeDirection.DOWN) }
 
-    inline fun continuous(q1: QuadrantType, q2: QuadrantType) = q1 == q2 || ((q1 == QuadrantType.SQUARE || q1 == QuadrantType.INVISIBLE) && (q2 == QuadrantType.SQUARE || q2 == QuadrantType.INVISIBLE))
+    fun continuous(q1: QuadrantType, q2: QuadrantType) = q1 == q2 || ((q1 == QuadrantType.SQUARE || q1 == QuadrantType.INVISIBLE) && (q2 == QuadrantType.SQUARE || q2 == QuadrantType.INVISIBLE))
 
     abstract val axisFunc: (Block, Int) -> Axis
     abstract val blockPredicate: (Block, Int) -> Boolean
 
-    @Suppress("NON_EXHAUSTIVE_WHEN")
     override fun render(ctx: BlockContext, parent: RenderBlocks): Boolean {
         if (ctx.isSurroundedBy(surroundPredicate)) return false
 
@@ -268,7 +266,7 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
     }
 
     /** Sets the type of the given quadrant only if the new value is "stronger" (larger ordinal). */
-    inline fun Array<QuadrantType>.upgrade(idx: Int, value: QuadrantType) {
+    fun Array<QuadrantType>.upgrade(idx: Int, value: QuadrantType) {
         if (this[idx].ordinal < value.ordinal) this[idx] = value
     }
 
