@@ -14,6 +14,7 @@ import net.minecraft.util.EnumChatFormatting.YELLOW
  * Base class for a config GUI element. The GUI representation is a list of toggleable objects. The
  * config representation is an integer list of the selected objects' IDs.
  */
+@Suppress("UNCHECKED_CAST")
 abstract class IdListConfigEntry<T>(
     owningScreen: GuiConfig,
     owningEntryList: GuiConfigEntries,
