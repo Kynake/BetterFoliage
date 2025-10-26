@@ -2,6 +2,7 @@ package mods.betterfoliage.client.render
 
 import mods.betterfoliage.BetterFoliageMod
 import mods.betterfoliage.client.config.Config
+import mods.betterfoliage.client.integration.GT6Integration
 import mods.octarinecore.client.render.Axis
 import mods.octarinecore.client.render.BlockContext
 import net.minecraft.block.Block
@@ -11,7 +12,8 @@ class RenderLog : AbstractRenderColumn(BetterFoliageMod.MOD_ID) {
     override fun isEligible(ctx: BlockContext) = Config.enabled &&
         Config.roundLogs.enabled &&
         ctx.cameraDistance < Config.roundLogs.distance &&
-        Config.blocks.logs.matchesID(ctx.block)
+        Config.blocks.logs.matchesID(ctx.block) &&
+        allowModSpecialCases(ctx)
 
     override var axisFunc = { block: Block, meta: Int ->
         when ((meta shr 2) and 3) {
@@ -36,4 +38,6 @@ class RenderLog : AbstractRenderColumn(BetterFoliageMod.MOD_ID) {
         get() = Config.roundLogs.radiusLarge
     override val radiusSmall: Double
         get() = Config.roundLogs.radiusSmall
+
+    private fun allowModSpecialCases(ctx: BlockContext): Boolean = GT6Integration.allowSpecialGT6LogRender(ctx)
 }

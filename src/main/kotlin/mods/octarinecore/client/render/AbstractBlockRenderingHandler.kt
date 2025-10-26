@@ -5,6 +5,7 @@ package mods.octarinecore.client.render
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler
 import cpw.mods.fml.client.registry.RenderingRegistry
 import mods.betterfoliage.client.integration.GT5UIntegration
+import mods.betterfoliage.client.integration.GT6Integration
 import mods.betterfoliage.client.integration.OptifineCTM
 import mods.betterfoliage.loader.Refs
 import mods.octarinecore.ThreadLocalDelegate
@@ -12,6 +13,7 @@ import mods.octarinecore.client.resource.ResourceHandler
 import net.minecraft.block.Block
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.RenderBlocks
+import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.IIcon
 import net.minecraft.util.MathHelper
 import net.minecraft.world.IBlockAccess
@@ -150,6 +152,11 @@ class BlockContext {
         get() = world!!.getBlockMetadata(x, y, z)
     fun meta(offset: Int3) = world!!.getBlockMetadata(x + offset.x, y + offset.y, z + offset.z)
 
+    /** Get the [TileEntity] (or null, if none is found) at the given offset. */
+    val tileEntity: TileEntity?
+        get() = world!!.getTileEntity(x, y, z)
+    fun tileEntity(offset: Int3): TileEntity? = world!!.getTileEntity(x + offset.x, y + offset.y, z + offset.z)
+
     /** Get the block color multiplier at the given offset. */
     val blockColor: Int
         get() = blockColor(block, world, x, y, z)
@@ -167,14 +174,15 @@ class BlockContext {
         get() = world!!.getBiomeGenForCoords(x, z).biomeID
 
     /** Get the texture on a given face of the block at the given offset. */
-    fun icon(face: ForgeDirection, offset: Int3 = Int3.zero) = block(offset).getIcon(world, x + offset.x, y + offset.y, z + offset.z, face.ordinal).let {
-        if (!OptifineCTM.isAvailable) {
-            it!!
-        } else {
-            Refs.getConnectedTexture.invokeStatic(world!!, block(offset), x + offset.x, y + offset.y, z + offset.z, face.ordinal, it)
-                as IIcon
+    fun icon(face: ForgeDirection, offset: Int3 = Int3.zero) = getIconSpecialCases(face, offset)
+        ?: block(offset).getIcon(world, x + offset.x, y + offset.y, z + offset.z, face.ordinal).let {
+            if (!OptifineCTM.isAvailable) {
+                it!!
+            } else {
+                Refs.getConnectedTexture.invokeStatic(world!!, block(offset), x + offset.x, y + offset.y, z + offset.z, face.ordinal, it)
+                    as IIcon
+            }
         }
-    }
 
     /** Get the centerpoint of the block being rendered. */
     val blockCenter: Double3
@@ -201,4 +209,6 @@ class BlockContext {
                 abs(y - MathHelper.floor_double(camera.posY)) +
                 abs(z - MathHelper.floor_double(camera.posZ))
         }
+
+    private fun getIconSpecialCases(face: ForgeDirection, offset: Int3): IIcon? = GT6Integration.getGT6LogMTEIcon(this, face, offset)
 }
