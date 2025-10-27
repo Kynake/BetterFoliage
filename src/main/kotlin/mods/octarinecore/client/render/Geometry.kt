@@ -265,7 +265,7 @@ data class Int3(var x: Int, var y: Int, var z: Int) {
 // Rotation
 // ================================
 val ForgeDirection.rotations: Array<ForgeDirection>
-    get() = Array(6) { idx -> ForgeDirection.values()[ForgeDirection.ROTATION_MATRIX[ordinal][idx]] }
+    get() = Array(6) { idx -> ForgeDirection.entries[ForgeDirection.ROTATION_MATRIX[ordinal][idx]] }
 
 fun ForgeDirection.rotate(rot: Rotation) = rot.forward[ordinal]
 
@@ -336,7 +336,7 @@ fun <T> nearestPosition(
     vertex: Double3,
     objs: Iterable<T>,
     objPos: (T) -> Double3,
-): Pair<T, Double> = objs.map { it to (objPos(it) - vertex).length }.minBy { it.second }!!
+): Pair<T, Double> = objs.map { it to (objPos(it) - vertex).length }.minBy { it.second }
 
 /**
  * Get the object closest in orientation to the specified vector from a list of objects.
@@ -350,7 +350,7 @@ fun <T> nearestAngle(
     vector: Double3,
     objs: Iterable<T>,
     objAngle: (T) -> Double3,
-): Pair<T, Double> = objs.map { it to objAngle(it).dot(vector) }.maxBy { it.second }!!
+): Pair<T, Double> = objs.map { it to objAngle(it).dot(vector) }.maxBy { it.second }
 
 data class FaceCorners(
     val topLeft: Pair<ForgeDirection, ForgeDirection>,
@@ -363,7 +363,6 @@ data class FaceCorners(
         left: ForgeDirection,
     ) : this(top to left, top to left.opposite, top.opposite to left, top.opposite to left.opposite)
 
-    val asArray = arrayOf(topLeft, topRight, bottomLeft, bottomRight)
     val asList = listOf(topLeft, topRight, bottomLeft, bottomRight)
 }
 
