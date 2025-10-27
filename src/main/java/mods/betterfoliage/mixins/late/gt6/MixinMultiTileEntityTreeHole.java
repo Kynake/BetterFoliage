@@ -12,9 +12,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.render.ITexture;
 import gregapi.tileentity.misc.MultiTileEntityTreeHole;
-import mods.betterfoliage.mixins.interfaces.gt6.IIconGetter;
-import mods.betterfoliage.mixins.interfaces.gt6.ITexture2Getter;
 import mods.betterfoliage.mixins.interfaces.gt6.ITreeHoleMTE;
+import mods.betterfoliage.mixins.interfaces.gt6.accessors.IIconAccessor;
+import mods.betterfoliage.mixins.interfaces.gt6.accessors.ITexture2Accessor;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(MultiTileEntityTreeHole.class)
@@ -30,8 +30,8 @@ public abstract class MixinMultiTileEntityTreeHole implements ITreeHoleMTE {
 
         // We skip all the messing with render passes from getTexture() and go
         // straight to GT6's getTexture2(), which handles the IIcons for logs
-        ITexture texture = ((ITexture2Getter) this)
+        ITexture texture = ((ITexture2Accessor) this)
             .betterfoliage$getTexture2(block, 0, (byte) side.ordinal(), betterfoliage$allSidesRender);
-        return ((IIconGetter) texture).betterfoliage$getIconForSide(side.ordinal());
+        return ((IIconAccessor) texture).betterfoliage$getIconForSide(side.ordinal());
     }
 }

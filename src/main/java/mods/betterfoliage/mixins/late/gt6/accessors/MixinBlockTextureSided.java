@@ -1,4 +1,4 @@
-package mods.betterfoliage.mixins.late.gt6;
+package mods.betterfoliage.mixins.late.gt6.accessors;
 
 import net.minecraft.util.IIcon;
 
@@ -11,11 +11,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.render.BlockTextureSided;
 import gregapi.render.IIconContainer;
-import mods.betterfoliage.mixins.interfaces.gt6.IIconGetter;
+import mods.betterfoliage.mixins.interfaces.gt6.accessors.IIconAccessor;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(BlockTextureSided.class)
-public abstract class MixinBlockTextureSided_IconGetter implements IIconGetter {
+public abstract class MixinBlockTextureSided implements IIconAccessor {
 
     @Final
     @Shadow(remap = false)

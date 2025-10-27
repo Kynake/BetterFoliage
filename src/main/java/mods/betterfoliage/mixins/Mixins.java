@@ -18,15 +18,15 @@ public enum Mixins implements IMixins {
         .setPhase(Phase.EARLY)),
     GT6(new MixinBuilder()
         .addClientMixins(
-            "gt6.MixinBlockTextureCopied_IconGetter",
-            "gt6.MixinBlockTextureDefault_IconGetter",
-            "gt6.MixinBlockTextureFluid_IconGetter",
-            "gt6.MixinBlockTextureMulti_IconGetter",
-            "gt6.MixinBlockTextureSided_IconGetter",
+            "gt6.accessors.MixinBlockTextureCopied",
+            "gt6.accessors.MixinBlockTextureDefault",
+            "gt6.accessors.MixinBlockTextureFluid",
+            "gt6.accessors.MixinBlockTextureMulti",
+            "gt6.accessors.MixinBlockTextureSided",
+            "gt6.accessors.MixinTileEntityBase06Covers",
             "gt6.MixinITextureUtil",
             "gt6.MixinMultiTileEntityTreeHole",
-            "gt6.MixinTileEntityBase01Root",
-            "gt6.MixinTileEntityBase06Covers_Texture2Getter")
+            "gt6.MixinTileEntityBase01Root")
         .addRequiredMod(Mod.GT6)
         .setPhase(Phase.LATE)),
     ;
