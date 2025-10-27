@@ -1,6 +1,5 @@
 package mods.betterfoliage.mixins.early.minecraft;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
 
@@ -29,9 +28,8 @@ public abstract class MixinRenderBlocks {
             value = "INVOKE",
             shift = At.Shift.AFTER,
             target = "Lnet/minecraft/client/renderer/RenderBlocks;setRenderBoundsFromBlock(Lnet/minecraft/block/Block;)V"))
-    private int betterfoliage$getRenderTypeOverride(int originalRenderType, @Local(argsOnly = true) Block block,
-        @Local(ordinal = 0, argsOnly = true) int x, @Local(ordinal = 1, argsOnly = true) int y,
-        @Local(ordinal = 2, argsOnly = true) int z) {
-        return Hooks.getRenderTypeOverride(blockAccess, x, y, z, block, originalRenderType);
+    private int betterfoliage$getRenderTypeOverride(int originalRenderType, @Local(ordinal = 0, argsOnly = true) int x,
+        @Local(ordinal = 1, argsOnly = true) int y, @Local(ordinal = 2, argsOnly = true) int z) {
+        return Hooks.getRenderTypeOverride(blockAccess, x, y, z, originalRenderType);
     }
 }

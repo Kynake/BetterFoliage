@@ -20,7 +20,6 @@ fun getRenderTypeOverride(
     x: Int,
     y: Int,
     z: Int,
-    block: Block,
     original: Int,
 ): Int {
     if (!Config.enabled) return original
