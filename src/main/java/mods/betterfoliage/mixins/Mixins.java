@@ -23,6 +23,7 @@ public enum Mixins implements IMixins {
             "gt6.MixinBlockTextureFluid_IconGetter",
             "gt6.MixinBlockTextureMulti_IconGetter",
             "gt6.MixinBlockTextureSided_IconGetter",
+            "gt6.MixinITextureUtil",
             "gt6.MixinMultiTileEntityTreeHole",
             "gt6.MixinTileEntityBase06Covers_TextureGetter")
         .addRequiredMod(Mod.GT6)
