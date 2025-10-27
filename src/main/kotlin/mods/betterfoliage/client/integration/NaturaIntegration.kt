@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import mods.betterfoliage.client.Client
 import mods.natura.blocks.crops.BerryBush
+import mods.natura.blocks.crops.NetherBerryBush
 import mods.octarinecore.client.render.BlockContext
 import mods.octarinecore.client.render.Double3
 import mods.octarinecore.client.render.Model
@@ -23,11 +24,11 @@ object NaturaIntegration {
 
     @JvmStatic val naturaLeavesModel: Array<Model?> by lazy { arrayOfNulls(BUSH_GROWTH_STAGES - 1) }
 
-    fun isBerryBush(block: Block) = Mod.NATURA.isLoaded && block is BerryBush
+    fun isBerryBush(block: Block) = Mod.NATURA.isLoaded && (block is BerryBush || block is NetherBerryBush)
 
-    fun BerryBush.getBerryBushData(ctx: BlockContext): BerryBushData {
+    fun getBerryBushData(ctx: BlockContext): BerryBushData {
         val world = Minecraft.getMinecraft().theWorld
-        val aabb = getCollisionBoundingBoxFromPool(world, ctx.x, ctx.y, ctx.z)
+        val aabb = ctx.block.getCollisionBoundingBoxFromPool(world, ctx.x, ctx.y, ctx.z)
 
         val stage = getBushGrowth(ctx)
         val scale = aabb.scale

@@ -5,7 +5,6 @@ import mods.betterfoliage.client.config.Config
 import mods.betterfoliage.client.integration.NaturaIntegration
 import mods.betterfoliage.client.integration.NaturaIntegration.getBerryBushData
 import mods.betterfoliage.client.texture.LeafRegistry
-import mods.natura.blocks.crops.BerryBush
 import mods.octarinecore.PI2
 import mods.octarinecore.client.render.AbstractBlockRenderingHandler
 import mods.octarinecore.client.render.BlockContext
@@ -61,7 +60,7 @@ class RenderLeaves : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
             val rand = ctx.semiRandomArray(2)
             (if (Config.leaves.dense) denseLeavesRot else normalLeavesRot).forEach { rotation ->
                 if (NaturaIntegration.isBerryBush(ctx.block)) {
-                    val (scale, center, model) = (ctx.block as BerryBush).getBerryBushData(ctx)
+                    val (scale, center, model) = getBerryBushData(ctx)
                     modelRenderer.render(
                         model,
                         rotation,
