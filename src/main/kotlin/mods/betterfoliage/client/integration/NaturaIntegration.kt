@@ -3,12 +3,12 @@ package mods.betterfoliage.client.integration
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import mods.betterfoliage.client.Client
-import mods.betterfoliage.client.render.center
-import mods.betterfoliage.client.render.scale
 import mods.natura.blocks.crops.BerryBush
 import mods.octarinecore.client.render.BlockContext
 import mods.octarinecore.client.render.Double3
 import mods.octarinecore.client.render.Model
+import mods.octarinecore.client.render.center
+import mods.octarinecore.client.render.scale
 import net.minecraft.block.Block
 import net.minecraft.client.Minecraft
 import kotlin.math.min

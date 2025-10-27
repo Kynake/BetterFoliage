@@ -3,6 +3,7 @@ package mods.octarinecore.client.render
 import mods.octarinecore.client.render.Dir.N
 import mods.octarinecore.client.render.Dir.P
 import mods.octarinecore.cross
+import net.minecraft.util.AxisAlignedBB
 import net.minecraftforge.common.util.ForgeDirection
 
 // ================================
@@ -378,3 +379,21 @@ val faceCorners =
             else -> FaceCorners(ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN)
         }
     }
+
+/** Extensions of [AxisAlignedBB] */
+
+/** Get the center of the AABB */
+val AxisAlignedBB.center: Double3
+    get() = Double3(
+        (minX + maxX) / 2.0,
+        (minY + maxY) / 2.0,
+        (minZ + maxZ) / 2.0,
+    )
+
+/** Get the scale for each axis of the AABB. Assumes a normal block is the default scale of (1, 1, 1) */
+val AxisAlignedBB.scale: Double3
+    get() = Double3(
+        maxX - minX,
+        maxY - minY,
+        maxZ - minZ,
+    )

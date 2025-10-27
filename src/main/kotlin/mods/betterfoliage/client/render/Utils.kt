@@ -14,7 +14,6 @@ import mods.octarinecore.client.render.Vertex
 import mods.octarinecore.client.render.times
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
-import net.minecraft.util.AxisAlignedBB
 import net.minecraftforge.common.util.ForgeDirection
 
 val up1 = Int3(1 to ForgeDirection.UP)
@@ -42,24 +41,6 @@ fun Quad.toCross(rotAxis: ForgeDirection, trans: (Quad) -> Quad) = (0..3).map { 
 }
 
 fun Quad.toCross(rotAxis: ForgeDirection) = toCross(rotAxis) { it }
-
-/** Extensions of [AxisAlignedBB] */
-
-/** Get the center of the AABB */
-val AxisAlignedBB.center: Double3
-    get() = Double3(
-        (minX + maxX) / 2.0,
-        (minY + maxY) / 2.0,
-        (minZ + maxZ) / 2.0,
-    )
-
-/** Get the scale for each axis of the AABB. Assumes a normal block is the default scale of (1, 1, 1) */
-val AxisAlignedBB.scale: Double3
-    get() = Double3(
-        maxX - minX,
-        maxY - minY,
-        maxZ - minZ,
-    )
 
 fun xzDisk(modelIdx: Int) = (PI2 * modelIdx / 64.0).let { Double3(Math.cos(it), 0.0, Math.sin(it)) }
 
