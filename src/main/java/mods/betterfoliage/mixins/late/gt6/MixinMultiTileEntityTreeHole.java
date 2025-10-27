@@ -12,13 +12,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.render.ITexture;
 import gregapi.tileentity.misc.MultiTileEntityTreeHole;
-import mods.betterfoliage.mixins.interfaces.IGT6IconGetter;
-import mods.betterfoliage.mixins.interfaces.IGT6TextureGetter;
-import mods.betterfoliage.mixins.interfaces.IGT6TreeHoleMTE;
+import mods.betterfoliage.mixins.interfaces.gt6.IIconGetter;
+import mods.betterfoliage.mixins.interfaces.gt6.ITexture2Getter;
+import mods.betterfoliage.mixins.interfaces.gt6.ITreeHoleMTE;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(MultiTileEntityTreeHole.class)
-public abstract class MixinMultiTileEntityTreeHole implements IGT6TreeHoleMTE {
+public abstract class MixinMultiTileEntityTreeHole implements ITreeHoleMTE {
 
     @Unique
     private static final boolean[] betterfoliage$allSidesRender = { true, true, true, true, true, true };
@@ -27,8 +27,11 @@ public abstract class MixinMultiTileEntityTreeHole implements IGT6TreeHoleMTE {
     @SideOnly(Side.CLIENT)
     public IIcon betterFoliage$getTextureForSide(ForgeDirection side) {
         Block block = ((TileEntity) (Object) this).getBlockType();
-        ITexture texture = ((IGT6TextureGetter) this)
-            .betterfoliage$getTexture(block, 0, (byte) side.ordinal(), betterfoliage$allSidesRender);
-        return ((IGT6IconGetter) texture).betterfoliage$getIconForSide(side.ordinal());
+
+        // We skip all the messing with render passes from getTexture() and go
+        // straight to GT6's getTexture2(), which handles the IIcons for logs
+        ITexture texture = ((ITexture2Getter) this)
+            .betterfoliage$getTexture2(block, 0, (byte) side.ordinal(), betterfoliage$allSidesRender);
+        return ((IIconGetter) texture).betterfoliage$getIconForSide(side.ordinal());
     }
 }

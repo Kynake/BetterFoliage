@@ -9,18 +9,18 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.render.ITexture;
 import gregapi.tileentity.base.TileEntityBase06Covers;
-import mods.betterfoliage.mixins.interfaces.IGT6TextureGetter;
+import mods.betterfoliage.mixins.interfaces.gt6.ITexture2Getter;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(TileEntityBase06Covers.class)
-public abstract class MixinTileEntityBase06Covers_TextureGetter implements IGT6TextureGetter {
+public abstract class MixinTileEntityBase06Covers_Texture2Getter implements ITexture2Getter {
 
     @Shadow(remap = false)
-    public abstract ITexture getTexture(Block block, int renderPass, byte side, boolean[] sidesToRender);
+    public abstract ITexture getTexture2(Block block, int renderPass, byte side, boolean[] sidesToRender);
 
     @Override
     @SideOnly(Side.CLIENT)
-    public ITexture betterfoliage$getTexture(Block block, int renderPass, byte side, boolean[] sidesToRender) {
-        return getTexture(block, renderPass, side, sidesToRender);
+    public ITexture betterfoliage$getTexture2(Block block, int renderPass, byte side, boolean[] sidesToRender) {
+        return getTexture2(block, renderPass, side, sidesToRender);
     }
 }

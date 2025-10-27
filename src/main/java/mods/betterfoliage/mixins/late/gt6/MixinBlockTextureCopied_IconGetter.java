@@ -9,11 +9,11 @@ import org.spongepowered.asm.mixin.Unique;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.render.BlockTextureCopied;
-import mods.betterfoliage.mixins.interfaces.IGT6IconGetter;
+import mods.betterfoliage.mixins.interfaces.gt6.IIconGetter;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(BlockTextureCopied.class)
-public abstract class MixinBlockTextureCopied_IconGetter implements IGT6IconGetter {
+public abstract class MixinBlockTextureCopied_IconGetter implements IIconGetter {
 
     @Shadow(remap = false)
     protected abstract IIcon getIcon(int side);

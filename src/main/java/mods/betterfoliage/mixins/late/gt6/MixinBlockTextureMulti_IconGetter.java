@@ -11,11 +11,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.render.BlockTextureMulti;
 import gregapi.render.ITexture;
-import mods.betterfoliage.mixins.interfaces.IGT6IconGetter;
+import mods.betterfoliage.mixins.interfaces.gt6.IIconGetter;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(BlockTextureMulti.class)
-public abstract class MixinBlockTextureMulti_IconGetter implements IGT6IconGetter {
+public abstract class MixinBlockTextureMulti_IconGetter implements IIconGetter {
 
     @Final
     @Shadow(remap = false)
@@ -27,7 +27,7 @@ public abstract class MixinBlockTextureMulti_IconGetter implements IGT6IconGette
     public IIcon betterfoliage$getIconForSide(int side) {
         if (mTextures == null || mTextures.length == 0) return null;
 
-        IGT6IconGetter texture = (IGT6IconGetter) mTextures[0];
+        IIconGetter texture = (IIconGetter) mTextures[0];
         return texture.betterfoliage$getIconForSide(side);
     }
 }

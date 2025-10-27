@@ -11,11 +11,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregapi.render.BlockTextureDefault;
 import gregapi.render.IIconContainer;
-import mods.betterfoliage.mixins.interfaces.IGT6IconGetter;
+import mods.betterfoliage.mixins.interfaces.gt6.IIconGetter;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(BlockTextureDefault.class)
-public abstract class MixinBlockTextureDefault_IconGetter implements IGT6IconGetter {
+public abstract class MixinBlockTextureDefault_IconGetter implements IIconGetter {
 
     @Final
     @Shadow(remap = false)
