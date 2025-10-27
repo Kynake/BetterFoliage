@@ -21,7 +21,7 @@ enum class Dir {
 
 val axes = listOf(Axis.X, Axis.Y, Axis.Z)
 val axisDirs = listOf(P, N)
-val forgeDirs = ForgeDirection.VALID_DIRECTIONS
+val forgeDirs = ForgeDirection.VALID_DIRECTIONS!!
 val forgeDirOffsets = forgeDirs.map { Int3(it) }
 val ForgeDirection.axis: Axis
     get() =

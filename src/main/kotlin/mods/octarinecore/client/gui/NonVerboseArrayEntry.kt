@@ -13,6 +13,7 @@ class NonVerboseArrayEntry(
 ) : GuiConfigEntries.ArrayEntry(owningScreen, owningEntryList, configElement) {
 
     init {
+        @Suppress("UNCHECKED_CAST")
         stripTooltipDefaultText(toolTip as MutableList<String>)
         val shortDefaults =
             I18n.format("${configElement.languageKey}.arrayEntry", configElement.defaults.size)
