@@ -25,7 +25,8 @@ public enum Mixins implements IMixins {
             "gt6.MixinBlockTextureSided_IconGetter",
             "gt6.MixinITextureUtil",
             "gt6.MixinMultiTileEntityTreeHole",
-            "gt6.MixinTileEntityBase06Covers_TextureGetter")
+            "gt6.MixinTileEntityBase01Root",
+            "gt6.MixinTileEntityBase06Covers_Texture2Getter")
         .addRequiredMod(Mod.GT6)
         .setPhase(Phase.LATE)),
     ;
