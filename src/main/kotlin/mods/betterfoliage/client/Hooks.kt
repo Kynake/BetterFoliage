@@ -30,19 +30,19 @@ fun getRenderTypeOverride(
     }
 }
 
-fun shouldRenderBlockSideOverride(
-    original: Boolean,
+/** Should this block be Non-solid when the game otherwise considers it to be?
+ *  Used by rounded logs */
+fun overrideIsPartialBlock(
+    originalIsPartial: Boolean,
     blockAccess: IBlockAccess,
     x: Int,
     y: Int,
     z: Int,
-    side: Int,
-): Boolean = original ||
-    (
-        Config.enabled &&
-            Config.roundLogs.enabled &&
-            Config.blocks.logs.matchesID(blockAccess.getBlock(x, y, z))
-        )
+): Boolean = originalIsPartial || (
+    Config.enabled &&
+        Config.roundLogs.enabled &&
+        Config.blocks.logs.matchesID(blockAccess.getBlock(x, y, z))
+    )
 
 fun getAmbientOcclusionLightValueOverride(original: Float, block: Block): Float {
     if (Config.enabled && Config.roundLogs.enabled && Config.blocks.logs.matchesID(block)) {

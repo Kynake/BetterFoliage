@@ -37,6 +37,6 @@ public abstract class MixinBlock {
     @ModifyReturnValue(method = "shouldSideBeRendered", at = @At("RETURN"))
     private boolean betterfoliage$shouldRenderBlockSideOverride(boolean original, IBlockAccess world, int x, int y,
         int z, int side) {
-        return Hooks.shouldRenderBlockSideOverride(original, world, x, y, z, side);
+        return Hooks.overrideIsPartialBlock(original, world, x, y, z);
     }
 }
