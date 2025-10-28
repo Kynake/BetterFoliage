@@ -37,6 +37,7 @@ dependencies {
     api("com.github.GTNewHorizons:Forgelin:2.0.3-GTNH")
     compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.75:dev") { transitive = false }
     compileOnly("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev") { transitive = false }
+    compileOnly("ganymedes01.etfuturum:Et-Futurum-Requiem:2.6.2.25-GTNH:dev") { transitive = false }
     compileOnly(rfg.deobf("curse.maven:natura-74120:2257670")) { transitive = false }
     compileOnly(rfg.deobf(jarUrl("https://gregtech.mechaenetia.com/com/gregoriust/gregtech/gregtech_1.7.10/6.17.05/gregtech_1.7.10-6.17.05.jar")))
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.21-GTNH:dev")
@@ -50,17 +51,20 @@ dependencies {
 
     // Test with other mods
 
-    // GT5U (GTNH)
+    // GregTech 5 Unofficial (GTNH)
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.75:dev")
 
     // GregTech 6
     //runtimeOnlyNonPublishable(rfg.deobf(jarUrl("https://gregtech.mechaenetia.com/com/gregoriust/gregtech/gregtech_1.7.10/6.17.05/gregtech_1.7.10-6.17.05.jar")))
 
-    // IC2
+    // IndustrialCraft 2
     //runtimeOnlyNonPublishable("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
 
-    // TFC
+    // TerraFirmaCraft
     //runtimeOnlyNonPublishable("curse.maven:terrafirmacraft-302973:2627990")
+
+    // Et Futurum Requiem (GTNH)
+    //runtimeOnlyNonPublishable("ganymedes01.etfuturum:Et-Futurum-Requiem:2.6.2.25-GTNH:dev")
 
     // Natura
     //runtimeOnlyNonPublishable("curse.maven:natura-74120:2257670")

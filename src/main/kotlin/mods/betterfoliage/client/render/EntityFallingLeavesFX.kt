@@ -6,6 +6,7 @@ import cpw.mods.fml.common.gameevent.TickEvent
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import mods.betterfoliage.client.config.Config
+import mods.betterfoliage.client.integration.EFRIntegration
 import mods.betterfoliage.client.texture.LeafRegistry
 import mods.octarinecore.PI2
 import mods.octarinecore.client.render.AbstractEntityFX
@@ -14,6 +15,7 @@ import mods.octarinecore.client.render.Double3
 import mods.octarinecore.client.render.HSB
 import mods.octarinecore.minmax
 import mods.octarinecore.random
+import net.minecraft.block.Block
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.util.MathHelper
@@ -32,6 +34,8 @@ class EntityFallingLeavesFX(world: World, x: Int, y: Int, z: Int) : AbstractEnti
 
     companion object {
         @JvmStatic val biomeBrightnessMultiplier = 0.5f
+
+        @JvmStatic fun checkModSpecialLeafParticles(block: Block, world: World, x: Int, y: Int, z: Int) = !EFRIntegration.isETFCherryLeaves(block, world.getBlockMetadata(x, y, z))
     }
 
     var particleRot = rand.nextInt(64)

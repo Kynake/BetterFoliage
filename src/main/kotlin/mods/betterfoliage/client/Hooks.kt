@@ -54,8 +54,8 @@ fun getUseNeighborBrightnessOverride(original: Boolean, block: Block): Boolean =
     (Config.enabled && Config.roundLogs.enabled && Config.blocks.logs.matchesID(block))
 
 fun onRandomDisplayTick(block: Block, world: World, x: Int, y: Int, z: Int) {
-    if (Config.enabled &&
-        Config.risingSoul.enabled &&
+    if (!Config.enabled) return
+    if (Config.risingSoul.enabled &&
         block == Blocks.soul_sand &&
         world.isAirBlock(x, y + 1, z) &&
         Math.random() < Config.risingSoul.chance
@@ -63,11 +63,11 @@ fun onRandomDisplayTick(block: Block, world: World, x: Int, y: Int, z: Int) {
         EntityRisingSoulFX(world, x, y, z).addIfValid()
     }
 
-    if (Config.enabled &&
-        Config.fallingLeaves.enabled &&
+    if (Config.fallingLeaves.enabled &&
         Config.blocks.leaves.matchesID(block) &&
         world.isAirBlock(x, y - 1, z) &&
-        Math.random() < Config.fallingLeaves.chance
+        Math.random() < Config.fallingLeaves.chance &&
+        EntityFallingLeavesFX.checkModSpecialLeafParticles(block, world, x, y, z)
     ) {
         EntityFallingLeavesFX(world, x, y, z).addIfValid()
     }
