@@ -129,7 +129,7 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
     fun continuous(q1: QuadrantType, q2: QuadrantType) = q1 == q2 || ((q1 == QuadrantType.SQUARE || q1 == QuadrantType.INVISIBLE) && (q2 == QuadrantType.SQUARE || q2 == QuadrantType.INVISIBLE))
 
     abstract val axisFunc: (Block, Int) -> Axis
-    abstract val blockPredicate: (Block, Int) -> Boolean
+    abstract val blockPredicate: (BlockContext) -> Boolean
 
     override fun render(ctx: BlockContext, parent: RenderBlocks): Boolean {
         if (ctx.isSurroundedBy(surroundPredicate)) return false
@@ -369,11 +369,12 @@ abstract class AbstractRenderColumn(modId: String) : AbstractBlockRenderingHandl
     fun BlockContext.blockType(rotation: Rotation, axis: Axis, offset: Int3): BlockType {
         val offsetRot = offset.rotate(rotation)
         val logBlock = block(offsetRot)
-        val logMeta = meta(offsetRot)
-        return if (!blockPredicate(logBlock, logMeta)) {
+        val ctx = BlockContext()
+        ctx.set(world!!, x + offsetRot.x, y + offsetRot.y, z + offsetRot.z)
+        return if (!blockPredicate(ctx)) {
             if (logBlock.isOpaqueCube) BlockType.SOLID else BlockType.NONSOLID
         } else {
-            if (axisFunc(logBlock, logMeta) == axis) BlockType.PARALLEL else BlockType.PERPENDICULAR
+            if (axisFunc(logBlock, meta(offsetRot)) == axis) BlockType.PARALLEL else BlockType.PERPENDICULAR
         }
     }
 }

@@ -23,7 +23,9 @@ class RenderLog : AbstractRenderColumn(BetterFoliageMod.MOD_ID) {
         }
     }
 
-    override val blockPredicate = { block: Block, meta: Int -> Config.blocks.logs.matchesID(block) }
+    override val blockPredicate = { ctx: BlockContext ->
+        Config.blocks.logs.matchesID(ctx.block) && allowModSpecialCases(ctx)
+    }
     override val surroundPredicate = { block: Block ->
         block.isOpaqueCube && !Config.blocks.logs.matchesID(block)
     }
