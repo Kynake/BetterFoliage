@@ -210,7 +210,5 @@ betterfoliage.roundLogs.dimming=조광
 betterfoliage.roundLogs.dimming.tooltip=나무 표면부분을 어둡게하는 양
 betterfoliage.roundLogs.zProtection=Z-Protection
 betterfoliage.roundLogs.zProtection.tooltip=Amount to scale parallel log connection bits to stop Z-fighting (flickering). Try to set it as high as possible without having glitches.
-betterfoliage.roundLogs.defaultY=수직선에대한 기본값
-betterfoliage.roundLogs.defaultY.tooltip=true 일경우, 나무 블럭이 수직선에대한 렌더링을 할수가 없습니다. 그렇지 아니하면, 네모난 블럭으로 렌더링 될것임니다.
 
-# Translate by IS_Jump for feedback mail acarus22@gmail.com
+# Translate by IS_Jump

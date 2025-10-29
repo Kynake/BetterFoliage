@@ -1,7 +1,7 @@
 key.betterfoliage.gui=Abrir Configurações
 
 betterfoliage.global.enabled=Habilitar o Mod
-betterfoliage.global.enabled.tooltip=Caso falso, BetterFoliage não irá renderizar nada
+betterfoliage.global.enabled.tooltip=Caso falso, Better Foliage - Legacy Edition não irá renderizar nada
 
 betterfoliage.enabled=Habilitar
 betterfoliage.enabled.tooltip=Esta característica está habilitada?
@@ -35,10 +35,15 @@ betterfoliage.blocks.grassBlacklist=Lista negra de Grama
 betterfoliage.blocks.grassWhitelist.arrayEntry=%d entradas
 betterfoliage.blocks.grassBlacklist.arrayEntry=%d entradas
 
-betterfoliage.blocks.leavesWhitelist=Lista branca de Folhas
-betterfoliage.blocks.leavesBlacklist=Lista negra de Folhas
+betterfoliage.blocks.leavesWhitelist=Lista branca de Folhas Extras
+betterfoliage.blocks.leavesBlacklist=Lista negra de Folhas Extras
 betterfoliage.blocks.leavesWhitelist.arrayEntry=%d entradas
 betterfoliage.blocks.leavesBlacklist.arrayEntry=%d entradas
+
+betterfoliage.blocks.fallingLeavesWhitelist=Lista branca de Folhas caindo
+betterfoliage.blocks.fallingLeavesBlacklist=Lista negra de Folhas caindo
+betterfoliage.blocks.fallingLeavesWhitelist.arrayEntry=%d entradas
+betterfoliage.blocks.fallingLeavesBlacklist.arrayEntry=%d entradas
 
 betterfoliage.blocks.cropsWhitelist=Lista branca de Colheita
 betterfoliage.blocks.cropsBlacklist=Lista negra de Colheita
@@ -70,8 +75,10 @@ betterfoliage.blocks.dirtWhitelist.tooltip=Blocos reconhecidos como Terra. Afeta
 betterfoliage.blocks.dirtBlacklist.tooltip=Blocos nunca aceitos como Terra. Afeta Juncos, Algas e Grama Conectada
 betterfoliage.blocks.grassWhitelist.tooltip=Blocos reconhecidos como Grama. Afeta Grama Curta e Grama Conectada
 betterfoliage.blocks.grassBlacklist.tooltip=Blocos  como Grama. Afeta Grama Curta e Grama Conectada
-betterfoliage.blocks.leavesWhitelist.tooltip=Blocos reconhecidos como Folhas. Afeta Folhas Extras e Folhas caindo. Folhas serão renderizadas com o ID do bloco de folhas em programas de Shader
-betterfoliage.blocks.leavesBlacklist.tooltip=Blocos nunca aceitos como Folhas. Afeta Folhas Extras e Folhas caindo. Folhas serão renderizadas com o ID do bloco de folhas em programas de Shader
+betterfoliage.blocks.leavesWhitelist.tooltip=Blocos reconhecidos como Folhas ao utilizar Folhas Extras. Folhas serão renderizadas com o ID do bloco de folhas em programas de Shader
+betterfoliage.blocks.leavesBlacklist.tooltip=Blocos nunca aceitos como Folhas ao utilizar Folhas Extras. Folhas serão renderizadas com o ID do bloco de folhas em programas de Shader
+betterfoliage.blocks.fallingLeavesWhitelist.tooltip=Blocos reconhecidos como Folhas ao utilizar Folhas caindo. Folhas serão renderizadas com o ID do bloco de folhas em programas de Shader
+betterfoliage.blocks.fallingLeavesBlacklist.tooltip=Blocos nunca aceitos como Folhas ao utilizar Folhas caindo. Folhas serão renderizadas com o ID do bloco de folhas em programas de Shader
 betterfoliage.blocks.cropsWhitelist.tooltip=Blocos reconhecidos como Colheita. Colheitas serão renderizadas com o ID do bloco de grama alta em programas de Shader
 betterfoliage.blocks.cropsBlacklist.tooltip=Blocos nunca aceitos como Colheita. Colheitas serão renderizadas com o ID do bloco de grama alta em programas de Shader
 betterfoliage.blocks.logsWhitelist.tooltip=Blocos reconhecidos como Troncos. Afeta Troncos Arredondados
