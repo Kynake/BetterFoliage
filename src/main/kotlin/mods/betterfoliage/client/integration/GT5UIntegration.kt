@@ -1,8 +1,11 @@
 package mods.betterfoliage.client.integration
 
+import cpw.mods.fml.relauncher.Side
+import cpw.mods.fml.relauncher.SideOnly
 import gregtech.common.pollution.Pollution
 import net.minecraft.block.Block
 
+@SideOnly(Side.CLIENT)
 object GT5UIntegration {
     private const val STANDARD_TYPE = 0
     private const val CROSSED_SQUARES_TYPE = 1

@@ -1,5 +1,7 @@
 package mods.betterfoliage.client.integration
 
+import cpw.mods.fml.relauncher.Side
+import cpw.mods.fml.relauncher.SideOnly
 import gregapi.block.multitileentity.MultiTileEntityBlock
 import mods.betterfoliage.client.Client
 import mods.betterfoliage.client.texture.LeafRegistry.registerLeaf
@@ -11,6 +13,7 @@ import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.common.util.ForgeDirection
 import org.apache.logging.log4j.Level
 
+@SideOnly(Side.CLIENT)
 object GT6Integration {
 
     fun registerLeafTextures(event: TextureStitchEvent.Pre) {

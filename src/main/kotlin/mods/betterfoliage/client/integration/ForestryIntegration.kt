@@ -1,10 +1,13 @@
 package mods.betterfoliage.client.integration
 
+import cpw.mods.fml.relauncher.Side
+import cpw.mods.fml.relauncher.SideOnly
 import mods.betterfoliage.client.Client
 import mods.betterfoliage.client.texture.LeafRegistry.registerLeaf
 import net.minecraftforge.client.event.TextureStitchEvent
 import org.apache.logging.log4j.Level
 
+@SideOnly(Side.CLIENT)
 object ForestryIntegration {
     fun registerLeafTextures(event: TextureStitchEvent.Pre) {
         if (!Mod.FORESTRY.isLoaded) return
