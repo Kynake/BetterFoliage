@@ -1,7 +1,7 @@
 key.betterfoliage.gui=Open Settings
 
 betterfoliage.global.enabled=Enable Mod
-betterfoliage.global.enabled.tooltip=If set to false, BetterFoliage will not render anything
+betterfoliage.global.enabled.tooltip=If set to false, Better Foliage - Legacy Edition will not render anything
 
 betterfoliage.enabled=Enable
 betterfoliage.enabled.tooltip=Is this feature enabled?
@@ -35,10 +35,15 @@ betterfoliage.blocks.grassBlacklist=Grass Blacklist
 betterfoliage.blocks.grassWhitelist.arrayEntry=%d entries
 betterfoliage.blocks.grassBlacklist.arrayEntry=%d entries
 
-betterfoliage.blocks.leavesWhitelist=Leaves Whitelist
-betterfoliage.blocks.leavesBlacklist=Leaves Blacklist
+betterfoliage.blocks.leavesWhitelist=Extra Leaves Whitelist
+betterfoliage.blocks.leavesBlacklist=Extra Leaves Blacklist
 betterfoliage.blocks.leavesWhitelist.arrayEntry=%d entries
 betterfoliage.blocks.leavesBlacklist.arrayEntry=%d entries
+
+betterfoliage.blocks.fallingLeavesWhitelist=Falling Leaves Whitelist
+betterfoliage.blocks.fallingLeavesBlacklist=Falling Leaves Blacklist
+betterfoliage.blocks.fallingLeavesWhitelist.arrayEntry=%d entries
+betterfoliage.blocks.fallingLeavesBlacklist.arrayEntry=%d entries
 
 betterfoliage.blocks.cropsWhitelist=Crop Whitelist
 betterfoliage.blocks.cropsBlacklist=Crop Blacklist
@@ -70,8 +75,10 @@ betterfoliage.blocks.dirtWhitelist.tooltip=Blocks recognized as Dirt. Has an imp
 betterfoliage.blocks.dirtBlacklist.tooltip=Blocks never accepted as Dirt. Has an impact on Reeds, Algae, Connected Grass
 betterfoliage.blocks.grassWhitelist.tooltip=Blocks recognized as Grass. Has an impact on Short Grass, Connected Grass
 betterfoliage.blocks.grassBlacklist.tooltip=Blocks never accepted as Grass. Has an impact on Short Grass, Connected Grass
-betterfoliage.blocks.leavesWhitelist.tooltip=Blocks recognized as Leaves. Has an impact on Extra Leaves, Falling Leaves. Leaves will render with leaves block ID in shader programs
-betterfoliage.blocks.leavesBlacklist.tooltip=Blocks never accepted as Leaves. Has an impact on Extra Leaves, Falling Leaves. Leaves will render with leaves block ID in shader programs
+betterfoliage.blocks.leavesWhitelist.tooltip=Blocks recognized as Leaves when enabling Extra Leaves. Leaves will render with leaves block ID in shader programs
+betterfoliage.blocks.leavesBlacklist.tooltip=Blocks never accepted as Leaves when enabling Extra Leaves. Leaves will render with leaves block ID in shader programs
+betterfoliage.blocks.fallingLeavesWhitelist.tooltip=Blocks recognized as Leaves when enabling Falling Leaves. Leaves will render with leaves block ID in shader programs
+betterfoliage.blocks.fallingLeavesBlacklist.tooltip=Blocks never accepted as Leaves when enabling Falling Leaves. Leaves will render with leaves block ID in shader programs
 betterfoliage.blocks.cropsWhitelist.tooltip=Blocks recognized as crops. Crops will render with tallgrass block ID in shader programs
 betterfoliage.blocks.cropsBlacklist.tooltip=Blocks never accepted as crops. Crops will render with tallgrass block ID in shader programs
 betterfoliage.blocks.logsWhitelist.tooltip=Blocks recognized as wooden logs. Has an impact on Rounded Logs

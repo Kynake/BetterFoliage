@@ -64,7 +64,7 @@ fun onRandomDisplayTick(block: Block, world: World, x: Int, y: Int, z: Int) {
     }
 
     if (Config.fallingLeaves.enabled &&
-        Config.blocks.leaves.matchesID(block) &&
+        Config.blocks.fallingLeaves.matchesID(block) &&
         world.isAirBlock(x, y - 1, z) &&
         Math.random() < Config.fallingLeaves.chance &&
         EntityFallingLeavesFX.checkModSpecialLeafParticles(block, world, x, y, z)
