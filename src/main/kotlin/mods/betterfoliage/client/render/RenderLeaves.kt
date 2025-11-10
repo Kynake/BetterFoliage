@@ -92,6 +92,8 @@ class RenderLeaves : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
         val modelData =
             if (NaturaIntegration.isBerryBush(ctx.block)) {
                 NaturaIntegration.getBerryBushData(ctx)
+            } else if (TinkersIntegration.isTinkersBush(ctx.block)) {
+                TinkersIntegration.getTinkersBushData(ctx)
             } else {
                 return false
             }
