@@ -11,7 +11,7 @@
   "logoFile": "",
   "screenshots": [],
   "parent": "",
-  "requiredMods": [],
+  "requiredMods": ["forgelin", "unimixins"],
   "dependencies": [],
   "dependants": [],
   "useDependencyInformation": false
