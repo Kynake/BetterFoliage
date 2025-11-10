@@ -321,6 +321,8 @@ class Rotation(val forward: Array<ForgeDirection>, val reverse: Array<ForgeDirec
 // Miscellaneous
 // ================================
 
+data class ModelData(val scale: Double3, val center: Double3, val model: Model)
+
 /** List of all 12 box edges, represented as a [Pair] of [ForgeDirection]s */
 val boxEdges =
     forgeDirs.flatMap { face1 -> forgeDirs.filter { it.axis > face1.axis }.map { face1 to it } }

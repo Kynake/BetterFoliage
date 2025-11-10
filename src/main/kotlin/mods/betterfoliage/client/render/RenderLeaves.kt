@@ -3,7 +3,8 @@ package mods.betterfoliage.client.render
 import mods.betterfoliage.BetterFoliageMod
 import mods.betterfoliage.client.config.Config
 import mods.betterfoliage.client.integration.NaturaIntegration
-import mods.betterfoliage.client.integration.NaturaIntegration.getBerryBushData
+import mods.betterfoliage.client.integration.TinkersIntegration
+import mods.betterfoliage.client.texture.LeafInfo
 import mods.betterfoliage.client.texture.LeafRegistry
 import mods.octarinecore.PI2
 import mods.octarinecore.client.render.AbstractBlockRenderingHandler
@@ -58,18 +59,10 @@ class RenderLeaves : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
         val leafInfo = LeafRegistry.leaves[ctx.icon(DOWN)]
         if (leafInfo != null) {
             val rand = ctx.semiRandomArray(2)
-            (if (Config.leaves.dense) denseLeavesRot else normalLeavesRot).forEach { rotation ->
-                if (NaturaIntegration.isBerryBush(ctx.block)) {
-                    val (scale, center, model) = getBerryBushData(ctx)
-                    modelRenderer.render(
-                        model,
-                        rotation,
-                        center + (perturbs[rand[0]] * scale),
-                        icon = { _, _, _ -> leafInfo.roundLeafTexture },
-                        rotateUV = { rand[1] },
-                        postProcess = noPost,
-                    )
-                } else {
+            val rotations = if (Config.leaves.dense) denseLeavesRot else normalLeavesRot
+
+            if (!renderSpecialCaseLeaves(ctx, leafInfo, rotations, rand)) {
+                rotations.forEach { rotation ->
                     modelRenderer.render(
                         leavesModel.model,
                         rotation,
@@ -92,6 +85,28 @@ class RenderLeaves : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
             }
         }
 
+        return true
+    }
+
+    private fun renderSpecialCaseLeaves(ctx: BlockContext, leafInfo: LeafInfo, rotations: Array<Rotation>, rand: Array<Int>): Boolean {
+        val modelData =
+            if (NaturaIntegration.isBerryBush(ctx.block)) {
+                NaturaIntegration.getBerryBushData(ctx)
+            } else {
+                return false
+            }
+
+        val position = modelData.center + (perturbs[rand[0]] * modelData.scale)
+        rotations.forEach { rotation ->
+            modelRenderer.render(
+                modelData.model,
+                rotation,
+                trans = position,
+                icon = { _, _, _ -> leafInfo.roundLeafTexture },
+                rotateUV = { rand[1] },
+                postProcess = noPost,
+            )
+        }
         return true
     }
 }
