@@ -20,6 +20,7 @@ import mods.octarinecore.client.render.modelRenderer
 import mods.octarinecore.client.render.noPost
 import mods.octarinecore.client.render.vec
 import mods.octarinecore.random
+import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraftforge.common.util.ForgeDirection.DOWN
@@ -49,7 +50,8 @@ class RenderLeaves : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
     override fun isEligible(ctx: BlockContext) = Config.enabled &&
         Config.leaves.enabled &&
         ctx.cameraDistance < Config.leaves.distance &&
-        Config.blocks.leaves.matchesID(ctx.block)
+        Config.blocks.leaves.matchesID(ctx.block) &&
+        (!Config.leaves.surfaceOnly || isExposed(ctx))
 
     override fun render(ctx: BlockContext, parent: RenderBlocks): Boolean {
         val isSnowed = ctx.block(up1).material.let { it == Material.snow || it == Material.craftedSnow }
@@ -86,6 +88,10 @@ class RenderLeaves : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
         }
 
         return true
+    }
+
+    private fun isExposed(ctx: BlockContext) = !ctx.isSurroundedBy { block: Block ->
+        block.isOpaqueCube || Config.blocks.leaves.matchesID(block)
     }
 
     private fun renderSpecialCaseLeaves(ctx: BlockContext, leafInfo: LeafInfo, rotations: Array<Rotation>, rand: Array<Int>): Boolean {
