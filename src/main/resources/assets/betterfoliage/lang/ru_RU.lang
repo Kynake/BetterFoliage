@@ -1,6 +1,6 @@
 key.betterfoliage.gui=Открыть настройки
 
-betterfoliage.global.enabled=Включить мод
+betterfoliage.global.enabled=[TRANSLATION IS OUT-OF-DATE] Включить мод
 betterfoliage.global.enabled.tooltip=Если установлено на false, BetterFoliage не будет ничего рендерить
 
 betterfoliage.enabled=Включить

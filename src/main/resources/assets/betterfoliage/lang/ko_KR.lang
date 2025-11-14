@@ -1,6 +1,6 @@
 key.betterfoliage.gui=설정
 
-betterfoliage.global.enabled=모드 활성화
+betterfoliage.global.enabled=[TRANSLATION IS OUT-OF-DATE] 모드 활성화
 betterfoliage.global.enabled.tooltip=비활성화 할 경우, 환경강화모드 렌더링이 보이지 않습니다.
 
 betterfoliage.enabled=활성화
