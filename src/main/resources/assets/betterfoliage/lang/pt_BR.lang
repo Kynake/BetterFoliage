@@ -96,6 +96,8 @@ betterfoliage.leaves.dense=Modo denso
 betterfoliage.leaves.dense.tooltip=Modo denso tem folhas mais arredondadas
 betterfoliage.leaves.snowEnabled=Habilitar neve
 betterfoliage.leaves.snowEnabled.tooltip=Habilitar neve nas folhas extras?
+betterfoliage.leaves.surfaceOnly=Apenas superfície
+betterfoliage.leaves.surfaceOnly.tooltip=Folhas Extras serão renderizadas apenas em blocos com pelo menos um lado exposto. Desabilitar esta opção pode aumentar a chance de que folhas completamente pretas apareçam entre os cantos de outros blocos de folha
 
 betterfoliage.shortGrass=Grama Curta e Micélio
 betterfoliage.shortGrass.tooltip=Tufo de grama ou micélio no topo de blocos adequados
