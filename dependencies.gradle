@@ -40,7 +40,7 @@ dependencies {
     compileOnly("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev") { transitive = false }
     compileOnly("ganymedes01.etfuturum:Et-Futurum-Requiem:2.6.2.25-GTNH:dev") { transitive = false }
     compileOnly(rfg.deobf("curse.maven:natura-74120:2257670")) { transitive = false }
-    compileOnly(rfg.deobf(jarUrl("https://gregtech.mechaenetia.com/com/gregoriust/gregtech/gregtech_1.7.10/6.17.05/gregtech_1.7.10-6.17.05.jar")))
+    compileOnly(jarUrl("https://gregtech.mechaenetia.com/com/gregoriust/gregtech/gregtech_1.7.10/6.17.05/gregtech_1.7.10-6.17.05-dev.jar"))
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.37-GTNH:dev")
 
     // Test with Angelica
@@ -56,7 +56,7 @@ dependencies {
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.111:dev")
 
     // GregTech 6
-    //runtimeOnlyNonPublishable(rfg.deobf(jarUrl("https://gregtech.mechaenetia.com/com/gregoriust/gregtech/gregtech_1.7.10/6.17.05/gregtech_1.7.10-6.17.05.jar")))
+    //runtimeOnlyNonPublishable(jarUrl("https://gregtech.mechaenetia.com/com/gregoriust/gregtech/gregtech_1.7.10/6.17.05/gregtech_1.7.10-6.17.05-dev.jar"))
 
     // IndustrialCraft 2
     //runtimeOnlyNonPublishable("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
