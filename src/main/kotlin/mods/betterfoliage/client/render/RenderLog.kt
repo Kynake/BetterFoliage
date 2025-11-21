@@ -41,5 +41,5 @@ class RenderLog : AbstractRenderColumn(BetterFoliageMod.MOD_ID) {
     override val radiusSmall: Double
         get() = Config.roundLogs.radiusSmall
 
-    private fun allowModSpecialCases(ctx: BlockContext): Boolean = GT6Integration.allowSpecialGT6LogRender(ctx)
+    private fun allowModSpecialCases(ctx: BlockContext) = GT6Integration.allowSpecialGT6LogRender(ctx)
 }
