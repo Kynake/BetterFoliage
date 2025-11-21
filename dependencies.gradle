@@ -40,6 +40,7 @@ dependencies {
     compileOnly("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev") { transitive = false }
     compileOnly("ganymedes01.etfuturum:Et-Futurum-Requiem:2.6.2.25-GTNH:dev") { transitive = false }
     compileOnly(rfg.deobf("curse.maven:natura-74120:2257670")) { transitive = false }
+    compileOnly(rfg.deobf("curse.maven:terrafirmacraft-302973:2627990")) { transitive = false }
     compileOnly(jarUrl("https://gregtech.mechaenetia.com/com/gregoriust/gregtech/gregtech_1.7.10/6.17.05/gregtech_1.7.10-6.17.05-dev.jar"))
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.37-GTNH:dev")
 

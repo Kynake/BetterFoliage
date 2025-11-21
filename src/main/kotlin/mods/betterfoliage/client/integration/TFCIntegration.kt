@@ -1,5 +1,7 @@
 package mods.betterfoliage.client.integration
 
+import com.bioxx.tfc.Blocks.Terrain.BlockDirt
+import com.bioxx.tfc.Blocks.Terrain.BlockGrass
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import mods.betterfoliage.client.Client
@@ -13,6 +15,8 @@ import org.apache.logging.log4j.Level
 @SideOnly(Side.CLIENT)
 object TFCIntegration {
 
+    @JvmStatic fun isTFCDirtOrGrass(block: Block) = Mod.TFC.isLoaded && (block is BlockGrass || block is BlockDirt)
+
     val horizontalLogs =
         object : SimpleBlockMatcher() {
             override fun matchesClass(block: Block) = Config.blocks.logs.matchesClass(block) &&
@@ -24,11 +28,9 @@ object TFCIntegration {
                 block.javaClass.name.let { it.startsWith("com.bioxx.tfc") && !it.contains("Horiz") }
         }
 
-    // TODO TFC Grass rendering is currently bugged
     val grass =
         object : SimpleBlockMatcher() {
-            override fun matchesClass(block: Block) = Config.blocks.grass.matchesClass(block) &&
-                block.javaClass.name.startsWith("com.bioxx.tfc")
+            override fun matchesClass(block: Block) = Mod.TFC.isLoaded && block is BlockGrass && Config.blocks.grass.matchesClass(block)
         }
 
     init {

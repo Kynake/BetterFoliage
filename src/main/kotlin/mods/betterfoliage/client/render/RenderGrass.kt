@@ -76,7 +76,8 @@ class RenderGrass : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
         val connectedGrass =
             isConnected &&
                 Config.connectedGrass.enabled &&
-                (!isSnowed || Config.connectedGrass.snowEnabled)
+                (!isSnowed || Config.connectedGrass.snowEnabled) &&
+                allowConnectedGrassSpecialCases(ctx)
 
         val grassInfo = GrassRegistry.grass[ctx.icon(UP)]
         if (grassInfo == null) {
@@ -145,4 +146,6 @@ class RenderGrass : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
 
         return true
     }
+
+    private fun allowConnectedGrassSpecialCases(ctx: BlockContext) = !TFCIntegration.isTFCDirtOrGrass(ctx.block)
 }
