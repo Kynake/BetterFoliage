@@ -38,11 +38,13 @@ Currently, the mod adds the following:
 Check out the [wiki](https://github.com/Kynake/BetterFoliage/wiki/Features) for more details about, and screenshots of, each feature.
 
 ## Installation
-Place this mods inside the `mods` folder of your modded Minecraft instance.
+Place the mod's jar file inside the `mods` folder of your modded Minecraft instance.
 Make sure you've also installed the latest [Forge](https://files.minecraftforge.net/net/minecraftforge/forge/index_1.7.10.html) for Minecraft 1.7.10, [UniMixins](https://github.com/LegacyModdingMC/UniMixins/releases) and [Forgelin](https://github.com/GTNewHorizons/Forgelin/releases).
 
 ## Contributing
-You may contribute to this mod by reporting any Issues you find while using it or by submitting Pull Requests with fixes or improvements.
+You may contribute to this mod by reporting any [Issues](https://github.com/Kynake/BetterFoliage/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen) you find while using it or by submitting [Pull Requests](https://github.com/Kynake/BetterFoliage/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Aopen) with fixes or improvements.
+
+In particular, It'd be great to get the project translated into more languages.
 
 To submit a pull request you should fork the project into your own GitHub account and build the project by cloning it locally and running this command in a terminal to build the initial project setup:
 
