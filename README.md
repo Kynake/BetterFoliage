@@ -1,4 +1,4 @@
-//TODO add banner image
+<img alt="banner" src="https://github.com/user-attachments/assets/ab68b2ae-8350-4fb3-9773-a38ae8e7584c" />
 
 Better Foliage - Legacy Edition
 ===============================
@@ -35,7 +35,7 @@ Currently, the mod adds the following:
 - **Round Logs:** Swaps log block models for a rounded shape
 - **Short Grass and Mycelium:** Add small tufts of grass or mycelium on top of appropriate blocks
 
-// TODO add link to wiki for images
+Check out the [wiki](https://github.com/Kynake/BetterFoliage/wiki/Features) for more details about, and screenshots of, each feature.
 
 ## Installation
 Place this mods inside the `mods` folder of your modded Minecraft instance.
