@@ -30,7 +30,7 @@ object GT6Integration {
         }
     }
 
-    fun allowSpecialGT6LogRender(ctx: BlockContext) = // Is MTE, but not a log block (we don't want to make round a normal GT6 machine, after all)
+    @JvmStatic fun allowSpecialGT6LogRender(ctx: BlockContext) = // Is MTE, but not a log block (we don't want to make round a normal GT6 machine, after all)
         !Mod.GT6.isLoaded || ctx.block !is MultiTileEntityBlock || ctx.tileEntity is ITreeHoleMTE
 
     fun getGT6LogMTEIcon(ctx: BlockContext, face: ForgeDirection, offset: Int3): IIcon? {
