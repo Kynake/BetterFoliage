@@ -58,5 +58,5 @@ From this point forward you should have a working project, and should be able to
 
 ## License and Modpacks
 
-Better Foliage - Legacy Edition is under the [MIT License](https://github.com/Kynake/BetterFoliage/blob/improved-readme/LICENSE). You may use or fork and modify this mod, or use it in modpacks, without asking for permission.
+Better Foliage - Legacy Edition is under the [MIT License](https://github.com/Kynake/BetterFoliage/blob/master/LICENSE). You may use or fork and modify this mod, or use it in modpacks, without asking for permission.
 I would appreciate being informed about it, for curiosity's sake.
