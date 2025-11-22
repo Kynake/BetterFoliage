@@ -23,7 +23,7 @@ All the features this mod adds can be individually configured and toggled based 
 Currently, the mod adds the following:
 
 - **Algae:** Add algae to dirt blocks in deep water
-- **Better Cactus:** Add a more natural shape to cacti
+- **Better Cactus:** Add more details to cactus blocks
 - **Connected Grass Textures:** Full grass on block sides, as well as rendering grass in the dirt block underneath for a smoother texture transition. Also works for grass blocks covered in snow
 - **Coral:** Add coral to sand blocks in deep water
 - **Falling Leaves:** Leaf particle effects from the bottom of leaf blocks
@@ -58,5 +58,7 @@ From this point forward you should have a working project, and should be able to
 
 ## License and Modpacks
 
-Better Foliage - Legacy Edition is under the [MIT License](https://github.com/Kynake/BetterFoliage/blob/master/LICENSE). You may use or fork and modify this mod, or use it in modpacks, without asking for permission.
+Better Foliage - Legacy Edition is under the [MIT License](https://opensource.org/license/MIT). You may use or fork and modify this mod, or use it in modpacks, without asking for permission.
 I would appreciate being informed about it, for curiosity's sake.
+
+For more information see the [LICENSE](https://github.com/Kynake/BetterFoliage/blob/master/LICENSE) file. This readme is not a replacement for the full license text.
