@@ -68,7 +68,7 @@ class RenderCactus : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
         modelSet(64) { modelIdx ->
             verticalRectangle(x1 = -0.5, z1 = 0.5, x2 = 0.5, z2 = -0.5, yBottom = 0.0, yTop = 1.0)
                 .scale(Config.cactus.size)
-                .move(0.5 to ForgeDirection.UP)
+                .move(0.4375 to ForgeDirection.UP) // 0.4375 = 0.5 * 14/16, to account for cacti being 2 pixels thinner
                 .setAoShader(faceOrientedAuto(overrideFace = ForgeDirection.UP, corner = cornerAo(Axis.Y), edge = null))
                 .toCross(ForgeDirection.UP) { it.move(xzDisk(modelIdx) * Config.cactus.hOffset) }
                 .addAll()
