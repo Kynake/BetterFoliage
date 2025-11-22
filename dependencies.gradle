@@ -35,26 +35,27 @@
  */
 dependencies {
     api("com.github.GTNewHorizons:Forgelin:2.0.3-GTNH")
-    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.111:dev") { transitive = false }
-    compileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.10-GTNH:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.122:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.12-GTNH:dev") { transitive = false }
     compileOnly("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev") { transitive = false }
     compileOnly("ganymedes01.etfuturum:Et-Futurum-Requiem:2.6.2.25-GTNH:dev") { transitive = false }
     compileOnly(rfg.deobf("curse.maven:natura-74120:2257670")) { transitive = false }
     compileOnly(rfg.deobf("curse.maven:terrafirmacraft-302973:2627990")) { transitive = false }
     compileOnly(jarUrl("https://gregtech.mechaenetia.com/com/gregoriust/gregtech/gregtech_1.7.10/6.17.05/gregtech_1.7.10-6.17.05-dev.jar"))
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.37-GTNH:dev")
 
-    // Test with Angelica
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.39-GTNH:dev")
+
+    // Test with rendering mods
+
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta68:dev")
 
-    // Test with SwanSong
-    //runtimeOnlyNonPublishable("curse.maven:swansong-1349982:7113984")
-    //runtimeOnlyNonPublishable("curse.maven:fplib-665627:7053321")
+    //runtimeOnlyNonPublishable(rfg.deobf("curse.maven:swansong-1349982:7113984"))
+    //runtimeOnlyNonPublishable(rfg.deobf("curse.maven:fplib-665627:7053321"))
 
     // Test with other mods
 
     // GregTech 5 Unofficial (GTNH)
-    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.111:dev")
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.122:dev")
 
     // GregTech 6
     //runtimeOnlyNonPublishable(jarUrl("https://gregtech.mechaenetia.com/com/gregoriust/gregtech/gregtech_1.7.10/6.17.05/gregtech_1.7.10-6.17.05-dev.jar"))
@@ -63,20 +64,26 @@ dependencies {
     //runtimeOnlyNonPublishable("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
 
     // TerraFirmaCraft
-    //runtimeOnlyNonPublishable("curse.maven:terrafirmacraft-302973:2627990")
+    //runtimeOnlyNonPublishable(rfg.deobf("curse.maven:terrafirmacraft-302973:2627990"))
 
     // Et Futurum Requiem (GTNH)
     //runtimeOnlyNonPublishable("ganymedes01.etfuturum:Et-Futurum-Requiem:2.6.2.25-GTNH:dev")
 
     // Natura
-    //runtimeOnlyNonPublishable("curse.maven:natura-74120:2257670")
-    //runtimeOnlyNonPublishable("curse.maven:mantle-74924:2264244")
+    //runtimeOnlyNonPublishable(rfg.deobf("curse.maven:natura-74120:2257670"))
+    //runtimeOnlyNonPublishable(rfg.deobf("curse.maven:mantle-74924:2264244"))
     // Natura (GTNH)
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Natura:2.8.9:dev")
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Mantle:0.5.1:dev")
 
     // Twilight Forest
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:twilightforest:2.7.13:dev")
+
+    // Forestry
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:ForestryMC:4.11.2:dev")
+
+    // Biomes O' Plenty
+    //runtimeOnlyNonPublishable(rfg.deobf("curse.maven:biomes-o-plenty-220318:2499612"))
 }
 
 def jarUrl(String sourceURL) {
