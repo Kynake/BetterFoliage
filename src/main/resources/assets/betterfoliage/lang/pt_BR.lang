@@ -205,8 +205,9 @@ betterfoliage.risingSoul.trailDensity=Densidade da trilha
 betterfoliage.risingSoul.trailDensity.tooltip=Renderizar cada enésima posição anterior na trilha de partículas
 
 betterfoliage.connectedGrass=Texturas de grama conectada
-betterfoliage.connectedGrass.enabled=Habilitar
-betterfoliage.connectedGrass.enabled.tooltip=Se houver um bloco de grama em cima de um bloco de terra: Desenhe a textura de grama em todos os lados do bloco de grama
+betterfoliage.connectedGrass.tooltip=Se houver um bloco de grama em cima de um bloco de terra: Desenhe a textura de grama em todos os lados do bloco de grama
+betterfoliage.connectedGrass.snowEnabled=Habilitar neve
+betterfoliage.connectedGrass.snowEnabled.tooltip=Permita com que blocos de grama cobertos por neve utilizem a textura da neve em suas laterais
 
 betterfoliage.roundLogs=Troncos Arredondados
 betterfoliage.roundLogs.tooltip=Conectar blocos arredondados a blocos sólidos inteiros?

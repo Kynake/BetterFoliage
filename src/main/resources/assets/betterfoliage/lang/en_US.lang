@@ -205,8 +205,9 @@ betterfoliage.risingSoul.trailDensity=Trail density
 betterfoliage.risingSoul.trailDensity.tooltip=Render every Nth previous position in the particle trail
 
 betterfoliage.connectedGrass=Connected grass textures
-betterfoliage.connectedGrass.enabled=Enable
-betterfoliage.connectedGrass.enabled.tooltip=If there is a grass block on top of a dirt block: draw grass top texture on all grass block sides,
+betterfoliage.connectedGrass.tooltip=If there is a grass block on top of a dirt block: draw grass top texture on all grass block sides
+betterfoliage.connectedGrass.snowEnabled=Snow enabled
+betterfoliage.connectedGrass.snowEnabled.tooltip=Allow the sides of snow covered grass blocks to use the snow's texture 
 
 betterfoliage.roundLogs=Round Logs
 betterfoliage.roundLogs.tooltip=Connect round blocks to solid full blocks?

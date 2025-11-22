@@ -88,7 +88,7 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
     //    }
 
     object connectedGrass {
-        val enabled by boolean(true)
+        val enabled by featureEnable()
         val snowEnabled by boolean(false)
     }
 
