@@ -8,7 +8,7 @@
   "updateUrl": "",
   "authorList" : ["octarine-noise (code)", "Kynake (code)", "Meringue (textures)"],
   "credits": "",
-  "logoFile": "",
+  "logoFile": "assets/betterfoliage/textures/logo.png",
   "screenshots": [],
   "parent": "",
   "requiredMods": ["forgelin", "unimixins"],
