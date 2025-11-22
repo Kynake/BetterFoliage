@@ -22,29 +22,29 @@ import org.apache.logging.log4j.Level
 
 class RenderCactus : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
 
-    val cactusStemRadius = 0.4375
+    val cactusBlockExtents = 0.4375 // 0.4375 = 0.5 * 14/16, to account for cacti being 2 pixels thinner
     val cactusArmRotation = listOf(ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST).map { Rotation.rot90[it.ordinal] }
 
     val iconCross = iconStatic(BetterFoliageMod.LEGACY_DOMAIN, "better_cactus")
     val iconArm = iconSet(BetterFoliageMod.LEGACY_DOMAIN, "better_cactus_arm_%d")
 
-    val modelStem = model {
+    val modelBase = model {
         horizontalRectangle(
-            x1 = -cactusStemRadius,
-            x2 = cactusStemRadius,
-            z1 = -cactusStemRadius,
-            z2 = cactusStemRadius,
+            x1 = -cactusBlockExtents,
+            x2 = cactusBlockExtents,
+            z1 = -cactusBlockExtents,
+            z2 = cactusBlockExtents,
             y = 0.5,
         )
-            .scaleUV(cactusStemRadius * 2.0)
+            .scaleUV(cactusBlockExtents * 2.0)
             .let { listOf(it.flipped.move(1.0 to ForgeDirection.DOWN), it) }
             .forEach { it.setAoShader(faceOrientedAuto(corner = cornerAo(Axis.Y), edge = null)).add() }
 
         verticalRectangle(
             x1 = -0.5,
-            z1 = cactusStemRadius,
+            z1 = cactusBlockExtents,
             x2 = 0.5,
-            z2 = cactusStemRadius,
+            z2 = cactusBlockExtents,
             yBottom = -0.5,
             yTop = 0.5,
         )
@@ -52,27 +52,27 @@ class RenderCactus : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
             .toCross(ForgeDirection.UP)
             .addAll()
     }
-    val modelCross =
-        modelSet(64) { modelIdx ->
-            verticalRectangle(x1 = -0.5, z1 = 0.5, x2 = 0.5, z2 = -0.5, yBottom = -0.5 * 1.41, yTop = 0.5 * 1.41)
-                .setAoShader(edgeOrientedAuto(corner = cornerAoMaxGreen))
-                .scale(1.4)
-                .transformV { v ->
-                    val perturb = xzDisk(modelIdx) * Config.cactus.sizeVariation
-                    Vertex(v.xyz + (if (v.uv.u < 0.0) perturb else -perturb), v.uv, v.aoShader)
-                }
-                .toCross(ForgeDirection.UP)
-                .addAll()
-        }
-    val modelArm =
-        modelSet(64) { modelIdx ->
-            verticalRectangle(x1 = -0.5, z1 = 0.5, x2 = 0.5, z2 = -0.5, yBottom = 0.0, yTop = 1.0)
-                .scale(Config.cactus.size)
-                .move(0.4375 to ForgeDirection.UP) // 0.4375 = 0.5 * 14/16, to account for cacti being 2 pixels thinner
-                .setAoShader(faceOrientedAuto(overrideFace = ForgeDirection.UP, corner = cornerAo(Axis.Y), edge = null))
-                .toCross(ForgeDirection.UP) { it.move(xzDisk(modelIdx) * Config.cactus.hOffset) }
-                .addAll()
-        }
+
+    val modelCross = modelSet(64) { modelIdx ->
+        verticalRectangle(x1 = -0.5, z1 = 0.5, x2 = 0.5, z2 = -0.5, yBottom = -0.5 * 1.41, yTop = 0.5 * 1.41)
+            .setAoShader(edgeOrientedAuto(corner = cornerAoMaxGreen))
+            .scale(1.4)
+            .transformV { v ->
+                val perturb = xzDisk(modelIdx) * Config.cactus.sizeVariation
+                Vertex(v.xyz + (if (v.uv.u < 0.0) perturb else -perturb), v.uv, v.aoShader)
+            }
+            .toCross(ForgeDirection.UP)
+            .addAll()
+    }
+
+    val modelArm = modelSet(64) { modelIdx ->
+        verticalRectangle(x1 = -0.5, z1 = 0.5, x2 = 0.5, z2 = -0.5, yBottom = 0.0, yTop = 1.0)
+            .scale(Config.cactus.size)
+            .move(cactusBlockExtents to ForgeDirection.UP)
+            .setAoShader(faceOrientedAuto(overrideFace = ForgeDirection.UP, corner = cornerAo(Axis.Y), edge = null))
+            .toCross(ForgeDirection.UP) { it.move(xzDisk(modelIdx) * Config.cactus.hOffset) }
+            .addAll()
+    }
 
     override fun afterStitch() {
         Client.log(Level.INFO, "Registered ${iconArm.num} cactus arm textures")
@@ -88,7 +88,7 @@ class RenderCactus : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
         if (renderWorldBlockBase(parent, face = neverRender)) return true
 
         modelRenderer.render(
-            modelStem.model,
+            modelBase.model,
             Rotation.identity,
             icon = { ctx, qi, _ -> ctx.icon(forgeDirs[qi]) },
             rotateUV = { 0 },
