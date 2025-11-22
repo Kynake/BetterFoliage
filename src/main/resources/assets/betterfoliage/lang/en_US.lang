@@ -70,7 +70,6 @@ betterfoliage.blocks.cactusBlacklist=Cactus Blacklist
 betterfoliage.blocks.cactusWhitelist.arrayEntry=%d entries
 betterfoliage.blocks.cactusBlacklist.arrayEntry=%d entries
 
-
 betterfoliage.blocks.dirtWhitelist.tooltip=Blocks recognized as Dirt. Has an impact on Reeds, Algae, Connected Grass
 betterfoliage.blocks.dirtBlacklist.tooltip=Blocks never accepted as Dirt. Has an impact on Reeds, Algae, Connected Grass
 betterfoliage.blocks.grassWhitelist.tooltip=Blocks recognized as Grass. Has an impact on Short Grass, Connected Grass
@@ -119,8 +118,14 @@ betterfoliage.hangingGrass.separation.tooltip=How much the hanging grass stands 
 
 betterfoliage.cactus=Better Cactus
 betterfoliage.cactus.tooltip=Enhance cactus with extra bits and smooth shading
+betterfoliage.cactus.stem=Stem
+betterfoliage.cactus.stem.tooltip=Render extra textures in the main body of cacti 
+betterfoliage.cactus.arms=Arms
+betterfoliage.cactus.arms.tooltip=Render occasional arms in the sides of cactus blocks
 betterfoliage.cactus.sizeVariation=Size variation
 betterfoliage.cactus.sizeVariation.tooltip=Amount of random variation on cactus size
+betterfoliage.cactus.armChance=Arm chance
+betterfoliage.cactus.armChance.tooltip=Chance (N in 64) that each side of a cactus block will have an arm
 
 betterfoliage.lilypad=Better Lilypad
 betterfoliage.lilypad.tooltip=Enhance lilypad with roots and occasional flowers

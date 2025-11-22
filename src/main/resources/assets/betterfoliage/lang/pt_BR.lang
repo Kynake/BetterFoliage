@@ -70,7 +70,6 @@ betterfoliage.blocks.cactusBlacklist=Lista negra de Cacto
 betterfoliage.blocks.cactusWhitelist.arrayEntry=%d entradas
 betterfoliage.blocks.cactusBlacklist.arrayEntry=%d entradas
 
-
 betterfoliage.blocks.dirtWhitelist.tooltip=Blocos reconhecidos como Terra. Afeta Juncos, Algas e Grama Conectada
 betterfoliage.blocks.dirtBlacklist.tooltip=Blocos nunca aceitos como Terra. Afeta Juncos, Algas e Grama Conectada
 betterfoliage.blocks.grassWhitelist.tooltip=Blocos reconhecidos como Grama. Afeta Grama Curta e Grama Conectada
@@ -119,8 +118,14 @@ betterfoliage.hangingGrass.separation.tooltip=O quanto a grama pendurada se dest
 
 betterfoliage.cactus=Cacto Melhor
 betterfoliage.cactus.tooltip=Realce o cacto com pedaços extras e sombreamento suave
+betterfoliage.cactus.stem=Caule
+betterfoliage.cactus.stem.tooltip=Adiciona texturas extras no corpo principal do cacto 
+betterfoliage.cactus.arms=Braços
+betterfoliage.cactus.arms.tooltip=Adiciona braços nas laterais do bloco de cacto
 betterfoliage.cactus.sizeVariation=Variação de tamanho
 betterfoliage.cactus.sizeVariation.tooltip=Quantidade de variação aleatória no tamanho do cacto
+betterfoliage.cactus.armChance=Chance de braço
+betterfoliage.cactus.armChance.tooltip=Probabilidade (N em 64) de que cada lateral de um cacto terá um braço
 
 betterfoliage.lilypad=Vitória-Régia Melhor
 betterfoliage.lilypad.tooltip=Realce a vitória-régia com raízes e flores ocasionais

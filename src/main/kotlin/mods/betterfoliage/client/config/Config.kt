@@ -106,11 +106,13 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
     }
 
     object cactus {
-        val enabled by featureEnable()
+        val stem by boolean(true)
+        val arms by boolean(true)
         val distance by distanceLimit()
         val size by double(min = 0.5, max = 1.5, default = 0.8).lang("size")
         val sizeVariation by double(max = 0.5, default = 0.1)
         val hOffset by double(max = 0.5, default = 0.1).lang("hOffset")
+        val armChance by int(min = 0, max = 64, default = 16)
     }
 
     object lilypad {

@@ -78,8 +78,8 @@ class RenderCactus : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
         Client.log(Level.INFO, "Registered ${iconArm.num} cactus arm textures")
     }
 
-    override fun isEligible(ctx: BlockContext): Boolean = Config.enabled &&
-        Config.cactus.enabled &&
+    override fun isEligible(ctx: BlockContext) = Config.enabled &&
+        (Config.cactus.stem || Config.cactus.arms) &&
         ctx.cameraDistance < Config.cactus.distance &&
         Config.blocks.cactus.matchesID(ctx.block)
 
@@ -94,20 +94,31 @@ class RenderCactus : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
             rotateUV = { 0 },
             postProcess = noPost,
         )
-        modelRenderer.render(
-            modelCross[ctx.random(0)],
-            Rotation.identity,
-            icon = { _, _, _ -> iconCross.icon!! },
-            rotateUV = { 0 },
-            postProcess = noPost,
-        )
-        modelRenderer.render(
-            modelArm[ctx.random(1)],
-            cactusArmRotation[ctx.random(2) % 4],
-            icon = { _, _, _ -> iconArm[ctx.random(3)]!! },
-            rotateUV = { 0 },
-            postProcess = noPost,
-        )
+
+        if (Config.cactus.stem) {
+            modelRenderer.render(
+                modelCross[ctx.random(0)],
+                Rotation.identity,
+                icon = { _, _, _ -> iconCross.icon!! },
+                rotateUV = { 0 },
+                postProcess = noPost,
+            )
+        }
+
+        if (Config.cactus.arms) {
+            cactusArmRotation.forEachIndexed { idx, rotation ->
+                if (ctx.random(idx + 3) < Config.cactus.armChance) {
+                    modelRenderer.render(
+                        model = modelArm[ctx.random(1)],
+                        rot = rotation,
+                        icon = { _, _, _ -> iconArm[ctx.random(2)]!! },
+                        rotateUV = { 0 },
+                        postProcess = noPost,
+                    )
+                }
+            }
+        }
+
         return true
     }
 }
