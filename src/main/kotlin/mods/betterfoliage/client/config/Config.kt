@@ -15,7 +15,8 @@ import net.minecraft.client.Minecraft
 import net.minecraft.world.biome.BiomeGenBase
 
 // BetterFoliage-specific property delegates
-private fun featureEnable() = boolean(true).lang("enabled")
+private fun featureEnable() = featureEnable(true)
+private fun featureEnable(default: Boolean) = boolean(default).lang("enabled")
 
 private fun distanceLimit() = int(min = 1, max = 1000, default = 1000).lang("distance")
 
@@ -93,7 +94,7 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
     }
 
     object roundLogs {
-        val enabled by featureEnable()
+        val enabled by featureEnable(false)
         val distance by distanceLimit()
         val radiusSmall by double(max = 0.5, default = 0.25)
         val radiusLarge by double(max = 0.5, default = 0.44)
