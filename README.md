@@ -6,7 +6,7 @@ Better Foliage - Legacy Edition
 A modern fork of [BetterFoliage](https://www.curseforge.com/minecraft/mc-mods/better-foliage) by octarine_noise for Minecraft 1.7.10.
 This mod alters the appearance of leaves, logs, grass and other natural miscellanea.
 
-Requires [UniMixins](https://github.com/LegacyModdingMC/UniMixins/releases) and [Forgelin](https://github.com/GTNewHorizons/Forgelin/releases).
+Requires [UniMixins](https://github.com/LegacyModdingMC/UniMixins/releases) and [GTNH's Forgelin](https://github.com/GTNewHorizons/Forgelin/releases).
 
 **Important:**
 If you're upgrading from a previous version of the mod or from the original Better Foliage mod you must delete the config file located at `config/BetterFoliage.cfg` and let the mod regenerate it on the next game launch for any updated fixes to be applied in-game.
@@ -24,11 +24,11 @@ Currently, the mod adds the following:
 
 - **Algae:** Add algae to dirt blocks in deep water
 - **Better Cactus:** Add more details to cactus blocks
+- **Better Lilypad:** Enhances lilypads with roots and occasional flowers
 - **Connected Grass Textures:** Full grass on block sides, as well as rendering grass in the dirt block underneath for a smoother texture transition. Also works for grass blocks covered in snow
 - **Coral:** Add coral to sand blocks in deep water
-- **Falling Leaves:** Leaf particle effects from the bottom of leaf blocks
 - **Extra Leaves:** Increases the leaf density of Leaf Blocks. Optionally, enhances the texture of snow in leaves covered by it
-- **Better Lilypad:** Enhances lilypads with roots and occasional flowers
+- **Falling Leaves:** Leaf particle effects from the bottom of leaf blocks
 - **Netherrack Vines:** Hanging vines under netherrack
 - **Reeds:** Add reeds to dirt blocks in shallow water
 - **Rising Souls:** Emit rising soul particle effect from the top of soul sand
