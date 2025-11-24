@@ -11,14 +11,18 @@ import mods.octarinecore.client.render.Rotation
 import mods.octarinecore.client.render.alwaysRender
 import mods.octarinecore.client.render.modelRenderer
 import mods.octarinecore.client.render.noPost
+import mods.octarinecore.client.render.renderBlocks
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraftforge.common.util.ForgeDirection
 import org.apache.logging.log4j.Level
 
 class RenderLilypad : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
 
+    val lilypadHeight = 0.015625
+
     val rootModel = model {
         verticalRectangle(x1 = -0.5, z1 = 0.5, x2 = 0.5, z2 = -0.5, yBottom = -1.5, yTop = -0.5)
+            .move(lilypadHeight to ForgeDirection.UP)
             .setFlatShader(FlatOffsetNoColor(Int3.zero))
             .toCross(ForgeDirection.UP)
             .addAll()
@@ -26,7 +30,7 @@ class RenderLilypad : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
     val flowerModel = model {
         verticalRectangle(x1 = -0.5, z1 = 0.5, x2 = 0.5, z2 = -0.5, yBottom = 0.0, yTop = 1.0)
             .scale(0.5)
-            .move(0.5 to ForgeDirection.DOWN)
+            .move(0.5 - lilypadHeight to ForgeDirection.DOWN)
             .setFlatShader(FlatOffsetNoColor(Int3.zero))
             .toCross(ForgeDirection.UP)
             .addAll()
@@ -46,7 +50,14 @@ class RenderLilypad : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
         Config.blocks.lilypad.matchesID(ctx.block)
 
     override fun render(ctx: BlockContext, parent: RenderBlocks): Boolean {
-        if (renderWorldBlockBase(parent, face = alwaysRender)) return true
+        if (renderWorldBlockBase(
+                parentRenderer = parent,
+                face = alwaysRender,
+                block = { renderBlocks.renderBlockLilyPad(ctx.block, ctx.x, ctx.y, ctx.z) },
+            )
+        ) {
+            return true
+        }
 
         val rand = ctx.semiRandomArray(5)
         modelRenderer.render(
