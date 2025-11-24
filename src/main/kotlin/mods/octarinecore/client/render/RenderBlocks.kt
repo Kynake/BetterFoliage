@@ -87,6 +87,24 @@ class ExtendedRenderBlocks : RenderBlocks() {
         saveBottomLeft(face, faceCorners[face.ordinal].bottomLeft)
         saveBottomRight(face, faceCorners[face.ordinal].bottomRight)
     }
+
+    /** Lilypad rendering does not use any 'renderFace...' methods, so we capture AO for it separately */
+    override fun renderBlockLilyPad(block: Block?, x: Int, y: Int, z: Int): Boolean {
+        val icon = if (this.hasOverrideBlockTexture()) overrideBlockTexture else this.getBlockIconFromSide(block, 1)
+
+        return captureLilyPadFaceAO(ForgeDirection.DOWN, icon) &&
+            captureLilyPadFaceAO(ForgeDirection.UP, icon) &&
+            super.renderBlockLilyPad(block, x, y, z)
+    }
+
+    private fun captureLilyPadFaceAO(face: ForgeDirection, icon: IIcon): Boolean {
+        if (capture.isCorrectPass(face)) {
+            saveAllShading(face)
+            capture.icons[face.ordinal] = icon
+        }
+
+        return capture.renderCallback(capture, face, capture.passes[face.ordinal], icon)
+    }
 }
 
 /** Captures the AO values and textures used in a specific rendering pass when rendering a block. */
