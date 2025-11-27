@@ -37,6 +37,19 @@ Currently, the mod adds the following:
 
 Check out the [wiki](https://github.com/Kynake/BetterFoliage/wiki/Features) for more details about, and screenshots of, each feature.
 
+#### Why this instead of the original?
+Besides offering more customization options this version also improves upon the original BetterFoliage 1.7.10 version by fixing bugs and adding support to more mods by default.
+The full list is too big to fit in a short sentence, not to mention still improving, but a few of the more notable cases are:
+- Angelica
+- Swansong
+- Tinker's Contruct
+- TerraFirmaCraft
+- GregTech 6
+- Witchery
+- The Twilight Forest
+- Et Futurum Requiem
+- Everything in the GregTech New Horizons modpack
+
 ## Installation
 Place the mod's jar file inside the `mods` folder of your modded Minecraft instance.
 Make sure you've also installed the latest [Forge](https://files.minecraftforge.net/net/minecraftforge/forge/index_1.7.10.html) for Minecraft 1.7.10, [UniMixins](https://github.com/LegacyModdingMC/UniMixins/releases) and [Forgelin](https://github.com/GTNewHorizons/Forgelin/releases).
