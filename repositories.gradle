@@ -1,4 +1,9 @@
 // Add any additional repositories for your dependencies here.
 
 repositories {
+    //LegacyModdingMC Forgelin
+    maven {
+        name = "mavenpattern"
+        url = "https://mvn.falsepattern.com/releases/"
+    }
 }
