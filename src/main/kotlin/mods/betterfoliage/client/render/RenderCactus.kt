@@ -28,6 +28,9 @@ class RenderCactus : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
     val iconCross = iconStatic(BetterFoliageMod.LEGACY_DOMAIN, "better_cactus")
     val iconArm = iconSet(BetterFoliageMod.LEGACY_DOMAIN, "better_cactus_arm_%d")
 
+    // Why do we have to recreate the cactus block here?
+    // TODO consider removing this and using the base render, if possible
+    // Add an explanation comment otherwise
     val modelBase = model {
         horizontalRectangle(
             x1 = -cactusBlockExtents,
