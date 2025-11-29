@@ -35,7 +35,7 @@
  */
 dependencies {
     api("com.falsepattern:forgelin-mc1.7.10:2.4.0-2.2.21:dev")
-    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.122:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.128:dev") { transitive = false }
     compileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.12-GTNH:dev") { transitive = false }
     compileOnly("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev") { transitive = false }
     compileOnly("ganymedes01.etfuturum:Et-Futurum-Requiem:2.6.2.25-GTNH:dev") { transitive = false }
@@ -43,19 +43,21 @@ dependencies {
     compileOnly(rfg.deobf("curse.maven:terrafirmacraft-302973:2627990")) { transitive = false }
     compileOnly(jarUrl("https://gregtech.mechaenetia.com/com/gregoriust/gregtech/gregtech_1.7.10/6.17.05/gregtech_1.7.10-6.17.05-dev.jar"))
 
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.39-GTNH:dev")
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.40-GTNH:dev")
 
     // Test with rendering mods
 
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:1.0.0-beta68:dev")
 
-    //runtimeOnlyNonPublishable(rfg.deobf("curse.maven:swansong-1349982:7113984"))
-    //runtimeOnlyNonPublishable(rfg.deobf("curse.maven:fplib-665627:7053321"))
+    //runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:swansong:1.2.6"))
+    //runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:falsetweaks:4.3.2"))
+    //runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:beddium:1.0.5-j8"))
+    //runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:fplib:1.10.5"))
 
     // Test with other mods
 
     // GregTech 5 Unofficial (GTNH)
-    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.122:dev")
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.128:dev")
 
     // GregTech 6
     //runtimeOnlyNonPublishable(jarUrl("https://gregtech.mechaenetia.com/com/gregoriust/gregtech/gregtech_1.7.10/6.17.05/gregtech_1.7.10-6.17.05-dev.jar"))
