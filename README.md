@@ -1,7 +1,8 @@
 <img alt="banner" src="https://github.com/user-attachments/assets/ab68b2ae-8350-4fb3-9773-a38ae8e7584c" />
 
-Better Foliage - Legacy Edition
-===============================
+<sup>**[CurseForge](https://www.curseforge.com/minecraft/mc-mods/better-foliage-legacy-edition) | [Modrinth](https://modrinth.com/mod/better-foliage-legacy-edition)**</sup>
+
+# Better Foliage - Legacy Edition
 
 A modern fork of [BetterFoliage](https://www.curseforge.com/minecraft/mc-mods/better-foliage) by octarine_noise for Minecraft 1.7.10.
 This mod alters the appearance of leaves, logs, grass and other natural miscellanea.
@@ -42,7 +43,7 @@ Besides offering more customization options this version also improves upon the 
 The full list is too big to fit in a short sentence, not to mention still improving, but a few of the more notable cases are:
 - Angelica
 - Swansong
-- Tinker's Contruct
+- Tinker's Construct
 - TerraFirmaCraft
 - GregTech 6
 - Witchery
