@@ -29,6 +29,10 @@ public enum Mixins implements IMixins {
             "gt6.MixinTileEntityBase01Root")
         .addRequiredMod(Mod.GT6)
         .setPhase(Phase.LATE)),
+    NOTFINE(new MixinBuilder()
+        .addClientMixins("notfine.MixinLeafRenderUtil")
+        .addRequiredMod(Mod.NOTFINE)
+        .setPhase(Phase.LATE)),
     ;
     // spotless:on
     private final MixinBuilder builder;

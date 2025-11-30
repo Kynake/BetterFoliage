@@ -12,6 +12,7 @@ enum class Mod(val modID: String?, val modName: String, val coreModClass: String
     GT6("gregtech", "GregTech 6", "gregtech.asm.GT_ASM", "gregtech.GT6_Main"),
     IC2("IC2", "IndustrialCraft 2", "ic2.core.coremod.IC2core", "ic2.core.IC2"),
     NATURA("Natura", "Natura", null, "mods.natura.Natura"),
+    NOTFINE("notfine", "NotFine", "jss.notfine.mixinplugin", "jss.notfine.NotFine"),
     TFC("terrafirmacraft", "TerraFirmaCraft", "com.bioxx.tfc.TFCASMLoadingPlugin", "com.bioxx.tfc.TerraFirmaCraft"),
     TCON("TConstruct", "Tinker's Construct", null, "tconstruct.TConstruct"),
     ;
