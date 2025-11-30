@@ -16,6 +16,7 @@ import mods.octarinecore.client.render.forgeDirs
 import mods.octarinecore.client.render.modelRenderer
 import mods.octarinecore.client.render.neverRender
 import mods.octarinecore.client.render.noPost
+import net.minecraft.block.BlockCactus
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraftforge.common.util.ForgeDirection
 import org.apache.logging.log4j.Level
@@ -28,14 +29,17 @@ class RenderCactus : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
     val iconCross = iconStatic(BetterFoliageMod.LEGACY_DOMAIN, "better_cactus")
     val iconArm = iconSet(BetterFoliageMod.LEGACY_DOMAIN, "better_cactus_arm_%d")
 
-    val modelCactus = model {
-        val aoShader = faceOrientedAuto(corner = cornerAo(Axis.Y), edge = null)
+    val aoShader = faceOrientedAuto(corner = cornerAo(Axis.Y), edge = null)
 
-        // Top and Bottom
-        horizontalRectangle(x1 = -0.5, x2 = 0.5, z1 = -0.5, z2 = 0.5, y = 0.5)
-            .let { listOf(it.flipped.move(1.0 to ForgeDirection.DOWN), it) }
-            .forEach { it.setAoShader(aoShader).add() }
+    val modelTop = model {
+        horizontalRectangle(x1 = -0.5, x2 = 0.5, z1 = -0.5, z2 = 0.5, y = 0.5).setAoShader(aoShader).add()
+    }
 
+    val modelBottom = model {
+        horizontalRectangle(x1 = -0.5, x2 = 0.5, z1 = -0.5, z2 = 0.5, y = 0.5).flipped.setAoShader(aoShader).add()
+    }
+
+    val modelSides = model {
         // In order: North, South, East, West
         verticalRectangle(x1 = 0.5, z1 = -cactusBlockExtents, x2 = -0.5, z2 = -cactusBlockExtents, yBottom = -0.5, yTop = 0.5)
             .setAoShader(aoShader).add()
@@ -84,10 +88,30 @@ class RenderCactus : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
         // We render the cactus model ourselves because minecraft does not render it
         // with AO by default, which looks out of place when paired with
         // the other cactus additions that _do_ render with AO.
+        if (!(ctx.block(down1).isOpaqueCube || ctx.block(down1) is BlockCactus)) {
+            modelRenderer.render(
+                modelBottom.model,
+                Rotation.identity,
+                icon = { ctx, _, _ -> ctx.icon(forgeDirs[0]) },
+                rotateUV = { 0 },
+                postProcess = noPost,
+            )
+        }
+
+        if (!(ctx.block(up1).isOpaqueCube || ctx.block(up1) is BlockCactus)) {
+            modelRenderer.render(
+                modelTop.model,
+                Rotation.identity,
+                icon = { ctx, _, _ -> ctx.icon(forgeDirs[1]) },
+                rotateUV = { 0 },
+                postProcess = noPost,
+            )
+        }
+
         modelRenderer.render(
-            modelCactus.model,
+            modelSides.model,
             Rotation.identity,
-            icon = { ctx, qi, _ -> ctx.icon(forgeDirs[qi]) },
+            icon = { ctx, qi, _ -> ctx.icon(forgeDirs[qi + 2]) },
             rotateUV = { 0 },
             postProcess = noPost,
         )
