@@ -7,7 +7,8 @@
 A modern fork of [BetterFoliage](https://www.curseforge.com/minecraft/mc-mods/better-foliage) by octarine_noise for Minecraft 1.7.10.
 This mod alters the appearance of leaves, logs, grass and other natural miscellanea.
 
-Requires [UniMixins](https://github.com/LegacyModdingMC/UniMixins/releases) and [GTNH's Forgelin](https://github.com/GTNewHorizons/Forgelin/releases).
+Requires [UniMixins](https://github.com/LegacyModdingMC/UniMixins/releases) and either [Forgelin 2](https://github.com/LegacyModdingMC/Forgelin) or [GTNH's Forgelin](https://github.com/GTNewHorizons/Forgelin/releases). <br>
+(Use whichever one comes included in your modpack. If neither is present, I recommend Forgelin 2 over GTNH's Forgelin)
 
 **Important:**
 If you're upgrading from a previous version of the mod or from the original Better Foliage mod you must delete the config file located at `config/BetterFoliage.cfg` and let the mod regenerate it on the next game launch for any updated fixes to be applied in-game.
