@@ -9,11 +9,11 @@ import mods.betterfoliage.client.config.Config
 import mods.betterfoliage.client.integration.EFRIntegration
 import mods.betterfoliage.client.texture.LeafRegistry
 import mods.octarinecore.PI2
+import mods.octarinecore.clamp
 import mods.octarinecore.client.render.AbstractEntityFX
 import mods.octarinecore.client.render.BlockContext
 import mods.octarinecore.client.render.Double3
 import mods.octarinecore.client.render.HSB
-import mods.octarinecore.minmax
 import mods.octarinecore.random
 import net.minecraft.block.Block
 import net.minecraft.client.Minecraft
@@ -143,9 +143,9 @@ object LeafWindTracker {
                 // change current wind speed
                 val changeRate = if (world.isRaining) 0.015 else 0.005
                 current.add(
-                    (target.x - current.x).minmax(-changeRate, changeRate),
+                    (target.x - current.x).clamp(-changeRate, changeRate),
                     0.0,
-                    (target.z - current.z).minmax(-changeRate, changeRate),
+                    (target.z - current.z).clamp(-changeRate, changeRate),
                 )
             }
         }

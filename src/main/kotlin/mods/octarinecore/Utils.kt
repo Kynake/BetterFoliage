@@ -38,7 +38,7 @@ fun <A, B> Iterable<A>.cross(other: Iterable<B>) = flatMap { a -> other.map { b 
  * @param[init] Lambda to get initial value
  */
 class ThreadLocalDelegate<T>(init: () -> T) {
-    var tlVal = ThreadLocal.withInitial(init)
+    var tlVal = ThreadLocal.withInitial(init)!!
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T = tlVal.get()
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
         tlVal.set(value)
@@ -74,12 +74,10 @@ fun random(min: Double, max: Double) = Math.random().let { min + (max - min) * i
  * Return this [Double] value if it lies between the two limits. If outside, return the
  * minimum/maximum value correspondingly.
  */
-fun Double.minmax(minVal: Double, maxVal: Double) = min(max(this, minVal), maxVal)
+fun Double.clamp(minVal: Double, maxVal: Double) = min(max(this, minVal), maxVal)
 
 /**
  * Return this [Int] value if it lies between the two limits. If outside, return the minimum/maximum
  * value correspondingly.
  */
-fun Int.minmax(minVal: Int, maxVal: Int) = min(max(this, minVal), maxVal)
-
-fun nextPowerOf2(x: Int): Int = 1 shl (if (x == 0) 0 else 32 - Integer.numberOfLeadingZeros(x - 1))
+fun Int.clamp(minVal: Int, maxVal: Int) = min(max(this, minVal), maxVal)

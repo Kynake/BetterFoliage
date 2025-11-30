@@ -1,6 +1,6 @@
 package mods.octarinecore.client.render
 
-import mods.octarinecore.minmax
+import mods.octarinecore.clamp
 import mods.octarinecore.replace
 import net.minecraftforge.common.util.ForgeDirection
 import kotlin.math.max
@@ -29,7 +29,7 @@ data class UV(val u: Double, val v: Double) {
         else -> UV(-v, u)
     }
 
-    fun clamp(minU: Double = -0.5, maxU: Double = 0.5, minV: Double = -0.5, maxV: Double = 0.5) = UV(u.minmax(minU, maxU), v.minmax(minV, maxV))
+    fun clamp(minU: Double = -0.5, maxU: Double = 0.5, minV: Double = -0.5, maxV: Double = 0.5) = UV(u.clamp(minU, maxU), v.clamp(minV, maxV))
 
     fun mirror(mirrorU: Boolean, mirrorV: Boolean) = UV(if (mirrorU) -u else u, if (mirrorV) -v else v)
 }

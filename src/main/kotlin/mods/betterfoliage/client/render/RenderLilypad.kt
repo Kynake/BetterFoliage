@@ -50,6 +50,7 @@ class RenderLilypad : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
         Config.blocks.lilypad.matchesID(ctx.block)
 
     override fun render(ctx: BlockContext, parent: RenderBlocks): Boolean {
+        // Render base block and capture AO data
         if (renderWorldBlockBase(
                 parentRenderer = parent,
                 face = alwaysRender,
