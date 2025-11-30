@@ -28,32 +28,23 @@ class RenderCactus : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
     val iconCross = iconStatic(BetterFoliageMod.LEGACY_DOMAIN, "better_cactus")
     val iconArm = iconSet(BetterFoliageMod.LEGACY_DOMAIN, "better_cactus_arm_%d")
 
-    // Why do we have to recreate the cactus block here?
-    // TODO consider removing this and using the base render, if possible
-    // Add an explanation comment otherwise
-    val modelBase = model {
-        horizontalRectangle(
-            x1 = -cactusBlockExtents,
-            x2 = cactusBlockExtents,
-            z1 = -cactusBlockExtents,
-            z2 = cactusBlockExtents,
-            y = 0.5,
-        )
-            .scaleUV(cactusBlockExtents * 2.0)
-            .let { listOf(it.flipped.move(1.0 to ForgeDirection.DOWN), it) }
-            .forEach { it.setAoShader(faceOrientedAuto(corner = cornerAo(Axis.Y), edge = null)).add() }
+    val modelCactus = model {
+        val aoShader = faceOrientedAuto(corner = cornerAo(Axis.Y), edge = null)
 
-        verticalRectangle(
-            x1 = -0.5,
-            z1 = cactusBlockExtents,
-            x2 = 0.5,
-            z2 = cactusBlockExtents,
-            yBottom = -0.5,
-            yTop = 0.5,
-        )
-            .setAoShader(faceOrientedAuto(corner = cornerAo(Axis.Y), edge = null))
-            .toCross(ForgeDirection.UP)
-            .addAll()
+        // Top and Bottom
+        horizontalRectangle(x1 = -0.5, x2 = 0.5, z1 = -0.5, z2 = 0.5, y = 0.5)
+            .let { listOf(it.flipped.move(1.0 to ForgeDirection.DOWN), it) }
+            .forEach { it.setAoShader(aoShader).add() }
+
+        // In order: North, South, East, West
+        verticalRectangle(x1 = 0.5, z1 = -cactusBlockExtents, x2 = -0.5, z2 = -cactusBlockExtents, yBottom = -0.5, yTop = 0.5)
+            .setAoShader(aoShader).add()
+        verticalRectangle(x1 = -0.5, z1 = cactusBlockExtents, x2 = 0.5, z2 = cactusBlockExtents, yBottom = -0.5, yTop = 0.5)
+            .setAoShader(aoShader).add()
+        verticalRectangle(x1 = cactusBlockExtents, z1 = 0.5, x2 = cactusBlockExtents, z2 = -0.5, yBottom = -0.5, yTop = 0.5)
+            .setAoShader(aoShader).add()
+        verticalRectangle(x1 = -cactusBlockExtents, z1 = -0.5, x2 = -cactusBlockExtents, z2 = 0.5, yBottom = -0.5, yTop = 0.5)
+            .setAoShader(aoShader).add()
     }
 
     val modelCross = modelSet(64) { modelIdx ->
@@ -87,11 +78,14 @@ class RenderCactus : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
         Config.blocks.cactus.matchesID(ctx.block)
 
     override fun render(ctx: BlockContext, parent: RenderBlocks): Boolean {
-        // get AO data
+        // Dummy render pass to capture AO data
         if (renderWorldBlockBase(parent, face = neverRender)) return true
 
+        // We render the cactus model ourselves because minecraft does not render it
+        // with AO by default, which looks out of place when paired with
+        // the other cactus additions that _do_ render with AO.
         modelRenderer.render(
-            modelBase.model,
+            modelCactus.model,
             Rotation.identity,
             icon = { ctx, qi, _ -> ctx.icon(forgeDirs[qi]) },
             rotateUV = { 0 },
