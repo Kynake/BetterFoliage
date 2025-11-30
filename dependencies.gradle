@@ -34,7 +34,7 @@
  * For more details, see https://docs.gradle.org/8.0.1/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
-    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.128:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.130:dev") { transitive = false }
     compileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.12-GTNH:dev") { transitive = false }
     compileOnly("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev") { transitive = false }
     compileOnly("ganymedes01.etfuturum:Et-Futurum-Requiem:2.6.2.25-GTNH:dev") { transitive = false }
@@ -61,7 +61,7 @@ dependencies {
     // Test with other mods
 
     // GregTech 5 Unofficial (GTNH)
-    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.128:dev")
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:GT5-Unofficial:5.09.52.130:dev")
 
     // GregTech 6
     //runtimeOnlyNonPublishable(jarUrl("https://gregtech.mechaenetia.com/com/gregoriust/gregtech/gregtech_1.7.10/6.17.05/gregtech_1.7.10-6.17.05-dev.jar"))
