@@ -18,7 +18,7 @@ betterfoliage.heightMax.tooltip=元素的最大高度
 betterfoliage.population=种群
 betterfoliage.population.tooltip=符合条件的块将具有此功能的机会（64 中的 N）
 betterfoliage.shaderWind=着色器的风效果
-betterfoliage.shaderWind.tooltip=将来自ShaderMod（Optifine）着色器的风效果应用到该元素？
+betterfoliage.shaderWind.tooltip=将来自ShaderMod着色器的风效果应用到该元素？
 betterfoliage.distance=距离限制
 betterfoliage.distance.tooltip=渲染此功能的玩家的最大距离
 
@@ -96,6 +96,8 @@ betterfoliage.leaves.dense=树叶模式
 betterfoliage.leaves.dense.tooltip=密集模式有更多的圆形叶子
 betterfoliage.leaves.snowEnabled=启用积雪
 betterfoliage.leaves.snowEnabled.tooltip=是否在额外树叶上启用积雪？
+betterfoliage.leaves.surfaceOnly=仅渲染表面
+betterfoliage.leaves.surfaceOnly.tooltip=额外的树叶只会在至少有一个暴露面的方块上渲染。禁用此功能可能会增加在其他树叶方块角落之间出现完全黑色树叶的可能性
 
 betterfoliage.shortGrass=体现短草方块和菌丝
 betterfoliage.shortGrass.tooltip=方块顶部会有一簇簇草方块/菌丝
@@ -119,6 +121,12 @@ betterfoliage.cactus=更好的仙人掌
 betterfoliage.cactus.tooltip=用额外的像素和平滑的阴影增强仙人掌的美感
 betterfoliage.cactus.sizeVariation=大小变化
 betterfoliage.cactus.sizeVariation.tooltip=仙人掌大小的随机变化量
+betterfoliage.cactus.stem=主干
+betterfoliage.cactus.stem.tooltip=在仙人掌的主干部分渲染额外的纹理
+betterfoliage.cactus.arms=分支臂
+betterfoliage.cactus.arms.tooltip=在仙人掌方块的侧面随机渲染分支臂
+betterfoliage.cactus.armChance=分支臂几率
+betterfoliage.cactus.armChance.tooltip=仙人掌方块的每个侧面出现分支臂的几率（64 中的 N）
 
 betterfoliage.lilypad=更好的睡莲
 betterfoliage.lilypad.tooltip=用根和偶尔的花增强睡莲的美感
