@@ -119,14 +119,15 @@ betterfoliage.hangingGrass.separation.tooltip=悬垂的草方块从方块中突�
 
 betterfoliage.cactus=更好的仙人掌
 betterfoliage.cactus.tooltip=用额外的像素和平滑的阴影增强仙人掌的美感
-betterfoliage.cactus.sizeVariation=大小变化
-betterfoliage.cactus.sizeVariation.tooltip=仙人掌大小的随机变化量
 betterfoliage.cactus.stem=主干
 betterfoliage.cactus.stem.tooltip=在仙人掌的主干部分渲染额外的纹理
 betterfoliage.cactus.arms=分支臂
 betterfoliage.cactus.arms.tooltip=在仙人掌方块的侧面随机渲染分支臂
 betterfoliage.cactus.armChance=分支臂几率
 betterfoliage.cactus.armChance.tooltip=仙人掌方块的每个侧面出现分支臂的几率（64 中的 N）
+betterfoliage.cactus.sizeVariation=大小变化
+betterfoliage.cactus.sizeVariation.tooltip=仙人掌大小的随机变化量
+
 
 betterfoliage.lilypad=更好的睡莲
 betterfoliage.lilypad.tooltip=用根和偶尔的花增强睡莲的美感
