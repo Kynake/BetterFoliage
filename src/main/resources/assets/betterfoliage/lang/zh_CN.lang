@@ -1,0 +1,231 @@
+key.betterfoliage.gui=打开设置
+
+betterfoliage.global.enabled=启用模组
+betterfoliage.global.enabled.tooltip=如果设置为 false，Better Foliage - Legacy Edition 将不会渲染任何内容
+
+betterfoliage.enabled=启用
+betterfoliage.enabled.tooltip=是否启用此功能？
+betterfoliage.hOffset=水平偏移
+betterfoliage.hOffset.tooltip=该元素水平移动的距离，以块为单位
+betterfoliage.vOffset=垂直偏移
+betterfoliage.vOffset.tooltip=该元素垂直移动的距离，以块为单位
+betterfoliage.size=大小
+betterfoliage.size.tooltip=该元素的大小
+betterfoliage.heightMin=最小高度
+betterfoliage.heightMin.tooltip=元素的最小高度
+betterfoliage.heightMax=最大高度
+betterfoliage.heightMax.tooltip=元素的最大高度
+betterfoliage.population=种群
+betterfoliage.population.tooltip=符合条件的块将具有此功能的机会（64 中的 N）
+betterfoliage.shaderWind=着色器的风效果
+betterfoliage.shaderWind.tooltip=将来自ShaderMod着色器的风效果应用到该元素？
+betterfoliage.distance=距离限制
+betterfoliage.distance.tooltip=渲染此功能的玩家的最大距离
+
+betterfoliage.blocks=方块类型
+betterfoliage.blocks.tooltip=配置将应用特定功能的方块类别列表
+
+betterfoliage.blocks.dirtWhitelist=泥土白名单
+betterfoliage.blocks.dirtBlacklist=泥土黑名单
+betterfoliage.blocks.dirtWhitelist.arrayEntry=%d 个条目
+betterfoliage.blocks.dirtBlacklist.arrayEntry=%d 个条目
+
+betterfoliage.blocks.grassWhitelist=草方块白名单
+betterfoliage.blocks.grassBlacklist=草方块黑名单
+betterfoliage.blocks.grassWhitelist.arrayEntry=%d 个条目
+betterfoliage.blocks.grassBlacklist.arrayEntry=%d 个条目
+
+betterfoliage.blocks.leavesWhitelist=额外树叶白名单
+betterfoliage.blocks.leavesBlacklist=额外树叶黑名单
+betterfoliage.blocks.leavesWhitelist.arrayEntry=%d 个条目
+betterfoliage.blocks.leavesBlacklist.arrayEntry=%d 个条目
+
+betterfoliage.blocks.fallingLeavesWhitelist=落叶白名单
+betterfoliage.blocks.fallingLeavesBlacklist=落叶黑名单
+betterfoliage.blocks.fallingLeavesWhitelist.arrayEntry=%d 个条目
+betterfoliage.blocks.fallingLeavesBlacklist.arrayEntry=%d 个条目
+
+betterfoliage.blocks.cropsWhitelist=作物白名单
+betterfoliage.blocks.cropsBlacklist=作物黑名单
+betterfoliage.blocks.cropsWhitelist.arrayEntry=%d 个条目
+betterfoliage.blocks.cropsBlacklist.arrayEntry=%d 个条目
+
+betterfoliage.blocks.logsWhitelist=原木白名单
+betterfoliage.blocks.logsBlacklist=原木黑名单
+betterfoliage.blocks.logsWhitelist.arrayEntry=%d 个条目
+betterfoliage.blocks.logsBlacklist.arrayEntry=%d 个条目
+
+betterfoliage.blocks.sandWhitelist=沙子白名单
+betterfoliage.blocks.sandBlacklist=沙子黑名单
+betterfoliage.blocks.sandWhitelist.arrayEntry=%d 个条目
+betterfoliage.blocks.sandBlacklist.arrayEntry=%d 个条目
+
+betterfoliage.blocks.lilypadWhitelist=睡莲白名单
+betterfoliage.blocks.lilypadBlacklist=睡莲黑名单
+betterfoliage.blocks.lilypadWhitelist.arrayEntry=%d 个条目
+betterfoliage.blocks.lilypadBlacklist.arrayEntry=%d 个条目
+
+betterfoliage.blocks.cactusWhitelist=仙人掌白名单
+betterfoliage.blocks.cactusBlacklist=仙人掌黑名单
+betterfoliage.blocks.cactusWhitelist.arrayEntry=%d 个条目
+betterfoliage.blocks.cactusBlacklist.arrayEntry=%d 个条目
+
+
+betterfoliage.blocks.dirtWhitelist.tooltip=被识别为泥土的方块，影响芦苇、藻类、连接的草方块
+betterfoliage.blocks.dirtBlacklist.tooltip=从不被接受为泥土的方块，影响芦苇、藻类、连接的草方块
+betterfoliage.blocks.grassWhitelist.tooltip=被识别为草方块的方块，影响短草、连接的草方块
+betterfoliage.blocks.grassBlacklist.tooltip=从不被接受为草方块的方块，影响短草、连接的草方块
+betterfoliage.blocks.leavesWhitelist.tooltip=启用额外树叶时被识别为树叶的方块，树叶将在着色器程序中以树叶方块ID渲染
+betterfoliage.blocks.leavesBlacklist.tooltip=启用额外树叶时从不被接受为树叶的方块，树叶将在着色器程序中以树叶方块ID渲染
+betterfoliage.blocks.fallingLeavesWhitelist.tooltip=启用落叶时被识别为树叶的方块，树叶将在着色器程序中以树叶方块ID渲染
+betterfoliage.blocks.fallingLeavesBlacklist.tooltip=启用落叶时从不被接受为树叶的方块，树叶将在着色器程序中以树叶方块ID渲染
+betterfoliage.blocks.cropsWhitelist.tooltip=被识别为作物的方块，作物将在着色器程序中以高草方块ID渲染
+betterfoliage.blocks.cropsBlacklist.tooltip=从不被接受为作物的方块，作物将在着色器程序中以高草方块ID渲染
+betterfoliage.blocks.logsWhitelist.tooltip=被识别为原木的方块，影响圆形原木
+betterfoliage.blocks.logsBlacklist.tooltip=从不被接受为原木的方块，影响圆形原木
+betterfoliage.blocks.sandWhitelist.tooltip=被识别为沙子的方块，影响珊瑚
+betterfoliage.blocks.sandBlacklist.tooltip=从不被接受为沙子的方块，影响珊瑚
+betterfoliage.blocks.lilypadWhitelist.tooltip=被识别为睡莲的方块，影响更好的睡莲
+betterfoliage.blocks.lilypadBlacklist.tooltip=从不被接受为睡莲的方块，影响更好的睡莲
+betterfoliage.blocks.cactusWhitelist.tooltip=被识别为仙人掌的方块，影响更好的仙人掌
+betterfoliage.blocks.cactusBlacklist.tooltip=从不被接受为仙人掌的方块，影响更好的仙人掌
+
+betterfoliage.leaves=额外树叶
+betterfoliage.leaves.tooltip=在树叶方块上添加额外的圆形树叶
+betterfoliage.leaves.dense=树叶模式
+betterfoliage.leaves.dense.tooltip=密集模式有更多的圆形叶子
+betterfoliage.leaves.snowEnabled=启用积雪
+betterfoliage.leaves.snowEnabled.tooltip=是否在额外树叶上启用积雪？
+betterfoliage.leaves.surfaceOnly=仅渲染表面
+betterfoliage.leaves.surfaceOnly.tooltip=额外的树叶只会在至少有一个暴露面的方块上渲染，禁用此功能可能会增加在其他树叶方块角落之间出现完全黑色树叶的可能性
+
+betterfoliage.shortGrass=体现短草方块和菌丝
+betterfoliage.shortGrass.tooltip=方块顶部会有一簇簇草方块/菌丝
+betterfoliage.shortGrass.useGenerated=使用生成的草方块的纹理
+betterfoliage.shortGrass.useGenerated.tooltip=生成的纹理是通过将活动资源包中的高草方块纹理切成两半来制作的
+betterfoliage.shortGrass.myceliumEnabled=启用菌丝的纹理
+betterfoliage.shortGrass.myceliumEnabled.tooltip=菌丝是否启用了此功能？
+betterfoliage.shortGrass.grassEnabled=启用草方块的纹理
+betterfoliage.shortGrass.grassEnabled.tooltip=草方块方块是否启用了此功能？
+betterfoliage.shortGrass.snowEnabled=雪下启用
+betterfoliage.shortGrass.snowEnabled.tooltip=是否在被雪覆盖的草方块上启用？
+betterfoliage.shortGrass.saturationThreshold=饱和度阈值
+betterfoliage.shortGrass.saturationThreshold.tooltip=“无色”方块（使用生物群系颜色）和“彩色”方块（使用其自身特定颜色）之间的颜色饱和度截止值
+
+betterfoliage.hangingGrass=挂草方块
+betterfoliage.hangingGrass.tooltip=草方块丛顶部边缘垂下的草方块丛
+betterfoliage.hangingGrass.separation=分离
+betterfoliage.hangingGrass.separation.tooltip=悬垂的草方块从方块中突出的程度
+
+betterfoliage.cactus=更好的仙人掌
+betterfoliage.cactus.tooltip=用额外的像素和平滑的阴影增强仙人掌的美感
+betterfoliage.cactus.stem=主干
+betterfoliage.cactus.stem.tooltip=在仙人掌的主干部分渲染额外的纹理
+betterfoliage.cactus.arms=分支臂
+betterfoliage.cactus.arms.tooltip=在仙人掌方块的侧面随机渲染分支臂
+betterfoliage.cactus.armChance=分支臂几率
+betterfoliage.cactus.armChance.tooltip=仙人掌方块的每个侧面出现分支臂的几率（64 中的 N）
+betterfoliage.cactus.sizeVariation=大小变化
+betterfoliage.cactus.sizeVariation.tooltip=仙人掌大小的随机变化量
+
+
+betterfoliage.lilypad=更好的睡莲
+betterfoliage.lilypad.tooltip=用根和偶尔的花增强睡莲的美感
+betterfoliage.lilypad.flowerChance=开花几率
+betterfoliage.lilypad.flowerChance.tooltip=睡莲上有一朵花的几率（64 中的 N）
+
+betterfoliage.reed=芦苇
+betterfoliage.reed.tooltip=浅水土块上的芦苇
+betterfoliage.reed.biomes=生物群系列表
+betterfoliage.reed.biomes.tooltip=配置芦苇允许出现在哪些生物群系中
+betterfoliage.reed.biomes.tooltip.element=芦苇是否应出现在 %s 生物群系中？
+
+betterfoliage.algae=藻类
+betterfoliage.algae.tooltip=深水中泥块上的藻类
+betterfoliage.algae.biomes=生物群系列表
+betterfoliage.algae.biomes.tooltip=配置藻类允许出现在哪些生物群系中
+betterfoliage.algae.biomes.tooltip.element=藻类是否应出现在 %s 生物群系中？
+
+betterfoliage.coral=珊瑚
+betterfoliage.coral.tooltip=深水中沙块上的珊瑚
+betterfoliage.coral.size=珊瑚大小
+betterfoliage.coral.size.tooltip=伸出的珊瑚碎片的大小
+betterfoliage.coral.crustSize=外壳大小
+betterfoliage.coral.crustSize.tooltip=扁平珊瑚部分的大小
+betterfoliage.coral.chance=珊瑚几率
+betterfoliage.coral.chance.tooltip=块的特定面显示珊瑚的几率（64 中的 N）
+betterfoliage.coral.biomes=生物群系列表
+betterfoliage.coral.biomes.tooltip=配置珊瑚允许出现在哪些生物群系中
+betterfoliage.coral.biomes.tooltip.element=珊瑚是否应出现在 %s 生物群系中？
+betterfoliage.coral.shallowWater=浅水珊瑚
+betterfoliage.coral.shallowWater.tooltip=要珊瑚出现在 1 格深的水中吗？
+
+betterfoliage.netherrack=地狱岩藤蔓
+betterfoliage.netherrack.tooltip=地狱岩下悬挂的藤蔓
+
+betterfoliage.fallingLeaves=落叶
+betterfoliage.fallingLeaves.tooltip=从叶子块底部的落叶粒子效果
+betterfoliage.fallingLeaves.speed=粒子速度
+betterfoliage.fallingLeaves.speed.tooltip=整体粒子速度
+betterfoliage.fallingLeaves.windStrength=风力
+betterfoliage.fallingLeaves.windStrength.tooltip=天气好的时候风影响的大小（正态分布的分布以0为中心）
+betterfoliage.fallingLeaves.stormStrength=风暴强度
+betterfoliage.fallingLeaves.stormStrength.tooltip=雨天风影响的额外强度（正态分布的分布以0为中心）
+betterfoliage.fallingLeaves.size=粒子大小
+betterfoliage.fallingLeaves.chance=粒子几率
+betterfoliage.fallingLeaves.chance.tooltip=每个随机渲染tick击中叶子方块产生粒子的几率
+betterfoliage.fallingLeaves.perturb=飘动
+betterfoliage.fallingLeaves.perturb.tooltip=扰动效果的大小，向与其旋转同步的粒子添加螺旋状运动
+betterfoliage.fallingLeaves.lifetime=最大寿命
+betterfoliage.fallingLeaves.lifetime.tooltip=粒子的最大寿命（以秒为单位），最短寿命是该值的 60%%
+betterfoliage.fallingLeaves.opacityHack=不透明粒子
+betterfoliage.fallingLeaves.opacityHack.tooltip=停止透明方块在粒子位于其前方时仍遮挡粒子，警告：可能导致图形故障
+
+betterfoliage.risingSoul=上升的灵魂
+betterfoliage.risingSoul.tooltip=从灵魂沙块顶部的升腾灵魂粒子效果
+betterfoliage.risingSoul.chance=粒子几率
+betterfoliage.risingSoul.chance.tooltip=每个随机渲染刻度击中灵魂沙块以产生粒子的几率
+betterfoliage.risingSoul.speed=粒子速度
+betterfoliage.risingSoul.speed.tooltip=灵魂粒子的垂直速度
+betterfoliage.risingSoul.perturb=扰动
+betterfoliage.risingSoul.perturb.tooltip=扰动效果的大小，为粒子添加开瓶器般的运动
+betterfoliage.risingSoul.headSize=灵魂大小
+betterfoliage.risingSoul.headSize.tooltip=灵魂粒子的大小
+betterfoliage.risingSoul.trailSize=轨迹大小
+betterfoliage.risingSoul.trailSize.tooltip=粒子轨迹的初始大小
+betterfoliage.risingSoul.opacity=轨迹密度
+betterfoliage.risingSoul.opacity.tooltip=粒子效果的不透明度
+betterfoliage.risingSoul.sizeDecay=尺寸衰减
+betterfoliage.risingSoul.sizeDecay.tooltip=相对于前一个刻度中的粒子大小的轨迹粒子大小
+betterfoliage.risingSoul.opacityDecay=不透明度衰减
+betterfoliage.risingSoul.opacityDecay.tooltip=轨迹粒子不透明度相对于其在前一个刻度中的不透明度
+betterfoliage.risingSoul.lifetime=最大寿命
+betterfoliage.risingSoul.lifetime.tooltip=粒子效果的最长寿命（以秒为单位），最短寿命是该值的 60%%
+betterfoliage.risingSoul.trailLength=轨迹长度
+betterfoliage.risingSoul.trailLength.tooltip=粒子以滴答为单位记住的先前位置的数量
+betterfoliage.risingSoul.trailDensity=轨迹密度
+betterfoliage.risingSoul.trailDensity.tooltip=渲染粒子轨迹中每第 N 个前一个位置
+
+betterfoliage.connectedGrass=连接的草方块纹理
+betterfoliage.connectedGrass.tooltip=如果一个泥土方块上方有一个草方块：在所有草方块侧面绘制草方块顶部纹理
+betterfoliage.connectedGrass.snowEnabled=启用积雪
+betterfoliage.connectedGrass.snowEnabled.tooltip=允许被雪覆盖的草方块的侧面使用雪的纹理
+
+betterfoliage.roundLogs=圆形原木
+betterfoliage.roundLogs.tooltip=制作横截面为八角形的原木
+betterfoliage.roundLogs.connectSolids=连接到实体方块
+betterfoliage.roundLogs.connectSolids.tooltip=将圆形方块连接到实体完整方块？
+betterfoliage.roundLogs.connectPerpendicular=连接到垂直原木
+betterfoliage.roundLogs.connectPerpendicular.tooltip=将圆形原木沿其轴线连接到垂直的原木？
+betterfoliage.roundLogs.lenientConnect=宽松圆角连接
+betterfoliage.roundLogs.lenientConnect.tooltip=也在 L 形中连接平行的圆形原木，而不仅仅是 2x2
+betterfoliage.roundLogs.connectGrass=连接草方块
+betterfoliage.roundLogs.connectGrass.tooltip=如果附近有草方块，则在树下渲染草方块方块而不是泥土
+betterfoliage.roundLogs.radiusSmall=倒角半径
+betterfoliage.roundLogs.radiusSmall.tooltip=从原木角落切掉多少
+betterfoliage.roundLogs.radiusLarge=连接倒角半径
+betterfoliage.roundLogs.radiusLarge.tooltip=从连接原木的外角切掉多少
+betterfoliage.roundLogs.dimming=变暗
+betterfoliage.roundLogs.dimming.tooltip=使被遮挡的原木面变暗的程度
+betterfoliage.roundLogs.zProtection=Z-保护
+betterfoliage.roundLogs.zProtection.tooltip=缩放平行原木连接部分以防止 Z-fighting（闪烁）的程度，尝试将其设置为尽可能高而不出现故障
