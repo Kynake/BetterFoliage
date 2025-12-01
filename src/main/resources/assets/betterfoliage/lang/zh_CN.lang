@@ -206,8 +206,9 @@ betterfoliage.risingSoul.trailDensity=轨迹密度
 betterfoliage.risingSoul.trailDensity.tooltip=渲染粒子轨迹中每第 N 个前一个位置
 
 betterfoliage.connectedGrass=连接的草方块纹理
-betterfoliage.connectedGrass.enabled=启用
-betterfoliage.connectedGrass.enabled.tooltip=如果一个泥土方块上方有一个草方块：在所有草方块侧面绘制草方块顶部纹理，
+betterfoliage.connectedGrass.tooltip=如果一个泥土方块上方有一个草方块：在所有草方块侧面绘制草方块顶部纹理
+betterfoliage.connectedGrass.snowEnabled=启用积雪
+betterfoliage.connectedGrass.snowEnabled.tooltip=允许被雪覆盖的草方块的侧面使用雪的纹理
 
 betterfoliage.roundLogs=圆形原木
 betterfoliage.roundLogs.tooltip=制作横截面为八角形的原木
