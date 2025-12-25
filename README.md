@@ -49,12 +49,13 @@ The full list is too big to fit in a short sentence, not to mention still improv
 - GregTech 6
 - Witchery
 - The Twilight Forest
+- The Lord of the Rings Mod
 - Et Futurum Requiem
 - Everything in the GregTech New Horizons modpack
 
 ## Installation
 Place the mod's jar file inside the `mods` folder of your modded Minecraft instance.
-Make sure you've also installed the latest [Forge](https://files.minecraftforge.net/net/minecraftforge/forge/index_1.7.10.html) for Minecraft 1.7.10, [UniMixins](https://github.com/LegacyModdingMC/UniMixins/releases) and [Forgelin](https://github.com/GTNewHorizons/Forgelin/releases).
+Make sure you've also installed the latest [Forge](https://files.minecraftforge.net/net/minecraftforge/forge/index_1.7.10.html) for Minecraft 1.7.10, [UniMixins](https://github.com/LegacyModdingMC/UniMixins/releases) and [Forgelin](https://github.com/LegacyModdingMC/Forgelin).
 
 ## Contributing
 You may contribute to this mod by reporting any [Issues](https://github.com/Kynake/BetterFoliage/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen) you find while using it or by submitting [Pull Requests](https://github.com/Kynake/BetterFoliage/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Aopen) with fixes or improvements.
