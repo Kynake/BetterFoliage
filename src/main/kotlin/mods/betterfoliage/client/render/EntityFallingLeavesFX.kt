@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import mods.betterfoliage.client.config.Config
 import mods.betterfoliage.client.integration.EFRIntegration
+import mods.betterfoliage.client.integration.LOTRIntegration
 import mods.betterfoliage.client.texture.LeafRegistry
 import mods.octarinecore.PI2
 import mods.octarinecore.clamp
@@ -35,7 +36,11 @@ class EntityFallingLeavesFX(world: World, x: Int, y: Int, z: Int) : AbstractEnti
     companion object {
         @JvmStatic val biomeBrightnessMultiplier = 0.5f
 
-        @JvmStatic fun checkModSpecialLeafParticles(block: Block, world: World, x: Int, y: Int, z: Int) = !EFRIntegration.isETFCherryLeaves(block, world.getBlockMetadata(x, y, z))
+        @JvmStatic fun checkModSpecialLeafParticles(block: Block, world: World, x: Int, y: Int, z: Int): Boolean {
+            val metadata = world.getBlockMetadata(x, y, z)
+            return !EFRIntegration.isETFCherryLeaves(block, metadata) &&
+                !LOTRIntegration.isLOTRLeafWithVFX(block, metadata)
+        }
     }
 
     var particleRot = rand.nextInt(64)
