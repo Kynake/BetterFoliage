@@ -18,10 +18,10 @@ object AbyssalCraftIntegration {
 
     val abyssalLogs by lazy {
         object : SimpleBlockMatcher() {
-            override fun matchesClass(block: Block) =
-                (block.javaClass.name.equals(BlockDLTLog::class.java.name) ||
-                block.javaClass.name.equals(BlockDreadLog::class.java.name)) &&
-                Config.blocks.logs.matchesClass(block)
+            override fun matchesClass(block: Block) = (
+                block.javaClass.name.equals(BlockDLTLog::class.java.name) ||
+                    block.javaClass.name.equals(BlockDreadLog::class.java.name)
+                ) && Config.blocks.logs.matchesClass(block)
         }
     }
 
