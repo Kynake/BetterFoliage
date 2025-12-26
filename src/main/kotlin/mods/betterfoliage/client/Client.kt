@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import mods.betterfoliage.BetterFoliageMod
 import mods.betterfoliage.client.gui.ConfigGuiFactory
+import mods.betterfoliage.client.integration.AbyssalCraftIntegration
 import mods.betterfoliage.client.integration.CLCIntegration
 import mods.betterfoliage.client.integration.IC2Integration
 import mods.betterfoliage.client.integration.TFCIntegration
@@ -83,6 +84,7 @@ object Client {
             TFCIntegration,
             CLCIntegration,
             IC2Integration,
+            AbyssalCraftIntegration,
         )
 
     fun log(level: Level, msg: String) = BetterFoliageMod.log!!.log(level, msg)

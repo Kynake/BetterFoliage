@@ -6,6 +6,7 @@ import cpw.mods.fml.common.Loader
 import mods.octarinecore.metaprog.getJavaClass
 
 enum class Mod(val modID: String?, val modName: String, val coreModClass: String?, val targetClass: String?) : ITargetMod {
+    ABYSSALCRAFT("abyssalcraft", "AbyssalCraft", null, "com.shinoow.abyssalcraft.AbyssalCraft"),
     EFR("etfuturum", "Et Futurum Requiem", "ganymedes01.etfuturum.mixinplugin.EtFuturumEarlyMixins", "ganymedes01.etfuturum.EtFuturum"),
     FORESTRY("forestry", "Forestry", null, "forestry.Forestry"),
     GT5U("gregtech_nh", "GregTech GTNH", "gregtech.asm.GTCorePlugin", "gregtech.GTNHMod"),

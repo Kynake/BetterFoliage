@@ -39,6 +39,7 @@ dependencies {
     compileOnly("com.github.jss2a98aj:NotFine:0.3.0:dev") { transitive = false }
     compileOnly("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev") { transitive = false }
     compileOnly("ganymedes01.etfuturum:Et-Futurum-Requiem:2.6.2.25-GTNH:dev") { transitive = false }
+    compileOnly(rfg.deobf("curse.maven:abyssalcraft-53686:2311135")) { transitive = false }
     compileOnly(rfg.deobf("curse.maven:natura-74120:2257670")) { transitive = false }
     compileOnly(rfg.deobf("curse.maven:terrafirmacraft-302973:2627990")) { transitive = false }
     compileOnly(rfg.deobf("curse.maven:the-lord-of-the-rings-mod-legacy-423748:4091561")) { transitive = false }
@@ -89,6 +90,9 @@ dependencies {
 
     // Forestry
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:ForestryMC:4.11.4:dev")
+
+    // AbyssalCraft
+    runtimeOnlyNonPublishable(rfg.deobf("curse.maven:abyssalcraft-53686:2311135"))
 
     // Biomes O' Plenty
     //runtimeOnlyNonPublishable(rfg.deobf("curse.maven:biomes-o-plenty-220318:2499612"))
