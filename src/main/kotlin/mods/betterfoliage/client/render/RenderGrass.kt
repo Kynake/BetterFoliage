@@ -13,7 +13,7 @@ import mods.octarinecore.client.render.Model
 import mods.octarinecore.client.render.Quad
 import mods.octarinecore.client.render.Rotation
 import mods.octarinecore.client.render.ShadingContext
-import mods.octarinecore.client.render.alwaysRender
+import mods.octarinecore.client.render.applyContextToRender
 import mods.octarinecore.client.render.cornerAo
 import mods.octarinecore.client.render.cornerFlat
 import mods.octarinecore.client.render.faceOrientedAuto
@@ -68,6 +68,11 @@ class RenderGrass : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
         Config.blocks.grass.matchesID(ctx.block)
 
     override fun render(ctx: BlockContext, parent: RenderBlocks): Boolean {
+        val grassInfo = GrassRegistry.grass[ctx.icon(UP)]
+        if (grassInfo == null) {
+            renderWorldBlockBase(parent, face = applyContextToRender(ctx))
+            return true
+        }
         val isConnected =
             ctx.block(down1).let {
                 Config.blocks.dirt.matchesID(it) || Config.blocks.grass.matchesID(it)
@@ -79,12 +84,7 @@ class RenderGrass : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
                 (!isSnowed || Config.connectedGrass.snowEnabled) &&
                 allowConnectedGrassSpecialCases(ctx)
 
-        val grassInfo = GrassRegistry.grass[ctx.icon(UP)]
-        if (grassInfo == null) {
-            renderWorldBlockBase(parent, face = alwaysRender)
-            return true
-        }
-        val cubeTexture = if (isSnowed) ctx.icon(UP, up1) else null ?: grassInfo.grassTopTexture
+        val cubeTexture = if (isSnowed) ctx.icon(UP, up1) else grassInfo.grassTopTexture
         val blockColor = ctx.blockColor
 
         if (connectedGrass) {
@@ -109,7 +109,7 @@ class RenderGrass : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
             )
         } else {
             // render normally
-            if (renderWorldBlockBase(parent, face = alwaysRender)) return true
+            if (renderWorldBlockBase(parent, face = applyContextToRender(ctx))) return true
         }
 
         if (!Config.shortGrass.grassEnabled) return true

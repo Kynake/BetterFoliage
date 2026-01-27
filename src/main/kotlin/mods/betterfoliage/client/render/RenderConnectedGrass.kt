@@ -5,7 +5,7 @@ import mods.betterfoliage.client.config.Config
 import mods.octarinecore.client.render.AbstractBlockRenderingHandler
 import mods.octarinecore.client.render.BlockContext
 import mods.octarinecore.client.render.Int3
-import mods.octarinecore.client.render.alwaysRender
+import mods.octarinecore.client.render.applyContextToRender
 import mods.octarinecore.client.render.withOffset
 import net.minecraft.client.renderer.RenderBlocks
 
@@ -18,7 +18,7 @@ class RenderConnectedGrass : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_
 
     override fun render(ctx: BlockContext, parent: RenderBlocks): Boolean = ctx.withOffset(Int3.zero, up1) {
         ctx.withOffset(up1, up2) {
-            renderWorldBlockBase(parent, face = alwaysRender, captureShadingOnly = false)
+            renderWorldBlockBase(parent, face = applyContextToRender(ctx), captureShadingOnly = false)
         }
     }
 }

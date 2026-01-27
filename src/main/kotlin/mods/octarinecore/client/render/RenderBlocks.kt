@@ -168,14 +168,15 @@ class ShadingCapture {
     protected fun cornerId(face: ForgeDirection, corner1: ForgeDirection, corner2: ForgeDirection) = cornerId(face.ordinal, corner1.ordinal, corner2.ordinal)
 }
 
+/** Method that generates a lambda function that only renders sides that aren't occluded by a full opaque block  */
+fun applyContextToRender(ctx: BlockContext): (ShadingCapture, ForgeDirection, Int, IIcon?) -> Boolean = { renderCtx, face, pass, icon ->
+    ctx.shouldRenderSide(face.offset, face)
+}
+
 /** Lambda to render all faces of a block */
 val alwaysRender: (ShadingCapture, ForgeDirection, Int, IIcon?) -> Boolean =
-    { ctx, face, pass, icon ->
-        true
-    }
+    { ctx, face, pass, icon -> true }
 
 /** Lambda to render no faces of a block */
 val neverRender: (ShadingCapture, ForgeDirection, Int, IIcon?) -> Boolean =
-    { ctx, face, pass, icon ->
-        false
-    }
+    { ctx, face, pass, icon -> false }
