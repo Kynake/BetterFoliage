@@ -86,14 +86,17 @@ abstract class AbstractBlockRenderingHandler(modId: String) :
      * @param[targetPass] which render pass to save shading and texture data from
      * @param[block] lambda to use to render the block if it does not have a custom renderer
      * @param[face] lambda to determine which faces of the block to render
+     * @param[captureShadingOnly] attempt to render the block as well as capture AO. Default is true,
+     * for backwards compatibility. This is likely to be changed into a required variable in the future.
      */
     fun renderWorldBlockBase(
         parentRenderer: RenderBlocks = renderBlocks,
         targetPass: Int = 1,
-        block: () -> Unit = {
+        block: () -> Boolean = {
             blockContext.let { ctx -> renderBlocks.renderStandardBlock(ctx.block, ctx.x, ctx.y, ctx.z) }
         },
         face: (ShadingCapture, ForgeDirection, Int, IIcon?) -> Boolean,
+        captureShadingOnly: Boolean = true,
     ): Boolean {
         val ctx = blockContext
         val renderBlocks = renderBlocks
@@ -101,8 +104,7 @@ abstract class AbstractBlockRenderingHandler(modId: String) :
         // use original renderer for block breaking overlay
         if (parentRenderer.hasOverrideBlockTexture()) {
             parentRenderer.setRenderBoundsFromBlock(ctx.block)
-            parentRenderer.renderStandardBlock(ctx.block, ctx.x, ctx.y, ctx.z)
-            return true
+            return parentRenderer.renderStandardBlock(ctx.block, ctx.x, ctx.y, ctx.z)
         }
 
         // render block
@@ -110,12 +112,11 @@ abstract class AbstractBlockRenderingHandler(modId: String) :
         renderBlocks.capture.renderCallback = face
         renderBlocks.setRenderBoundsFromBlock(ctx.block)
         val handler = renderingHandlers[ctx.block.renderType]
-        if (handler != null && ctx.block.renderType != 0) {
+        return if (handler != null && ctx.block.renderType != 0) {
             handler.renderWorldBlock(ctx.world, ctx.x, ctx.y, ctx.z, ctx.block, ctx.block.renderType, renderBlocks)
         } else {
-            block()
+            block() && !captureShadingOnly
         }
-        return false
     }
 }
 

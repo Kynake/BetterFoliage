@@ -51,13 +51,14 @@ class RenderLilypad : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
 
     override fun render(ctx: BlockContext, parent: RenderBlocks): Boolean {
         // Render base block and capture AO data
-        if (renderWorldBlockBase(
+        if (!renderWorldBlockBase(
                 parentRenderer = parent,
                 face = alwaysRender,
                 block = { renderBlocks.renderBlockLilyPad(ctx.block, ctx.x, ctx.y, ctx.z) },
+                captureShadingOnly = false,
             )
         ) {
-            return true
+            return false
         }
 
         val rand = ctx.semiRandomArray(5)

@@ -17,6 +17,8 @@ class RenderConnectedGrass : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_
         (Config.connectedGrass.snowEnabled || !ctx.block(up2).isSnow)
 
     override fun render(ctx: BlockContext, parent: RenderBlocks): Boolean = ctx.withOffset(Int3.zero, up1) {
-        ctx.withOffset(up1, up2) { renderWorldBlockBase(parent, face = alwaysRender) }
+        ctx.withOffset(up1, up2) {
+            renderWorldBlockBase(parent, face = alwaysRender, captureShadingOnly = false)
+        }
     }
 }
