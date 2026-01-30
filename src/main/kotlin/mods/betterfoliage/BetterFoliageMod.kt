@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
     guiFactory = "mods.betterfoliage.client.gui.ConfigGuiFactory",
+    dependencies = "after:angelica;after:notfine;",
 )
 object BetterFoliageMod {
 
