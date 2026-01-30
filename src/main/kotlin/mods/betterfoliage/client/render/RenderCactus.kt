@@ -88,7 +88,9 @@ class RenderCactus : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
         // We render the cactus model ourselves because minecraft does not render it
         // with AO by default, which looks out of place when paired with
         // the other cactus additions that _do_ render with AO.
-        if (!(ctx.block(down1).isOpaqueCube || ctx.block(down1) is BlockCactus)) {
+        if (ctx.block(down1) !is BlockCactus &&
+            ctx.shouldRenderSide(down1, ForgeDirection.DOWN)
+        ) {
             modelRenderer.render(
                 modelBottom.model,
                 Rotation.identity,
@@ -98,7 +100,9 @@ class RenderCactus : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
             )
         }
 
-        if (!(ctx.block(up1).isOpaqueCube || ctx.block(up1) is BlockCactus)) {
+        if (ctx.block(up1) !is BlockCactus &&
+            ctx.shouldRenderSide(up1, ForgeDirection.UP)
+        ) {
             modelRenderer.render(
                 modelTop.model,
                 Rotation.identity,
