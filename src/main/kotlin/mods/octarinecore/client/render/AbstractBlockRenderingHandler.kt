@@ -115,8 +115,8 @@ abstract class AbstractBlockRenderingHandler(modId: String) :
         return if (handler != null && ctx.block.renderType != 0) {
             handler.renderWorldBlock(ctx.world, ctx.x, ctx.y, ctx.z, ctx.block, ctx.block.renderType, renderBlocks)
         } else {
-            block() && !captureShadingOnly
-        }
+            block()
+        } && !captureShadingOnly
     }
 }
 
