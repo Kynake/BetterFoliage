@@ -54,7 +54,7 @@ dependencies {
 
     // Test with rendering mods
 
-    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:2.0.0-alpha16:dev")
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:2.0.0-alpha17:dev")
 
     //runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:swansong:1.2.6"))
     //runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:falsetweaks:4.3.2"))
