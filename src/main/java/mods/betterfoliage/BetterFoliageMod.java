@@ -1,12 +1,13 @@
 package mods.betterfoliage;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.Side;
 import mods.betterfoliage.client.Client;
+import mods.betterfoliage.client.ClientRegistry;
 import mods.betterfoliage.client.config.Config;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Level;
@@ -47,15 +48,27 @@ public class BetterFoliageMod {
         log = event.getModLog();
         Configuration config = new Configuration(event.getSuggestedConfigurationFile(), null, true);
         Config.INSTANCE.attach(config);
+        if(event.getSide() == Side.CLIENT) {
+            ClientRegistry.preInit();
+        }
+    }
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        if (event.getSide() == Side.CLIENT) {
+           ClientRegistry.init();
+        }
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+        if (event.getSide() == Side.CLIENT) {
 
             // Load bearing log. without this the mod doesn't load!
             // TODO stop disguising initialization in a message log
             Client.INSTANCE.log(Level.INFO, "BetterFoliage initialized");
+
+            ClientRegistry.postInit();
         }
     }
 
