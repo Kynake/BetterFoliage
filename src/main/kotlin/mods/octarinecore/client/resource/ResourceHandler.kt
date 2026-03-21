@@ -20,14 +20,18 @@ import java.util.Random
 // ============================
 // Resource types
 // ============================
+
+// Something register textures for fetching IIcons
 interface IStitchListener {
     fun onStitch(atlas: IIconRegister)
 }
 
+// Generate models variants vectors etc
 interface IConfigChangeListener {
     fun onConfigChange()
 }
 
+// Gets world seed for SimplexNoise
 interface IWorldLoadListener {
     fun onWorldLoad(world: World)
 }
