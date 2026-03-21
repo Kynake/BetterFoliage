@@ -20,6 +20,6 @@ pluginManagement {
 }
 
 plugins {
-    id("com.gtnewhorizons.gtnhsettingsconvention") version("2.0.18")
+    id("com.gtnewhorizons.gtnhsettingsconvention") version("2.0.24")
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
 }
