@@ -1,4 +1,4 @@
-// TODO migrate these hooks directly into the corresponding Mixin classes
+// TODO migrate to java class
 @file:JvmName("Hooks")
 @file:SideOnly(Side.CLIENT)
 
@@ -25,6 +25,11 @@ fun getRenderTypeOverride(
     if (!Config.enabled) return original
     return blockContext.let { ctx ->
         ctx.set(blockAccess, x, y, z)
+
+        // Look under new renderers first
+        ClientRegistry.getEligibleBlockRenderer(ctx)?.renderId ?:
+
+        // Then use legacy renderers
         Client.renderers.find { it.isEligible(ctx) }?.renderId ?: original
     }
 }
