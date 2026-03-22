@@ -61,7 +61,7 @@ object Client {
 
     val renderers =
         listOf(
-            //RenderGrass(),
+            // RenderGrass(),
             RenderMycelium(),
             leafRenderer,
             RenderCactus(),

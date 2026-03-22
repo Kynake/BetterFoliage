@@ -1,6 +1,5 @@
 package mods.betterfoliage.mixins.early.minecraft;
 
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
@@ -12,6 +11,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 
 import mods.betterfoliage.client.Hooks;
@@ -87,9 +87,12 @@ public abstract class MixinRenderBlocks {
         }
     }
 
-    @ModifyVariable (method = "renderStandardBlockWithAmbientOcclusion", ordinal = 0,
+    @ModifyVariable(
+        method = "renderStandardBlockWithAmbientOcclusion",
+        ordinal = 0,
         at = @At(
-            value = "INVOKE_ASSIGN", ordinal = 2,
+            value = "INVOKE_ASSIGN",
+            ordinal = 2,
             target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIcon(Lnet/minecraft/block/Block;Lnet/minecraft/world/IBlockAccess;IIII)Lnet/minecraft/util/IIcon;"))
     private IIcon betterfoliage$applyAOColorNorth(IIcon icon, @Local(argsOnly = true, ordinal = 0) float r,
         @Local(argsOnly = true, ordinal = 1) float g, @Local(argsOnly = true, ordinal = 2) float b) {
@@ -97,9 +100,12 @@ public abstract class MixinRenderBlocks {
         return icon;
     }
 
-    @ModifyVariable (method = "renderStandardBlockWithAmbientOcclusion", ordinal = 0,
+    @ModifyVariable(
+        method = "renderStandardBlockWithAmbientOcclusion",
+        ordinal = 0,
         at = @At(
-            value = "INVOKE_ASSIGN", ordinal = 3,
+            value = "INVOKE_ASSIGN",
+            ordinal = 3,
             target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIcon(Lnet/minecraft/block/Block;Lnet/minecraft/world/IBlockAccess;IIII)Lnet/minecraft/util/IIcon;"))
     private IIcon betterfoliage$applyAOColorSouth(IIcon icon, @Local(argsOnly = true, ordinal = 0) float r,
         @Local(argsOnly = true, ordinal = 1) float g, @Local(argsOnly = true, ordinal = 2) float b) {
@@ -107,9 +113,12 @@ public abstract class MixinRenderBlocks {
         return icon;
     }
 
-    @ModifyVariable (method = "renderStandardBlockWithAmbientOcclusion", ordinal = 0,
+    @ModifyVariable(
+        method = "renderStandardBlockWithAmbientOcclusion",
+        ordinal = 0,
         at = @At(
-            value = "INVOKE_ASSIGN", ordinal = 5,
+            value = "INVOKE_ASSIGN",
+            ordinal = 5,
             target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIcon(Lnet/minecraft/block/Block;Lnet/minecraft/world/IBlockAccess;IIII)Lnet/minecraft/util/IIcon;"))
     private IIcon betterfoliage$applyAOColorWest(IIcon icon, @Local(argsOnly = true, ordinal = 0) float r,
         @Local(argsOnly = true, ordinal = 1) float g, @Local(argsOnly = true, ordinal = 2) float b) {
@@ -117,9 +126,12 @@ public abstract class MixinRenderBlocks {
         return icon;
     }
 
-    @ModifyVariable (method = "renderStandardBlockWithAmbientOcclusion", ordinal = 0,
+    @ModifyVariable(
+        method = "renderStandardBlockWithAmbientOcclusion",
+        ordinal = 0,
         at = @At(
-            value = "INVOKE_ASSIGN", ordinal = 6,
+            value = "INVOKE_ASSIGN",
+            ordinal = 6,
             target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIcon(Lnet/minecraft/block/Block;Lnet/minecraft/world/IBlockAccess;IIII)Lnet/minecraft/util/IIcon;"))
     private IIcon betterfoliage$applyAOColorEast(IIcon icon, @Local(argsOnly = true, ordinal = 0) float r,
         @Local(argsOnly = true, ordinal = 1) float g, @Local(argsOnly = true, ordinal = 2) float b) {
@@ -130,7 +142,8 @@ public abstract class MixinRenderBlocks {
     /// Grass render mixins (Without AO)
 
     @Unique
-    private boolean betterfoliage$overrideTessellatorColor(Tessellator tesselator, float rBase, float gBase, float bBase, float r, float g, float b) {
+    private boolean betterfoliage$overrideTessellatorColor(Tessellator tesselator, float rBase, float gBase,
+        float bBase, float r, float g, float b) {
         if (!GrassRenderer.forceBlockColor) {
             return true;
         }
@@ -139,9 +152,11 @@ public abstract class MixinRenderBlocks {
         return false;
     }
 
-    @WrapWithCondition(method = "renderStandardBlockWithColorMultiplier",
+    @WrapWithCondition(
+        method = "renderStandardBlockWithColorMultiplier",
         at = @At(
-            value = "INVOKE", ordinal = 2,
+            value = "INVOKE",
+            ordinal = 2,
             target = "Lnet/minecraft/client/renderer/Tessellator;setColorOpaque_F(FFF)V"))
     private boolean betterfoliage$applyMultColorNorth(Tessellator tessellator, float rBase, float gBase, float bBase,
         @Local(argsOnly = true, ordinal = 0) float r, @Local(argsOnly = true, ordinal = 1) float g,
@@ -149,33 +164,39 @@ public abstract class MixinRenderBlocks {
         return betterfoliage$overrideTessellatorColor(tessellator, rBase, gBase, bBase, r, g, b);
     }
 
-    @WrapWithCondition(method = "renderStandardBlockWithColorMultiplier",
+    @WrapWithCondition(
+        method = "renderStandardBlockWithColorMultiplier",
         at = @At(
-            value = "INVOKE", ordinal = 4,
+            value = "INVOKE",
+            ordinal = 4,
             target = "Lnet/minecraft/client/renderer/Tessellator;setColorOpaque_F(FFF)V"))
     private boolean betterfoliage$applyMultColorSouth(Tessellator tessellator, float rBase, float gBase, float bBase,
-                                                      @Local(argsOnly = true, ordinal = 0) float r, @Local(argsOnly = true, ordinal = 1) float g,
-                                                      @Local(argsOnly = true, ordinal = 2) float b) {
+        @Local(argsOnly = true, ordinal = 0) float r, @Local(argsOnly = true, ordinal = 1) float g,
+        @Local(argsOnly = true, ordinal = 2) float b) {
         return betterfoliage$overrideTessellatorColor(tessellator, rBase, gBase, bBase, r, g, b);
     }
 
-    @WrapWithCondition(method = "renderStandardBlockWithColorMultiplier",
+    @WrapWithCondition(
+        method = "renderStandardBlockWithColorMultiplier",
         at = @At(
-            value = "INVOKE", ordinal = 6,
+            value = "INVOKE",
+            ordinal = 6,
             target = "Lnet/minecraft/client/renderer/Tessellator;setColorOpaque_F(FFF)V"))
     private boolean betterfoliage$applyMultColorWest(Tessellator tessellator, float rBase, float gBase, float bBase,
-                                                      @Local(argsOnly = true, ordinal = 0) float r, @Local(argsOnly = true, ordinal = 1) float g,
-                                                      @Local(argsOnly = true, ordinal = 2) float b) {
+        @Local(argsOnly = true, ordinal = 0) float r, @Local(argsOnly = true, ordinal = 1) float g,
+        @Local(argsOnly = true, ordinal = 2) float b) {
         return betterfoliage$overrideTessellatorColor(tessellator, rBase, gBase, bBase, r, g, b);
     }
 
-    @WrapWithCondition(method = "renderStandardBlockWithColorMultiplier",
+    @WrapWithCondition(
+        method = "renderStandardBlockWithColorMultiplier",
         at = @At(
-            value = "INVOKE", ordinal = 8,
+            value = "INVOKE",
+            ordinal = 8,
             target = "Lnet/minecraft/client/renderer/Tessellator;setColorOpaque_F(FFF)V"))
     private boolean betterfoliage$applyMultColorEast(Tessellator tessellator, float rBase, float gBase, float bBase,
-                                                      @Local(argsOnly = true, ordinal = 0) float r, @Local(argsOnly = true, ordinal = 1) float g,
-                                                      @Local(argsOnly = true, ordinal = 2) float b) {
+        @Local(argsOnly = true, ordinal = 0) float r, @Local(argsOnly = true, ordinal = 1) float g,
+        @Local(argsOnly = true, ordinal = 2) float b) {
         return betterfoliage$overrideTessellatorColor(tessellator, rBase, gBase, bBase, r, g, b);
     }
 }

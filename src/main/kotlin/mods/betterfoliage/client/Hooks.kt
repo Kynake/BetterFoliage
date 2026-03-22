@@ -27,10 +27,9 @@ fun getRenderTypeOverride(
         ctx.set(blockAccess, x, y, z)
 
         // Look under new renderers first
-        ClientRegistry.getEligibleBlockRenderer(ctx)?.renderId ?:
-
-        // Then use legacy renderers
-        Client.renderers.find { it.isEligible(ctx) }?.renderId ?: original
+        ClientRegistry.getEligibleBlockRenderer(ctx)?.renderId
+            ?: // Then use legacy renderers
+            Client.renderers.find { it.isEligible(ctx) }?.renderId ?: original
     }
 }
 

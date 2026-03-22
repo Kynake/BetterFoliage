@@ -26,9 +26,7 @@ public class ClientRegistry {
     }
 
     private static void initBlockRenderers() {
-        blockRenderers = new BlockRenderer[] {
-            GrassRenderer.getInstance()
-        };
+        blockRenderers = new BlockRenderer[] { GrassRenderer.getInstance() };
     }
 
     public static BlockRenderer getEligibleBlockRenderer(BlockContext ctx) {

@@ -1,5 +1,12 @@
 package mods.betterfoliage;
 
+import java.util.Map;
+
+import net.minecraftforge.common.config.Configuration;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -9,11 +16,6 @@ import cpw.mods.fml.relauncher.Side;
 import mods.betterfoliage.client.Client;
 import mods.betterfoliage.client.ClientRegistry;
 import mods.betterfoliage.client.config.Config;
-import net.minecraftforge.common.config.Configuration;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
-
-import java.util.Map;
 
 @Mod(
     modid = BetterFoliageMod.MOD_ID,
@@ -22,9 +24,9 @@ import java.util.Map;
     acceptedMinecraftVersions = "[1.7.10]",
     acceptableRemoteVersions = "*",
     guiFactory = "mods.betterfoliage.client.gui.ConfigGuiFactory",
-    dependencies = "after:angelica;after:notfine;"
-)
+    dependencies = "after:angelica;after:notfine;")
 public class BetterFoliageMod {
+
     public static final String MOD_ID = "BetterFoliage";
     public static final String MOD_NAME = "Better Foliage";
     public static final String DOMAIN = "betterfoliage";
@@ -36,7 +38,7 @@ public class BetterFoliageMod {
 
     @Mod.InstanceFactory
     public static BetterFoliageMod instanceFactory() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new BetterFoliageMod();
         }
 
@@ -48,7 +50,7 @@ public class BetterFoliageMod {
         log = event.getModLog();
         Configuration config = new Configuration(event.getSuggestedConfigurationFile(), null, true);
         Config.INSTANCE.attach(config);
-        if(event.getSide() == Side.CLIENT) {
+        if (event.getSide() == Side.CLIENT) {
             ClientRegistry.preInit();
         }
     }
@@ -56,7 +58,7 @@ public class BetterFoliageMod {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         if (event.getSide() == Side.CLIENT) {
-           ClientRegistry.init();
+            ClientRegistry.init();
         }
     }
 
@@ -74,7 +76,7 @@ public class BetterFoliageMod {
 
     /** Mod is cosmetic only, always allow connection. */
     @NetworkCheckHandler
-    public boolean checkVersion(Map<String, String> mods, Side side)  {
+    public boolean checkVersion(Map<String, String> mods, Side side) {
         return true;
     }
 }

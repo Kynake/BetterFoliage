@@ -1,12 +1,14 @@
 package mods.betterfoliage.client.render;
 
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import mods.octarinecore.client.render.BlockContext;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import mods.octarinecore.client.render.BlockContext;
+
 public abstract class BlockRenderer implements ISimpleBlockRenderingHandler {
+
     private final int renderId;
 
     protected BlockRenderer() {
