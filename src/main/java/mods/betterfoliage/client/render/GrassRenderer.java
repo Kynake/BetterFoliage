@@ -8,13 +8,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
+import mods.betterfoliage.mixins.interfaces.minecraft.IGrassColorOverride;
 import mods.octarinecore.client.render.BlockContext;
 
 public class GrassRenderer extends BlockRenderer {
 
     private static GrassRenderer instance;
-
-    public static boolean forceBlockColor = false;
 
     public static GrassRenderer getInstance() {
         if (instance == null) {
@@ -30,12 +29,14 @@ public class GrassRenderer extends BlockRenderer {
         RenderBlocks renderer) {
         IIcon grassTop = block.getIcon(world, x, y, z, ForgeDirection.UP.ordinal());
 
-        forceBlockColor = true;
+        IGrassColorOverride grassRenderer = (IGrassColorOverride) renderer;
+
+        grassRenderer.betterfoliage$forceGrassColor(true);
         renderer.setOverrideBlockTexture(grassTop);
 
         boolean renderResult = renderer.renderStandardBlock(block, x, y, z);
 
-        forceBlockColor = false;
+        grassRenderer.betterfoliage$forceGrassColor(false);
         renderer.clearOverrideBlockTexture();
 
         return renderResult;

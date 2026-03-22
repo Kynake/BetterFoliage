@@ -15,11 +15,11 @@ import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 
 import mods.betterfoliage.client.Hooks;
-import mods.betterfoliage.client.render.GrassRenderer;
+import mods.betterfoliage.mixins.interfaces.minecraft.IGrassColorOverride;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(RenderBlocks.class)
-public abstract class MixinRenderBlocks {
+public abstract class MixinRenderBlocks implements IGrassColorOverride {
 
     @Shadow()
     public IBlockAccess blockAccess;
@@ -51,6 +51,13 @@ public abstract class MixinRenderBlocks {
     @Shadow()
     public float colorBlueBottomRight;
 
+    @Unique
+    private boolean betterfoliage$isForcingGrassColor = false;
+
+    public void betterfoliage$forceGrassColor(boolean shouldForce) {
+        betterfoliage$isForcingGrassColor = shouldForce;
+    }
+
     // What: Invoke BF code to overrule the return value of Block.getRenderType()
     // Why: Allows us to use custom block renderers for any block, without touching block code
     @ModifyVariable(
@@ -68,7 +75,7 @@ public abstract class MixinRenderBlocks {
     /// Grass render mixins (With AO)
     @Unique
     private void betterfoliage$applyAOBlockColor(float r, float g, float b) {
-        if (GrassRenderer.forceBlockColor) {
+        if (betterfoliage$isForcingGrassColor) {
             colorRedTopLeft *= r;
             colorGreenTopLeft *= g;
             colorBlueTopLeft *= b;
@@ -144,7 +151,7 @@ public abstract class MixinRenderBlocks {
     @Unique
     private boolean betterfoliage$overrideTessellatorColor(Tessellator tesselator, float rBase, float gBase,
         float bBase, float r, float g, float b) {
-        if (!GrassRenderer.forceBlockColor) {
+        if (!betterfoliage$isForcingGrassColor) {
             return true;
         }
 
