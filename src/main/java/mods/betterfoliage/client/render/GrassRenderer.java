@@ -29,6 +29,12 @@ public class GrassRenderer extends BlockRenderer {
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
         RenderBlocks renderer) {
 
+        // Use original render path when rendering block breaking overlay
+        if (renderer.hasOverrideBlockTexture()) {
+            renderer.setRenderBoundsFromBlock(block);
+            return renderer.renderStandardBlock(block, x, y, z);
+        }
+
         boolean isConnected = Config.connectedGrass.INSTANCE.getEnabled();
         if(isConnected) {
             Block blockBelow = world.getBlock(x, y - 1, z);
