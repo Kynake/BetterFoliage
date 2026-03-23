@@ -7,11 +7,12 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import mods.octarinecore.client.render.BlockContext;
 
-public abstract class BlockRenderer implements ISimpleBlockRenderingHandler {
+public abstract class BlockRenderer extends ResourceHandler implements ISimpleBlockRenderingHandler {
 
     private final int renderId;
 
     protected BlockRenderer() {
+        super();
         renderId = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(this);
     }

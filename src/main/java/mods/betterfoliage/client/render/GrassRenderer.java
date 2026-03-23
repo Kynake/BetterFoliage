@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
@@ -15,6 +16,8 @@ import mods.octarinecore.client.render.BlockContext;
 public class GrassRenderer extends BlockRenderer {
 
     private static GrassRenderer instance;
+
+    private IIcon shortGrass;
 
     public static GrassRenderer getInstance() {
         if (instance == null) {
@@ -84,5 +87,12 @@ public class GrassRenderer extends BlockRenderer {
             && (Config.shortGrass.INSTANCE.getGrassEnabled() || Config.connectedGrass.INSTANCE.getEnabled())
             && Config.blocks.INSTANCE.getGrass()
                 .matchesID(ctx.getBlock());
+    }
+
+    @Override
+    public void onTextureStitch(TextureStitchEvent.Pre event) {
+        if (event.map.getTextureType() != 0) return;
+
+        shortGrass = event.map.registerIcon(BetterFoliageMod.LEGACY_DOMAIN + ":better_grass_long_0");
     }
 }
