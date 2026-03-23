@@ -1,8 +1,8 @@
 package mods.betterfoliage.client.render;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -39,46 +39,54 @@ public class GrassRenderer extends BlockRenderer {
         }
 
         boolean isConnected = Config.connectedGrass.INSTANCE.getEnabled();
-        if(isConnected) {
+        if (isConnected) {
             Block blockBelow = world.getBlock(x, y - 1, z);
-            isConnected = Config.blocks.INSTANCE.getDirt().matchesID(blockBelow) ||
-                Config.blocks.INSTANCE.getGrass().matchesID(blockBelow);
+            isConnected = Config.blocks.INSTANCE.getDirt()
+                .matchesID(blockBelow)
+                || Config.blocks.INSTANCE.getGrass()
+                    .matchesID(blockBelow);
         }
+
+        Block blockAbove = world.getBlock(x, y + 1, z);
+        boolean isSnowed = Config.connectedGrass.INSTANCE.getSnowEnabled() && Utils.isSnow(blockAbove);
+
+        IGrassColorOverride grassRenderer = (IGrassColorOverride) renderer;
 
         boolean renderResult;
         if (isConnected) {
-
-            Block blockAbove = world.getBlock(x, y + 1, z);
-
-            boolean isSnowed = Config.connectedGrass.INSTANCE.getSnowEnabled() && (
-                blockAbove.getMaterial() == Material.snow || blockAbove.getMaterial() == Material.craftedSnow);
-
-            if(isSnowed) {
+            if (isSnowed) {
                 IIcon snowTop = blockAbove.getIcon(world, x, y + 1, z, ForgeDirection.UP.ordinal());
                 renderer.setOverrideBlockTexture(snowTop);
                 renderResult = renderer.renderStandardBlock(block, x, y, z);
                 renderer.clearOverrideBlockTexture();
-            }
-            else {
+            } else {
                 IIcon grassTop = block.getIcon(world, x, y, z, ForgeDirection.UP.ordinal());
                 renderer.setOverrideBlockTexture(grassTop);
-
-                IGrassColorOverride grassRenderer = (IGrassColorOverride) renderer;
-                grassRenderer.betterfoliage$forceGrassColor(true);
+                grassRenderer.betterfoliage$setGrassRender(true);
 
                 renderResult = renderer.renderStandardBlock(block, x, y, z);
 
-                grassRenderer.betterfoliage$forceGrassColor(false);
+                grassRenderer.betterfoliage$setGrassRender(false);
                 renderer.clearOverrideBlockTexture();
             }
-        }
-        else {
+        } else {
             renderResult = renderer.renderStandardBlock(block, x, y, z);
         }
 
-        // TODO render short grass
+        if (!renderResult) return false;
 
-        return renderResult;
+        if (!Config.shortGrass.INSTANCE.getGrassEnabled()) return true;
+        if (isSnowed && !Config.shortGrass.INSTANCE.getSnowEnabled()) return true;
+
+        renderer.setOverrideBlockTexture(shortGrass);
+        grassRenderer.betterfoliage$setGrassRender(true);
+
+        renderer.renderCrossedSquares(Blocks.tallgrass, x, y + 1, z);
+
+        grassRenderer.betterfoliage$setGrassRender(false);
+        renderer.clearOverrideBlockTexture();
+
+        return true;
     }
 
     @Override

@@ -52,10 +52,10 @@ public abstract class MixinRenderBlocks implements IGrassColorOverride {
     public float colorBlueBottomRight;
 
     @Unique
-    private boolean betterfoliage$isForcingGrassColor = false;
+    private boolean betterfoliage$isRenderingGrass = false;
 
-    public void betterfoliage$forceGrassColor(boolean shouldForce) {
-        betterfoliage$isForcingGrassColor = shouldForce;
+    public void betterfoliage$setGrassRender(boolean isRenderingGrass) {
+        betterfoliage$isRenderingGrass = isRenderingGrass;
     }
 
     // What: Invoke BF code to overrule the return value of Block.getRenderType()
@@ -72,10 +72,12 @@ public abstract class MixinRenderBlocks implements IGrassColorOverride {
         return Hooks.getRenderTypeOverride(blockAccess, x, y, z, originalRenderType);
     }
 
+    /// =============================
     /// Grass render mixins (With AO)
+    /// =============================
     @Unique
     private void betterfoliage$applyAOBlockColor(float r, float g, float b) {
-        if (betterfoliage$isForcingGrassColor) {
+        if (betterfoliage$isRenderingGrass) {
             colorRedTopLeft *= r;
             colorGreenTopLeft *= g;
             colorBlueTopLeft *= b;
@@ -146,12 +148,13 @@ public abstract class MixinRenderBlocks implements IGrassColorOverride {
         return icon;
     }
 
+    /// ================================
     /// Grass render mixins (Without AO)
-
+    /// ================================
     @Unique
     private boolean betterfoliage$overrideTessellatorColor(Tessellator tesselator, float rBase, float gBase,
         float bBase, float r, float g, float b) {
-        if (!betterfoliage$isForcingGrassColor) {
+        if (!betterfoliage$isRenderingGrass) {
             return true;
         }
 
@@ -206,4 +209,21 @@ public abstract class MixinRenderBlocks implements IGrassColorOverride {
         @Local(argsOnly = true, ordinal = 2) float b) {
         return betterfoliage$overrideTessellatorColor(tessellator, rBase, gBase, bBase, r, g, b);
     }
+
+    /// ================================
+    /// Grass render mixins (Tall Grass)
+    /// ================================
+    // @WrapOperation(
+    // method = "renderCrossedSquares",
+    // at = @At(
+    // value = "INVOKE",
+    // target =
+    // "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIconFromSideAndMetadata(Lnet/minecraft/block/Block;II)Lnet/minecraft/util/IIcon;"))
+    // private IIcon betterfoliage$overrideTextureIfNecessary(RenderBlocks target, Block block, int side, int meta,
+    // Operation<IIcon> original) {
+    // if(betterfoliage$isRenderingGrass && target.hasOverrideBlockTexture()) {
+    // return target.overrideBlockTexture;
+    // }
+    // return original.call(target, block, side, meta);
+    // }
 }
