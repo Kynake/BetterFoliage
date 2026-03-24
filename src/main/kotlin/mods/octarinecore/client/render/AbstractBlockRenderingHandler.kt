@@ -120,6 +120,8 @@ abstract class AbstractBlockRenderingHandler(modId: String) :
     }
 }
 
+// TODO: Replace with static methods in a BlockUtils class (maybe ThreadLocal instanced?)
+
 /**
  * Represents the block being rendered. Has properties and methods to query the neighborhood of the
  * block in block-relative coordinates.

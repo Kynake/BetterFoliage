@@ -6,6 +6,7 @@ import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
+// TODO: Add other SubscribeEvents that need to be handled (either here or somewhere else)
 public abstract class ResourceHandler {
 
     protected ResourceHandler() {

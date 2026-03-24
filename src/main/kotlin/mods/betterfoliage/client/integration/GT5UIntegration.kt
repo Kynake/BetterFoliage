@@ -14,6 +14,7 @@ object GT5UIntegration {
     private const val VINE_TYPE = 20
     private const val DOUBLE_PLANT_TYPE = 40
 
+    // TODO Might not be needed after the refactor
     @JvmStatic fun tryTintWithPollution(originalColor: Int, block: Block, x: Int, z: Int): Int {
         if (!(Mod.GT5U.isLoaded && PollutionConfig.pollution)) return originalColor
         return when (block.renderType) {

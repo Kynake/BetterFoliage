@@ -8,6 +8,7 @@ import net.minecraft.block.Block
 import net.minecraft.util.IIcon
 
 /** Integration for Optifine. */
+// TODO: Might not be needed after the refactor
 @Suppress("UNCHECKED_CAST")
 @SideOnly(Side.CLIENT)
 object OptifineCTM {

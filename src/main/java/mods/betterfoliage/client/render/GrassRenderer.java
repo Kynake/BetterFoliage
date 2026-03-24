@@ -15,6 +15,10 @@ import mods.octarinecore.client.render.BlockContext;
 
 public class GrassRenderer extends BlockRenderer {
 
+    // TODO: Reminder SPECIAL CASES to handle:
+    // TFC
+    // Primal (Frodo's mod) <--- New Compat
+
     private static GrassRenderer instance;
 
     private IIcon shortGrass;
@@ -38,6 +42,7 @@ public class GrassRenderer extends BlockRenderer {
             return renderer.renderStandardBlock(block, x, y, z);
         }
 
+        // Render grass block
         boolean isConnected = Config.connectedGrass.INSTANCE.getEnabled();
         if (isConnected) {
             Block blockBelow = world.getBlock(x, y - 1, z);
@@ -78,6 +83,16 @@ public class GrassRenderer extends BlockRenderer {
         if (!Config.shortGrass.INSTANCE.getGrassEnabled()) return true;
         if (isSnowed && !Config.shortGrass.INSTANCE.getSnowEnabled()) return true;
 
+        // TODO: Maybe don't use tallgrass noise as position variation (else it stays at the same place as tallgrass)
+        // TODO: Check quad scales (currently, texture is > 16px but renders same size as tallgrass)
+        // ^ Might need custom render func
+
+        // TODO: Don't render under full blocks
+        // TODO: Don't render together with tall grass (<--- new feature)
+
+        // TODO: Generate color based on grass top texture for modded grass blocks
+
+        // Render short grass
         renderer.setOverrideBlockTexture(shortGrass);
         grassRenderer.betterfoliage$setGrassRender(true);
 
@@ -101,6 +116,8 @@ public class GrassRenderer extends BlockRenderer {
     public void onTextureStitch(TextureStitchEvent.Pre event) {
         if (event.map.getTextureType() != 0) return;
 
+        // TODO: Render varied grass (needs a TextureSet (and Loader) class + randomizer)
+        // TODO: Also, Snow variations
         shortGrass = event.map.registerIcon(BetterFoliageMod.LEGACY_DOMAIN + ":better_grass_long_0");
     }
 }

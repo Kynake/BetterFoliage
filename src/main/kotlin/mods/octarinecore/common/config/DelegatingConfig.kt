@@ -1,3 +1,11 @@
+// TODO Refactor the entire config system
+// - Allow for config class to use static variables
+// - Prevent unused-but-present configs from appearing in the menu. See Issue #23
+//   (possibly clear them from the config file too)
+// - Complete overhaul of block lists:
+//   - Configurable by prioritized property files in resource packs (Like natural textures in RPMCPatcher)
+//   - Config menu should show these as read-only options.
+//   - Allow adding / removing options on top (which then saves them to a user-custom resource pack)
 package mods.octarinecore.common.config
 
 import com.google.common.collect.LinkedListMultimap

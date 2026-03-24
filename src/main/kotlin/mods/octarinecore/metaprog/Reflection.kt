@@ -1,3 +1,4 @@
+// TODO: Try to stop using reflection (hopefully all of it, otherwise just migrate this class to java)
 @file:JvmName("Reflection")
 
 package mods.octarinecore.metaprog

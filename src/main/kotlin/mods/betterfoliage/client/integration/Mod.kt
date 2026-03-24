@@ -5,6 +5,7 @@ import com.gtnewhorizon.gtnhmixins.builders.TargetModBuilder
 import cpw.mods.fml.common.Loader
 import mods.octarinecore.metaprog.getJavaClass
 
+// TODO: Migrate to Java
 enum class Mod(val modID: String?, val modName: String, val coreModClass: String?, val targetClass: String?) : ITargetMod {
     ABYSSALCRAFT("abyssalcraft", "AbyssalCraft", null, "com.shinoow.abyssalcraft.AbyssalCraft"),
     EFR("etfuturum", "Et Futurum Requiem", "ganymedes01.etfuturum.mixinplugin.EtFuturumEarlyMixins", "ganymedes01.etfuturum.EtFuturum"),
