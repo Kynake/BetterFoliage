@@ -15,8 +15,6 @@ import mods.betterfoliage.client.Hooks;
 @Mixin(WorldClient.class)
 public abstract class MixinWorldClient {
 
-    // What: Invoke BF code for every random display tick
-    // Why: Allows us to catch random display ticks, without touching block code
     @ModifyExpressionValue(
         method = "doVoidFogParticles",
         at = @At(

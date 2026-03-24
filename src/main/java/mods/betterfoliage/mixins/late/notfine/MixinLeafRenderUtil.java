@@ -21,6 +21,6 @@ public abstract class MixinLeafRenderUtil {
     @ModifyReturnValue(method = "shouldSideBeRendered", at = @At("RETURN"), remap = false)
     private static boolean betterfoliage$shouldRenderBlockSideOverride(boolean original, IBlockAccess world, int x,
         int y, int z, int side) {
-        return Hooks.overrideIsPartialBlock(original, world, x, y, z);
+        return Hooks.overrideIsPartialBlock(world, x, y, z, original);
     }
 }

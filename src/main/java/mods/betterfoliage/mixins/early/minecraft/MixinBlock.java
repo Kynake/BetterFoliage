@@ -16,27 +16,19 @@ import mods.betterfoliage.client.Hooks;
 @Mixin(value = Block.class, priority = 1500)
 public abstract class MixinBlock {
 
-    // What: Invoke BF code to overrule AO transparency value
-    // Why: Allows us to have light behave properly on non-solid log blocks without
-    // messing with isOpaqueBlock(), which could have gameplay effects
     @ModifyReturnValue(method = "getAmbientOcclusionLightValue", at = @At("RETURN"))
     private float betterfoliage$getAmbientOcclusionLightValueOverride(float original) {
-        return Hooks.getAmbientOcclusionLightValueOverride(original, (Block) (Object) this);
+        return Hooks.getAmbientOcclusionLightValueOverride((Block) (Object) this, original);
     }
 
-    // What: Invoke BF code to override block.useNeighborBrightness
-    // Why: Allows us to have light behave properly on non-solid log blocks
     @ModifyReturnValue(method = "getUseNeighborBrightness", at = @At("RETURN"))
     private boolean betterfoliage$getUseNeighborBrightnessOverride(boolean original) {
-        return Hooks.getUseNeighborBrightnessOverride(original, (Block) (Object) this);
+        return Hooks.getUseNeighborBrightnessOverride((Block) (Object) this, original);
     }
 
-    // What: Invoke BF code to overrule condition
-    // Why: Allows us to make log blocks non-solid without
-    // messing with isOpaqueBlock(), which could have gameplay effects
     @ModifyReturnValue(method = "shouldSideBeRendered", at = @At("RETURN"))
     private boolean betterfoliage$shouldRenderBlockSideOverride(boolean original, IBlockAccess world, int x, int y,
         int z, int side) {
-        return Hooks.overrideIsPartialBlock(original, world, x, y, z);
+        return Hooks.overrideIsPartialBlock(world, x, y, z, original);
     }
 }

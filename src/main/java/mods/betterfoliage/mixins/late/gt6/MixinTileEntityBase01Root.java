@@ -20,10 +20,10 @@ public abstract class MixinTileEntityBase01Root {
         TileEntity te = ((TileEntity) (Object) this);
         ForgeDirection direction = ForgeDirection.getOrientation(side);
         return Hooks.overrideIsPartialBlock(
-            original.call(side),
             te.getWorldObj(),
             te.xCoord + direction.offsetX,
             te.yCoord + direction.offsetY,
-            te.zCoord + direction.offsetZ);
+            te.zCoord + direction.offsetZ,
+            original.call(side));
     }
 }

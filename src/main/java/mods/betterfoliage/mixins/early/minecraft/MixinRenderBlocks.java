@@ -59,8 +59,6 @@ public abstract class MixinRenderBlocks implements IGrassColorOverride {
         betterfoliage$isRenderingGrass = isRenderingGrass;
     }
 
-    // What: Invoke BF code to overrule the return value of Block.getRenderType()
-    // Why: Allows us to use custom block renderers for any block, without touching block code
     @ModifyVariable(
         method = "renderBlockByRenderType",
         ordinal = 3,

@@ -39,6 +39,6 @@ public abstract class MixinShouldSideBeRendered {
     @ModifyReturnValue(method = { "shouldSideBeRendered", "func_149646_a" }, at = @At("RETURN"), remap = false)
     private boolean betterfoliage$shouldSideBeRenderedNotFineOverride(boolean original, IBlockAccess world, int x,
         int y, int z, int side) {
-        return Hooks.overrideIsPartialBlock(original, world, x, y, z);
+        return Hooks.overrideIsPartialBlock(world, x, y, z, original);
     }
 }
