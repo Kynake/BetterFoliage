@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 
@@ -72,6 +73,7 @@ public abstract class MixinRenderBlocks implements IGrassColorOverride {
         return Hooks.getRenderTypeOverride(blockAccess, x, y, z, originalRenderType);
     }
 
+    // TODO Move to separate Grass mixin class
     /// =============================
     /// Grass render mixins (With AO)
     /// =============================
@@ -152,13 +154,13 @@ public abstract class MixinRenderBlocks implements IGrassColorOverride {
     /// Grass render mixins (Without AO)
     /// ================================
     @Unique
-    private boolean betterfoliage$overrideTessellatorColor(Tessellator tesselator, float rBase, float gBase,
+    private boolean betterfoliage$overrideTessellatorColor(Tessellator tessellator, float rBase, float gBase,
         float bBase, float r, float g, float b) {
         if (!betterfoliage$isRenderingGrass) {
             return true;
         }
 
-        tesselator.setColorOpaque_F(r * rBase, g * gBase, b * bBase);
+        tessellator.setColorOpaque_F(r * rBase, g * gBase, b * bBase);
         return false;
     }
 
@@ -213,17 +215,14 @@ public abstract class MixinRenderBlocks implements IGrassColorOverride {
     /// ================================
     /// Grass render mixins (Tall Grass)
     /// ================================
-    // @WrapOperation(
-    // method = "renderCrossedSquares",
-    // at = @At(
-    // value = "INVOKE",
-    // target =
-    // "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIconFromSideAndMetadata(Lnet/minecraft/block/Block;II)Lnet/minecraft/util/IIcon;"))
-    // private IIcon betterfoliage$overrideTextureIfNecessary(RenderBlocks target, Block block, int side, int meta,
-    // Operation<IIcon> original) {
-    // if(betterfoliage$isRenderingGrass && target.hasOverrideBlockTexture()) {
-    // return target.overrideBlockTexture;
-    // }
-    // return original.call(target, block, side, meta);
-    // }
+    @ModifyExpressionValue(
+        method = "renderCrossedSquares",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/block/Block;colorMultiplier(Lnet/minecraft/world/IBlockAccess;III)I"))
+    private int betterfoliage$overrideShortGrassColor(int original, @Local(argsOnly = true, ordinal = 0) int x,
+        @Local(argsOnly = true, ordinal = 1) int y, @Local(argsOnly = true, ordinal = 2) int z) {
+        return betterfoliage$isRenderingGrass ? blockAccess.getBiomeGenForCoords(x, z)
+            .getBiomeGrassColor(x, y - 1, z) : original;
+    }
 }
