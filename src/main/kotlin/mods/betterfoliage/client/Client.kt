@@ -1,10 +1,8 @@
 package mods.betterfoliage.client
 
-import cpw.mods.fml.client.FMLClientHandler
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import mods.betterfoliage.BetterFoliageMod
-import mods.betterfoliage.client.gui.ConfigGuiFactory
 import mods.betterfoliage.client.integration.AbyssalCraftIntegration
 import mods.betterfoliage.client.integration.CLCIntegration
 import mods.betterfoliage.client.integration.IC2Integration
@@ -27,10 +25,8 @@ import mods.betterfoliage.client.texture.GrassGenerator
 import mods.betterfoliage.client.texture.GrassRegistry
 import mods.betterfoliage.client.texture.LeafGenerator
 import mods.betterfoliage.client.texture.LeafRegistry
-import mods.octarinecore.client.KeyHandler
 import mods.octarinecore.client.resource.CenteringTextureGenerator
 import mods.octarinecore.client.resource.GeneratorPack
-import net.minecraft.client.Minecraft
 import org.apache.logging.log4j.Level
 
 /**
@@ -42,12 +38,6 @@ import org.apache.logging.log4j.Level
  */
 @SideOnly(Side.CLIENT)
 object Client {
-
-    val configKey =
-        KeyHandler(BetterFoliageMod.MOD_NAME, 66, "key.betterfoliage.gui") {
-            FMLClientHandler.instance()
-                .showGuiScreen(ConfigGuiFactory.ConfigGuiBetterFoliage(Minecraft.getMinecraft().currentScreen))
-        }
 
     val genGrass = GrassGenerator("bf_gen_grass")
     val genLeaves = LeafGenerator("bf_gen_leaves")
