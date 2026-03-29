@@ -220,6 +220,7 @@ public abstract class MixinRenderBlocks implements IGrassColorOverride {
             target = "Lnet/minecraft/block/Block;colorMultiplier(Lnet/minecraft/world/IBlockAccess;III)I"))
     private int betterfoliage$overrideShortGrassColor(int original, @Local(argsOnly = true, ordinal = 0) int x,
         @Local(argsOnly = true, ordinal = 1) int y, @Local(argsOnly = true, ordinal = 2) int z) {
+        // TODO: turn this into a hook like: Hooks.getGrassColor(IBlockAccess world, x, y, z); that checks custom grass color list
         return betterfoliage$isRenderingGrass ? blockAccess.getBiomeGenForCoords(x, z)
             .getBiomeGrassColor(x, y - 1, z) : original;
     }
