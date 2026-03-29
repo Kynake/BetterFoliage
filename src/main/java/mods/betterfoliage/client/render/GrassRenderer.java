@@ -5,11 +5,11 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
+import mods.betterfoliage.client.resource.TextureSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.IGrassColorOverride;
 import mods.octarinecore.client.render.BlockContext;
 
@@ -21,7 +21,10 @@ public class GrassRenderer extends BlockRenderer {
 
     private static GrassRenderer instance;
 
-    private IIcon shortGrass;
+    // spotless:off
+    private final TextureSet shortGrass = new TextureSet(
+        BetterFoliageMod.LEGACY_DOMAIN, "textures/blocks/better_grass_long_", ".png");
+    // spotless:on
 
     public static GrassRenderer getInstance() {
         if (instance == null) {
@@ -93,7 +96,9 @@ public class GrassRenderer extends BlockRenderer {
         // TODO: Generate color based on grass top texture for modded grass blocks
 
         // Render short grass
-        renderer.setOverrideBlockTexture(shortGrass);
+
+        // TODO: Snow variations
+        renderer.setOverrideBlockTexture(shortGrass.getTextureForLocation(x, y, z));
         grassRenderer.betterfoliage$setGrassRender(true);
 
         renderer.renderCrossedSquares(Blocks.tallgrass, x, y + 1, z);
@@ -110,14 +115,5 @@ public class GrassRenderer extends BlockRenderer {
             && (Config.shortGrass.INSTANCE.getGrassEnabled() || Config.connectedGrass.INSTANCE.getEnabled())
             && Config.blocks.INSTANCE.getGrass()
                 .matchesID(ctx.getBlock());
-    }
-
-    @Override
-    public void onTextureStitch(TextureStitchEvent.Pre event) {
-        if (event.map.getTextureType() != 0) return;
-
-        // TODO: Render varied grass (needs a TextureSet (and Loader) class + randomizer)
-        // TODO: Also, Snow variations
-        shortGrass = event.map.registerIcon(BetterFoliageMod.LEGACY_DOMAIN + ":better_grass_long_0");
     }
 }
