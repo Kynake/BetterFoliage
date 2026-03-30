@@ -3,7 +3,6 @@ package mods.betterfoliage.mixins.early.minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,9 +20,6 @@ import mods.betterfoliage.mixins.interfaces.minecraft.IGrassBlockRenderer;
 @SuppressWarnings("UnusedMixin")
 @Mixin(RenderBlocks.class)
 public abstract class MixinRenderBlocks_Grass implements IGrassBlockRenderer {
-
-    @Shadow()
-    public IBlockAccess blockAccess;
 
     // spotless:off
     @Shadow() public float colorRedTopLeft;
