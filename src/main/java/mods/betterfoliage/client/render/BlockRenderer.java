@@ -31,5 +31,4 @@ public abstract class BlockRenderer implements ISimpleBlockRenderingHandler {
     }
 
     public abstract boolean isEligible(BlockContext context);
-
 }
