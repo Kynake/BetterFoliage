@@ -4,7 +4,6 @@ import com.shinoow.abyssalcraft.common.blocks.BlockDLTLog
 import com.shinoow.abyssalcraft.common.blocks.BlockDreadLog
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
-import ic2.core.block.BlockRubWood
 import mods.betterfoliage.client.Client
 import mods.betterfoliage.client.config.Config
 import mods.betterfoliage.client.config.SimpleBlockMatcher
