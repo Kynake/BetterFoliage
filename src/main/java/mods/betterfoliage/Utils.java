@@ -4,9 +4,9 @@ public final class Utils {
 
     public static int hash(int x) {
         x ^= x >>> 16;
-        x *= 0x7feb352d;
+        x *= 0x7FEB352D;
         x ^= x >>> 15;
-        x *= 0x846ca68b;
+        x *= 0x846CA68B;
         x ^= x >>> 16;
         return x;
     }
@@ -23,5 +23,10 @@ public final class Utils {
         int hash = hash(((int) seed) + 53);
         hash = hash((int) (seed >> 32) + hash);
         return hashCoords(x, y, z, hash);
+    }
+
+    public static double hashToRange(int hash, double min, double max) {
+        double invLerp = (double) ((long) hash - 0xFFFFFFFF80000000L) / (double) 0xFFFFFFFFL;
+        return (max - min) * invLerp + min;
     }
 }
