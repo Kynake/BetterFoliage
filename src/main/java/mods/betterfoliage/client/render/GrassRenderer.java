@@ -111,6 +111,8 @@ public class GrassRenderer extends BlockRenderer {
 
         // Render short grass
 
+        // TODO fix short grass snow coloring
+
         double yHeight = y + 1;
 
         TextureSet set;
