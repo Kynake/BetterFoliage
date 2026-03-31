@@ -111,8 +111,6 @@ public class GrassRenderer extends BlockRenderer {
 
         // Render short grass
 
-        // TODO fix short grass snow coloring
-
         double yHeight = y + 1;
 
         TextureSet set;
@@ -123,8 +121,13 @@ public class GrassRenderer extends BlockRenderer {
             set = shortGrass;
         }
 
-        Tessellator.instance.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y + 1, z));
-        setGrassColor(world, block, x, y, z);
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y + 1, z));
+        if (hasSnowAbove) {
+            tessellator.setColorOpaque(255, 255, 255);
+        } else {
+            setGrassColor(world, tessellator, block, x, y, z);
+        }
 
         grassRenderer.betterfoliage$setGrassRender(true);
 
@@ -149,10 +152,10 @@ public class GrassRenderer extends BlockRenderer {
                 .matchesID(ctx.getBlock());
     }
 
-    private void setGrassColor(IBlockAccess world, Block grassBlock, int x, int y, int z) {
+    private void setGrassColor(IBlockAccess world, Tessellator tessellator, Block grassBlock, int x, int y, int z) {
         // TODO: consider custom grass blocks and colors here
         int color = world.getBiomeGenForCoords(x, z)
             .getBiomeGrassColor(x, y, z);
-        Tessellator.instance.setColorOpaque_I(color);
+        tessellator.setColorOpaque_I(color);
     }
 }
