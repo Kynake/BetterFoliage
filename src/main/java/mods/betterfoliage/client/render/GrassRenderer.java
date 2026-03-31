@@ -22,7 +22,8 @@ public class GrassRenderer extends BlockRenderer {
     // TFC
     // Primal (Frodo's mod) <--- New Compat
 
-    private static final float SNOW_OFFSET = 0.0625f;
+    // TODO make configurable? (per snow layer height maybe)
+    private static final float SNOW_HEIGHT_OFFSET = 0.0625f;
 
     private static GrassRenderer instance;
     private static long seed;
@@ -101,9 +102,6 @@ public class GrassRenderer extends BlockRenderer {
         if (!Config.shortGrass.INSTANCE.getGrassEnabled()) return true;
         if (hasSnowAbove && !Config.shortGrass.INSTANCE.getSnowEnabled()) return true;
 
-        // TODO: Maybe don't use tallgrass noise as position variation (else it stays at the same place as tallgrass)
-        // ^ Might need custom render func
-
         // TODO: Don't render under full blocks
         // TODO: Don't render together with tall grass (<--- new feature)
 
@@ -111,12 +109,12 @@ public class GrassRenderer extends BlockRenderer {
 
         // Render short grass
 
-        double yHeight = y + 1;
+        double shortGrassHeight = y + 1;
 
         TextureSet set;
         if (hasSnowAbove) {
             set = shortGrassSnow;
-            yHeight += SNOW_OFFSET;
+            shortGrassHeight += SNOW_HEIGHT_OFFSET;
         } else {
             set = shortGrass;
         }
@@ -129,16 +127,21 @@ public class GrassRenderer extends BlockRenderer {
             setGrassColor(world, tessellator, block, x, y, z);
         }
 
-        grassRenderer.betterfoliage$setGrassRender(true);
-
-        int heightHash = mods.betterfoliage.Utils.hashWorldCoords(x, y + 1, z, seed);
-        double topHeight = mods.betterfoliage.Utils.hashToRange(
-            heightHash,
+        int coordHash = mods.betterfoliage.Utils.hashWorldCoords(x, y + 1, z, seed);
+        double heightScale = mods.betterfoliage.Utils.hashToRange(
+            coordHash,
             Config.shortGrass.INSTANCE.getHeightMin(),
             Config.shortGrass.INSTANCE.getHeightMax());
-        grassRenderer.betterfoliage$setShortVerticalGrassScale((float) topHeight);
+        grassRenderer.betterfoliage$setShortVerticalGrassScale((float) heightScale);
 
-        renderer.drawCrossedSquares(set.getTextureForLocation(x, y, z), x, yHeight, z, 1F);
+        double hOffset = Config.shortGrass.INSTANCE.getHOffset();
+        double xOffset = x
+            + mods.betterfoliage.Utils.hashToRange(mods.betterfoliage.Utils.hash(coordHash + 1), -hOffset, hOffset);
+        double zOffset = z
+            + mods.betterfoliage.Utils.hashToRange(mods.betterfoliage.Utils.hash(coordHash + 2), -hOffset, hOffset);
+
+        grassRenderer.betterfoliage$setGrassRender(true);
+        renderer.drawCrossedSquares(set.getTextureForLocation(x, y, z), xOffset, shortGrassHeight, zOffset, 1F);
         grassRenderer.betterfoliage$setGrassRender(false);
 
         return true;
