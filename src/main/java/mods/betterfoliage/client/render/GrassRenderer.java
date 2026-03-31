@@ -102,10 +102,10 @@ public class GrassRenderer extends BlockRenderer {
         if (!Config.shortGrass.INSTANCE.getGrassEnabled()) return true;
         if (hasSnowAbove && !Config.shortGrass.INSTANCE.getSnowEnabled()) return true;
 
-        // TODO: Don't render under full blocks
-        // TODO: Don't render together with tall grass (<--- new feature)
+        if (blockAbove.isOpaqueCube() || blocksShortGrassRendering(world, blockAbove, x, y + 1, z)) return true;
 
         // TODO: Generate color based on grass top texture for modded grass blocks
+        // TODO: Implement generated grass IICons
 
         // Render short grass
 
@@ -160,5 +160,11 @@ public class GrassRenderer extends BlockRenderer {
         int color = world.getBiomeGenForCoords(x, z)
             .getBiomeGrassColor(x, y, z);
         tessellator.setColorOpaque_I(color);
+    }
+
+    // TODO Turn into configurable list
+    private boolean blocksShortGrassRendering(IBlockAccess world, Block blockAbove, int x, int y, int z) {
+        int meta = world.getBlockMetadata(x, y, z);
+        return (blockAbove == Blocks.tallgrass && meta == 1) || (blockAbove == Blocks.double_plant && meta == 2);
     }
 }
