@@ -10,6 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
+import mods.betterfoliage.client.resource.TextureProvider;
 import mods.betterfoliage.client.resource.TextureSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.IGrassBlockRenderer;
 import mods.betterfoliage.utils.MathUtils;
@@ -27,10 +28,10 @@ public class GrassRenderer extends BlockRenderer {
     private static GrassRenderer instance;
 
     // spotless:off
-    private final TextureSet shortGrass = new TextureSet(
+    private final TextureProvider shortGrass = new TextureSet(
         BetterFoliageMod.LEGACY_DOMAIN, "textures/blocks/better_grass_long_", ".png");
 
-    private final TextureSet shortGrassSnow = new TextureSet(
+    private final TextureProvider shortGrassSnow = new TextureSet(
         BetterFoliageMod.LEGACY_DOMAIN, "textures/blocks/better_grass_snowed_", ".png");
     // spotless:on
 
@@ -103,12 +104,12 @@ public class GrassRenderer extends BlockRenderer {
 
         double shortGrassHeight = y + 1;
 
-        TextureSet set;
+        TextureProvider texProvider;
         if (hasSnowAbove) {
-            set = shortGrassSnow;
+            texProvider = shortGrassSnow;
             shortGrassHeight += SNOW_HEIGHT_OFFSET;
         } else {
-            set = shortGrass;
+            texProvider = shortGrass;
         }
 
         Tessellator tessellator = Tessellator.instance;
@@ -131,7 +132,7 @@ public class GrassRenderer extends BlockRenderer {
         double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
         grassRenderer.betterfoliage$setGrassRender(true);
-        renderer.drawCrossedSquares(set.getTextureForLocation(x, y, z), xOffset, shortGrassHeight, zOffset, 1F);
+        renderer.drawCrossedSquares(texProvider.getTextureForCoord(x, y, z), xOffset, shortGrassHeight, zOffset, 1F);
         grassRenderer.betterfoliage$setGrassRender(false);
 
         return true;

@@ -14,7 +14,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.utils.MathUtils;
 
-public class TextureSet {
+public class TextureSet implements TextureProvider {
 
     private final String domain;
     private final String prefix;
@@ -61,7 +61,8 @@ public class TextureSet {
         }
     }
 
-    public IIcon getTextureForLocation(int x, int y, int z) {
+    @Override
+    public IIcon getTextureForCoord(int x, int y, int z) {
         if (textures == null || textures.isEmpty()) {
             return null;
         }
