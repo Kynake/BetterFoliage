@@ -40,7 +40,7 @@ import org.apache.logging.log4j.Level
 object Client {
 
     val genGrass = GrassGenerator("bf_gen_grass")
-    val genLeaves = LeafGenerator("bf_gen_leaves")
+    val genLeaves = LeafGenerator("bf_gen_leaves") // TODO revise extra leaves masks. Any texture other than _default is never used
     val genReeds = CenteringTextureGenerator("bf_gen_reeds", 1, 2)
 
     val generatorPack = GeneratorPack("Better Foliage generated", genGrass, genLeaves, genReeds)
