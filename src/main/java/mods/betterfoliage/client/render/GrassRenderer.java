@@ -14,6 +14,7 @@ import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.resource.TextureSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.IGrassBlockRenderer;
+import mods.betterfoliage.utils.MathUtils;
 import mods.octarinecore.client.render.BlockContext;
 
 public class GrassRenderer extends BlockRenderer {
@@ -127,18 +128,16 @@ public class GrassRenderer extends BlockRenderer {
             setGrassColor(world, tessellator, block, x, y, z);
         }
 
-        int coordHash = mods.betterfoliage.Utils.hashWorldCoords(x, y + 1, z, seed);
-        double heightScale = mods.betterfoliage.Utils.hashToRange(
+        int coordHash = MathUtils.hashWorldCoords(x, y + 1, z, seed);
+        double heightScale = MathUtils.hashToRange(
             coordHash,
             Config.shortGrass.INSTANCE.getHeightMin(),
             Config.shortGrass.INSTANCE.getHeightMax());
         grassRenderer.betterfoliage$setShortVerticalGrassScale((float) heightScale);
 
         double hOffset = Config.shortGrass.INSTANCE.getHOffset();
-        double xOffset = x
-            + mods.betterfoliage.Utils.hashToRange(mods.betterfoliage.Utils.hash(coordHash + 1), -hOffset, hOffset);
-        double zOffset = z
-            + mods.betterfoliage.Utils.hashToRange(mods.betterfoliage.Utils.hash(coordHash + 2), -hOffset, hOffset);
+        double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
+        double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
         grassRenderer.betterfoliage$setGrassRender(true);
         renderer.drawCrossedSquares(set.getTextureForLocation(x, y, z), xOffset, shortGrassHeight, zOffset, 1F);

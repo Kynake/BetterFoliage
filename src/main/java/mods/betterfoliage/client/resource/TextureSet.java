@@ -13,7 +13,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.Utils;
+import mods.betterfoliage.utils.MathUtils;
 
 public class TextureSet {
 
@@ -74,7 +74,7 @@ public class TextureSet {
             return null;
         }
 
-        int index = Utils.hashWorldCoords(x, y, z, seed) % textures.size();
+        int index = MathUtils.hashWorldCoords(x, y, z, seed) % textures.size();
         if (index < 0) {
             index = -index;
         }

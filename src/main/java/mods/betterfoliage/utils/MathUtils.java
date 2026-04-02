@@ -1,6 +1,6 @@
-package mods.betterfoliage;
+package mods.betterfoliage.utils;
 
-public final class Utils {
+public final class MathUtils {
 
     public static int hash(int x) {
         x ^= x >>> 16;
