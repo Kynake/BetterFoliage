@@ -2,6 +2,10 @@ package mods.betterfoliage.utils;
 
 public final class MathUtils {
 
+    // TODO: Make configurable
+    // Mods uses a set number as random seed because the world seed can't be accessed Client-side in a server.
+    private static final int SEED = 402653189;
+
     public static int hash(int x) {
         x ^= x >>> 16;
         x *= 0x7FEB352D;
@@ -11,20 +15,19 @@ public final class MathUtils {
         return x;
     }
 
+    public static int hashCoords(int x, int y, int z) {
+        return hashCoords(x, y, z, 0);
+    }
+
     public static int hashCoords(int x, int y, int z, int salt) {
-        int hash = hash(salt + 97);
+        int hash = hash(salt + SEED);
         hash = hash(x + hash);
         hash = hash(y + hash);
         hash = hash(z + hash);
         return hash;
     }
 
-    public static int hashWorldCoords(int x, int y, int z, long seed) {
-        int hash = hash(((int) seed) + 53);
-        hash = hash((int) (seed >> 32) + hash);
-        return hashCoords(x, y, z, hash);
-    }
-
+    // The hash is assumed to be in the range [Integer.MIN_VALUE, Integer.MAX_VALUE]
     public static double hashToRange(int hash, double min, double max) {
         double invLerp = (double) ((long) hash - 0xFFFFFFFF80000000L) / (double) 0xFFFFFFFFL;
         return (max - min) * invLerp + min;

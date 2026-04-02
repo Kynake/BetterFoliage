@@ -8,7 +8,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.WorldEvent;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -22,7 +21,6 @@ public class TextureSet {
     private final String suffix;
 
     private List<IIcon> textures;
-    private long seed;
 
     public TextureSet(String domain, String prefix, String suffix) {
         this.domain = domain;
@@ -50,23 +48,17 @@ public class TextureSet {
 
         for (ResourceLocation res : resources) {
             String name = res.getResourcePath();
-            int startIndex = name.lastIndexOf('/');
+            int startIndex = name.lastIndexOf('/') + 1;
             int endIndex = name.lastIndexOf('.');
 
-            if (startIndex < 0 || startIndex > endIndex) {
+            if (startIndex <= 0 || startIndex > endIndex) {
                 BetterFoliageMod.log.error("Invalid resource location: {}", res);
                 continue;
             }
 
-            String textureName = domain + ":" + name.substring(startIndex + 1, endIndex);
+            String textureName = domain + ":" + name.substring(startIndex, endIndex);
             textures.add(event.map.registerIcon(textureName));
         }
-    }
-
-    @SubscribeEvent
-    public void onWorldLoad(WorldEvent.Load event) {
-        seed = event.world.getWorldInfo()
-            .getSeed();
     }
 
     public IIcon getTextureForLocation(int x, int y, int z) {
@@ -74,10 +66,7 @@ public class TextureSet {
             return null;
         }
 
-        int index = MathUtils.hashWorldCoords(x, y, z, seed) % textures.size();
-        if (index < 0) {
-            index = -index;
-        }
+        int index = Math.abs(MathUtils.hashCoords(x, y, z) % textures.size());
         return textures.get(index);
     }
 }

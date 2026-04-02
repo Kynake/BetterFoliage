@@ -7,9 +7,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.event.world.WorldEvent;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.resource.TextureSet;
@@ -27,7 +25,6 @@ public class GrassRenderer extends BlockRenderer {
     private static final float SNOW_HEIGHT_OFFSET = 0.0625f;
 
     private static GrassRenderer instance;
-    private static long seed;
 
     // spotless:off
     private final TextureSet shortGrass = new TextureSet(
@@ -44,12 +41,6 @@ public class GrassRenderer extends BlockRenderer {
         }
 
         return instance;
-    }
-
-    @SubscribeEvent
-    public void onWorldLoad(WorldEvent.Load event) {
-        seed = event.world.getWorldInfo()
-            .getSeed();
     }
 
     @Override
@@ -128,7 +119,7 @@ public class GrassRenderer extends BlockRenderer {
             setGrassColor(world, tessellator, block, x, y, z);
         }
 
-        int coordHash = MathUtils.hashWorldCoords(x, y + 1, z, seed);
+        int coordHash = MathUtils.hashCoords(x, y + 1, z);
         double heightScale = MathUtils.hashToRange(
             coordHash,
             Config.shortGrass.INSTANCE.getHeightMin(),
