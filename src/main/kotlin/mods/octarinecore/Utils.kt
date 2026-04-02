@@ -75,9 +75,3 @@ fun random(min: Double, max: Double) = Math.random().let { min + (max - min) * i
  * minimum/maximum value correspondingly.
  */
 fun Double.clamp(minVal: Double, maxVal: Double) = min(max(this, minVal), maxVal)
-
-/**
- * Return this [Int] value if it lies between the two limits. If outside, return the minimum/maximum
- * value correspondingly.
- */
-fun Int.clamp(minVal: Int, maxVal: Int) = min(max(this, minVal), maxVal)

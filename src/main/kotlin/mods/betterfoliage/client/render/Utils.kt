@@ -29,9 +29,6 @@ val whitewash: RenderVertex.(ShadingContext, Int, Quad, Int, Vertex) -> Unit =
     { ctx, qi, q, vi, v ->
         setGrey(1.4f)
     }
-val greywash: RenderVertex.(ShadingContext, Int, Quad, Int, Vertex) -> Unit = { ctx, qi, q, vi, v ->
-    setGrey(1.0f)
-}
 
 val Block.isSnow: Boolean
     get() = material.let { it == Material.snow || it == Material.craftedSnow }
