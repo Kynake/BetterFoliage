@@ -34,6 +34,8 @@ public class GrassRenderer extends BlockRenderer {
         BetterFoliageMod.LEGACY_DOMAIN, "textures/blocks/better_grass_snowed_", ".png");
     // spotless:on
 
+    private PartialSprite genGrass = null;
+
     public static GrassRenderer getInstance() {
         if (instance == null) {
             BetterFoliageMod.log.info("Registering NEW! GrassRenderer");
@@ -89,26 +91,61 @@ public class GrassRenderer extends BlockRenderer {
             renderResult = renderer.renderStandardBlock(block, x, y, z);
         }
 
-        if (!renderResult) return false;
-
-        if (!Config.shortGrass.INSTANCE.getGrassEnabled()) return true;
-        if (hasSnowAbove && !Config.shortGrass.INSTANCE.getSnowEnabled()) return true;
-
-        if (blockAbove.isOpaqueCube() || blocksShortGrassRendering(world, blockAbove, x, y + 1, z)) return true;
-
         // TODO: Generate color based on grass top texture for modded grass blocks
-        // TODO: Implement generated grass IICons
-
         // Render short grass
+
+        int coordHash = MathUtils.hashCoords(x, y + 1, z);
+        double heightScale = MathUtils.hashToRange(
+            coordHash,
+            Config.shortGrass.INSTANCE.getHeightMin(),
+            Config.shortGrass.INSTANCE.getHeightMax());
+
+        if (!Config.shortGrass.INSTANCE.getGrassEnabled()) return renderResult;
+        if (hasSnowAbove && !Config.shortGrass.INSTANCE.getSnowEnabled()) return renderResult;
+        if (blockAbove.isOpaqueCube() || blocksShortGrassRendering(world, blockAbove, x, y + 1, z)) return renderResult;
+
+        if (!renderResult) {
+            float blockingHeight = (float) heightScale;
+
+            if (hasSnowAbove) {
+                blockingHeight += SNOW_HEIGHT_OFFSET;
+            }
+
+            // Block above completely covers short grass
+            if (blockAbove.getBlockBoundsMinY() <= 0 && blockAbove.getBlockBoundsMaxY() >= blockingHeight) {
+                return false;
+            }
+
+        }
 
         double shortGrassHeight = y + 1;
 
-        TextureProvider texProvider;
-        if (hasSnowAbove) {
-            texProvider = shortGrassSnow;
-            shortGrassHeight += SNOW_HEIGHT_OFFSET;
+        IIcon sprite;
+
+        // TODO: Implement generated grass IICons
+        if (Config.shortGrass.INSTANCE.getUseGenerated()) {
+            // TODO fix gen grass on reload
+            // TODO add snow grass generator (to get even brighter gen snow grass)
+            if (genGrass == null) {
+                IIcon baseSprite = Blocks.tallgrass.getIcon(0, 1);
+                genGrass = new PartialSprite(baseSprite, 0, 6F / 16F, 0, 0);
+            }
+
+            if (hasSnowAbove) {
+                shortGrassHeight += SNOW_HEIGHT_OFFSET;
+            }
+
+            sprite = genGrass;
+            heightScale *= genGrass.getHeightRatio();
         } else {
-            texProvider = shortGrass;
+            TextureProvider provider;
+            if (hasSnowAbove) {
+                provider = shortGrassSnow;
+                shortGrassHeight += SNOW_HEIGHT_OFFSET;
+            } else {
+                provider = shortGrass;
+            }
+            sprite = provider.getTextureForCoord(x, y, z);
         }
 
         Tessellator tessellator = Tessellator.instance;
@@ -119,11 +156,6 @@ public class GrassRenderer extends BlockRenderer {
             setGrassColor(world, tessellator, block, x, y, z);
         }
 
-        int coordHash = MathUtils.hashCoords(x, y + 1, z);
-        double heightScale = MathUtils.hashToRange(
-            coordHash,
-            Config.shortGrass.INSTANCE.getHeightMin(),
-            Config.shortGrass.INSTANCE.getHeightMax());
         grassRenderer.betterfoliage$setShortVerticalGrassScale((float) heightScale);
 
         double hOffset = Config.shortGrass.INSTANCE.getHOffset();
@@ -131,7 +163,7 @@ public class GrassRenderer extends BlockRenderer {
         double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
         grassRenderer.betterfoliage$setGrassRender(true);
-        renderer.drawCrossedSquares(texProvider.getTextureForCoord(x, y, z), xOffset, shortGrassHeight, zOffset, 1F);
+        renderer.drawCrossedSquares(sprite, xOffset, shortGrassHeight, zOffset, 1F);
         grassRenderer.betterfoliage$setGrassRender(false);
 
         return true;
