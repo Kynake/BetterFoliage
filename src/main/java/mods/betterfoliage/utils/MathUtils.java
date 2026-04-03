@@ -30,6 +30,19 @@ public final class MathUtils {
     // The hash is assumed to be in the range [Integer.MIN_VALUE, Integer.MAX_VALUE]
     public static double hashToRange(int hash, double min, double max) {
         double invLerp = (double) ((long) hash - 0xFFFFFFFF80000000L) / (double) 0xFFFFFFFFL;
-        return (max - min) * invLerp + min;
+        return lerp(min, max, invLerp);
+    }
+
+    public static double inverseLerp(double min, double max, double value) {
+        return (value - min) / (max - min);
+    }
+
+    public static double lerp(double min, double max, double lerpAmount) {
+        return (max - min) * lerpAmount + min;
+    }
+
+    public static double remapToRange(double fromRangeMin, double fromRangeMax, double toRangeMin, double toRangeMax,
+        double value) {
+        return lerp(toRangeMin, toRangeMax, inverseLerp(fromRangeMin, fromRangeMax, value));
     }
 }
