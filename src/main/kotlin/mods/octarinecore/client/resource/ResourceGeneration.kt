@@ -20,9 +20,7 @@ class GeneratorPack(val name: String, vararg val generators: GeneratorBase) : IR
 
     init {
         // add to the default resource packs
-        FMLClientHandler.instance()
-            .reflectField<MutableList<IResourcePack>>("resourcePackList")!!
-            .add(this)
+        FMLClientHandler.instance().resourcePackList.add(this)
     }
 
     override fun getPackName() = name
