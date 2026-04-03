@@ -10,7 +10,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
-import mods.betterfoliage.client.resource.TextureProvider;
 import mods.betterfoliage.client.resource.TextureSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.IGrassBlockRenderer;
 import mods.betterfoliage.utils.MathUtils;

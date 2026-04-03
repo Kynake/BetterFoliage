@@ -1,8 +1,8 @@
 package mods.betterfoliage.client.resource;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
@@ -12,6 +12,7 @@ import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.client.render.TextureProvider;
 import mods.betterfoliage.utils.MathUtils;
 
 public class TextureSet implements TextureProvider {
@@ -34,7 +35,7 @@ public class TextureSet implements TextureProvider {
     }
 
     @SubscribeEvent
-    public void onTextureStitch(TextureStitchEvent.Pre event) {
+    public final void onTextureStitch(TextureStitchEvent.Pre event) {
         int type = event.map.getTextureType();
         boolean isValid = (type == 0 && prefix.startsWith("textures/blocks/"))
             || (type == 1 && prefix.startsWith("textures/items/"));
@@ -43,7 +44,7 @@ public class TextureSet implements TextureProvider {
             return;
         }
 
-        HashSet<ResourceLocation> resources = ResourceManager.findResourcesWithPattern(domain, prefix, suffix);
+        Set<ResourceLocation> resources = ResourceManager.findResourcesWithPattern(domain, prefix, suffix);
         textures = new ArrayList<>(resources.size());
 
         for (ResourceLocation res : resources) {

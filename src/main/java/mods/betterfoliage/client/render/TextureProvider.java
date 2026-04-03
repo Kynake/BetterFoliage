@@ -1,4 +1,4 @@
-package mods.betterfoliage.client.resource;
+package mods.betterfoliage.client.render;
 
 import net.minecraft.util.IIcon;
 
