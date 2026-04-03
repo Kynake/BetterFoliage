@@ -21,6 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import com.google.common.collect.Lists;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.client.resource.generators.TextureGenerator;
 
 public class ResourceManager {
 
@@ -46,6 +47,11 @@ public class ResourceManager {
 
         List<IResourcePack> packs = getResourcePacksWithDomain(domain);
         for (IResourcePack pack : packs) {
+            if (pack instanceof TextureGenerator) {
+                // Ignore mod's own generated packs
+                continue;
+            }
+
             if (pack instanceof AbstractResourcePack abstractPack) {
                 File packFile = abstractPack.resourcePackFile;
                 if (packFile.isDirectory()) {
@@ -60,7 +66,6 @@ public class ResourceManager {
                         BetterFoliageMod.log.error("Error reading zip file in pattern search", e);
                     }
                 }
-
             } else if (pack instanceof DefaultResourcePack) {
                 // TODO Implement if needed
                 BetterFoliageMod.log.warn("DefaultResourcePack objects not supported");
