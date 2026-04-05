@@ -1,5 +1,6 @@
 package mods.betterfoliage.client.resource.generators;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -72,5 +73,28 @@ public abstract class TextureGenerator extends StitchListener implements IResour
     @Override
     public final String getPackName() {
         return "[" + BetterFoliageMod.MOD_NAME + "] " + name;
+    }
+
+    protected final BufferedImage createCopy(BufferedImage original) {
+        BufferedImage res = new BufferedImage(original.getWidth(), original.getHeight(), original.getType());
+
+        Graphics2D graphics = res.createGraphics();
+        graphics.drawImage(original, 0, 0, null);
+
+        return res;
+    }
+
+    protected final void debugPaintRed(BufferedImage image) {
+        // Colors are in the TYPE_INT_ARGB format
+        final int alphaMask = 0xFF_00_00_00;
+        // final int color = 0x00_FF_00_00; // RED
+        final int color = 0x00_00_00_FF; // BLUE
+
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                int originalAlpha = image.getRGB(x, y) & alphaMask;
+                image.setRGB(x, y, color | originalAlpha);
+            }
+        }
     }
 }

@@ -1,37 +1,81 @@
 package mods.betterfoliage.client.resource.generators;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.IIOException;
+import javax.imageio.ImageIO;
+
+import net.minecraft.client.resources.IResource;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.TextureStitchEvent;
+
+import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.client.resource.ResourceManager;
 
 // TODO: Maybe not necessary (needed because of generated snowtextures?)
 public class ShortGrassGenerator extends TextureGenerator {
 
-    ResourceLocation baseResource;
+    private final ResourceLocation baseResource;
+    private final ResourceLocation generatedResource;
+
+    private IIcon generatedTexture;
+
+    // TODO: support for mcmeta / animated textures, Normal (_n) and Specular (_s)?
+    // Maybe add to base class instead
 
     public ShortGrassGenerator(ResourceLocation baseResource) {
         super("Generated Grass", "Pack for custom generated grass", "gen_grass");
         this.baseResource = baseResource;
+        this.generatedResource = new ResourceLocation(this.domain, baseResource.getResourcePath());
     }
 
     @Override
-    public IIcon getTextureForCoord(int x, int y, int z) {
-        return null;
+    protected void onTextureStitch(TextureStitchEvent.Pre event) {
+        if (event.map.getTextureType() != 0) {
+            return;
+        }
+
+        String name = generatedResource.getResourcePath();
+        int startIndex = name.lastIndexOf('/') + 1;
+        int endIndex = name.lastIndexOf('.');
+
+        if (startIndex <= 0 || startIndex > endIndex) {
+            BetterFoliageMod.log.error("Invalid resource location: {}", generatedResource);
+            return;
+        }
+
+        String textureName = domain + ":" + name.substring(startIndex, endIndex);
+        generatedTexture = event.map.registerIcon(textureName);
     }
 
     @Override
     public boolean resourceExists(ResourceLocation location) {
-        return false;
+        return location.equals(generatedResource);
     }
 
     @Override
-    protected void generateTextures() {
+    protected BufferedImage getGeneratedTexture(ResourceLocation location) throws IOException {
+        if (!resourceExists(location)) {
+            throw new IOException("Resource " + location + " is not handled by this generator!");
+        }
 
+        IResource base = ResourceManager.getResourceManager()
+            .getResource(baseResource);
+        BufferedImage baseImage = ImageIO.read(base.getInputStream());
+
+        if (baseImage == null) {
+            throw new IIOException("Base image for generation of resource " + location + " is null!");
+        }
+
+        BufferedImage genImage = createCopy(baseImage);
+        debugPaintRed(genImage);
+        return genImage;
     }
 
     @Override
-    protected BufferedImage getGeneratedTexture(ResourceLocation location) {
-        return null;
+    public IIcon getTextureForCoord(int x, int y, int z) {
+        return generatedTexture;
     }
 }
