@@ -7,15 +7,12 @@ import java.util.Set;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.common.MinecraftForge;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.render.TextureProvider;
+import mods.betterfoliage.client.render.ITextureProvider;
 import mods.betterfoliage.utils.MathUtils;
 
-public class TextureSet implements TextureProvider {
+public class TextureSet extends StitchListener implements ITextureProvider {
 
     private final String domain;
     private final String prefix;
@@ -24,17 +21,13 @@ public class TextureSet implements TextureProvider {
     private List<IIcon> textures;
 
     public TextureSet(String domain, String prefix, String suffix) {
+        super();
         this.domain = domain;
         this.prefix = prefix;
         this.suffix = suffix;
-
-        MinecraftForge.EVENT_BUS.register(this);
-        FMLCommonHandler.instance()
-            .bus()
-            .register(this);
     }
 
-    @SubscribeEvent
+    @Override
     public final void onTextureStitch(TextureStitchEvent.Pre event) {
         int type = event.map.getTextureType();
         boolean isValid = (type == 0 && prefix.startsWith("textures/blocks/"))
