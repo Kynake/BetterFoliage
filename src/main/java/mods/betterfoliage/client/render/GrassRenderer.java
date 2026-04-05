@@ -35,8 +35,8 @@ public class GrassRenderer extends BlockRenderer {
     private final ISpriteProvider shortGrassSnow = new SpriteSet(
         BetterFoliageMod.LEGACY_DOMAIN, "textures/blocks/better_grass_snowed_", ".png");
 
-    private ISpriteProvider genGrass = new ShortGrassGenerator(
-        new ResourceLocation("minecraft:textures/blocks/tallgrass.png"));
+    private final ISpriteProvider genGrass = new ShortGrassGenerator(
+        "minecraft", "textures/blocks/tallgrass.png");
     // spotless:on
 
     // private PartialSprite genGrass = null;

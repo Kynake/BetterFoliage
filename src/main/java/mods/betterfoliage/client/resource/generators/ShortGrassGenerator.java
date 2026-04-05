@@ -25,6 +25,10 @@ public class ShortGrassGenerator extends TextureGenerator {
     // TODO: support for mcmeta / animated textures, Normal (_n) and Specular (_s)?
     // Maybe add to base class instead
 
+    public ShortGrassGenerator(String baseDomain, String baseResourcePath) {
+        this(new ResourceLocation(baseDomain, baseResourcePath));
+    }
+
     public ShortGrassGenerator(ResourceLocation baseResource) {
         super("Generated Grass", "Pack for custom generated grass", "gen_grass");
         this.baseResource = baseResource;
