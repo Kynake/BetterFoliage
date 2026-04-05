@@ -25,10 +25,13 @@ import mods.betterfoliage.client.resource.generators.TextureGenerator;
 
 public class ResourceManager {
 
+    public static SimpleReloadableResourceManager getResourceManager() {
+        return (SimpleReloadableResourceManager) Minecraft.getMinecraft()
+            .getResourceManager();
+    }
+
     public static List<IResourcePack> getResourcePacksWithDomain(String domain) {
-        Map<String, FallbackResourceManager> resourceManagers = ((SimpleReloadableResourceManager) Minecraft
-            .getMinecraft()
-            .getResourceManager()).domainResourceManagers;
+        Map<String, FallbackResourceManager> resourceManagers = getResourceManager().domainResourceManagers;
 
         if (!resourceManagers.containsKey(domain)) {
             return Collections.emptyList();
