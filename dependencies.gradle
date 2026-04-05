@@ -59,8 +59,8 @@ dependencies {
     //runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:swansong:1.3.1"))
     //runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:falsetweaks:4.4.0"))
     //runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:beddium:1.2.2-j8"))
-    //runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:fplib:1.10.7"))
-    //runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:mcpatcher:0.3.0"))
+    runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:fplib:1.10.7"))
+    runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:mcpatcher:0.3.0"))
     //runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:rple:2.2.2"))
 
     // Test with other mods
