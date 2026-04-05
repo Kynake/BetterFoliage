@@ -5,12 +5,14 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.resource.TextureSet;
+import mods.betterfoliage.client.resource.generators.ShortGrassGenerator;
 import mods.betterfoliage.mixins.interfaces.minecraft.IGrassBlockRenderer;
 import mods.betterfoliage.utils.MathUtils;
 import mods.octarinecore.client.render.BlockContext;
@@ -27,14 +29,17 @@ public class GrassRenderer extends BlockRenderer {
     private static GrassRenderer instance;
 
     // spotless:off
-    private final TextureProvider shortGrass = new TextureSet(
+    private final ITextureProvider shortGrass = new TextureSet(
         BetterFoliageMod.LEGACY_DOMAIN, "textures/blocks/better_grass_long_", ".png");
 
-    private final TextureProvider shortGrassSnow = new TextureSet(
+    private final ITextureProvider shortGrassSnow = new TextureSet(
         BetterFoliageMod.LEGACY_DOMAIN, "textures/blocks/better_grass_snowed_", ".png");
+
+    private ITextureProvider genGrass = new ShortGrassGenerator(
+        new ResourceLocation("minecraft:textures/blocks/tallgrass.png"));
     // spotless:on
 
-    private PartialSprite genGrass = null;
+    // private PartialSprite genGrass = null;
 
     public static GrassRenderer getInstance() {
         if (instance == null) {
@@ -126,19 +131,21 @@ public class GrassRenderer extends BlockRenderer {
         if (Config.shortGrass.INSTANCE.getUseGenerated()) {
             // TODO fix gen grass on reload
             // TODO add snow grass generator (to get even brighter gen snow grass)
-            if (genGrass == null) {
-                IIcon baseSprite = Blocks.tallgrass.getIcon(0, 1);
-                genGrass = new PartialSprite(baseSprite, 0, 6F / 16F, 0, 0);
-            }
+            // if (genGrass == null) {
+            // IIcon baseSprite = Blocks.tallgrass.getIcon(0, 1);
+            // genGrass = new PartialSprite(baseSprite, 0, 6F / 16F, 0, 0);
+            // }
+            //
+            // if (hasSnowAbove) {
+            // shortGrassHeight += SNOW_HEIGHT_OFFSET;
+            // }
+            //
+            // sprite = genGrass;
+            // heightScale *= genGrass.getHeightRatio();
 
-            if (hasSnowAbove) {
-                shortGrassHeight += SNOW_HEIGHT_OFFSET;
-            }
-
-            sprite = genGrass;
-            heightScale *= genGrass.getHeightRatio();
+            sprite = genGrass.getTextureForCoord(x, y, z);
         } else {
-            TextureProvider provider;
+            ITextureProvider provider;
             if (hasSnowAbove) {
                 provider = shortGrassSnow;
                 shortGrassHeight += SNOW_HEIGHT_OFFSET;
