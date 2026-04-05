@@ -37,7 +37,7 @@ public class TextureSet extends StitchListener implements ITextureProvider {
             return;
         }
 
-        Set<ResourceLocation> resources = ResourceManager.findResourcesWithPattern(domain, prefix, suffix);
+        Set<ResourceLocation> resources = ResourceUtils.findResourcesWithPattern(domain, prefix, suffix);
         textures = new ArrayList<>(resources.size());
 
         for (ResourceLocation res : resources) {

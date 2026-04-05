@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.resource.ResourceManager;
+import mods.betterfoliage.client.resource.ResourceUtils;
 
 // TODO: Maybe not necessary (needed because of generated snowtextures?)
 public class ShortGrassGenerator extends TextureGenerator {
@@ -61,7 +61,7 @@ public class ShortGrassGenerator extends TextureGenerator {
             throw new IOException("Resource " + location + " is not handled by this generator!");
         }
 
-        IResource base = ResourceManager.getResourceManager()
+        IResource base = ResourceUtils.getResourceManager()
             .getResource(baseResource);
         BufferedImage baseImage = ImageIO.read(base.getInputStream());
 

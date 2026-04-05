@@ -23,7 +23,7 @@ import com.google.common.collect.Lists;
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.resource.generators.TextureGenerator;
 
-public class ResourceManager {
+public class ResourceUtils {
 
     public static SimpleReloadableResourceManager getResourceManager() {
         return (SimpleReloadableResourceManager) Minecraft.getMinecraft()
