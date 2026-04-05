@@ -32,7 +32,7 @@ public class ShortGrassGenerator extends TextureGenerator {
     }
 
     @Override
-    protected void onTextureStitch(TextureStitchEvent.Pre event) {
+    protected void onSpriteStitch(TextureStitchEvent.Pre event) {
         if (event.map.getTextureType() != 0) {
             return;
         }
@@ -75,7 +75,7 @@ public class ShortGrassGenerator extends TextureGenerator {
     }
 
     @Override
-    public IIcon getTextureForCoord(int x, int y, int z) {
+    public IIcon getSpriteForCoord(int x, int y, int z) {
         return generatedTexture;
     }
 }

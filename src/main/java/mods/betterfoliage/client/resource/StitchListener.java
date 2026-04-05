@@ -17,8 +17,8 @@ public abstract class StitchListener {
 
     @SubscribeEvent
     public final void handleStitchEvent(TextureStitchEvent.Pre event) {
-        onTextureStitch(event);
+        onSpriteStitch(event);
     }
 
-    protected abstract void onTextureStitch(TextureStitchEvent.Pre event);
+    protected abstract void onSpriteStitch(TextureStitchEvent.Pre event);
 }

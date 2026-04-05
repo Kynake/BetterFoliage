@@ -11,7 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
-import mods.betterfoliage.client.resource.TextureSet;
+import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.client.resource.generators.ShortGrassGenerator;
 import mods.betterfoliage.mixins.interfaces.minecraft.IGrassBlockRenderer;
 import mods.betterfoliage.utils.MathUtils;
@@ -29,13 +29,13 @@ public class GrassRenderer extends BlockRenderer {
     private static GrassRenderer instance;
 
     // spotless:off
-    private final ITextureProvider shortGrass = new TextureSet(
+    private final ISpriteProvider shortGrass = new SpriteSet(
         BetterFoliageMod.LEGACY_DOMAIN, "textures/blocks/better_grass_long_", ".png");
 
-    private final ITextureProvider shortGrassSnow = new TextureSet(
+    private final ISpriteProvider shortGrassSnow = new SpriteSet(
         BetterFoliageMod.LEGACY_DOMAIN, "textures/blocks/better_grass_snowed_", ".png");
 
-    private ITextureProvider genGrass = new ShortGrassGenerator(
+    private ISpriteProvider genGrass = new ShortGrassGenerator(
         new ResourceLocation("minecraft:textures/blocks/tallgrass.png"));
     // spotless:on
 
@@ -143,16 +143,16 @@ public class GrassRenderer extends BlockRenderer {
             // sprite = genGrass;
             // heightScale *= genGrass.getHeightRatio();
 
-            sprite = genGrass.getTextureForCoord(x, y, z);
+            sprite = genGrass.getSpriteForCoord(x, y, z);
         } else {
-            ITextureProvider provider;
+            ISpriteProvider provider;
             if (hasSnowAbove) {
                 provider = shortGrassSnow;
                 shortGrassHeight += SNOW_HEIGHT_OFFSET;
             } else {
                 provider = shortGrass;
             }
-            sprite = provider.getTextureForCoord(x, y, z);
+            sprite = provider.getSpriteForCoord(x, y, z);
         }
 
         Tessellator tessellator = Tessellator.instance;

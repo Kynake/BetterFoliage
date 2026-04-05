@@ -9,10 +9,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.render.ITextureProvider;
+import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.utils.MathUtils;
 
-public class TextureSet extends StitchListener implements ITextureProvider {
+public class SpriteSet extends StitchListener implements ISpriteProvider {
 
     private final String domain;
     private final String prefix;
@@ -20,7 +20,7 @@ public class TextureSet extends StitchListener implements ITextureProvider {
 
     private List<IIcon> textures;
 
-    public TextureSet(String domain, String prefix, String suffix) {
+    public SpriteSet(String domain, String prefix, String suffix) {
         super();
         this.domain = domain;
         this.prefix = prefix;
@@ -28,7 +28,7 @@ public class TextureSet extends StitchListener implements ITextureProvider {
     }
 
     @Override
-    public final void onTextureStitch(TextureStitchEvent.Pre event) {
+    public final void onSpriteStitch(TextureStitchEvent.Pre event) {
         int type = event.map.getTextureType();
         boolean isValid = (type == 0 && prefix.startsWith("textures/blocks/"))
             || (type == 1 && prefix.startsWith("textures/items/"));
@@ -56,7 +56,7 @@ public class TextureSet extends StitchListener implements ITextureProvider {
     }
 
     @Override
-    public IIcon getTextureForCoord(int x, int y, int z) {
+    public IIcon getSpriteForCoord(int x, int y, int z) {
         if (textures == null || textures.isEmpty()) {
             return null;
         }
