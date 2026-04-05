@@ -20,29 +20,30 @@ import com.google.common.collect.ImmutableSet;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.render.TextureProvider;
+import mods.betterfoliage.client.render.ITextureProvider;
+import mods.betterfoliage.client.resource.StitchListener;
 
-public abstract class TextureGenerator implements TextureProvider, IResourcePack {
+public abstract class TextureGenerator extends StitchListener implements IResourcePack, ITextureProvider {
 
     private final String name;
     private final String description;
-    private final Set<String> domain;
+
+    protected final String domain;
 
     protected TextureGenerator(String name, String description, String domain) {
+        super();
         this.name = name;
         this.description = description;
-        this.domain = ImmutableSet.of(BetterFoliageMod.MOD_ID.toLowerCase() + "_" + domain);
+        this.domain = BetterFoliageMod.MOD_ID.toLowerCase() + "_" + domain;
 
         // Add self to the list of default resource packs
         FMLClientHandler.instance().resourcePackList.add(this);
     }
 
-    protected abstract void generateTextures();
-
-    protected abstract BufferedImage getGeneratedTexture(ResourceLocation location);
+    protected abstract BufferedImage getGeneratedTexture(ResourceLocation location) throws IOException;
 
     @Override
-    public final InputStream getInputStream(ResourceLocation location) throws IOException {
+    public InputStream getInputStream(ResourceLocation location) throws IOException {
         BufferedImage image = getGeneratedTexture(location);
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         ImageIO.write(image, "PNG", outStream);
@@ -51,7 +52,7 @@ public abstract class TextureGenerator implements TextureProvider, IResourcePack
 
     @Override
     public final Set<String> getResourceDomains() {
-        return domain;
+        return ImmutableSet.of(domain);
     }
 
     @Override
