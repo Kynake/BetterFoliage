@@ -45,4 +45,19 @@ public final class MathUtils {
         double value) {
         return lerp(toRangeMin, toRangeMax, inverseLerp(fromRangeMin, fromRangeMax, value));
     }
+
+    /// Colors are in ARGB format. Alpha is copied from first color
+    public static int blendRGB(int colorA, int colorB, float weightA, float weightB) {
+        float total = weightA + weightB;
+        int r = (int) ((weightA * ((colorA >> 16) & 0xFF) + weightB * ((colorB >> 16) & 0xFF)) / total);
+        int g = (int) ((weightA * ((colorA >> 8) & 0xFF) + weightB * ((colorB >> 8) & 0xFF)) / total);
+        int b = (int) ((weightA * ((colorA) & 0xFF) + weightB * ((colorB) & 0xFF)) / total);
+
+        int res = colorA & 0xFF_00_00_00;
+        res |= r << 16;
+        res |= g << 8;
+        res |= b;
+
+        return res;
+    }
 }
