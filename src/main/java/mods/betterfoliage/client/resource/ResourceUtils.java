@@ -83,6 +83,24 @@ public class ResourceUtils {
         return res;
     }
 
+    public static boolean resourceHasMcMeta(ResourceLocation location) {
+        if (location.getResourcePath()
+            .endsWith(".mcmeta")) {
+            return false;
+        }
+
+        List<IResourcePack> resourcePacks = getResourcePacksWithDomain(location.getResourceDomain());
+        for (IResourcePack pack : resourcePacks) {
+            if (pack.resourceExists(location)) {
+                // Only the highest priority asset dictates whether it'll use a .mcmeta file or not
+                return pack.resourceExists(
+                    new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + ".mcmeta"));
+            }
+        }
+
+        return false;
+    }
+
     private static void addFromFolderIfPossible(File dir, String domain, String prefix, String suffix,
         HashSet<ResourceLocation> output, String basePath) {
         File[] files = dir.listFiles();
