@@ -43,8 +43,14 @@ public abstract class TextureGenerator extends StitchListener implements IResour
 
     protected abstract BufferedImage getGeneratedTexture(ResourceLocation location) throws IOException;
 
+    protected abstract InputStream getGeneratedMcMeta(ResourceLocation location) throws IOException;
+
     @Override
     public InputStream getInputStream(ResourceLocation location) throws IOException {
+        if (isMcMeta(location)) {
+            return getGeneratedMcMeta(location);
+        }
+
         BufferedImage image = getGeneratedTexture(location);
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         ImageIO.write(image, "PNG", outStream);
@@ -73,6 +79,11 @@ public abstract class TextureGenerator extends StitchListener implements IResour
     @Override
     public final String getPackName() {
         return "[" + BetterFoliageMod.MOD_NAME + "] " + name;
+    }
+
+    protected static boolean isMcMeta(ResourceLocation location) {
+        return location.getResourcePath()
+            .endsWith(".mcmeta");
     }
 
     protected final BufferedImage createCopy(BufferedImage original) {

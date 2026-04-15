@@ -2,6 +2,7 @@ package mods.betterfoliage.client.resource.generators;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
@@ -56,7 +57,18 @@ public class ShortGrassGenerator extends TextureGenerator {
 
     @Override
     public boolean resourceExists(ResourceLocation location) {
+        if (isMcMeta(location)) {
+            return ResourceUtils.resourceHasMcMeta(baseResource);
+        }
+
         return location.equals(generatedResource);
+    }
+
+    @Override
+    protected InputStream getGeneratedMcMeta(ResourceLocation location) throws IOException {
+        return ResourceUtils.getResourceManager()
+            .getResource(new ResourceLocation(baseResource.getResourceDomain(), location.getResourcePath()))
+            .getInputStream();
     }
 
     @Override
