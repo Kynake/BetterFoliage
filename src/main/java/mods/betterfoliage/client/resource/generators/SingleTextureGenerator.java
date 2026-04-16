@@ -1,0 +1,68 @@
+package mods.betterfoliage.client.resource.generators;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.TextureStitchEvent;
+
+import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.client.resource.ResourceUtils;
+
+public abstract class SingleTextureGenerator extends TextureGenerator {
+
+    protected final ResourceLocation baseResource;
+    protected final ResourceLocation generatedResource;
+
+    protected IIcon generatedTexture;
+
+    // TODO: support for Normal (_n) and Specular (_s)?
+    // Maybe add to base class instead
+
+    public SingleTextureGenerator(String name, String domain, String baseDomain, String baseResourcePath) {
+        super(name, "Single texture Generator for: " + name, "single_tex_" + domain);
+        this.baseResource = new ResourceLocation(baseDomain, baseResourcePath);
+        this.generatedResource = new ResourceLocation(this.domain, baseResourcePath);
+    }
+
+    @Override
+    protected void onSpriteStitch(TextureStitchEvent.Pre event) {
+        if (event.map.getTextureType() != 0) {
+            return;
+        }
+
+        String name = generatedResource.getResourcePath();
+        int startIndex = name.lastIndexOf('/') + 1;
+        int endIndex = name.lastIndexOf('.');
+
+        if (startIndex <= 0 || startIndex > endIndex) {
+            BetterFoliageMod.log.error("Invalid resource location: {}", generatedResource);
+            return;
+        }
+
+        String textureName = domain + ":" + name.substring(startIndex, endIndex);
+        generatedTexture = event.map.registerIcon(textureName);
+    }
+
+    @Override
+    public boolean resourceExists(ResourceLocation location) {
+        if (ResourceUtils.isMcMeta(location)) {
+            return ResourceUtils.resourceHasMcMeta(baseResource);
+        }
+
+        return location.equals(generatedResource);
+    }
+
+    @Override
+    protected InputStream getGeneratedMcMeta(ResourceLocation location) throws IOException {
+        return ResourceUtils.getResourceManager()
+            .getResource(new ResourceLocation(baseResource.getResourceDomain(), location.getResourcePath()))
+            .getInputStream();
+    }
+
+    @Override
+    public IIcon getSpriteForCoord(int x, int y, int z) {
+        return generatedTexture;
+    }
+}
