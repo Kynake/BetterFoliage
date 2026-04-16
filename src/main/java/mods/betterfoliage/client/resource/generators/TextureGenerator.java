@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableSet;
 import cpw.mods.fml.client.FMLClientHandler;
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.render.ISpriteProvider;
+import mods.betterfoliage.client.resource.ResourceUtils;
 import mods.betterfoliage.client.resource.StitchListener;
 
 public abstract class TextureGenerator extends StitchListener implements IResourcePack, ISpriteProvider {
@@ -47,7 +48,7 @@ public abstract class TextureGenerator extends StitchListener implements IResour
 
     @Override
     public InputStream getInputStream(ResourceLocation location) throws IOException {
-        if (isMcMeta(location)) {
+        if (ResourceUtils.isMcMeta(location)) {
             return getGeneratedMcMeta(location);
         }
 
@@ -79,11 +80,6 @@ public abstract class TextureGenerator extends StitchListener implements IResour
     @Override
     public final String getPackName() {
         return "[" + BetterFoliageMod.MOD_NAME + "] " + name;
-    }
-
-    protected static boolean isMcMeta(ResourceLocation location) {
-        return location.getResourcePath()
-            .endsWith(".mcmeta");
     }
 
     protected final BufferedImage createCopy(BufferedImage original) {

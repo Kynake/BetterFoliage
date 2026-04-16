@@ -83,9 +83,13 @@ public class ResourceUtils {
         return res;
     }
 
+    public static boolean isMcMeta(ResourceLocation location) {
+        return location.getResourcePath()
+            .endsWith(".mcmeta");
+    }
+
     public static boolean resourceHasMcMeta(ResourceLocation location) {
-        if (location.getResourcePath()
-            .endsWith(".mcmeta")) {
+        if (isMcMeta(location)) {
             return false;
         }
 
