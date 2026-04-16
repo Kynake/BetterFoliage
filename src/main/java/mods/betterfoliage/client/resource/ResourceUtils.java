@@ -50,34 +50,38 @@ public class ResourceUtils {
 
         List<IResourcePack> packs = getResourcePacksWithDomain(domain);
         for (IResourcePack pack : packs) {
+            // Ignore mod's own generated packs
             if (pack instanceof TextureGenerator) {
-                // Ignore mod's own generated packs
                 continue;
             }
 
+            // Normal resource packs
             if (pack instanceof AbstractResourcePack abstractPack) {
                 File packFile = abstractPack.resourcePackFile;
                 if (packFile.isDirectory()) {
                     addFromFolderIfPossible(packFile, domain, prefix, suffix, res, "");
-                    continue;
-                }
-
-                if (packFile.isFile()) {
+                } else if (packFile.isFile()) {
                     try (ZipFile zip = new ZipFile(packFile)) {
                         addFromZipIfPossible(zip, domain, prefix, suffix, res);
                     } catch (IOException e) {
                         BetterFoliageMod.log.error("Error reading zip file in pattern search", e);
                     }
                 }
-            } else if (pack instanceof DefaultResourcePack) {
-                // TODO Implement if needed
-                BetterFoliageMod.log.warn("DefaultResourcePack objects not supported");
-            } else {
-                BetterFoliageMod.log.error(
-                    "Unsupported IResourcePack implementation: {}",
-                    pack.getClass()
-                        .getCanonicalName());
+                continue;
             }
+
+            // TODO Implement if needed
+            // MC's default textures (mapped in memory)
+            if (pack instanceof DefaultResourcePack) {
+                BetterFoliageMod.log.warn("DefaultResourcePack objects not supported");
+                continue;
+            }
+
+            // Others
+            BetterFoliageMod.log.error(
+                "Unsupported IResourcePack implementation: {}",
+                pack.getClass()
+                    .getCanonicalName());
         }
 
         return res;
