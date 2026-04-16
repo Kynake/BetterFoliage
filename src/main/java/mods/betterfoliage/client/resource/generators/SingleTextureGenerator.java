@@ -17,9 +17,6 @@ public abstract class SingleTextureGenerator extends TextureGenerator {
 
     protected IIcon generatedTexture;
 
-    // TODO: support for Normal (_n) and Specular (_s)?
-    // Maybe add to base class instead
-
     public SingleTextureGenerator(String name, String domain, String baseDomain, String baseResourcePath) {
         super(name, "Single texture Generator for: " + name, "single_tex_" + domain);
         this.baseResource = new ResourceLocation(baseDomain, baseResourcePath);
@@ -45,6 +42,8 @@ public abstract class SingleTextureGenerator extends TextureGenerator {
         generatedTexture = event.map.registerIcon(textureName);
     }
 
+    // TODO: support for Normal (_n) and Specular (_s)?
+    // Maybe add to base class instead
     @Override
     public boolean resourceExists(ResourceLocation location) {
         if (ResourceUtils.isMcMeta(location)) {

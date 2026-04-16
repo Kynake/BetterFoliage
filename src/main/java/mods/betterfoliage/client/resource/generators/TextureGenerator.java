@@ -82,6 +82,10 @@ public abstract class TextureGenerator extends StitchListener implements IResour
         return "[" + BetterFoliageMod.MOD_NAME + "] " + name;
     }
 
+    protected final BufferedImage createEmptyFrom(BufferedImage original) {
+        return new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_INT_ARGB);
+    }
+
     protected final BufferedImage createCopy(BufferedImage original) {
         BufferedImage res = new BufferedImage(original.getWidth(), original.getHeight(), original.getType());
 
