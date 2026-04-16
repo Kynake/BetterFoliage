@@ -16,10 +16,14 @@ public class ShortGrassGenerator extends SingleTextureGenerator {
 
     // TODO make configurable?
     // Only use the top 6 / 16 pixels from the base texture
-    private static final float topCutRatio = 6.f / 16.f;
+    private static final float TOP_CUT_RATIO = 6f / 16f;
 
     public ShortGrassGenerator(String baseDomain, String baseResourcePath) {
-        super("Generated Short Grass", "gen_grass", baseDomain, baseResourcePath);
+        this("Generated Short Grass", "gen_grass", baseDomain, baseResourcePath);
+    }
+
+    protected ShortGrassGenerator(String name, String domain, String baseDomain, String baseResourcePath) {
+        super(name, domain, baseDomain, baseResourcePath);
     }
 
     @Override
@@ -41,7 +45,7 @@ public class ShortGrassGenerator extends SingleTextureGenerator {
 
         int width = baseImage.getWidth();
         int frames = baseImage.getHeight() / width;
-        int topPixels = (int) (width * topCutRatio);
+        int topPixels = (int) (width * TOP_CUT_RATIO);
 
         for (int frame = 0; frame < frames; frame++) {
             BufferedImage baseSubFrame = baseImage.getSubimage(0, width * frame, width, topPixels);
