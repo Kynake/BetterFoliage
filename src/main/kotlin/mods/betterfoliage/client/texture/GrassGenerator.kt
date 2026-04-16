@@ -1,3 +1,4 @@
+// TODO remove soon
 package mods.betterfoliage.client.texture
 
 import mods.betterfoliage.utils.MathUtils
@@ -46,7 +47,7 @@ class GrassGenerator(domain: String) : TextureGenerator(domain) {
         if (isSnowed && target.first == ResourceType.COLOR) {
             for (x in 0..result.width - 1) {
                 for (y in 0..result.height - 1) {
-                    result[x, y] = MathUtils.blendRGB(result[x, y], 0xFF_FF_FF, 2f, 3f)
+                    result[x, y] = MathUtils.blendRGB(result[x, y], 0xFF_FF_FF, 2f / 3f)
                 }
             }
         }

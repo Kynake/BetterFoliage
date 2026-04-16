@@ -47,11 +47,11 @@ public final class MathUtils {
     }
 
     /// Colors are in ARGB format. Alpha is copied from first color
-    public static int blendRGB(int colorA, int colorB, float weightA, float weightB) {
-        float total = weightA + weightB;
-        int r = (int) ((weightA * ((colorA >> 16) & 0xFF) + weightB * ((colorB >> 16) & 0xFF)) / total);
-        int g = (int) ((weightA * ((colorA >> 8) & 0xFF) + weightB * ((colorB >> 8) & 0xFF)) / total);
-        int b = (int) ((weightA * ((colorA) & 0xFF) + weightB * ((colorB) & 0xFF)) / total);
+    public static int blendRGB(int colorA, int colorB, float ratio) {
+        float invRatio = (1f / ratio);
+        int r = (int) (ratio * ((colorA >> 16) & 0xFF) + invRatio * ((colorB >> 16) & 0xFF));
+        int g = (int) (ratio * ((colorA >> 8) & 0xFF) + invRatio * ((colorB >> 8) & 0xFF));
+        int b = (int) (ratio * ((colorA) & 0xFF) + invRatio * ((colorB) & 0xFF));
 
         int res = colorA & 0xFF_00_00_00;
         res |= r << 16;
