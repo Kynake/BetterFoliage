@@ -12,6 +12,7 @@ import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.client.resource.generators.ShortGrassGenerator;
+import mods.betterfoliage.client.resource.generators.ShortGrassSnowGenerator;
 import mods.betterfoliage.mixins.interfaces.minecraft.IGrassBlockRenderer;
 import mods.betterfoliage.utils.MathUtils;
 import mods.octarinecore.client.render.BlockContext;
@@ -35,6 +36,9 @@ public class GrassRenderer extends BlockRenderer {
         BetterFoliageMod.LEGACY_DOMAIN, "textures/blocks/better_grass_snowed_", ".png");
 
     private final ISpriteProvider genGrass = new ShortGrassGenerator(
+        "minecraft", "textures/blocks/tallgrass.png");
+
+    private final ISpriteProvider genGrassSnow = new ShortGrassSnowGenerator(
         "minecraft", "textures/blocks/tallgrass.png");
     // spotless:on
 
@@ -96,6 +100,7 @@ public class GrassRenderer extends BlockRenderer {
         }
 
         // TODO: Generate color based on grass top texture for modded grass blocks
+        // TODO: Adjust horizontal scale to match old mod calculations
         // Render short grass
 
         int coordHash = MathUtils.hashCoords(x, y + 1, z);
@@ -124,35 +129,24 @@ public class GrassRenderer extends BlockRenderer {
 
         double shortGrassHeight = y + 1;
 
-        IIcon sprite;
-
-        // TODO: Implement generated grass IICons
+        ISpriteProvider provider;
         if (Config.shortGrass.INSTANCE.getUseGenerated()) {
-            // TODO fix gen grass on reload
-            // TODO add snow grass generator (to get even brighter gen snow grass)
-            // if (genGrass == null) {
-            // IIcon baseSprite = Blocks.tallgrass.getIcon(0, 1);
-            // genGrass = new PartialSprite(baseSprite, 0, 6F / 16F, 0, 0);
-            // }
-            //
-            // if (hasSnowAbove) {
-            // shortGrassHeight += SNOW_HEIGHT_OFFSET;
-            // }
-            //
-            // sprite = genGrass;
-            // heightScale *= genGrass.getHeightRatio();
-
-            sprite = genGrass.getSpriteForCoord(x, y, z);
+            if (hasSnowAbove) {
+                provider = genGrassSnow;
+                shortGrassHeight += SNOW_HEIGHT_OFFSET;
+            } else {
+                provider = genGrass;
+            }
         } else {
-            ISpriteProvider provider;
             if (hasSnowAbove) {
                 provider = shortGrassSnow;
                 shortGrassHeight += SNOW_HEIGHT_OFFSET;
             } else {
                 provider = shortGrass;
             }
-            sprite = provider.getSpriteForCoord(x, y, z);
+
         }
+        IIcon sprite = provider.getSpriteForCoord(x, y, z);
 
         Tessellator tessellator = Tessellator.instance;
         tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y + 1, z));
