@@ -1,5 +1,7 @@
 package mods.betterfoliage.client.render;
 
+import java.util.Map;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -8,11 +10,15 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import org.jetbrains.annotations.NotNull;
+
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.client.resource.generators.ShortGrassGenerator;
 import mods.betterfoliage.client.resource.generators.ShortGrassSnowGenerator;
+import mods.betterfoliage.client.texture.GrassInfo;
+import mods.betterfoliage.client.texture.GrassRegistry;
 import mods.betterfoliage.mixins.interfaces.minecraft.IGrassBlockRenderer;
 import mods.betterfoliage.utils.MathUtils;
 import mods.octarinecore.client.render.BlockContext;
@@ -102,10 +108,7 @@ public class GrassRenderer extends BlockRenderer {
             renderResult = renderer.renderStandardBlock(block, x, y, z);
         }
 
-        // TODO: Generate color based on grass top texture for modded grass blocks
-        // TODO: Adjust horizontal scale to match old mod calculations
         // Render short grass
-
         int coordHash = MathUtils.hashCoords(x, y + 1, z);
         double heightScale = MathUtils.hashToRange(
             coordHash,
@@ -181,9 +184,19 @@ public class GrassRenderer extends BlockRenderer {
     }
 
     private void setGrassColor(IBlockAccess world, Tessellator tessellator, Block grassBlock, int x, int y, int z) {
-        // TODO: consider custom grass blocks and colors here
-        int color = world.getBiomeGenForCoords(x, z)
-            .getBiomeGrassColor(x, y, z);
+        IIcon grassTopTexture = grassBlock.getIcon(world, x, y, z, ForgeDirection.UP.ordinal());
+
+        Map<@NotNull IIcon, @NotNull GrassInfo> grassMap = GrassRegistry.INSTANCE.getGrass();
+        if (!grassMap.containsKey(grassTopTexture)) {
+            return;
+        }
+
+        GrassInfo grass = grassMap.get(grassTopTexture);
+
+        int color = grass.getOverrideColor() != null ? grass.getOverrideColor()
+            : world.getBiomeGenForCoords(x, z)
+                .getBiomeGrassColor(x, y, z);
+
         tessellator.setColorOpaque_I(color);
     }
 
