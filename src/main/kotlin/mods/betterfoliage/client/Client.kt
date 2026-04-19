@@ -13,7 +13,6 @@ import mods.betterfoliage.client.render.RenderCactus
 import mods.betterfoliage.client.render.RenderConnectedGrass
 import mods.betterfoliage.client.render.RenderConnectedGrassLog
 import mods.betterfoliage.client.render.RenderCoral
-import mods.betterfoliage.client.render.RenderGrass
 import mods.betterfoliage.client.render.RenderLeaves
 import mods.betterfoliage.client.render.RenderLilypad
 import mods.betterfoliage.client.render.RenderLog
@@ -21,7 +20,6 @@ import mods.betterfoliage.client.render.RenderMycelium
 import mods.betterfoliage.client.render.RenderNetherrack
 import mods.betterfoliage.client.render.RenderReeds
 import mods.betterfoliage.client.render.RisingSoulTextures
-import mods.betterfoliage.client.texture.GrassGenerator
 import mods.betterfoliage.client.texture.GrassRegistry
 import mods.betterfoliage.client.texture.LeafGenerator
 import mods.betterfoliage.client.texture.LeafRegistry
@@ -39,11 +37,10 @@ import org.apache.logging.log4j.Level
 @SideOnly(Side.CLIENT)
 object Client {
 
-    val genGrass = GrassGenerator("bf_gen_grass")
     val genLeaves = LeafGenerator("bf_gen_leaves") // TODO revise extra leaves masks. Any texture other than _default is never used
     val genReeds = CenteringTextureGenerator("bf_gen_reeds", 1, 2)
 
-    val generatorPack = GeneratorPack("Better Foliage generated", genGrass, genLeaves, genReeds)
+    val generatorPack = GeneratorPack("Better Foliage generated", genLeaves, genReeds)
 
     val logRenderer = RenderLog()
 
@@ -51,7 +48,6 @@ object Client {
 
     val renderers =
         listOf(
-            // RenderGrass(),
             RenderMycelium(),
             leafRenderer,
             RenderCactus(),
