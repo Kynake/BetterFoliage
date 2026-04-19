@@ -202,9 +202,11 @@ public class GrassRenderer extends BlockRenderer {
         tessellator.setColorOpaque_I(color);
     }
 
-    // TODO Turn into configurable list
     private boolean blocksShortGrassRendering(IBlockAccess world, Block blockAbove, int x, int y, int z) {
-        int meta = world.getBlockMetadata(x, y, z);
-        return (blockAbove == Blocks.tallgrass && meta == 1) || (blockAbove == Blocks.double_plant && meta == 2);
+        return false;
+
+        // TODO Enable after configurable list is implemented
+        // int meta = world.getBlockMetadata(x, y, z);
+        // return (blockAbove == Blocks.tallgrass && meta == 1) || (blockAbove == Blocks.double_plant && meta == 2);
     }
 }
