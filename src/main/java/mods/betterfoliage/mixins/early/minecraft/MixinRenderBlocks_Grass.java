@@ -10,8 +10,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-import com.llamalad7.mixinextras.expression.Definition;
-import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 
@@ -41,15 +39,8 @@ public abstract class MixinRenderBlocks_Grass implements IGrassBlockRenderer {
     @Unique
     private boolean betterfoliage$isRenderingGrass = false;
 
-    @Unique
-    private float betterfoliage$shortGrassVerticalScale;
-
     public void betterfoliage$setGrassRender(boolean isRenderingGrass) {
         betterfoliage$isRenderingGrass = isRenderingGrass;
-    }
-
-    public void betterfoliage$setShortVerticalGrassScale(float shortGrassScale) {
-        betterfoliage$shortGrassVerticalScale = shortGrassScale;
     }
 
     /// =============================
@@ -188,20 +179,5 @@ public abstract class MixinRenderBlocks_Grass implements IGrassBlockRenderer {
         @Local(argsOnly = true, ordinal = 0) float r, @Local(argsOnly = true, ordinal = 1) float g,
         @Local(argsOnly = true, ordinal = 2) float b) {
         return betterfoliage$overrideTessellatorColor(tessellator, rBase, gBase, bBase, r, g, b);
-    }
-
-    /// ================================
-    /// Tall Grass render mixins
-    /// ================================
-    @Definition(id = "scale", local = @Local(argsOnly = true, type = float.class, ordinal = 0))
-    @Definition(id = "d7", local = @Local(type = double.class, ordinal = 7))
-    @Expression("d7 = 0.45 * (double) scale")
-    @ModifyVariable(
-        method = "drawCrossedSquares",
-        ordinal = 0,
-        argsOnly = true,
-        at = @At(shift = At.Shift.AFTER, value = "MIXINEXTRAS:EXPRESSION"))
-    private float betterfoliage$overrideShortGrassVerticalScale(float original) {
-        return betterfoliage$isRenderingGrass ? betterfoliage$shortGrassVerticalScale : original;
     }
 }

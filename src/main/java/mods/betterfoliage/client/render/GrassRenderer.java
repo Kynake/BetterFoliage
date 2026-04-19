@@ -19,6 +19,7 @@ import mods.betterfoliage.client.resource.generators.ShortGrassGenerator;
 import mods.betterfoliage.client.resource.generators.ShortGrassSnowGenerator;
 import mods.betterfoliage.client.texture.GrassInfo;
 import mods.betterfoliage.client.texture.GrassRegistry;
+import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.IGrassBlockRenderer;
 import mods.betterfoliage.utils.MathUtils;
 import mods.octarinecore.client.render.BlockContext;
@@ -85,8 +86,6 @@ public class GrassRenderer extends BlockRenderer {
         Block blockAbove = world.getBlock(x, y + 1, z);
         boolean hasSnowAbove = Utils.isSnow(blockAbove);
 
-        IGrassBlockRenderer grassRenderer = (IGrassBlockRenderer) renderer;
-
         boolean renderResult;
         if (isConnected) {
             if (hasSnowAbove && Config.connectedGrass.INSTANCE.getSnowEnabled()) {
@@ -95,6 +94,8 @@ public class GrassRenderer extends BlockRenderer {
                 renderResult = renderer.renderStandardBlock(block, x, y, z);
                 renderer.clearOverrideBlockTexture();
             } else {
+                IGrassBlockRenderer grassRenderer = (IGrassBlockRenderer) renderer;
+
                 IIcon grassTop = block.getIcon(world, x, y, z, ForgeDirection.UP.ordinal());
                 renderer.setOverrideBlockTexture(grassTop);
                 grassRenderer.betterfoliage$setGrassRender(true);
@@ -162,15 +163,16 @@ public class GrassRenderer extends BlockRenderer {
             setGrassColor(world, tessellator, block, x, y, z);
         }
 
-        grassRenderer.betterfoliage$setShortVerticalGrassScale((float) heightScale);
-
         double hOffset = Config.shortGrass.INSTANCE.getHOffset();
         double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
         double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
-        grassRenderer.betterfoliage$setGrassRender(true);
+        ICrossedSquaresRenderer shortGrassRenderer = (ICrossedSquaresRenderer) renderer;
+
+        shortGrassRenderer.betterfoliage$setVerticalScale((float) heightScale);
+        shortGrassRenderer.betterfoliage$setIsRenderingCrossedSquares(true);
         renderer.drawCrossedSquares(sprite, xOffset, shortGrassHeight, zOffset, SHORT_GRASS_SCALE);
-        grassRenderer.betterfoliage$setGrassRender(false);
+        shortGrassRenderer.betterfoliage$setIsRenderingCrossedSquares(false);
 
         return true;
     }
