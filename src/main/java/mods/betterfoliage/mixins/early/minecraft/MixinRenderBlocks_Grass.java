@@ -69,7 +69,7 @@ public abstract class MixinRenderBlocks_Grass implements IGrassBlockRenderer {
 
     @ModifyVariable(
         method = "renderStandardBlockWithAmbientOcclusion",
-        ordinal = 0,
+        name = "iicon",
         at = @At(
             value = "INVOKE_ASSIGN",
             ordinal = 2,
@@ -82,7 +82,7 @@ public abstract class MixinRenderBlocks_Grass implements IGrassBlockRenderer {
 
     @ModifyVariable(
         method = "renderStandardBlockWithAmbientOcclusion",
-        ordinal = 0,
+        name = "iicon",
         at = @At(
             value = "INVOKE_ASSIGN",
             ordinal = 3,
@@ -95,7 +95,7 @@ public abstract class MixinRenderBlocks_Grass implements IGrassBlockRenderer {
 
     @ModifyVariable(
         method = "renderStandardBlockWithAmbientOcclusion",
-        ordinal = 0,
+        name = "iicon",
         at = @At(
             value = "INVOKE_ASSIGN",
             ordinal = 5,
@@ -108,7 +108,7 @@ public abstract class MixinRenderBlocks_Grass implements IGrassBlockRenderer {
 
     @ModifyVariable(
         method = "renderStandardBlockWithAmbientOcclusion",
-        ordinal = 0,
+        name = "iicon",
         at = @At(
             value = "INVOKE_ASSIGN",
             ordinal = 6,
