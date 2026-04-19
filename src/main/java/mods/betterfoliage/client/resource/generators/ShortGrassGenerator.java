@@ -15,8 +15,8 @@ import mods.betterfoliage.client.resource.ResourceUtils;
 public class ShortGrassGenerator extends SingleTextureGenerator {
 
     // TODO make configurable?
-    // Only use the top 6 / 16 pixels from the base texture
-    private static final float TOP_CUT_RATIO = 6f / 16f;
+    // Only use the top 10 / 16 pixels from the base texture
+    private static final float TOP_CUT_RATIO = 10f / 16f;
 
     public ShortGrassGenerator(String baseDomain, String baseResourcePath) {
         this("Generated Short Grass", "gen_grass", baseDomain, baseResourcePath);
