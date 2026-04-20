@@ -4,17 +4,13 @@ import mods.octarinecore.metaprog.ClassRef
 import mods.octarinecore.metaprog.FieldRef
 import mods.octarinecore.metaprog.MethodRef
 
+// TODO Remove this class once CTM support is refactored, as it all relates to it in some way
 /** Singleton object holding references to foreign code elements. */
 object Refs {
-    // Java
-    val List = ClassRef("java.util.List")
-
     // Minecraft
     val IBlockAccess = ClassRef("net.minecraft.world.IBlockAccess", "ahl")
 
     val Block = ClassRef("net.minecraft.block.Block", "aji")
-
-    val RenderBlocks = ClassRef("net.minecraft.client.renderer.RenderBlocks", "blm")
 
     val IIcon = ClassRef("net.minecraft.util.IIcon", "rf")
 
@@ -40,7 +36,4 @@ object Refs {
     val CPmatchBlocks = FieldRef(ConnectedProperties, "matchBlocks", null)
     val CPmatchTileIcons = FieldRef(ConnectedProperties, "matchTileIcons", null)
     val CPtileIcons = FieldRef(ConnectedProperties, "tileIcons", null)
-
-    // Colored Lights Core
-    val CLCLoadingPlugin = ClassRef("coloredlightscore.src.asm.ColoredLightsCoreLoadingPlugin")
 }
