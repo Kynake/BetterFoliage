@@ -11,7 +11,6 @@ import mods.octarinecore.client.render.RenderVertex
 import mods.octarinecore.client.render.Rotation
 import mods.octarinecore.client.render.ShadingContext
 import mods.octarinecore.client.render.Vertex
-import mods.octarinecore.client.render.times
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraftforge.common.util.ForgeDirection
@@ -19,7 +18,6 @@ import net.minecraftforge.common.util.ForgeDirection
 val up1 = Int3(1 to ForgeDirection.UP)
 val up2 = Int3(2 to ForgeDirection.UP)
 val down1 = Int3(1 to ForgeDirection.DOWN)
-val snowOffset = ForgeDirection.UP * 0.0625
 
 val normalLeavesRot = arrayOf(Rotation.identity)
 val denseLeavesRot =

@@ -38,6 +38,7 @@ object Client {
     val genLeaves = LeafGenerator("bf_gen_leaves") // TODO revise extra leaves masks. Any texture other than _default is never used
     val genReeds = CenteringTextureGenerator("bf_gen_reeds", 1, 2)
 
+    @Suppress("unused")
     val generatorPack = GeneratorPack("Better Foliage generated", genLeaves, genReeds)
 
     val logRenderer = RenderLog()
@@ -58,6 +59,7 @@ object Client {
             RenderConnectedGrassLog(),
         )
 
+    @Suppress("unused")
     val singletons =
         listOf(
             LeafRegistry,

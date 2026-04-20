@@ -161,13 +161,9 @@ class BlockContext {
     fun tileEntity(offset: Int3): TileEntity? = world!!.getTileEntity(x + offset.x, y + offset.y, z + offset.z)
 
     /** Get the block color multiplier at the given offset. */
-    val blockColor: Int
-        get() = blockColor(block, world, x, y, z)
     fun blockColor(offset: Int3) = blockColor(block(offset), world, x + offset.x, y + offset.y, z + offset.z)
 
     /** Get the block brightness at the given offset. */
-    val blockBrightness: Int
-        get() = block.getMixedBrightnessForBlock(world, x, y, z)
     fun blockBrightness(offset: Int3) = block(offset).getMixedBrightnessForBlock(world, x + offset.x, y + offset.y, z + offset.z)
 
     fun shouldRenderSide(offset: Int3, side: ForgeDirection) = block.shouldSideBeRendered(world, x + offset.x, y + offset.y, z + offset.z, side.ordinal)

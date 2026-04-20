@@ -60,7 +60,6 @@ open class ResourceHandler(val modId: String) {
     // Resource declarations
     // ============================
     fun iconStatic(domain: String, path: String) = IconHolder(domain, path).apply { resources.add(this) }
-    fun iconStatic(location: ResourceLocation) = iconStatic(location.resourceDomain, location.resourcePath)
     fun iconSet(domain: String, pathPattern: String) = IconSet(domain, pathPattern).apply { resources.add(this) }
     fun iconSet(location: ResourceLocation) = iconSet(location.resourceDomain, location.resourcePath)
     fun model(init: Model.() -> Unit) = ModelHolder(init).apply { resources.add(this) }

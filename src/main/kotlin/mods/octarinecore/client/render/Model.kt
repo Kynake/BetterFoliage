@@ -19,9 +19,6 @@ data class UV(val u: Double, val v: Double) {
         val bottomRight = UV(0.5, 0.5)
     }
 
-    val rotate: UV
-        get() = UV(v, -u)
-
     fun rotate(n: Int) = when (n % 4) {
         0 -> copy()
         1 -> UV(v, -u)
@@ -65,7 +62,6 @@ data class Quad(val v1: Vertex, val v2: Vertex, val v3: Vertex, val v4: Vertex) 
     fun scale(scale: Double3) = transformV {
         it.copy(xyz = Double3(it.xyz.x * scale.x, it.xyz.y * scale.y, it.xyz.z * scale.z))
     }
-    fun scaleUV(scale: Double) = transformV { it.copy(uv = UV(it.uv.u * scale, it.uv.v * scale)) }
     fun rotate(rot: Rotation) = transformV {
         it.copy(
             xyz = it.xyz.rotate(rot),
@@ -112,7 +108,6 @@ class Model() : Cloneable {
     fun Iterable<Quad>.addAll() = forEach { quads.add(it) }
 
     fun transformQ(trans: (Quad) -> Quad) = quads.replace(trans)
-    fun transformV(trans: (Vertex) -> Vertex) = quads.replace { it.transformV(trans) }
 
     fun verticalRectangle(
         x1: Double,
@@ -141,18 +136,6 @@ class Model() : Cloneable {
         )
     }
 
-    fun faceQuad(face: ForgeDirection): Quad {
-        val base = face.vec * 0.5
-        val top = faceCorners[face.ordinal].topLeft.first.vec * 0.5
-        val left = faceCorners[face.ordinal].topLeft.second.vec * 0.5
-        return Quad(
-            Vertex(base + top + left, UV.topLeft),
-            Vertex(base - top + left, UV.bottomLeft),
-            Vertex(base - top - left, UV.bottomRight),
-            Vertex(base + top - left, UV.topRight),
-        )
-    }
-
     public override fun clone(): Model {
         val quadsCopy = buildList(quads.size) {
             for (quad in quads) add(quad.copy())
@@ -161,13 +144,3 @@ class Model() : Cloneable {
         return Model(quadsCopy)
     }
 }
-
-val fullCube =
-    Model().apply {
-        forgeDirs.forEach {
-            faceQuad(it)
-                .setAoShader(faceOrientedAuto(corner = cornerAo(it.axis), edge = null))
-                .setFlatShader(faceOrientedAuto(corner = cornerFlat, edge = null))
-                .add()
-        }
-    }

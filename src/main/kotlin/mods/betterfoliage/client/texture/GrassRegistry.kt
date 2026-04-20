@@ -21,9 +21,6 @@ const val DEFAULT_GRASS_COLOR = 0
 
 /** Rendering-related information for a grass block. */
 class GrassInfo(
-    /** Top texture of the grass block. */
-    val grassTopTexture: TextureAtlasSprite,
-
     /**
      * Color to use for Short Grass rendering instead of the biome color.
      *
@@ -91,6 +88,6 @@ object GrassRegistry {
             } else {
                 null
             }
-        grass.put(icon, GrassInfo(icon, overrideColor))
+        grass.put(icon, GrassInfo(overrideColor))
     }
 }

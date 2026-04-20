@@ -1,7 +1,6 @@
 package mods.octarinecore.client.resource
 
 import cpw.mods.fml.client.FMLClientHandler
-import mods.octarinecore.metaprog.reflectField
 import net.minecraft.client.resources.IResourcePack
 import net.minecraft.client.resources.data.IMetadataSerializer
 import net.minecraft.client.resources.data.PackMetadataSection

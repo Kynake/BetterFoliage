@@ -35,15 +35,6 @@ val ForgeDirection.axis: Axis
             -> Axis.Y
             else -> Axis.Z
         }
-val ForgeDirection.dir: Dir
-    get() =
-        when (this) {
-            ForgeDirection.UP,
-            ForgeDirection.SOUTH,
-            ForgeDirection.EAST,
-            -> P
-            else -> N
-        }
 val Pair<Axis, Dir>.face: ForgeDirection
     get() =
         when (this) {
@@ -102,12 +93,6 @@ data class Double3(var x: Double, var y: Double, var z: Double) {
     )
 
     // mutable operations
-    fun setTo(other: Double3): Double3 {
-        x = other.x
-        y = other.y
-        z = other.z
-        return this
-    }
     fun setTo(x: Double, y: Double, z: Double): Double3 {
         this.x = x
         this.y = y
@@ -139,29 +124,11 @@ data class Double3(var x: Double, var y: Double, var z: Double) {
         this.z -= z
         return this
     }
-    fun invert(): Double3 {
-        x = -x
-        y = -y
-        z = -z
-        return this
-    }
     fun mul(scale: Double): Double3 {
         x *= scale
         y *= scale
         z *= scale
         return this
-    }
-    fun mul(other: Double3): Double3 {
-        x *= other.x
-        y *= other.y
-        z *= other.z
-        return this
-    }
-    fun rotateMut(rot: Rotation): Double3 {
-        val rotX = rot.rotatedComponent(ForgeDirection.EAST, x, y, z)
-        val rotY = rot.rotatedComponent(ForgeDirection.UP, x, y, z)
-        val rotZ = rot.rotatedComponent(ForgeDirection.SOUTH, x, y, z)
-        return setTo(rotX, rotY, rotZ)
     }
 
     // misc operations
@@ -212,53 +179,11 @@ data class Int3(var x: Int, var y: Int, var z: Int) {
     )
 
     // mutable operations
-    fun setTo(other: Int3): Int3 {
-        x = other.x
-        y = other.y
-        z = other.z
-        return this
-    }
-    fun setTo(x: Int, y: Int, z: Int): Int3 {
-        this.x = x
-        this.y = y
-        this.z = z
-        return this
-    }
     fun add(other: Int3): Int3 {
         x += other.x
         y += other.y
         z += other.z
         return this
-    }
-    fun sub(other: Int3): Int3 {
-        x -= other.x
-        y -= other.y
-        z -= other.z
-        return this
-    }
-    fun invert(): Int3 {
-        x = -x
-        y = -y
-        z = -z
-        return this
-    }
-    fun mul(scale: Int): Int3 {
-        x *= scale
-        y *= scale
-        z *= scale
-        return this
-    }
-    fun mul(other: Int3): Int3 {
-        x *= other.x
-        y *= other.y
-        z *= other.z
-        return this
-    }
-    fun rotateMut(rot: Rotation): Int3 {
-        val rotX = rot.rotatedComponent(ForgeDirection.EAST, x, y, z)
-        val rotY = rot.rotatedComponent(ForgeDirection.UP, x, y, z)
-        val rotZ = rot.rotatedComponent(ForgeDirection.SOUTH, x, y, z)
-        return setTo(rotX, rotY, rotZ)
     }
 }
 

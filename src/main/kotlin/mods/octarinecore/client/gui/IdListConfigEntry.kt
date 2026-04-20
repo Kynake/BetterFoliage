@@ -66,9 +66,6 @@ abstract class IdListConfigEntry<T>(
         override fun set(value: Boolean) {
             this.value = value
         }
-        fun setDefault(value: Boolean) {
-            this.defaultValue = value
-        }
         val booleanValue: Boolean
             get() = value as Boolean
     }

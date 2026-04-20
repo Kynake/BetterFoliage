@@ -158,11 +158,6 @@ class RenderVertex {
         green = grey
         blue = grey
     }
-    inline fun multiplyColor(color: Int) {
-        red *= (color shr 16 and 255) / 256.0f
-        green *= (color shr 8 and 255) / 256.0f
-        blue *= (color and 255) / 256.0f
-    }
     inline fun setColor(color: Int) {
         red = (color shr 16 and 255) / 256.0f
         green = (color shr 8 and 255) / 256.0f
