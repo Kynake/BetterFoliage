@@ -31,25 +31,29 @@ public class GrassRenderer extends BlockRenderer {
     // Primal (Frodo's mod) <--- New Compat
 
     // TODO make configurable
-    private static final float SHORT_GRASS_SCALE = 1.41f;
+    public static final float SHORT_GRASS_SCALE = 1.41f;
 
     // TODO make configurable? (per snow layer height maybe)
-    private static final float SNOW_HEIGHT_OFFSET = 0.0625f;
+    public static final float SNOW_HEIGHT_OFFSET = 0.0625f;
 
     private static GrassRenderer instance;
 
     // spotless:off
     private final ISpriteProvider shortGrass = new SpriteSet(
-        BetterFoliageMod.LEGACY_DOMAIN, "textures/blocks/better_grass_long_", ".png");
+        BetterFoliageMod.LEGACY_DOMAIN,
+        "textures/blocks/better_grass_long_", ".png");
 
     private final ISpriteProvider shortGrassSnow = new SpriteSet(
-        BetterFoliageMod.LEGACY_DOMAIN, "textures/blocks/better_grass_snowed_", ".png");
+        BetterFoliageMod.LEGACY_DOMAIN,
+        "textures/blocks/better_grass_snowed_", ".png");
 
     private final ISpriteProvider genGrass = new ShortGrassGenerator(
-        "minecraft", "textures/blocks/tallgrass.png");
+        "minecraft",
+        "textures/blocks/tallgrass.png");
 
     private final ISpriteProvider genGrassSnow = new ShortGrassSnowGenerator(
-        "minecraft", "textures/blocks/tallgrass.png");
+        "minecraft",
+        "textures/blocks/tallgrass.png");
     // spotless:on
 
     // private PartialSprite genGrass = null;
@@ -110,17 +114,19 @@ public class GrassRenderer extends BlockRenderer {
         }
 
         // Render short grass
+        if (!Config.shortGrass.INSTANCE.getGrassEnabled()) return renderResult;
+        if (hasSnowAbove && !Config.shortGrass.INSTANCE.getSnowEnabled()) return renderResult;
+        if (blockAbove.isOpaqueCube() || blocksShortGrassRendering(world, blockAbove, x, y + 1, z)) return renderResult;
+
         int coordHash = MathUtils.hashCoords(x, y + 1, z);
         double heightScale = MathUtils.hashToRange(
             coordHash,
             Config.shortGrass.INSTANCE.getHeightMin(),
             Config.shortGrass.INSTANCE.getHeightMax());
 
-        if (!Config.shortGrass.INSTANCE.getGrassEnabled()) return renderResult;
-        if (hasSnowAbove && !Config.shortGrass.INSTANCE.getSnowEnabled()) return renderResult;
-        if (blockAbove.isOpaqueCube() || blocksShortGrassRendering(world, blockAbove, x, y + 1, z)) return renderResult;
-
         if (!renderResult) {
+            // TODO: Revise this, calculations look wrong
+            // TODO: replicate on mycelium renderer after revised
             float blockingHeight = (float) heightScale;
 
             if (hasSnowAbove) {
@@ -131,7 +137,6 @@ public class GrassRenderer extends BlockRenderer {
             if (blockAbove.getBlockBoundsMinY() <= 0 && blockAbove.getBlockBoundsMaxY() >= blockingHeight) {
                 return false;
             }
-
         }
 
         double shortGrassHeight = y + 1;
@@ -158,7 +163,7 @@ public class GrassRenderer extends BlockRenderer {
         Tessellator tessellator = Tessellator.instance;
         tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y + 1, z));
         if (hasSnowAbove) {
-            tessellator.setColorOpaque(255, 255, 255);
+            tessellator.setColorOpaque(0xFF, 0xFF, 0xFF);
         } else {
             setGrassColor(world, tessellator, block, x, y, z);
         }
