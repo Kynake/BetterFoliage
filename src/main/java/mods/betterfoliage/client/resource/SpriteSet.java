@@ -20,6 +20,8 @@ public class SpriteSet extends StitchListener implements ISpriteProvider {
 
     private List<IIcon> textures;
 
+    // TODO: Consider regex instead?
+    //  Had to remove unused some mycelium textures so that they wouldn't be selected as valid
     public SpriteSet(String domain, String prefix, String suffix) {
         super();
         this.domain = domain;
