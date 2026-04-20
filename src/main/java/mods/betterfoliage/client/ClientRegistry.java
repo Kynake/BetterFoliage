@@ -11,6 +11,7 @@ import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.gui.ConfigGuiFactory;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.GrassRenderer;
+import mods.betterfoliage.client.render.MyceliumRenderer;
 import mods.octarinecore.client.render.BlockContext;
 
 public class ClientRegistry {
@@ -49,7 +50,12 @@ public class ClientRegistry {
     }
 
     private static void initBlockRenderers() {
-        blockRenderers = new BlockRenderer[] { GrassRenderer.getInstance() };
+        blockRenderers = new BlockRenderer[] {
+            // spotless:off
+            GrassRenderer.getInstance(),
+            MyceliumRenderer.getInstance(),
+            // spotless:on
+        };
     }
 
     public static BlockRenderer getEligibleBlockRenderer(BlockContext ctx) {

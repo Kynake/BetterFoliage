@@ -48,7 +48,6 @@ object Client {
 
     val renderers =
         listOf(
-            RenderMycelium(),
             leafRenderer,
             RenderCactus(),
             RenderLilypad(),
