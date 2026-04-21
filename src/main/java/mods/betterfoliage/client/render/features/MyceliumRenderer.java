@@ -1,5 +1,8 @@
-package mods.betterfoliage.client.render;
+package mods.betterfoliage.client.render.features;
 
+import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.client.render.ISpriteProvider;
+import mods.betterfoliage.client.render.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;

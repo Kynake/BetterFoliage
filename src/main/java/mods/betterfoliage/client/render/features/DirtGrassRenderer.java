@@ -1,5 +1,7 @@
-package mods.betterfoliage.client.render;
+package mods.betterfoliage.client.render.features;
 
+import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.client.render.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
@@ -51,6 +53,8 @@ public class DirtGrassRenderer extends BlockRenderer {
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
         RenderBlocks renderer) {
+        // TODO: fix not rendering snow grass if snow 2 blocks above
+        // (needs offset block access when getting IIcon (mixin?))
         Block grassAbove = world.getBlock(x, y + 1, z);
         return renderer.renderStandardBlock(grassAbove, x, y, z);
     }
