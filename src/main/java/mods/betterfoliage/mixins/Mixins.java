@@ -19,7 +19,8 @@ public enum Mixins implements IMixins {
             "minecraft.MixinRenderBlocks",
             "minecraft.MixinWorldClient",
             "minecraft.MixinRenderBlocks_Grass",
-            "minecraft.MixinRenderBlocks_CrossedSquares")
+            "minecraft.MixinRenderBlocks_CrossedSquares",
+            "minecraft.MixinRenderBlocks_OffsetSprite")
         .setPhase(Phase.EARLY)),
     GT6(new MixinBuilder()
         .addClientMixins(
