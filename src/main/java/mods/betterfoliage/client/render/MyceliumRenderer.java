@@ -16,6 +16,9 @@ import mods.octarinecore.client.render.BlockContext;
 
 public class MyceliumRenderer extends BlockRenderer {
 
+    // TODO Reminder special cases:
+    // Grass shader wind
+
     private static MyceliumRenderer instance;
 
     private final ISpriteProvider myceliumGrass = new SpriteSet(
@@ -30,6 +33,13 @@ public class MyceliumRenderer extends BlockRenderer {
         }
 
         return instance;
+    }
+
+    @Override
+    public boolean isEligible(BlockContext ctx) {
+        return Config.INSTANCE.getEnabled() && ctx.getCameraDistance() < Config.shortGrass.INSTANCE.getDistance()
+            && Config.shortGrass.INSTANCE.getMyceliumEnabled()
+            && ctx.getBlock() == Blocks.mycelium;
     }
 
     @Override
@@ -81,12 +91,5 @@ public class MyceliumRenderer extends BlockRenderer {
         myceliumRenderer.betterfoliage$setIsRenderingCrossedSquares(false);
 
         return true;
-    }
-
-    @Override
-    public boolean isEligible(BlockContext ctx) {
-        return Config.INSTANCE.getEnabled() && ctx.getCameraDistance() < Config.shortGrass.INSTANCE.getDistance()
-            && Config.shortGrass.INSTANCE.getMyceliumEnabled()
-            && ctx.getBlock() == Blocks.mycelium;
     }
 }

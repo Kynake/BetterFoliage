@@ -27,6 +27,7 @@ import mods.octarinecore.client.render.BlockContext;
 public class GrassRenderer extends BlockRenderer {
 
     // TODO: Reminder SPECIAL CASES to handle:
+    // Grass shader wind
     // TFC
     // Primal (Frodo's mod) <--- New Compat
 
@@ -65,6 +66,14 @@ public class GrassRenderer extends BlockRenderer {
         }
 
         return instance;
+    }
+
+    @Override
+    public boolean isEligible(BlockContext ctx) {
+        return Config.INSTANCE.getEnabled() && ctx.getCameraDistance() < Config.shortGrass.INSTANCE.getDistance()
+            && (Config.shortGrass.INSTANCE.getGrassEnabled() || Config.connectedGrass.INSTANCE.getEnabled())
+            && Config.blocks.INSTANCE.getGrass()
+                .matchesID(ctx.getBlock());
     }
 
     @Override
@@ -180,14 +189,6 @@ public class GrassRenderer extends BlockRenderer {
         shortGrassRenderer.betterfoliage$setIsRenderingCrossedSquares(false);
 
         return true;
-    }
-
-    @Override
-    public boolean isEligible(BlockContext ctx) {
-        return Config.INSTANCE.getEnabled() && ctx.getCameraDistance() < Config.shortGrass.INSTANCE.getDistance()
-            && (Config.shortGrass.INSTANCE.getGrassEnabled() || Config.connectedGrass.INSTANCE.getEnabled())
-            && Config.blocks.INSTANCE.getGrass()
-                .matchesID(ctx.getBlock());
     }
 
     private void setGrassColor(IBlockAccess world, Tessellator tessellator, Block grassBlock, int x, int y, int z) {
