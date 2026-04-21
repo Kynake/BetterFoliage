@@ -148,7 +148,8 @@ class BlockContext {
     /** Get the [Block] at the given offset. */
     val block: Block
         get() = world!!.getBlock(x, y, z)
-    fun block(offset: Int3) = world!!.getBlock(x + offset.x, y + offset.y, z + offset.z)!!
+    fun block(offset: Int3) = block(offset.x, offset.y, offset.z)
+    fun block(xOffset: Int, yOffset: Int, zOffset: Int): Block = world!!.getBlock(x + xOffset, y + yOffset, z + zOffset)!!
 
     /** Get the metadata at the given offset. */
     val meta: Int
