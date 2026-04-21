@@ -2,9 +2,6 @@ package mods.betterfoliage.client.render.features;
 
 import java.util.Map;
 
-import mods.betterfoliage.client.render.BlockRenderer;
-import mods.betterfoliage.client.render.ISpriteProvider;
-import mods.betterfoliage.client.render.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -13,10 +10,11 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import org.jetbrains.annotations.NotNull;
-
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
+import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.client.render.ISpriteProvider;
+import mods.betterfoliage.client.render.Utils;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.client.resource.generators.ShortGrassGenerator;
 import mods.betterfoliage.client.resource.generators.ShortGrassSnowGenerator;
@@ -90,17 +88,21 @@ public class GrassRenderer extends BlockRenderer {
         }
 
         // Render grass block
-        boolean isConnected = Config.connectedGrass.INSTANCE.getEnabled();
-        if (isConnected) {
-            Block blockBelow = world.getBlock(x, y - 1, z);
-            isConnected = Config.blocks.INSTANCE.getDirt()
-                .matchesID(blockBelow)
-                || Config.blocks.INSTANCE.getGrass()
-                    .matchesID(blockBelow);
-        }
-
         Block blockAbove = world.getBlock(x, y + 1, z);
         boolean hasSnowAbove = Utils.isSnow(blockAbove);
+
+        boolean isConnected = Config.connectedGrass.INSTANCE.getEnabled();
+        if (isConnected) {
+            isConnected = Config.connectedGrass.INSTANCE.getSnowEnabled() || !hasSnowAbove;
+
+            if (isConnected) {
+                Block blockBelow = world.getBlock(x, y - 1, z);
+                isConnected = Config.blocks.INSTANCE.getDirt()
+                    .matchesID(blockBelow)
+                    || Config.blocks.INSTANCE.getGrass()
+                        .matchesID(blockBelow);
+            }
+        }
 
         boolean renderResult;
         if (isConnected) {
@@ -197,7 +199,7 @@ public class GrassRenderer extends BlockRenderer {
     private void setGrassColor(IBlockAccess world, Tessellator tessellator, Block grassBlock, int x, int y, int z) {
         IIcon grassTopTexture = grassBlock.getIcon(world, x, y, z, ForgeDirection.UP.ordinal());
 
-        Map<@NotNull IIcon, @NotNull GrassInfo> grassMap = GrassRegistry.INSTANCE.getGrass();
+        Map<IIcon, GrassInfo> grassMap = GrassRegistry.INSTANCE.getGrass();
         if (!grassMap.containsKey(grassTopTexture)) {
             return;
         }
