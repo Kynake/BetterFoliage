@@ -10,6 +10,7 @@ import cpw.mods.fml.common.gameevent.InputEvent;
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.gui.ConfigGuiFactory;
 import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.client.render.DirtGrassRenderer;
 import mods.betterfoliage.client.render.GrassRenderer;
 import mods.betterfoliage.client.render.MyceliumRenderer;
 import mods.octarinecore.client.render.BlockContext;
@@ -54,6 +55,9 @@ public class ClientRegistry {
             // spotless:off
             GrassRenderer.getInstance(),
             MyceliumRenderer.getInstance(),
+
+            // Keep at end of list
+            DirtGrassRenderer.getInstance(),
             // spotless:on
         };
     }
