@@ -21,7 +21,7 @@ public abstract class MixinRenderBlocks {
 
     @ModifyVariable(
         method = "renderBlockByRenderType",
-        ordinal = 3,
+        name = "l",
         at = @At(
             value = "INVOKE",
             shift = At.Shift.AFTER,

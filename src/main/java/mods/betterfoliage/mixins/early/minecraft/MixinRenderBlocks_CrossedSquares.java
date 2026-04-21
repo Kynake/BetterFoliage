@@ -15,7 +15,7 @@ import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(RenderBlocks.class)
-public class MixinRenderBlocks_CrossedSquares implements ICrossedSquaresRenderer {
+public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquaresRenderer {
 
     @Unique
     private boolean betterfoliage$isRenderingCrossedSquares;

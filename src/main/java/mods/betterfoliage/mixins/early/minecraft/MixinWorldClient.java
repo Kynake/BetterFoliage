@@ -20,9 +20,9 @@ public abstract class MixinWorldClient {
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/multiplayer/WorldClient;getBlock(III)Lnet/minecraft/block/Block;"))
-    private Block betterfoliage$onRandomDisplayTick(Block original, @Local(ordinal = 4) int randX,
-        @Local(ordinal = 5) int randY, @Local(ordinal = 6) int randZ) {
-        Hooks.onRandomDisplayTick(original, (WorldClient) (Object) this, randX, randY, randZ);
+    private Block betterfoliage$onRandomDisplayTick(Block original, @Local(name = "i1") int x,
+        @Local(name = "j1") int y, @Local(name = "k1") int z) {
+        Hooks.onRandomDisplayTick(original, (WorldClient) (Object) this, x, y, z);
         return original;
     }
 }
