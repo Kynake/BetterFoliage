@@ -9,7 +9,6 @@ import mods.betterfoliage.client.integration.TFCIntegration
 import mods.betterfoliage.client.render.LeafWindTracker
 import mods.betterfoliage.client.render.RenderAlgae
 import mods.betterfoliage.client.render.RenderCactus
-import mods.betterfoliage.client.render.RenderConnectedGrassLog
 import mods.betterfoliage.client.render.RenderCoral
 import mods.betterfoliage.client.render.RenderLeaves
 import mods.betterfoliage.client.render.RenderLilypad
@@ -54,7 +53,6 @@ object Client {
             RenderCoral(),
             logRenderer,
             RenderNetherrack(),
-            RenderConnectedGrassLog(),
         )
 
     @Suppress("unused")
