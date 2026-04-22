@@ -26,7 +26,7 @@ public class DirtGrassRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(BlockContext context) {
-        if (!Config.INSTANCE.getEnabled() || !Config.connectedGrass.INSTANCE.getEnabled()) {
+        if (!Config.connectedGrass.INSTANCE.getEnabled()) {
             return false;
         }
 

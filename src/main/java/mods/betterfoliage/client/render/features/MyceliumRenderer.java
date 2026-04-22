@@ -40,8 +40,7 @@ public class MyceliumRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(BlockContext ctx) {
-        return Config.INSTANCE.getEnabled() && Config.shortGrass.INSTANCE.getMyceliumEnabled()
-            && ctx.getBlock() == Blocks.mycelium;
+        return Config.shortGrass.INSTANCE.getMyceliumEnabled() && ctx.getBlock() == Blocks.mycelium;
     }
 
     @Override
