@@ -19,8 +19,6 @@ betterfoliage.population=주민
 betterfoliage.population.tooltip=자격을 갖춘 블럭의 기능 확률(N 분의 64)
 betterfoliage.shaderWind=쉐이더 바람 효과
 betterfoliage.shaderWind.tooltip=바람효과를 쉐이더에 적용시키겠습니까?
-betterfoliage.distance=거리 제한
-betterfoliage.distance.tooltip=이 기능을 렌더링하는 플레이어의 최대거리
 
 betterfoliage.blocks=블록 타입
 betterfoliage.blocks.tooltip=세팅 된 것에 따라 블록이 바뀔 것입니다.

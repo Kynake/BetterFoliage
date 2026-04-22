@@ -19,8 +19,6 @@ betterfoliage.population=种群
 betterfoliage.population.tooltip=符合条件的块将具有此功能的机会（64 中的 N）
 betterfoliage.shaderWind=着色器的风效果
 betterfoliage.shaderWind.tooltip=将来自ShaderMod着色器的风效果应用到该元素？
-betterfoliage.distance=距离限制
-betterfoliage.distance.tooltip=渲染此功能的玩家的最大距离
 
 betterfoliage.blocks=方块类型
 betterfoliage.blocks.tooltip=配置将应用特定功能的方块类别列表

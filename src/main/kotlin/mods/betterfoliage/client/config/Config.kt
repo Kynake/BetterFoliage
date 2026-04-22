@@ -18,8 +18,6 @@ import net.minecraft.world.biome.BiomeGenBase
 private fun featureEnable() = featureEnable(true)
 private fun featureEnable(default: Boolean) = boolean(default).lang("enabled")
 
-private fun distanceLimit() = int(min = 1, max = 1000, default = 1000).lang("distance")
-
 fun biomeList(defaults: (BiomeGenBase) -> Boolean) = intList {
     BiomeGenBase.getBiomeGenArray()
         .filter { it != null && defaults(it) }
@@ -58,7 +56,6 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
     object leaves {
         val enabled by featureEnable()
         val snowEnabled by boolean(true)
-        val distance by distanceLimit()
         val surfaceOnly by boolean(true)
         val hOffset by double(max = 0.4, default = 0.2).lang("hOffset")
         val vOffset by double(max = 0.4, default = 0.1).lang("vOffset")
@@ -70,7 +67,6 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
         val grassEnabled by boolean(true)
         val myceliumEnabled by boolean(true)
         val snowEnabled by boolean(true)
-        val distance by distanceLimit()
         val hOffset by double(max = 0.4, default = 0.2).lang("hOffset")
         val heightMin by double(min = 0.1, max = 2.5, default = 0.6).lang("heightMin")
         val heightMax by double(min = 0.1, max = 2.5, default = 0.8).lang("heightMax")
@@ -95,7 +91,6 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
 
     object roundLogs {
         val enabled by featureEnable(false)
-        val distance by distanceLimit()
         val radiusSmall by double(max = 0.5, default = 0.25)
         val radiusLarge by double(max = 0.5, default = 0.44)
         val dimming by float(default = 0.7)
@@ -109,7 +104,6 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
     object cactus {
         val stem by boolean(true)
         val arms by boolean(true)
-        val distance by distanceLimit()
         val size by double(min = 0.5, max = 1.5, default = 0.8).lang("size")
         val sizeVariation by double(max = 0.5, default = 0.1)
         val hOffset by double(max = 0.5, default = 0.1).lang("hOffset")
@@ -118,14 +112,12 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
 
     object lilypad {
         val enabled by featureEnable()
-        val distance by distanceLimit()
         val hOffset by double(max = 0.25, default = 0.1).lang("hOffset")
         val flowerChance by int(max = 64, default = 16, min = 0)
     }
 
     object reed {
         val enabled by featureEnable()
-        val distance by distanceLimit()
         val hOffset by double(max = 0.4, default = 0.2).lang("hOffset")
         val heightMin by double(min = 1.5, max = 3.5, default = 1.7).lang("heightMin")
         val heightMax by double(min = 1.5, max = 3.5, default = 2.2).lang("heightMax")
@@ -136,7 +128,6 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
 
     object algae {
         val enabled by featureEnable()
-        val distance by distanceLimit()
         val hOffset by double(max = 0.25, default = 0.1).lang("hOffset")
         val size by double(min = 0.5, max = 1.5, default = 1.0).lang("size")
 
@@ -149,7 +140,6 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
 
     object coral {
         val enabled by featureEnable()
-        val distance by distanceLimit()
         val shallowWater by boolean(false)
         val hOffset by double(max = 0.4, default = 0.2).lang("hOffset")
         val vOffset by double(max = 0.4, default = 0.1).lang("vOffset")
@@ -162,7 +152,6 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
 
     object netherrack {
         val enabled by featureEnable()
-        val distance by distanceLimit()
         val hOffset by double(max = 0.4, default = 0.2).lang("hOffset")
         val heightMin by double(min = 0.1, max = 1.5, default = 0.6).lang("heightMin")
         val heightMax by double(min = 0.1, max = 1.5, default = 0.8).lang("heightMax")

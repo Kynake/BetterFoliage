@@ -19,8 +19,6 @@ betterfoliage.population=População
 betterfoliage.population.tooltip=Probabilidade (N em 64) que um bloco adequado terá esta característica
 betterfoliage.shaderWind=Efeitos de vento do Shader
 betterfoliage.shaderWind.tooltip=Aplicar efeitos de vento dos shaders do ShaderMod neste elemento?
-betterfoliage.distance=Distância limite
-betterfoliage.distance.tooltip=Distância máxima do jogador para renderizar esta característica
 
 betterfoliage.blocks=Tipos de Bloco
 betterfoliage.blocks.tooltip=Configure listas de classes de blocos que terão características específicas aplicadas
