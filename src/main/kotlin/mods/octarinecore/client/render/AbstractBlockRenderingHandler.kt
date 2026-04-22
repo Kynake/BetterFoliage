@@ -11,14 +11,11 @@ import mods.betterfoliage.loader.Refs
 import mods.octarinecore.ThreadLocalDelegate
 import mods.octarinecore.client.resource.ResourceHandler
 import net.minecraft.block.Block
-import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.IIcon
-import net.minecraft.util.MathHelper
 import net.minecraft.world.IBlockAccess
 import net.minecraftforge.common.util.ForgeDirection
-import kotlin.math.abs
 
 /**
  * [ThreadLocal] instance of [ExtendedRenderBlocks] used instead of the vanilla [RenderBlocks] to

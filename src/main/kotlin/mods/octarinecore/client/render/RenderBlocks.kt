@@ -87,24 +87,6 @@ class ExtendedRenderBlocks : RenderBlocks() {
         saveBottomLeft(face, faceCorners[face.ordinal].bottomLeft)
         saveBottomRight(face, faceCorners[face.ordinal].bottomRight)
     }
-
-    /** Lilypad rendering does not use any 'renderFace...' methods, so we capture AO for it separately */
-    override fun renderBlockLilyPad(block: Block?, x: Int, y: Int, z: Int): Boolean {
-        val icon = if (this.hasOverrideBlockTexture()) overrideBlockTexture else this.getBlockIconFromSide(block, 1)
-
-        return captureLilyPadFaceAO(ForgeDirection.DOWN, icon) &&
-            captureLilyPadFaceAO(ForgeDirection.UP, icon) &&
-            super.renderBlockLilyPad(block, x, y, z)
-    }
-
-    private fun captureLilyPadFaceAO(face: ForgeDirection, icon: IIcon): Boolean {
-        if (capture.isCorrectPass(face)) {
-            saveAllShading(face)
-            capture.icons[face.ordinal] = icon
-        }
-
-        return capture.renderCallback(capture, face, capture.passes[face.ordinal], icon)
-    }
 }
 
 /** Captures the AO values and textures used in a specific rendering pass when rendering a block. */
@@ -166,11 +148,6 @@ class ShadingCapture {
 
     /** One-dimensional index of a specific corner. */
     protected fun cornerId(face: ForgeDirection, corner1: ForgeDirection, corner2: ForgeDirection) = cornerId(face.ordinal, corner1.ordinal, corner2.ordinal)
-}
-
-/** Method that generates a lambda function that only renders sides that aren't occluded by a full opaque block  */
-fun applyContextToRender(ctx: BlockContext): (ShadingCapture, ForgeDirection, Int, IIcon?) -> Boolean = { renderCtx, face, pass, icon ->
-    ctx.shouldRenderSide(face.offset, face)
 }
 
 /** Lambda to render all faces of a block */
