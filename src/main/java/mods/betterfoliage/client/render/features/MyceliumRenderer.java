@@ -40,8 +40,7 @@ public class MyceliumRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(BlockContext ctx) {
-        return Config.INSTANCE.getEnabled() && ctx.getCameraDistance() < Config.shortGrass.INSTANCE.getDistance()
-            && Config.shortGrass.INSTANCE.getMyceliumEnabled()
+        return Config.INSTANCE.getEnabled() && Config.shortGrass.INSTANCE.getMyceliumEnabled()
             && ctx.getBlock() == Blocks.mycelium;
     }
 

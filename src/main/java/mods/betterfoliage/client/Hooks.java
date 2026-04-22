@@ -27,11 +27,12 @@ public class Hooks {
         BlockContext ctx = RendererHolder.getBlockContext();
         ctx.set(blockAccess, x, y, z);
 
-        // Look under new renderers first
+        // Look for new renderers first
         BlockRenderer renderer = ClientRegistry.getEligibleBlockRenderer(ctx);
         if (renderer != null) return renderer.getRenderId();
 
-        // Then use legacy renderers
+        // TODO remove eventually
+        // Only then use legacy renderers
         for (AbstractBlockRenderingHandler legacyRenderer : Client.INSTANCE.getRenderers()) {
             if (legacyRenderer.isEligible(ctx)) return legacyRenderer.getRenderId();
         }

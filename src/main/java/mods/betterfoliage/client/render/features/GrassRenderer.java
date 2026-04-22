@@ -71,10 +71,15 @@ public class GrassRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(BlockContext ctx) {
-        return Config.INSTANCE.getEnabled() && ctx.getCameraDistance() < Config.shortGrass.INSTANCE.getDistance()
-            && (Config.shortGrass.INSTANCE.getGrassEnabled() || Config.connectedGrass.INSTANCE.getEnabled())
-            && Config.blocks.INSTANCE.getGrass()
-                .matchesID(ctx.getBlock());
+        if (!Config.INSTANCE.getEnabled()) {
+            return false;
+        }
+
+        boolean eitherEnabled = Config.connectedGrass.INSTANCE.getEnabled()
+            || Config.shortGrass.INSTANCE.getGrassEnabled();
+
+        return eitherEnabled && Config.blocks.INSTANCE.getGrass()
+            .matchesID(ctx.getBlock());
     }
 
     @Override
