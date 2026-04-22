@@ -1,5 +1,8 @@
 package mods.betterfoliage.client;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import mods.betterfoliage.client.render.features.LilypadRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 
@@ -17,6 +20,7 @@ import mods.betterfoliage.client.render.features.MyceliumRenderer;
 import mods.betterfoliage.client.render.features.NetherrackRenderer;
 import mods.octarinecore.client.render.BlockContext;
 
+@SideOnly(Side.CLIENT)
 public class ClientRegistry {
 
     private static ClientRegistry eventListenerInstance = null;
@@ -57,6 +61,7 @@ public class ClientRegistry {
             // spotless:off
             GrassRenderer.getInstance(),
             MyceliumRenderer.getInstance(),
+            LilypadRenderer.getInstance(),
             NetherrackRenderer.getInstance(),
             DirtGrassRenderer.getInstance(),
             DirtGrassLogRenderer.getInstance(),
