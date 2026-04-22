@@ -14,6 +14,7 @@ import mods.betterfoliage.client.render.features.DirtGrassLogRenderer;
 import mods.betterfoliage.client.render.features.DirtGrassRenderer;
 import mods.betterfoliage.client.render.features.GrassRenderer;
 import mods.betterfoliage.client.render.features.MyceliumRenderer;
+import mods.betterfoliage.client.render.features.NetherrackRenderer;
 import mods.octarinecore.client.render.BlockContext;
 
 public class ClientRegistry {
@@ -56,6 +57,7 @@ public class ClientRegistry {
             // spotless:off
             GrassRenderer.getInstance(),
             MyceliumRenderer.getInstance(),
+            NetherrackRenderer.getInstance(),
             DirtGrassRenderer.getInstance(),
             DirtGrassLogRenderer.getInstance(),
             // spotless:on

@@ -13,7 +13,6 @@ import mods.betterfoliage.client.render.RenderCoral
 import mods.betterfoliage.client.render.RenderLeaves
 import mods.betterfoliage.client.render.RenderLilypad
 import mods.betterfoliage.client.render.RenderLog
-import mods.betterfoliage.client.render.RenderNetherrack
 import mods.betterfoliage.client.render.RenderReeds
 import mods.betterfoliage.client.render.RisingSoulTextures
 import mods.betterfoliage.client.texture.GrassRegistry
@@ -52,7 +51,6 @@ object Client {
             RenderAlgae(),
             RenderCoral(),
             logRenderer,
-            RenderNetherrack(),
         )
 
     @Suppress("unused")
