@@ -70,7 +70,7 @@ public class NetherrackRenderer extends BlockRenderer {
         tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y - 1, z));
         tessellator.setColorOpaque(0xFF, 0xFF, 0xFF);
 
-        IIcon sprite = netherrackVines.getSpriteForCoord(x, y, z);
+        IIcon sprite = netherrackVines.getSpriteForCoord(x, y - 1, z);
 
         ICrossedSquaresRenderer vinesRenderer = (ICrossedSquaresRenderer) renderer;
 
