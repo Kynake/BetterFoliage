@@ -11,7 +11,6 @@ class RenderLog : AbstractRenderColumn(BetterFoliageMod.MOD_ID) {
 
     override fun isEligible(ctx: BlockContext) = Config.enabled &&
         Config.roundLogs.enabled &&
-        ctx.cameraDistance < Config.roundLogs.distance &&
         Config.blocks.logs.matchesID(ctx.block) &&
         allowModSpecialCases(ctx)
 

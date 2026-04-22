@@ -78,7 +78,6 @@ class RenderCactus : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
 
     override fun isEligible(ctx: BlockContext) = Config.enabled &&
         (Config.cactus.stem || Config.cactus.arms) &&
-        ctx.cameraDistance < Config.cactus.distance &&
         Config.blocks.cactus.matchesID(ctx.block)
 
     override fun render(ctx: BlockContext, parent: RenderBlocks): Boolean {

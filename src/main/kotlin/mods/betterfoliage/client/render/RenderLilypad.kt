@@ -46,7 +46,6 @@ class RenderLilypad : AbstractBlockRenderingHandler(BetterFoliageMod.MOD_ID) {
 
     override fun isEligible(ctx: BlockContext): Boolean = Config.enabled &&
         Config.lilypad.enabled &&
-        ctx.cameraDistance < Config.lilypad.distance &&
         Config.blocks.lilypad.matchesID(ctx.block)
 
     override fun render(ctx: BlockContext, parent: RenderBlocks): Boolean {

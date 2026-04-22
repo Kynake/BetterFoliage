@@ -201,14 +201,5 @@ class BlockContext {
     /** Get an array of semi-random values based on the block coordinate. */
     fun semiRandomArray(num: Int): Array<Int> = Array(num) { random(it) }
 
-    /** Get the distance of the block from the camera (player). */
-    val cameraDistance: Int
-        get() {
-            val camera = Minecraft.getMinecraft().renderViewEntity ?: return 0
-            return abs(x - MathHelper.floor_double(camera.posX)) +
-                abs(y - MathHelper.floor_double(camera.posY)) +
-                abs(z - MathHelper.floor_double(camera.posZ))
-        }
-
     private fun getIconSpecialCases(face: ForgeDirection, offset: Int3): IIcon? = GT6Integration.getGT6LogMTEIcon(this, face, offset)
 }
