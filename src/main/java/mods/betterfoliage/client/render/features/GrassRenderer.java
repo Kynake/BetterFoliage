@@ -32,9 +32,6 @@ public class GrassRenderer extends BlockRenderer {
     // TFC
     // Primal (Frodo's mod) <--- New Compat
 
-    // TODO make configurable
-    public static final float SHORT_GRASS_SCALE = 1.41f;
-
     // TODO make configurable? (per snow layer height maybe)
     public static final float SNOW_HEIGHT_OFFSET = 0.0625f;
 
@@ -189,7 +186,12 @@ public class GrassRenderer extends BlockRenderer {
 
         shortGrassRenderer.betterfoliage$setVerticalScale((float) heightScale);
         shortGrassRenderer.betterfoliage$setIsRenderingCrossedSquares(true);
-        renderer.drawCrossedSquares(sprite, xOffset, shortGrassHeight, zOffset, SHORT_GRASS_SCALE);
+        renderer.drawCrossedSquares(
+            sprite,
+            xOffset,
+            shortGrassHeight,
+            zOffset,
+            (float) Config.shortGrass.INSTANCE.getSize());
         shortGrassRenderer.betterfoliage$setIsRenderingCrossedSquares(false);
 
         return true;
