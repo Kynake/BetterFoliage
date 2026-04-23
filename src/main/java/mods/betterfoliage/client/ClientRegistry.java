@@ -1,8 +1,5 @@
 package mods.betterfoliage.client;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import mods.betterfoliage.client.render.features.LilypadRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 
@@ -10,12 +7,16 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.gui.ConfigGuiFactory;
 import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.client.render.features.AlgaeRenderer;
 import mods.betterfoliage.client.render.features.DirtGrassLogRenderer;
 import mods.betterfoliage.client.render.features.DirtGrassRenderer;
 import mods.betterfoliage.client.render.features.GrassRenderer;
+import mods.betterfoliage.client.render.features.LilypadRenderer;
 import mods.betterfoliage.client.render.features.MyceliumRenderer;
 import mods.betterfoliage.client.render.features.NetherrackRenderer;
 import mods.octarinecore.client.render.BlockContext;
@@ -63,6 +64,7 @@ public class ClientRegistry {
             MyceliumRenderer.getInstance(),
             LilypadRenderer.getInstance(),
             NetherrackRenderer.getInstance(),
+            AlgaeRenderer.getInstance(),
             DirtGrassRenderer.getInstance(),
             DirtGrassLogRenderer.getInstance(),
             // spotless:on
