@@ -19,13 +19,6 @@ data class UV(val u: Double, val v: Double) {
         val bottomRight = UV(0.5, 0.5)
     }
 
-    fun rotate(n: Int) = when (n % 4) {
-        0 -> copy()
-        1 -> UV(v, -u)
-        2 -> UV(-u, -v)
-        else -> UV(-v, u)
-    }
-
     fun clamp(minU: Double = -0.5, maxU: Double = 0.5, minV: Double = -0.5, maxV: Double = 0.5) = UV(u.clamp(minU, maxU), v.clamp(minV, maxV))
 
     fun mirror(mirrorU: Boolean, mirrorV: Boolean) = UV(if (mirrorU) -u else u, if (mirrorV) -v else v)
@@ -69,7 +62,6 @@ data class Quad(val v1: Vertex, val v2: Vertex, val v3: Vertex, val v4: Vertex) 
             flatShader = it.flatShader.rotate(rot),
         )
     }
-    fun rotateUV(n: Int) = transformV { it.copy(uv = it.uv.rotate(n)) }
     fun clampUV(minU: Double = -0.5, maxU: Double = 0.5, minV: Double = -0.5, maxV: Double = 0.5) = transformV {
         it.copy(uv = it.uv.clamp(minU, maxU, minV, maxV))
     }
