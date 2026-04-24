@@ -52,7 +52,6 @@ public class AlgaeRenderer extends BlockRenderer {
 
         // TODO: Use [0, 1] based range
         float threshold = Config.algae.INSTANCE.getPopulation() / 32.0f;
-
         if (noise.isAboveThreshold(ctx.getX(), ctx.getZ(), threshold)) return false;
 
         int currentBiomeId = ctx.getBiomeId();
@@ -76,12 +75,10 @@ public class AlgaeRenderer extends BlockRenderer {
         boolean renderResult = renderer.renderStandardBlock(block, x, y, z);
 
         if (!renderResult) return false;
-        if (world.getBlock(x, y + 1, z)
-            .isOpaqueCube()) return false;
 
         // Render Algae
-        int coordHash = MathUtils.hashCoords(x, y - 1, z, SALT);
-        double hOffset = Config.netherrack.INSTANCE.getHOffset();
+        int coordHash = MathUtils.hashCoords(x, y + 1, z, SALT);
+        double hOffset = Config.algae.INSTANCE.getHOffset();
         double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
         double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
