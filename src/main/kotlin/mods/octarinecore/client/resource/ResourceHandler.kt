@@ -61,7 +61,6 @@ open class ResourceHandler(val modId: String) {
     // ============================
     fun iconStatic(domain: String, path: String) = IconHolder(domain, path).apply { resources.add(this) }
     fun iconSet(domain: String, pathPattern: String) = IconSet(domain, pathPattern).apply { resources.add(this) }
-    fun iconSet(location: ResourceLocation) = iconSet(location.resourceDomain, location.resourcePath)
     fun model(init: Model.() -> Unit) = ModelHolder(init).apply { resources.add(this) }
     fun modelSet(num: Int, init: Model.(Int) -> Unit) = ModelSet(num, init).apply { resources.add(this) }
     fun vectorSet(num: Int, init: (Int) -> Double3) = VectorSet(num, init).apply { resources.add(this) }

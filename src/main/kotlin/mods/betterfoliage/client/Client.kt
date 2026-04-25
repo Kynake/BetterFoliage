@@ -15,7 +15,6 @@ import mods.betterfoliage.client.render.RisingSoulTextures
 import mods.betterfoliage.client.texture.GrassRegistry
 import mods.betterfoliage.client.texture.LeafGenerator
 import mods.betterfoliage.client.texture.LeafRegistry
-import mods.octarinecore.client.resource.CenteringTextureGenerator
 import mods.octarinecore.client.resource.GeneratorPack
 import org.apache.logging.log4j.Level
 
@@ -30,7 +29,6 @@ import org.apache.logging.log4j.Level
 object Client {
 
     val genLeaves = LeafGenerator("bf_gen_leaves") // TODO revise extra leaves masks. Any texture other than _default is never used
-    val genReeds = CenteringTextureGenerator("bf_gen_reeds", 1, 2)
 
     @Suppress("unused")
     val generatorPack = GeneratorPack("Better Foliage generated", genLeaves)

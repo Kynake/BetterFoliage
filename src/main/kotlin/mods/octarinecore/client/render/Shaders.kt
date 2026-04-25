@@ -195,13 +195,3 @@ class FlatOffset(val offset: Int3) : Shader {
     }
     override fun rotate(rot: Rotation): Shader = this
 }
-
-class FlatOffsetNoColor(val offset: Int3) : Shader {
-    override fun shade(context: ShadingContext, vertex: RenderVertex) {
-        vertex.brightness = context.blockBrightness(offset)
-        vertex.red = 1.0f
-        vertex.green = 1.0f
-        vertex.blue = 1.0f
-    }
-    override fun rotate(rot: Rotation): Shader = this
-}
