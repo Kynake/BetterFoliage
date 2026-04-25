@@ -11,7 +11,6 @@ import mods.betterfoliage.client.render.RenderCactus
 import mods.betterfoliage.client.render.RenderCoral
 import mods.betterfoliage.client.render.RenderLeaves
 import mods.betterfoliage.client.render.RenderLog
-import mods.betterfoliage.client.render.RenderReeds
 import mods.betterfoliage.client.render.RisingSoulTextures
 import mods.betterfoliage.client.texture.GrassRegistry
 import mods.betterfoliage.client.texture.LeafGenerator
@@ -34,7 +33,7 @@ object Client {
     val genReeds = CenteringTextureGenerator("bf_gen_reeds", 1, 2)
 
     @Suppress("unused")
-    val generatorPack = GeneratorPack("Better Foliage generated", genLeaves, genReeds)
+    val generatorPack = GeneratorPack("Better Foliage generated", genLeaves)
 
     val logRenderer = RenderLog()
 
@@ -44,7 +43,6 @@ object Client {
         listOf(
             leafRenderer,
             RenderCactus(),
-            RenderReeds(),
             RenderCoral(),
             logRenderer,
         )

@@ -19,6 +19,7 @@ import mods.betterfoliage.client.render.features.GrassRenderer;
 import mods.betterfoliage.client.render.features.LilypadRenderer;
 import mods.betterfoliage.client.render.features.MyceliumRenderer;
 import mods.betterfoliage.client.render.features.NetherrackRenderer;
+import mods.betterfoliage.client.render.features.ReedsRenderer;
 import mods.octarinecore.client.render.BlockContext;
 
 @SideOnly(Side.CLIENT)
@@ -64,6 +65,7 @@ public class ClientRegistry {
             MyceliumRenderer.getInstance(),
             LilypadRenderer.getInstance(),
             NetherrackRenderer.getInstance(),
+            ReedsRenderer.getInstance(),
             AlgaeRenderer.getInstance(),
             DirtGrassRenderer.getInstance(),
             DirtGrassLogRenderer.getInstance(),
