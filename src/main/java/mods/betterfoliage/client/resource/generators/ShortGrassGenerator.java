@@ -32,8 +32,7 @@ public class ShortGrassGenerator extends SingleTextureGenerator {
             throw new IOException("Resource " + location + " is not handled by this generator!");
         }
 
-        IResource base = ResourceUtils.getResourceManager()
-            .getResource(baseResource);
+        IResource base = ResourceUtils.getResource(baseResource);
         BufferedImage baseImage = ImageIO.read(base.getInputStream());
 
         if (baseImage == null) {

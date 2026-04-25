@@ -55,7 +55,7 @@ public abstract class SingleTextureGenerator extends TextureGenerator {
 
     @Override
     protected InputStream getGeneratedMcMeta(ResourceLocation location) throws IOException {
-        return ResourceUtils.getResourceManager()
+        return ResourceUtils
             .getResource(new ResourceLocation(baseResource.getResourceDomain(), location.getResourcePath()))
             .getInputStream();
     }
