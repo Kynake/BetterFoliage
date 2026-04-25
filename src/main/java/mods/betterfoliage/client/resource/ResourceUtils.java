@@ -97,6 +97,16 @@ public class ResourceUtils {
             .endsWith(".mcmeta");
     }
 
+    public static ResourceLocation getBaseForMcMeta(ResourceLocation mcMeta) {
+        int endIndex = mcMeta.getResourcePath()
+            .lastIndexOf(".mcmeta");
+        return endIndex > 0 ? new ResourceLocation(
+            mcMeta.getResourceDomain(),
+            mcMeta.getResourcePath()
+                .substring(0, endIndex))
+            : mcMeta;
+    }
+
     public static boolean resourceHasMcMeta(ResourceLocation location) {
         if (isMcMeta(location)) {
             return false;
