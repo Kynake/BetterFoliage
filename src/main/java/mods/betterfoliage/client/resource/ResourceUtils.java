@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.AbstractResourcePack;
 import net.minecraft.client.resources.DefaultResourcePack;
 import net.minecraft.client.resources.FallbackResourceManager;
+import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -28,6 +29,10 @@ public class ResourceUtils {
     public static SimpleReloadableResourceManager getResourceManager() {
         return (SimpleReloadableResourceManager) Minecraft.getMinecraft()
             .getResourceManager();
+    }
+
+    public static IResource getResource(ResourceLocation location) throws IOException {
+        return getResourceManager().getResource(location);
     }
 
     public static List<IResourcePack> getResourcePacksWithDomain(String domain) {
