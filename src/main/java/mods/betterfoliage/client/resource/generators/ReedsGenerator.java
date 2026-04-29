@@ -98,12 +98,12 @@ public class ReedsGenerator extends TextureGenerator implements ISpriteProvider 
     }
 
     @Override
-    public IIcon getSpriteForCoord(int x, int y, int z) {
+    public IIcon getSpriteForCoord(int x, int y, int z, int side) {
         if (sprites == null || sprites.isEmpty()) {
             return null;
         }
 
-        int index = Math.abs(MathUtils.hashCoords(x, y, z) % sprites.size());
+        int index = Math.abs(MathUtils.hashCoords(x, y, z, side) % sprites.size());
         return sprites.get(index);
     }
 }

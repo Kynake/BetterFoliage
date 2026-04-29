@@ -64,4 +64,9 @@ public abstract class SingleTextureGenerator extends TextureGenerator {
     public IIcon getSpriteForCoord(int x, int y, int z) {
         return generatedTexture;
     }
+
+    @Override
+    public IIcon getSpriteForCoord(int x, int y, int z, int side) {
+        return generatedTexture;
+    }
 }
