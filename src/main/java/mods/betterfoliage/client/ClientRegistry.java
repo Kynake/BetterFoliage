@@ -13,6 +13,7 @@ import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.gui.ConfigGuiFactory;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.features.AlgaeRenderer;
+import mods.betterfoliage.client.render.features.CoralRenderer;
 import mods.betterfoliage.client.render.features.DirtGrassLogRenderer;
 import mods.betterfoliage.client.render.features.DirtGrassRenderer;
 import mods.betterfoliage.client.render.features.GrassRenderer;
@@ -65,6 +66,7 @@ public class ClientRegistry {
             MyceliumRenderer.getInstance(),
             LilypadRenderer.getInstance(),
             NetherrackRenderer.getInstance(),
+            CoralRenderer.getInstance(),
             ReedsRenderer.getInstance(),
             AlgaeRenderer.getInstance(),
             DirtGrassRenderer.getInstance(),
