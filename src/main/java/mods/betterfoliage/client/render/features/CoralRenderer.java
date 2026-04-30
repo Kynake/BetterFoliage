@@ -13,6 +13,7 @@ import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
+import mods.betterfoliage.client.resource.EmptySprite;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICustomSidePositionRenderer;
@@ -47,15 +48,7 @@ public class CoralRenderer extends BlockRenderer {
 
     private final SimplexNoiseGenerator noise = new SimplexNoiseGenerator(SALT);
 
-    private final ISpriteProvider coral = new SpriteSet(
-        BetterFoliageMod.LEGACY_DOMAIN,
-        "textures/blocks/better_coral_",
-        ".png");
-
-    private final ISpriteProvider crust = new SpriteSet(
-        BetterFoliageMod.LEGACY_DOMAIN,
-        "textures/blocks/better_crust_",
-        ".png");
+    private final CoralSpriteProvider spriteProvider = new CoralSpriteProvider();
 
     public static CoralRenderer getInstance() {
         if (instance == null) {
@@ -110,9 +103,8 @@ public class CoralRenderer extends BlockRenderer {
         // Render Crust
         int coordHash = MathUtils.hashCoords(x, y, z, SALT);
 
-        // TODO: Add option for rendering the same crust sprite on all sides (legacy behaviour)
         ICustomSideSpritesRenderer customSpriteRenderer = (ICustomSideSpritesRenderer) renderer;
-        customSpriteRenderer.betterfoliage$setSpriteProvider(crust);
+        customSpriteRenderer.betterfoliage$setSpriteProvider(spriteProvider);
 
         ICustomSidePositionRenderer customSizeRenderer = (ICustomSidePositionRenderer) renderer;
         customSizeRenderer.betterfoliage$setSidesWithCustomProperties(
@@ -134,6 +126,12 @@ public class CoralRenderer extends BlockRenderer {
         Tessellator tessellator = Tessellator.instance;
 
         for (int i = 0; i < SIDES.length; i++) {
+            int ordinal = SIDES[i].ordinal();
+
+            if (!CoralSpriteProvider.shouldRenderSide(x, y, z, ordinal)) {
+                continue;
+            }
+
             int xSide = x + SIDES[i].offsetX;
             int ySide = y + SIDES[i].offsetY;
             int zSide = z + SIDES[i].offsetZ;
@@ -143,12 +141,9 @@ public class CoralRenderer extends BlockRenderer {
                 continue;
             }
 
-            int ordinal = SIDES[i].ordinal();
-
-            IIcon sprite = coral.getSpriteForCoord(xSide, ySide, zSide, ordinal);
-
             // TODO: Add config using only one sprite on the same crossed square
-            IIcon spriteTwo = coral.getSpriteForCoord(xSide, ySide, zSide, ordinal + 6);
+            IIcon spriteOne = spriteProvider.getFirstCoralForCoord(xSide, ySide, zSide, ordinal);
+            IIcon spriteTwo = spriteProvider.getSecondCoralForCoord(xSide, ySide, zSide, ordinal);
 
             double hOffset = Config.shortGrass.INSTANCE.getHOffset();
             double xOffset = xSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
@@ -159,7 +154,7 @@ public class CoralRenderer extends BlockRenderer {
 
             coralRenderer.betterfoliage$setSecondSprite(spriteTwo);
             coralRenderer.betterfoliage$setRotation(xSide + 0.5, ySide + 0.5, zSide + 0.5, ROTATIONS[i]);
-            renderer.drawCrossedSquares(sprite, xOffset, ySide, zOffset, (float) Config.coral.INSTANCE.getSize());
+            renderer.drawCrossedSquares(spriteOne, xOffset, ySide, zOffset, (float) Config.coral.INSTANCE.getSize());
             coralRenderer.betterfoliage$resetRotation();
             coralRenderer.betterfoliage$setSecondSprite(null);
         }
@@ -183,6 +178,42 @@ public class CoralRenderer extends BlockRenderer {
 
             default:
                 tessellator.setColorOpaque(0xFF, 0xFF, 0xFF);
+        }
+    }
+
+    private static class CoralSpriteProvider implements ISpriteProvider {
+
+        private final ISpriteProvider coral = new SpriteSet(
+            BetterFoliageMod.LEGACY_DOMAIN,
+            "textures/blocks/better_coral_",
+            ".png");
+
+        private final ISpriteProvider crust = new SpriteSet(
+            BetterFoliageMod.LEGACY_DOMAIN,
+            "textures/blocks/better_crust_",
+            ".png");
+
+        CoralSpriteProvider() {}
+
+        @Override
+        public IIcon getSpriteForCoord(int x, int y, int z, int side) {
+            // TODO: Add option for rendering the same crust sprite on all sides (legacy behaviour)
+            return shouldRenderSide(x, y, z, side) ? crust.getSpriteForCoord(x, y, z, side) : EmptySprite.getInstance();
+        }
+
+        public IIcon getFirstCoralForCoord(int x, int y, int z, int side) {
+            return coral.getSpriteForCoord(x, y, z, side);
+        }
+
+        public IIcon getSecondCoralForCoord(int x, int y, int z, int side) {
+            return coral.getSpriteForCoord(x, y, z, side + 6);
+        }
+
+        public static boolean shouldRenderSide(int x, int y, int z, int side) {
+            int hash = MathUtils.hashCoords(x, y, z, side);
+
+            // TODO convert to [0, 1] range RNG
+            return MathUtils.hashToRange(hash, 0, 64) > Config.coral.INSTANCE.getChance();
         }
     }
 }
