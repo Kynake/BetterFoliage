@@ -186,14 +186,13 @@ public class GrassRenderer extends BlockRenderer {
 
         // TODO: Add config for mixing two sprites on the same crossed square
         shortGrassRenderer.betterfoliage$setVerticalScale((float) heightScale);
-        shortGrassRenderer.betterfoliage$setIsRenderingCrossedSquares(true);
         renderer.drawCrossedSquares(
             sprite,
             xOffset,
             shortGrassHeight,
             zOffset,
             (float) Config.shortGrass.INSTANCE.getSize());
-        shortGrassRenderer.betterfoliage$setIsRenderingCrossedSquares(false);
+        shortGrassRenderer.betterfoliage$resetVerticalScale();
 
         return true;
     }

@@ -86,12 +86,11 @@ public class MyceliumRenderer extends BlockRenderer {
 
         ICrossedSquaresRenderer myceliumRenderer = (ICrossedSquaresRenderer) renderer;
         myceliumRenderer.betterfoliage$setVerticalScale((float) heightScale);
-        myceliumRenderer.betterfoliage$setIsRenderingCrossedSquares(true);
 
         renderer
             .drawCrossedSquares(sprite, xOffset, myceliumHeight, zOffset, (float) Config.shortGrass.INSTANCE.getSize());
 
-        myceliumRenderer.betterfoliage$setIsRenderingCrossedSquares(false);
+        myceliumRenderer.betterfoliage$resetVerticalScale();
 
         return true;
     }

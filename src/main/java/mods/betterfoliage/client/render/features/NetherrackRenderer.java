@@ -76,14 +76,13 @@ public class NetherrackRenderer extends BlockRenderer {
         ICrossedSquaresRenderer vinesRenderer = (ICrossedSquaresRenderer) renderer;
 
         vinesRenderer.betterfoliage$setVerticalScale((float) heightScale);
-        vinesRenderer.betterfoliage$setIsRenderingCrossedSquares(true);
         renderer.drawCrossedSquares(
             sprite,
             xOffset,
             y - heightScale,
             zOffset,
             (float) Config.netherrack.INSTANCE.getSize());
-        vinesRenderer.betterfoliage$setIsRenderingCrossedSquares(false);
+        vinesRenderer.betterfoliage$resetVerticalScale();
 
         return true;
     }

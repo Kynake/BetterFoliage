@@ -24,7 +24,7 @@ import mods.betterfoliage.utils.MathUtils;
 public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquaresRenderer {
 
     @Unique
-    private boolean betterfoliage$isRenderingCrossedSquares;
+    private boolean betterfoliage$isUsingCustomVerticalScale;
 
     @Unique
     private float betterfoliage$crossedSquaresVerticalScale;
@@ -48,13 +48,14 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private double betterfoliage$centerZ;
 
     @Override
-    public void betterfoliage$setIsRenderingCrossedSquares(boolean isCrossedSquares) {
-        betterfoliage$isRenderingCrossedSquares = isCrossedSquares;
+    public void betterfoliage$setVerticalScale(float verticalScale) {
+        betterfoliage$isUsingCustomVerticalScale = true;
+        betterfoliage$crossedSquaresVerticalScale = verticalScale;
     }
 
     @Override
-    public void betterfoliage$setVerticalScale(float verticalScale) {
-        betterfoliage$crossedSquaresVerticalScale = verticalScale;
+    public void betterfoliage$resetVerticalScale() {
+        betterfoliage$isUsingCustomVerticalScale = false;
     }
 
     @Override
@@ -87,7 +88,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         argsOnly = true,
         at = @At(shift = At.Shift.AFTER, value = "MIXINEXTRAS:EXPRESSION"))
     private float betterfoliage$overrideVerticalScale(float original) {
-        return betterfoliage$isRenderingCrossedSquares ? betterfoliage$crossedSquaresVerticalScale : original;
+        return betterfoliage$isUsingCustomVerticalScale ? betterfoliage$crossedSquaresVerticalScale : original;
     }
 
     /// Second Sprite
@@ -100,8 +101,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
             shift = At.Shift.AFTER,
             target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
     private double betterfoliage$secondSpriteMinU(double minU) {
-        return betterfoliage$crossedSquareSecondSprite != null
-            ? betterfoliage$crossedSquareSecondSprite.getMinU()
+        return betterfoliage$crossedSquareSecondSprite != null ? betterfoliage$crossedSquareSecondSprite.getMinU()
             : minU;
     }
 
@@ -114,8 +114,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
             shift = At.Shift.AFTER,
             target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
     private double betterfoliage$secondSpriteMinV(double minV) {
-        return betterfoliage$crossedSquareSecondSprite != null
-            ? betterfoliage$crossedSquareSecondSprite.getMinV()
+        return betterfoliage$crossedSquareSecondSprite != null ? betterfoliage$crossedSquareSecondSprite.getMinV()
             : minV;
     }
 
@@ -128,8 +127,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
             shift = At.Shift.AFTER,
             target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
     private double betterfoliage$secondSpriteMaxU(double maxU) {
-        return betterfoliage$crossedSquareSecondSprite != null
-            ? betterfoliage$crossedSquareSecondSprite.getMaxU()
+        return betterfoliage$crossedSquareSecondSprite != null ? betterfoliage$crossedSquareSecondSprite.getMaxU()
             : maxU;
     }
 
@@ -142,8 +140,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
             shift = At.Shift.AFTER,
             target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
     private double betterfoliage$secondSpriteMaxV(double maxV) {
-        return betterfoliage$crossedSquareSecondSprite != null
-            ? betterfoliage$crossedSquareSecondSprite.getMaxV()
+        return betterfoliage$crossedSquareSecondSprite != null ? betterfoliage$crossedSquareSecondSprite.getMaxV()
             : maxV;
     }
 

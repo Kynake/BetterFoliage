@@ -98,15 +98,13 @@ public class ReedsRenderer extends BlockRenderer {
 
         ICrossedSquaresRenderer reedsRenderer = (ICrossedSquaresRenderer) renderer;
         reedsRenderer.betterfoliage$setVerticalScale(verticalScale);
-
-        reedsRenderer.betterfoliage$setIsRenderingCrossedSquares(true);
         renderer.drawCrossedSquares(
             sprite,
             xOffset,
             y + 1,
             zOffset,
             (float) Config.algae.INSTANCE.getSize() * ReedsGenerator.HORIZONTAL_SCALING);
-        reedsRenderer.betterfoliage$setIsRenderingCrossedSquares(false);
+        reedsRenderer.betterfoliage$resetVerticalScale();
 
         return true;
     }
