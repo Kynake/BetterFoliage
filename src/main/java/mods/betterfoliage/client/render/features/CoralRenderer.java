@@ -3,6 +3,9 @@ package mods.betterfoliage.client.render.features;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -11,6 +14,7 @@ import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.SpriteSet;
+import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICustomSidePositionRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICustomSideSpritesRenderer;
 import mods.betterfoliage.utils.MathUtils;
@@ -21,11 +25,23 @@ public class CoralRenderer extends BlockRenderer {
 
     private static final int SALT = 6739;
 
-    private static final ForgeDirection[] SIDES = { ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.SOUTH,
-        ForgeDirection.WEST, ForgeDirection.EAST, };
+    // spotless:off
+    private static final ForgeDirection[] SIDES = {
+        ForgeDirection.UP,
+        ForgeDirection.NORTH,
+        ForgeDirection.SOUTH,
+        ForgeDirection.WEST,
+        ForgeDirection.EAST
+    };
 
-    private static final ForgeDirection[] ROTATIONS = { ForgeDirection.UNKNOWN, ForgeDirection.WEST,
-        ForgeDirection.EAST, ForgeDirection.NORTH, ForgeDirection.SOUTH, };
+    private static final ForgeDirection[] ROTATIONS = {
+        ForgeDirection.UNKNOWN,
+        ForgeDirection.EAST,
+        ForgeDirection.WEST,
+        ForgeDirection.SOUTH,
+        ForgeDirection.NORTH
+    };
+    // spotless:on
 
     private static CoralRenderer instance;
 
@@ -70,7 +86,7 @@ public class CoralRenderer extends BlockRenderer {
         if (noise.isAboveThreshold(ctx.getX(), ctx.getZ(), threshold)) return false;
 
         int currentBiomeId = ctx.getBiomeId();
-        for (int biomeId : Config.reed.INSTANCE.getBiomes()) {
+        for (int biomeId : Config.coral.INSTANCE.getBiomes()) {
             if (currentBiomeId == biomeId) return true;
         }
 
@@ -90,10 +106,8 @@ public class CoralRenderer extends BlockRenderer {
 
         if (!renderResult) return false;
 
-        // Render Coral
-        // Tessellator tessellator = Tessellator.instance;
-        // tessellator.setColorOpaque(0xFF, 0xFF, 0xFF);
-
+        // TODO Add configurable
+        // Render Crust
         int coordHash = MathUtils.hashCoords(x, y, z, SALT);
 
         ICustomSideSpritesRenderer customSpriteRenderer = (ICustomSideSpritesRenderer) renderer;
@@ -112,6 +126,57 @@ public class CoralRenderer extends BlockRenderer {
         customSpriteRenderer.betterfoliage$resetSpriteProvider();
         customSizeRenderer.betterfoliage$resetCustomProperties();
 
+        // TODO Add configurable
+        // Render Coral
+        ICrossedSquaresRenderer coralRenderer = (ICrossedSquaresRenderer) renderer;
+
+        Tessellator tessellator = Tessellator.instance;
+
+        for (int i = 0; i < SIDES.length; i++) {
+            int xSide = x + SIDES[i].offsetX;
+            int ySide = y + SIDES[i].offsetY;
+            int zSide = z + SIDES[i].offsetZ;
+
+            if (world.getBlock(xSide, ySide, zSide)
+                .isOpaqueCube()) {
+                continue;
+            }
+
+            int ordinal = SIDES[i].ordinal();
+
+            IIcon sprite = coral.getSpriteForCoord(xSide, ySide, zSide, ordinal);
+
+            double hOffset = Config.shortGrass.INSTANCE.getHOffset();
+            double xOffset = xSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
+            double zOffset = zSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
+
+            tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, xSide, ySide, zSide));
+            setCrossedSquareColorForSide(tessellator, ordinal);
+
+            coralRenderer.betterfoliage$setRotation(xSide + 0.5, ySide + 0.5, zSide + 0.5, ROTATIONS[i]);
+            renderer.drawCrossedSquares(sprite, xOffset, ySide, zOffset, (float) Config.coral.INSTANCE.getSize());
+            coralRenderer.betterfoliage$resetRotation();
+        }
+
         return true;
+    }
+
+    private static void setCrossedSquareColorForSide(Tessellator tessellator, int side) {
+        switch (side) {
+            case 0:
+                tessellator.setColorOpaque_F(0.5f, 0.5f, 0.5f);
+                break;
+
+            case 2, 3:
+                tessellator.setColorOpaque_F(0.8f, 0.8f, 0.8f);
+                break;
+
+            case 4, 5:
+                tessellator.setColorOpaque_F(0.6f, 0.6f, 0.6f);
+                break;
+
+            default:
+                tessellator.setColorOpaque(0xFF, 0xFF, 0xFF);
+        }
     }
 }

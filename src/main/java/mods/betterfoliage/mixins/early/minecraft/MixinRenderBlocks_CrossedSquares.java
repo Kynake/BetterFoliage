@@ -1,6 +1,8 @@
 package mods.betterfoliage.mixins.early.minecraft;
 
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -9,9 +11,12 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
+import mods.betterfoliage.utils.MathUtils;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(RenderBlocks.class)
@@ -23,6 +28,21 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     @Unique
     private float betterfoliage$crossedSquaresVerticalScale;
 
+    @Unique
+    private ForgeDirection betterfoliage$rotationAxis = ForgeDirection.UNKNOWN;
+
+    @Unique
+    private final double[] betterfoliage$rotationPoint = new double[3];
+
+    @Unique
+    private double betterfoliage$centerX;
+
+    @Unique
+    private double betterfoliage$centerY;
+
+    @Unique
+    private double betterfoliage$centerZ;
+
     @Override
     public void betterfoliage$setIsRenderingCrossedSquares(boolean isCrossedSquares) {
         betterfoliage$isRenderingCrossedSquares = isCrossedSquares;
@@ -31,6 +51,19 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     @Override
     public void betterfoliage$setVerticalScale(float verticalScale) {
         betterfoliage$crossedSquaresVerticalScale = verticalScale;
+    }
+
+    @Override
+    public void betterfoliage$setRotation(double x, double y, double z, ForgeDirection axis) {
+        betterfoliage$centerX = x;
+        betterfoliage$centerY = y;
+        betterfoliage$centerZ = z;
+        betterfoliage$rotationAxis = axis;
+    }
+
+    @Override
+    public void betterfoliage$resetRotation() {
+        betterfoliage$rotationAxis = ForgeDirection.UNKNOWN;
     }
 
     /// ================================
@@ -46,5 +79,35 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(shift = At.Shift.AFTER, value = "MIXINEXTRAS:EXPRESSION"))
     private float betterfoliage$overrideShortGrassVerticalScale(float original) {
         return betterfoliage$isRenderingCrossedSquares ? betterfoliage$crossedSquaresVerticalScale : original;
+    }
+
+    @WrapOperation(
+        method = "drawCrossedSquares",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+    private void betterfoliage$rotateCrossedSquare(Tessellator instance, double x, double y, double z, double u,
+        double v, Operation<Void> original) {
+        if (betterfoliage$rotationAxis == ForgeDirection.UNKNOWN) {
+            original.call(instance, x, y, z, u, v);
+            return;
+        }
+
+        betterfoliage$rotationPoint[0] = x;
+        betterfoliage$rotationPoint[1] = y;
+        betterfoliage$rotationPoint[2] = z;
+
+        MathUtils.rotateCounterclock(
+            betterfoliage$rotationAxis,
+            betterfoliage$centerX,
+            betterfoliage$centerY,
+            betterfoliage$centerZ,
+            betterfoliage$rotationPoint);
+
+        original.call(
+            instance,
+            betterfoliage$rotationPoint[0],
+            betterfoliage$rotationPoint[1],
+            betterfoliage$rotationPoint[2],
+            u,
+            v);
     }
 }
