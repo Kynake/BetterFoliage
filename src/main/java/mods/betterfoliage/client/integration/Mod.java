@@ -46,32 +46,33 @@ public enum Mod implements ITargetMod {
             return isLoadedCache;
         }
 
-        isChecked = true;
-
-        // If a field is null it is ignored, otherwise it is checked and MUST be true.
-        if (modID != null) {
-            isLoadedCache = Loader.isModLoaded(modID);
-        }
-
-        if (isLoadedCache && coreModClass != null) {
-            try {
-                Class.forName(coreModClass);
-                isLoadedCache = true;
-            } catch (Throwable t) {
-                isLoadedCache = false;
+        synchronized (this) {
+            // If a field is null it is ignored, otherwise it is checked and MUST be true.
+            if (modID != null) {
+                isLoadedCache = Loader.isModLoaded(modID);
             }
-        }
 
-        if (isLoadedCache && targetClass != null) {
-            try {
-                Class.forName(targetClass);
-                isLoadedCache = true;
-            } catch (Throwable t) {
-                isLoadedCache = false;
+            if (isLoadedCache && coreModClass != null) {
+                try {
+                    Class.forName(coreModClass);
+                    isLoadedCache = true;
+                } catch (Throwable t) {
+                    isLoadedCache = false;
+                }
             }
-        }
 
-        return isLoadedCache;
+            if (isLoadedCache && targetClass != null) {
+                try {
+                    Class.forName(targetClass);
+                    isLoadedCache = true;
+                } catch (Throwable t) {
+                    isLoadedCache = false;
+                }
+            }
+
+            isChecked = true;
+            return isLoadedCache;
+        }
     }
 
     @Override
