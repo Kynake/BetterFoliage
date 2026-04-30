@@ -1,7 +1,6 @@
 package mods.octarinecore.client.render
 
 import mods.octarinecore.clamp
-import mods.octarinecore.replace
 import net.minecraftforge.common.util.ForgeDirection
 import kotlin.math.max
 import kotlin.math.min
@@ -98,8 +97,6 @@ class Model() : Cloneable {
 
     fun Quad.add() = quads.add(this)
     fun Iterable<Quad>.addAll() = forEach { quads.add(it) }
-
-    fun transformQ(trans: (Quad) -> Quad) = quads.replace(trans)
 
     fun verticalRectangle(
         x1: Double,

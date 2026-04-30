@@ -16,7 +16,6 @@ import net.minecraft.block.material.Material
 import net.minecraftforge.common.util.ForgeDirection
 
 val up1 = Int3(1 to ForgeDirection.UP)
-val up2 = Int3(2 to ForgeDirection.UP)
 val down1 = Int3(1 to ForgeDirection.DOWN)
 
 val normalLeavesRot = arrayOf(Rotation.identity)

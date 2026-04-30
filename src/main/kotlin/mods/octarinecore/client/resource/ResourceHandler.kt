@@ -4,18 +4,14 @@ import cpw.mods.fml.client.event.ConfigChangedEvent
 import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import mods.octarinecore.client.render.Double3
-import mods.octarinecore.client.render.Int3
 import mods.octarinecore.client.render.Model
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.util.IIcon
-import net.minecraft.util.MathHelper
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
-import net.minecraft.world.gen.NoiseGeneratorSimplex
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.world.WorldEvent
-import java.util.Random
 
 // ============================
 // Resource types
@@ -64,7 +60,6 @@ open class ResourceHandler(val modId: String) {
     fun model(init: Model.() -> Unit) = ModelHolder(init).apply { resources.add(this) }
     fun modelSet(num: Int, init: Model.(Int) -> Unit) = ModelSet(num, init).apply { resources.add(this) }
     fun vectorSet(num: Int, init: (Int) -> Double3) = VectorSet(num, init).apply { resources.add(this) }
-    fun simplexNoise() = SimplexNoise().apply { resources.add(this) }
 
     // ============================
     // Event registration
@@ -135,13 +130,4 @@ class VectorSet(val num: Int, val init: (Int) -> Double3) : IConfigChangeListene
         (0..num - 1).forEach { models[it] = init(it) }
     }
     operator fun get(idx: Int) = models[idx % num]
-}
-
-class SimplexNoise : IWorldLoadListener {
-    var noise = NoiseGeneratorSimplex()
-    override fun onWorldLoad(world: World) {
-        noise = NoiseGeneratorSimplex(Random(world.worldInfo.seed))
-    }
-    operator fun get(x: Int, z: Int) = MathHelper.floor_double((noise.func_151605_a(x.toDouble(), z.toDouble()) + 1.0) * 32.0)
-    operator fun get(pos: Int3) = get(pos.x, pos.z)
 }

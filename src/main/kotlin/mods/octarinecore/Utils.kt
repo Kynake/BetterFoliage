@@ -14,14 +14,6 @@ inline fun String.stripStart(str: String) = if (startsWith(str)) substring(str.l
 
 inline fun ResourceLocation.stripStart(str: String) = ResourceLocation(resourceDomain, resourcePath.stripStart(str))
 
-/**
- * Mutating version of _map_. Replace each element of the list with the result of the given
- * transformation.
- */
-inline fun <reified T> MutableList<T>.replace(transform: (T) -> T) = forEachIndexed { idx, value ->
-    this[idx] = transform(value)
-}
-
 /** Exchange the two elements of the list with the given indices */
 inline fun <T> MutableList<T>.exchange(idx1: Int, idx2: Int) {
     val e = this[idx1]
