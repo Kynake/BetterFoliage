@@ -184,6 +184,7 @@ public class GrassRenderer extends BlockRenderer {
 
         ICrossedSquaresRenderer shortGrassRenderer = (ICrossedSquaresRenderer) renderer;
 
+        // TODO: Add config for mixing two sprites on the same crossed square
         shortGrassRenderer.betterfoliage$setVerticalScale((float) heightScale);
         shortGrassRenderer.betterfoliage$setIsRenderingCrossedSquares(true);
         renderer.drawCrossedSquares(

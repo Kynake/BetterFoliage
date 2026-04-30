@@ -70,6 +70,7 @@ public class NetherrackRenderer extends BlockRenderer {
         tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y - 1, z));
         tessellator.setColorOpaque(0xFF, 0xFF, 0xFF);
 
+        // TODO: Add config for mixing two sprites on the same crossed square
         IIcon sprite = netherrackVines.getSpriteForCoord(x, y - 1, z);
 
         ICrossedSquaresRenderer vinesRenderer = (ICrossedSquaresRenderer) renderer;

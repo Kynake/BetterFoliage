@@ -87,6 +87,8 @@ public class AlgaeRenderer extends BlockRenderer {
         tessellator.setColorOpaque(0xFF, 0xFF, 0xFF);
 
         IIcon sprite = algae.getSpriteForCoord(x, y + 1, z);
+
+        // TODO: Add config for mixing two sprites on the same crossed square
         renderer.drawCrossedSquares(sprite, xOffset, y + 1, zOffset, (float) Config.algae.INSTANCE.getSize());
 
         return true;

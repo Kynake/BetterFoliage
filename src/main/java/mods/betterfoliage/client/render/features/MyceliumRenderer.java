@@ -77,6 +77,7 @@ public class MyceliumRenderer extends BlockRenderer {
         double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
         double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
+        // TODO: Add config for mixing two sprites on the same crossed square
         IIcon sprite = myceliumGrass.getSpriteForCoord(x, y + 1, z);
 
         Tessellator tessellator = Tessellator.instance;
