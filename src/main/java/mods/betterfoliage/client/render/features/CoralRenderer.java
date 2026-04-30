@@ -110,6 +110,7 @@ public class CoralRenderer extends BlockRenderer {
         // Render Crust
         int coordHash = MathUtils.hashCoords(x, y, z, SALT);
 
+        // TODO: Add option for rendering the same crust sprite on all sides (legacy behaviour)
         ICustomSideSpritesRenderer customSpriteRenderer = (ICustomSideSpritesRenderer) renderer;
         customSpriteRenderer.betterfoliage$setSpriteProvider(crust);
 
@@ -146,6 +147,9 @@ public class CoralRenderer extends BlockRenderer {
 
             IIcon sprite = coral.getSpriteForCoord(xSide, ySide, zSide, ordinal);
 
+            // TODO: Add config using only one sprite on the same crossed square
+            IIcon spriteTwo = coral.getSpriteForCoord(xSide, ySide, zSide, ordinal + 6);
+
             double hOffset = Config.shortGrass.INSTANCE.getHOffset();
             double xOffset = xSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
             double zOffset = zSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
@@ -153,9 +157,11 @@ public class CoralRenderer extends BlockRenderer {
             tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, xSide, ySide, zSide));
             setCrossedSquareColorForSide(tessellator, ordinal);
 
+            coralRenderer.betterfoliage$setSecondSprite(spriteTwo);
             coralRenderer.betterfoliage$setRotation(xSide + 0.5, ySide + 0.5, zSide + 0.5, ROTATIONS[i]);
             renderer.drawCrossedSquares(sprite, xOffset, ySide, zOffset, (float) Config.coral.INSTANCE.getSize());
             coralRenderer.betterfoliage$resetRotation();
+            coralRenderer.betterfoliage$setSecondSprite(null);
         }
 
         return true;

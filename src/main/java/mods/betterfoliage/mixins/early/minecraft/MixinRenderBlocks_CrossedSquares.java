@@ -2,6 +2,7 @@ package mods.betterfoliage.mixins.early.minecraft;
 
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,6 +30,9 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private float betterfoliage$crossedSquaresVerticalScale;
 
     @Unique
+    private IIcon betterfoliage$crossedSquareSecondSprite = null;
+
+    @Unique
     private ForgeDirection betterfoliage$rotationAxis = ForgeDirection.UNKNOWN;
 
     @Unique
@@ -51,6 +55,11 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     @Override
     public void betterfoliage$setVerticalScale(float verticalScale) {
         betterfoliage$crossedSquaresVerticalScale = verticalScale;
+    }
+
+    @Override
+    public void betterfoliage$setSecondSprite(IIcon secondSprite) {
+        betterfoliage$crossedSquareSecondSprite = secondSprite;
     }
 
     @Override
@@ -77,10 +86,68 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         ordinal = 0,
         argsOnly = true,
         at = @At(shift = At.Shift.AFTER, value = "MIXINEXTRAS:EXPRESSION"))
-    private float betterfoliage$overrideShortGrassVerticalScale(float original) {
+    private float betterfoliage$overrideVerticalScale(float original) {
         return betterfoliage$isRenderingCrossedSquares ? betterfoliage$crossedSquaresVerticalScale : original;
     }
 
+    /// Second Sprite
+    @ModifyVariable(
+        method = "drawCrossedSquares",
+        ordinal = 3,
+        at = @At(
+            value = "INVOKE",
+            ordinal = 7,
+            shift = At.Shift.AFTER,
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+    private double betterfoliage$secondSpriteMinU(double minU) {
+        return betterfoliage$crossedSquareSecondSprite != null
+            ? betterfoliage$crossedSquareSecondSprite.getMinU()
+            : minU;
+    }
+
+    @ModifyVariable(
+        method = "drawCrossedSquares",
+        ordinal = 4,
+        at = @At(
+            value = "INVOKE",
+            ordinal = 7,
+            shift = At.Shift.AFTER,
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+    private double betterfoliage$secondSpriteMinV(double minV) {
+        return betterfoliage$crossedSquareSecondSprite != null
+            ? betterfoliage$crossedSquareSecondSprite.getMinV()
+            : minV;
+    }
+
+    @ModifyVariable(
+        method = "drawCrossedSquares",
+        ordinal = 5,
+        at = @At(
+            value = "INVOKE",
+            ordinal = 7,
+            shift = At.Shift.AFTER,
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+    private double betterfoliage$secondSpriteMaxU(double maxU) {
+        return betterfoliage$crossedSquareSecondSprite != null
+            ? betterfoliage$crossedSquareSecondSprite.getMaxU()
+            : maxU;
+    }
+
+    @ModifyVariable(
+        method = "drawCrossedSquares",
+        ordinal = 6,
+        at = @At(
+            value = "INVOKE",
+            ordinal = 7,
+            shift = At.Shift.AFTER,
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+    private double betterfoliage$secondSpriteMaxV(double maxV) {
+        return betterfoliage$crossedSquareSecondSprite != null
+            ? betterfoliage$crossedSquareSecondSprite.getMaxV()
+            : maxV;
+    }
+
+    /// Rotation
     @WrapOperation(
         method = "drawCrossedSquares",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
