@@ -142,8 +142,8 @@ public class CoralRenderer extends BlockRenderer {
             }
 
             // TODO: Add config using only one sprite on the same crossed square
-            IIcon spriteOne = spriteProvider.getFirstCoralForCoord(xSide, ySide, zSide, ordinal);
-            IIcon spriteTwo = spriteProvider.getSecondCoralForCoord(xSide, ySide, zSide, ordinal);
+            IIcon spriteOne = spriteProvider.getFirstCoralForCoord(x, y, z, ordinal);
+            IIcon spriteTwo = spriteProvider.getSecondCoralForCoord(x, y, z, ordinal);
 
             double hOffset = Config.shortGrass.INSTANCE.getHOffset();
             double xOffset = xSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
@@ -194,7 +194,7 @@ public class CoralRenderer extends BlockRenderer {
             int hash = MathUtils.hashCoords(x, y, z, side);
 
             // TODO convert to [0, 1] range RNG
-            return MathUtils.hashToRange(hash, 0, 64) > Config.coral.INSTANCE.getChance();
+            return MathUtils.hashToRange(hash, 0, 64) < Config.coral.INSTANCE.getChance();
         }
     }
 }
