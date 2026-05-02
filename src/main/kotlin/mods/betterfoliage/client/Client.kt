@@ -7,7 +7,6 @@ import mods.betterfoliage.client.integration.AbyssalCraftIntegration
 import mods.betterfoliage.client.integration.IC2Integration
 import mods.betterfoliage.client.integration.TFCIntegration
 import mods.betterfoliage.client.render.LeafWindTracker
-import mods.betterfoliage.client.render.RenderCactus
 import mods.betterfoliage.client.render.RenderLeaves
 import mods.betterfoliage.client.render.RenderLog
 import mods.betterfoliage.client.render.RisingSoulTextures
@@ -39,7 +38,6 @@ object Client {
     val renderers =
         listOf(
             leafRenderer,
-            RenderCactus(),
             logRenderer,
         )
 
