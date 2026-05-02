@@ -27,7 +27,7 @@ public class CactusRenderer extends BlockRenderer {
     // Height is increased in the original, for some reason
     private static final float STEM_VERTICAL_SCALE = STEM_SCALE * 1.41f;
 
-    private static final double OFFSET_EPSILON = 0.001;
+    private static final double OFFSET_EPSILON = 0.002;
 
     // spotless:off
     private static final ForgeDirection[] SIDES = {
@@ -97,16 +97,31 @@ public class CactusRenderer extends BlockRenderer {
             double sizeOffset = Config.cactus.INSTANCE.getSizeVariation();
             float scale = (float) (STEM_SCALE + MathUtils.hashToRange(hash, 0, sizeOffset));
 
-            double epsilonX = x + MathUtils.hashToRange(MathUtils.hash(hash + 1), -OFFSET_EPSILON, OFFSET_EPSILON);
-            double epsilonZ = z + MathUtils.hashToRange(MathUtils.hash(hash + 2), -OFFSET_EPSILON, OFFSET_EPSILON);
+            double xOffset = x;
+            double zOffset = z;
+
+            if ((y & 1) == 0) {
+                xOffset += OFFSET_EPSILON;
+                zOffset += OFFSET_EPSILON / 2.0;
+            }
+
+            if ((x & 1) == 0) {
+                xOffset += OFFSET_EPSILON / 8.0;
+                zOffset += OFFSET_EPSILON / 4.0;
+            }
+
+            if ((z & 1) == 0) {
+                xOffset += OFFSET_EPSILON / 16.0;
+                zOffset += OFFSET_EPSILON / 32.0;
+            }
 
             cactusRenderer.betterfoliage$setVerticalScale(STEM_VERTICAL_SCALE);
 
             renderer.drawCrossedSquares(
                 stem.getSpriteForCoord(x, y, z),
-                epsilonX,
+                xOffset,
                 y - STEM_VERTICAL_SCALE / 4.0,
-                epsilonZ,
+                zOffset,
                 scale);
 
             cactusRenderer.betterfoliage$resetVerticalScale();
