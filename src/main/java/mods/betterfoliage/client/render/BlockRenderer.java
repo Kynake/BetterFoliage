@@ -2,12 +2,11 @@ package mods.betterfoliage.client.render;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import mods.octarinecore.client.render.BlockContext;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class BlockRenderer implements ISimpleBlockRenderingHandler {
 
