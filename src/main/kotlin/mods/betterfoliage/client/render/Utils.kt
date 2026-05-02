@@ -2,8 +2,6 @@
 
 package mods.betterfoliage.client.render
 
-import mods.octarinecore.PI2
-import mods.octarinecore.client.render.Double3
 import mods.octarinecore.client.render.Int3
 import mods.octarinecore.client.render.Model
 import mods.octarinecore.client.render.Quad
@@ -16,7 +14,6 @@ import net.minecraft.block.material.Material
 import net.minecraftforge.common.util.ForgeDirection
 
 val up1 = Int3(1 to ForgeDirection.UP)
-val down1 = Int3(1 to ForgeDirection.DOWN)
 
 val normalLeavesRot = arrayOf(Rotation.identity)
 val denseLeavesRot =
@@ -35,8 +32,6 @@ fun Quad.toCross(rotAxis: ForgeDirection, trans: (Quad) -> Quad) = (0..3).map { 
 }
 
 fun Quad.toCross(rotAxis: ForgeDirection) = toCross(rotAxis) { it }
-
-fun xzDisk(modelIdx: Int) = (PI2 * modelIdx / 64.0).let { Double3(Math.cos(it), 0.0, Math.sin(it)) }
 
 val rotationFromUp =
     arrayOf(

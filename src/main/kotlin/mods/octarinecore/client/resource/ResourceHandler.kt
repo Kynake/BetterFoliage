@@ -58,7 +58,6 @@ open class ResourceHandler(val modId: String) {
     fun iconStatic(domain: String, path: String) = IconHolder(domain, path).apply { resources.add(this) }
     fun iconSet(domain: String, pathPattern: String) = IconSet(domain, pathPattern).apply { resources.add(this) }
     fun model(init: Model.() -> Unit) = ModelHolder(init).apply { resources.add(this) }
-    fun modelSet(num: Int, init: Model.(Int) -> Unit) = ModelSet(num, init).apply { resources.add(this) }
     fun vectorSet(num: Int, init: (Int) -> Double3) = VectorSet(num, init).apply { resources.add(this) }
 
     // ============================
@@ -114,14 +113,6 @@ class IconSet(val domain: String, val namePattern: String) : IStitchListener {
     }
 
     operator fun get(idx: Int) = if (num == 0) null else icons[idx % num]
-}
-
-class ModelSet(val num: Int, val init: Model.(Int) -> Unit) : IConfigChangeListener {
-    val models = Array(num) { Model().apply { init(it) } }
-    override fun onConfigChange() {
-        (0..num - 1).forEach { models[it] = Model().apply { init(it) } }
-    }
-    operator fun get(idx: Int) = models[idx % num]
 }
 
 class VectorSet(val num: Int, val init: (Int) -> Double3) : IConfigChangeListener {

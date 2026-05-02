@@ -1,7 +1,6 @@
 package mods.octarinecore.client.render
 
 import mods.octarinecore.clamp
-import net.minecraftforge.common.util.ForgeDirection
 import kotlin.math.max
 import kotlin.math.min
 
@@ -48,8 +47,6 @@ data class Quad(val v1: Vertex, val v2: Vertex, val v3: Vertex, val v4: Vertex) 
     val normal: Double3
         get() = (v2.xyz - v1.xyz).cross(v4.xyz - v1.xyz).normalize
 
-    fun move(trans: Double3) = transformV { it.copy(xyz = it.xyz + trans) }
-    fun move(trans: Pair<Double, ForgeDirection>) = move(Double3(trans.second) * trans.first)
     fun scale(scale: Double) = transformV { it.copy(xyz = it.xyz * scale) }
     fun scale(scale: Double3) = transformV {
         it.copy(xyz = Double3(it.xyz.x * scale.x, it.xyz.y * scale.y, it.xyz.z * scale.z))
@@ -79,8 +76,6 @@ data class Quad(val v1: Vertex, val v2: Vertex, val v3: Vertex, val v4: Vertex) 
     fun setFlatShader(shader: Shader) = transformVI { vertex, idx ->
         vertex.copy(flatShader = shader)
     }
-    val flipped: Quad
-        get() = Quad(v4, v3, v2, v1)
 }
 
 /**

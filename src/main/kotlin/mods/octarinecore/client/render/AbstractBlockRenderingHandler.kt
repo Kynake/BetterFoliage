@@ -164,8 +164,6 @@ class BlockContext {
     /** Get the block brightness at the given offset. */
     fun blockBrightness(offset: Int3) = block(offset).getMixedBrightnessForBlock(world, x + offset.x, y + offset.y, z + offset.z)
 
-    fun shouldRenderSide(offset: Int3, side: ForgeDirection) = block.shouldSideBeRendered(world, x + offset.x, y + offset.y, z + offset.z, side.ordinal)
-
     /** Get the biome ID at the block position. */
     val biomeId: Int
         get() = world!!.getBiomeGenForCoords(x, z).biomeID
