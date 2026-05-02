@@ -150,7 +150,7 @@ public class CoralRenderer extends BlockRenderer {
             double zOffset = zSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
             tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, xSide, ySide, zSide));
-            setCrossedSquareColorForSide(tessellator, ordinal);
+            setColorMultiplierBySide(tessellator, ordinal);
 
             coralRenderer.betterfoliage$setSecondSprite(spriteTwo);
             coralRenderer.betterfoliage$setRotation(xSide + 0.5, ySide + 0.5, zSide + 0.5, ROTATIONS[i]);
@@ -160,25 +160,6 @@ public class CoralRenderer extends BlockRenderer {
         }
 
         return true;
-    }
-
-    private static void setCrossedSquareColorForSide(Tessellator tessellator, int side) {
-        switch (side) {
-            case 0:
-                tessellator.setColorOpaque_F(0.5f, 0.5f, 0.5f);
-                break;
-
-            case 2, 3:
-                tessellator.setColorOpaque_F(0.8f, 0.8f, 0.8f);
-                break;
-
-            case 4, 5:
-                tessellator.setColorOpaque_F(0.6f, 0.6f, 0.6f);
-                break;
-
-            default:
-                tessellator.setColorOpaque(0xFF, 0xFF, 0xFF);
-        }
     }
 
     private static class CoralSpriteProvider implements ISpriteProvider {
