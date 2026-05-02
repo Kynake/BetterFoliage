@@ -8,7 +8,6 @@ import mods.betterfoliage.client.Client
 import mods.betterfoliage.client.config.Config
 import mods.betterfoliage.client.integration.ForestryIntegration
 import mods.betterfoliage.client.integration.GT6Integration
-import mods.betterfoliage.client.integration.OptifineCTM
 import mods.octarinecore.client.resource.IconSet
 import mods.octarinecore.client.resource.averageColor
 import net.minecraft.block.Block
@@ -72,27 +71,7 @@ object LeafRegistry {
                     Client.log(Level.INFO, "Registering leaf texture: $location")
                     registerLeaf(event.map, original)
 
-                    if (OptifineCTM.isAvailable) {
-                        OptifineCTM.getAllCTM(original).let { ctmIcons ->
-                            if (ctmIcons.isNotEmpty()) {
-                                Client.log(Level.INFO, "Registering ${ctmIcons.size} CTM variants for texture ${original.iconName}")
-                                ctmIcons.forEach { registerLeaf(event.map, it as TextureAtlasSprite) }
-                            }
-                        }
-                    }
                     return@registerBlockIcons original
-                }
-
-                if (OptifineCTM.isAvailable) {
-                    OptifineCTM.getAllCTM(block).let { ctmIcons ->
-                        if (ctmIcons.isNotEmpty()) {
-                            Client.log(
-                                Level.INFO,
-                                "Found ${ctmIcons.size} CTM variants for block ${Block.getIdFromBlock(block)}",
-                            )
-                            ctmIcons.forEach { registerLeaf(event.map, it as TextureAtlasSprite) }
-                        }
-                    }
                 }
             }
         }

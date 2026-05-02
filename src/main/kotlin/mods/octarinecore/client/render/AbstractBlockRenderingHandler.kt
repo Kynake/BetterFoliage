@@ -6,8 +6,6 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler
 import cpw.mods.fml.client.registry.RenderingRegistry
 import mods.betterfoliage.client.integration.GT5UIntegration
 import mods.betterfoliage.client.integration.GT6Integration
-import mods.betterfoliage.client.integration.OptifineCTM
-import mods.betterfoliage.loader.Refs
 import mods.octarinecore.ThreadLocalDelegate
 import mods.octarinecore.client.resource.ResourceHandler
 import net.minecraft.block.Block
@@ -170,14 +168,7 @@ class BlockContext {
 
     /** Get the texture on a given face of the block at the given offset. */
     fun icon(face: ForgeDirection, offset: Int3 = Int3.zero) = getIconSpecialCases(face, offset)
-        ?: block(offset).getIcon(world, x + offset.x, y + offset.y, z + offset.z, face.ordinal).let {
-            if (!OptifineCTM.isAvailable) {
-                it!!
-            } else {
-                Refs.getConnectedTexture.invokeStatic(world!!, block(offset), x + offset.x, y + offset.y, z + offset.z, face.ordinal, it)
-                    as IIcon
-            }
-        }
+        ?: block(offset).getIcon(world, x + offset.x, y + offset.y, z + offset.z, face.ordinal)
 
     /** Get the centerpoint of the block being rendered. */
     val blockCenter: Double3
