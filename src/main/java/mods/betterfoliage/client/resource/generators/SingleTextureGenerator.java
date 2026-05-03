@@ -8,9 +8,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.ResourceUtils;
 
-public abstract class SingleTextureGenerator extends TextureGenerator {
+public abstract class SingleTextureGenerator extends TextureGenerator implements ISpriteProvider {
 
     protected final ResourceLocation baseResource;
     protected final ResourceLocation generatedResource;

@@ -21,11 +21,10 @@ import com.google.common.collect.ImmutableSet;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.ResourceUtils;
 import mods.betterfoliage.client.resource.StitchListener;
 
-public abstract class TextureGenerator extends StitchListener implements IResourcePack, ISpriteProvider {
+public abstract class TextureGenerator extends StitchListener implements IResourcePack {
 
     private final String name;
     private final String description;
