@@ -42,7 +42,7 @@ public class SpriteSet extends StitchListener implements ISpriteProvider {
         sprites = new ArrayList<>(resources.size());
 
         for (ResourceLocation res : resources) {
-            String textureName = convertToSpriteName(res);
+            String textureName = ResourceUtils.convertToSpriteName(res);
             if (textureName == null) continue;
             sprites.add(event.map.registerIcon(textureName));
         }

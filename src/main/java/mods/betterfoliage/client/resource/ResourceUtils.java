@@ -17,6 +17,7 @@ import net.minecraft.client.resources.FallbackResourceManager;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 import com.google.common.collect.Lists;
@@ -122,6 +123,30 @@ public class ResourceUtils {
         }
 
         return false;
+    }
+
+    public static String convertToSpriteName(ResourceLocation location) {
+        return convertToSpriteName(location, location.getResourceDomain());
+    }
+
+    public static String convertToSpriteName(ResourceLocation location, String domain) {
+        String name = location.getResourcePath();
+        int startIndex = name.lastIndexOf('/') + 1;
+        int endIndex = name.lastIndexOf('.');
+
+        if (startIndex <= 0 || startIndex > endIndex) {
+            BetterFoliageMod.log.error("Invalid resource location: {}", location);
+            return null;
+        }
+
+        return domain + ":" + name.substring(startIndex, endIndex);
+    }
+
+    public static ResourceLocation convertToResourceLocation(IIcon sprite) {
+        ResourceLocation partial = new ResourceLocation(sprite.getIconName());
+        return new ResourceLocation(
+            partial.getResourceDomain(),
+            "textures/blocks/" + partial.getResourcePath() + ".png");
     }
 
     private static void addFromFolderIfPossible(File dir, String domain, String prefix, String suffix,

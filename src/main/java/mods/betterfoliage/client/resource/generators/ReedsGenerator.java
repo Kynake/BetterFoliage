@@ -43,7 +43,7 @@ public class ReedsGenerator extends TextureGenerator implements ISpriteProvider 
         sprites = new ArrayList<>(backingResources.size());
 
         for (ResourceLocation res : backingResources) {
-            String textureName = convertToSpriteName(res, domain);
+            String textureName = ResourceUtils.convertToSpriteName(res, domain);
             if (textureName == null) continue;
             sprites.add(event.map.registerIcon(textureName));
         }

@@ -28,7 +28,7 @@ public class SpriteSingle extends StitchListener implements ISpriteProvider {
             return;
         }
 
-        String textureName = convertToSpriteName(spriteLocation);
+        String textureName = ResourceUtils.convertToSpriteName(spriteLocation);
         if (textureName != null) {
             sprite = event.map.registerIcon(textureName);
         }
