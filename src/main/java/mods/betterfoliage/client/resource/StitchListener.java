@@ -5,6 +5,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import mods.betterfoliage.BetterFoliageMod;
 
@@ -17,7 +18,7 @@ public abstract class StitchListener {
             .register(this);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public final void handleStitchEvent(TextureStitchEvent.Pre event) {
         onSpriteStitch(event);
     }
