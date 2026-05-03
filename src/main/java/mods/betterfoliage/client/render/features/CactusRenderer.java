@@ -100,6 +100,7 @@ public class CactusRenderer extends BlockRenderer {
             double xOffset = x;
             double zOffset = z;
 
+            // TODO Move to static utils method
             if ((y & 1) == 0) {
                 xOffset += OFFSET_EPSILON;
                 zOffset += OFFSET_EPSILON / 2.0;

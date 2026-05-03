@@ -6,8 +6,11 @@ import net.minecraft.client.renderer.Tessellator;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mods.octarinecore.client.render.BlockContext;
 
+@SideOnly(Side.CLIENT)
 public abstract class BlockRenderer implements ISimpleBlockRenderingHandler {
 
     private final int renderId;

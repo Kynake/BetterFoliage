@@ -65,7 +65,6 @@ public class AlgaeRenderer extends BlockRenderer {
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
         RenderBlocks renderer) {
-
         // Use original render path when rendering block breaking overlay
         if (renderer.hasOverrideBlockTexture()) {
             renderer.setRenderBoundsFromBlock(block);
