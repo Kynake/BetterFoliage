@@ -1,6 +1,8 @@
 package mods.betterfoliage.client.resource.generators;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -85,26 +87,28 @@ public abstract class TextureGenerator extends StitchListener implements IResour
         return new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_INT_ARGB);
     }
 
-    protected final BufferedImage createCopy(BufferedImage original) {
-        BufferedImage res = new BufferedImage(original.getWidth(), original.getHeight(), original.getType());
+    protected final BufferedImage convertToType(BufferedImage original, int imageType) {
+        if (original.getType() == imageType) return original;
+
+        BufferedImage res = new BufferedImage(original.getWidth(), original.getHeight(), imageType);
 
         Graphics2D graphics = res.createGraphics();
         graphics.drawImage(original, 0, 0, null);
 
+        graphics.dispose();
         return res;
     }
 
-    protected final void debugPaintRed(BufferedImage image) {
-        // Colors are in the TYPE_INT_ARGB format
-        final int alphaMask = 0xFF_00_00_00;
-        // final int color = 0x00_FF_00_00; // RED
-        final int color = 0x00_00_00_FF; // BLUE
+    protected final BufferedImage createScaledCopy(BufferedImage original, int targetWidth, int targetHeight,
+        int scalingType) {
+        double widthFactor = (double) targetWidth / (double) original.getWidth();
+        double heightFactor = (double) targetHeight / (double) original.getHeight();
 
-        for (int x = 0; x < image.getWidth(); x++) {
-            for (int y = 0; y < image.getHeight(); y++) {
-                int originalAlpha = image.getRGB(x, y) & alphaMask;
-                image.setRGB(x, y, color | originalAlpha);
-            }
-        }
+        BufferedImage copyImage = new BufferedImage(targetWidth, targetHeight, original.getType());
+
+        AffineTransform scalerTransform = new AffineTransform();
+        scalerTransform.scale(widthFactor, heightFactor);
+        AffineTransformOp scaleOperation = new AffineTransformOp(scalerTransform, scalingType);
+        return scaleOperation.filter(original, copyImage);
     }
 }
