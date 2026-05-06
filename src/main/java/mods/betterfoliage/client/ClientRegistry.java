@@ -11,6 +11,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.gui.ConfigGuiFactory;
+import mods.betterfoliage.client.registries.LeafRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.features.AlgaeRenderer;
 import mods.betterfoliage.client.render.features.CactusRenderer;
@@ -18,6 +19,7 @@ import mods.betterfoliage.client.render.features.CoralRenderer;
 import mods.betterfoliage.client.render.features.DirtGrassLogRenderer;
 import mods.betterfoliage.client.render.features.DirtGrassRenderer;
 import mods.betterfoliage.client.render.features.GrassRenderer;
+import mods.betterfoliage.client.render.features.LeafRenderer;
 import mods.betterfoliage.client.render.features.LilypadRenderer;
 import mods.betterfoliage.client.render.features.MyceliumRenderer;
 import mods.betterfoliage.client.render.features.NetherrackRenderer;
@@ -33,6 +35,8 @@ public class ClientRegistry {
     private static KeyBinding openConfigMenu;
 
     private static BlockRenderer[] blockRenderers;
+
+    private static LeafRegistry leafRegistry;
 
     private ClientRegistry() {}
 
@@ -51,6 +55,9 @@ public class ClientRegistry {
 
     public static void postInit() {
         BetterFoliageMod.log.info("New ClientRegistry postInit()");
+
+        leafRegistry = LeafRegistry.getInstance();
+
         initBlockRenderers();
 
         openConfigMenu = new KeyBinding("key.betterfoliage.gui", F8_KEYCODE, BetterFoliageMod.MOD_NAME);
@@ -60,11 +67,13 @@ public class ClientRegistry {
             .register(eventListenerInstance);
     }
 
+    // TODO: Consider removing the singletons here maybe
     private static void initBlockRenderers() {
         blockRenderers = new BlockRenderer[] {
             // spotless:off
             GrassRenderer.getInstance(),
             MyceliumRenderer.getInstance(),
+            LeafRenderer.getInstance(),
             CactusRenderer.getInstance(),
             LilypadRenderer.getInstance(),
             NetherrackRenderer.getInstance(),
@@ -75,6 +84,10 @@ public class ClientRegistry {
             DirtGrassLogRenderer.getInstance(),
             // spotless:on
         };
+    }
+
+    public static LeafRegistry getLeafRegistry() {
+        return leafRegistry;
     }
 
     public static BlockRenderer getEligibleBlockRenderer(BlockContext ctx) {
