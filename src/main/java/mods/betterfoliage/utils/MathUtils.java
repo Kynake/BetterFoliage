@@ -54,6 +54,7 @@ public final class MathUtils {
         return lerp(toRangeMin, toRangeMax, inverseLerp(fromRangeMin, fromRangeMax, value));
     }
 
+    // TODO: use [0, 1] ratio instead
     /// Colors are in ARGB format. Alpha is copied from first color
     public static int blendRGB(int colorA, int colorB, float ratio) {
         float invRatio = (1f / ratio);
@@ -66,6 +67,16 @@ public final class MathUtils {
         res |= g << 8;
         res |= b;
 
+        return res;
+    }
+
+    /// Colors are in ARGB format. Color channels are copied from first color
+    public static int multiplyAlphas(int colorA, int colorB) {
+        float alphaA = ((colorA >> 24) & 0xFF) / (float) 0xFF;
+        float alphaB = ((colorB >> 24) & 0xFF) / (float) 0xFF;
+        int alpha = (int) (alphaA * alphaB * 0xFF);
+        int res = colorA & 0x00_FF_FF_FF;
+        res |= alpha << 24;
         return res;
     }
 
