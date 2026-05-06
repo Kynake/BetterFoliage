@@ -51,6 +51,15 @@ public class ResourceUtils {
         return Lists.reverse(resourceManager.resourcePacks);
     }
 
+    public static boolean resourceExists(ResourceLocation location) {
+        List<IResourcePack> packs = getResourcePacksWithDomain(location.getResourceDomain());
+        for (IResourcePack pack : packs) {
+            if (pack.resourceExists(location)) return true;
+        }
+
+        return false;
+    }
+
     public static HashSet<ResourceLocation> findResourcesWithPattern(String domain, String prefix, String suffix) {
         HashSet<ResourceLocation> res = new HashSet<>();
 
