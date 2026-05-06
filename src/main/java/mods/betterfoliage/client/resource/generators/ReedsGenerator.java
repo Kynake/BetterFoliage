@@ -75,6 +75,7 @@ public class ReedsGenerator extends TextureGenerator implements ISpriteProvider 
             graphics.drawImage(baseSubFrame, xPos, width * frame, null);
         }
 
+        graphics.dispose();
         return genImage;
     }
 

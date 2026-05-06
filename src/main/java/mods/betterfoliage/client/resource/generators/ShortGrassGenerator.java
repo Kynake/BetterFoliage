@@ -51,6 +51,7 @@ public class ShortGrassGenerator extends SingleTextureGenerator {
             graphics.drawImage(baseSubFrame, 0, width * (frame + 1) - topPixels, null);
         }
 
+        graphics.dispose();
         return genImage;
     }
 }
