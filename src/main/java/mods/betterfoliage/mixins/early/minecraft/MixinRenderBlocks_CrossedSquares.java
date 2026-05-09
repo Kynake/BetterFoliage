@@ -16,8 +16,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
+import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
-import mods.betterfoliage.utils.MathUtils;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(RenderBlocks.class)
@@ -159,7 +159,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         betterfoliage$rotationPoint[1] = y;
         betterfoliage$rotationPoint[2] = z;
 
-        MathUtils.rotateCounterclock(
+        RenderUtils.rotateCounterclock(
             betterfoliage$rotationAxis,
             betterfoliage$centerX,
             betterfoliage$centerY,

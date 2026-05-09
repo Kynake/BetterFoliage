@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import net.minecraft.util.ResourceLocation;
 
-import mods.betterfoliage.utils.MathUtils;
+import mods.betterfoliage.client.render.RenderUtils;
 
 public class ShortGrassSnowGenerator extends ShortGrassGenerator {
 
@@ -23,7 +23,7 @@ public class ShortGrassSnowGenerator extends ShortGrassGenerator {
 
         for (int x = 0; x < base.getWidth(); x++) {
             for (int y = 0; y < base.getHeight(); y++) {
-                base.setRGB(x, y, MathUtils.blendRGB(base.getRGB(x, y), BLEND_COLOR, BLEND_RATIO));
+                base.setRGB(x, y, RenderUtils.blendRGB(base.getRGB(x, y), BLEND_COLOR, BLEND_RATIO));
             }
         }
 

@@ -22,9 +22,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
+import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.ResourceUtils;
 import mods.betterfoliage.client.resource.generators.TextureGenerator;
-import mods.betterfoliage.utils.MathUtils;
 
 @SideOnly(Side.CLIENT)
 public final class LeafRegistry extends TextureGenerator {
@@ -127,7 +127,7 @@ public final class LeafRegistry extends TextureGenerator {
                     int baseY = y + (frame * genWidth);
                     int baseColor = genImage.getRGB(x, baseY);
                     int maskColor = maskImage.getRGB(x, y);
-                    genImage.setRGB(x, baseY, MathUtils.multiplyAlphas(baseColor, maskColor));
+                    genImage.setRGB(x, baseY, RenderUtils.multiplyAlphas(baseColor, maskColor));
                 }
             }
         }
