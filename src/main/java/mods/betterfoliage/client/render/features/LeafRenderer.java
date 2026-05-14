@@ -12,9 +12,12 @@ import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.registries.LeafInfo;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
+import mods.betterfoliage.utils.MathUtils;
 import mods.octarinecore.client.render.BlockContext;
 
 public class LeafRenderer extends BlockRenderer {
+
+    private static final int SALT = 39845;
 
     // Multiply Horizontal scale by this factor to ensure the horizontal scale equals the vertical one.
     private static final float HORIZONTAL_SCALE_FACTOR = 0.5f / 0.45f;
@@ -64,6 +67,15 @@ public class LeafRenderer extends BlockRenderer {
         float scale = (float) Config.leaves.INSTANCE.getSize();
         float verticalScale = scale * VERTICAL_SCALE_FACTOR;
 
+        int coordHash = MathUtils.hashCoords(x, y, z, SALT);
+
+        double vOffset = Config.leaves.INSTANCE.getVOffset();
+        double yOffset = y + MathUtils.hashToRange(coordHash, -vOffset, vOffset) + (1f - verticalScale) / 2f;
+
+        double hOffset = Config.leaves.INSTANCE.getHOffset();
+        double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
+        double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
+
         int color = block.colorMultiplier(world, x, y, z);
         float r = (float) (color >> 16 & 0xFF) / 255.0f;
         float g = (float) (color >> 8 & 0xFF) / 255.0f;
@@ -75,9 +87,9 @@ public class LeafRenderer extends BlockRenderer {
         leafRenderer.betterfoliage$setAORender(block, x, y, z, r, g, b);
         renderer.drawCrossedSquares(
             leaf.getSpriteForCoord(x, y, z),
-            x,
-            y + (1f - verticalScale) / 2f,
-            z,
+            xOffset,
+            yOffset,
+            zOffset,
             scale * HORIZONTAL_SCALE_FACTOR);
         leafRenderer.betterfoliage$resetAORender();
         leafRenderer.betterfoliage$resetVerticalScale();
