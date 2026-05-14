@@ -85,10 +85,8 @@ public class ReedsRenderer extends BlockRenderer {
         double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
         double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
-        float verticalScale = (float) MathUtils.hashToRange(
-            MathUtils.hash(coordHash + 3),
-            Config.reed.INSTANCE.getHeightMin(),
-            Config.reed.INSTANCE.getHeightMax());
+        float verticalScale = (float) MathUtils
+            .hashToRange(coordHash, Config.reed.INSTANCE.getHeightMin(), Config.reed.INSTANCE.getHeightMax());
 
         Tessellator tessellator = Tessellator.instance;
         tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y + 2, z));
