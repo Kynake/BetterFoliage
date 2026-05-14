@@ -2,8 +2,6 @@ package mods.betterfoliage.client.render.features;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -13,9 +11,16 @@ import mods.betterfoliage.client.ClientRegistry;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.registries.LeafInfo;
 import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.octarinecore.client.render.BlockContext;
 
 public class LeafRenderer extends BlockRenderer {
+
+    // Multiply Horizontal scale by this factor to ensure the horizontal scale equals the vertical one.
+    private static final float HORIZONTAL_SCALE_FACTOR = 0.5f / 0.45f;
+
+    // Original renderer scaled the vertical axis so that the squares o the diagonal look square instead of rectangular.
+    private static final float VERTICAL_SCALE_FACTOR = 1.41f;
 
     private static LeafRenderer instance;
 
@@ -56,18 +61,26 @@ public class LeafRenderer extends BlockRenderer {
         if (leaf == null) return true;
 
         // Render Round Leaves
-        // ICrossedSquaresRenderer leafRenderer = (ICrossedSquaresRenderer) renderer;
+        float scale = (float) Config.leaves.INSTANCE.getSize();
+        float verticalScale = scale * VERTICAL_SCALE_FACTOR;
 
-        double scale = Config.leaves.INSTANCE.getSize();
+        int color = block.colorMultiplier(world, x, y, z);
+        float r = (float) (color >> 16 & 0xFF) / 255.0f;
+        float g = (float) (color >> 8 & 0xFF) / 255.0f;
+        float b = (float) (color & 0xFF) / 255.0f;
 
-        Tessellator tessellator = Tessellator.instance;
+        ICrossedSquaresRenderer leafRenderer = (ICrossedSquaresRenderer) renderer;
 
-        // TODO Refactor rendering to use AO:
-        // AO from leaf block OR maybe,
-        // AO from each corner of surrounding blocks, if it appears to look good (and fixes the black leaves issue)
-        tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y, z));
-
-        renderer.drawCrossedSquares(leaf.getSpriteForCoord(x, y, z), x, y - scale / 4.0, z, (float) scale);
+        leafRenderer.betterfoliage$setVerticalScale(verticalScale);
+        leafRenderer.betterfoliage$setAORender(block, x, y, z, r, g, b);
+        renderer.drawCrossedSquares(
+            leaf.getSpriteForCoord(x, y, z),
+            x,
+            y + (1f - verticalScale) / 2f,
+            z,
+            scale * HORIZONTAL_SCALE_FACTOR);
+        leafRenderer.betterfoliage$resetAORender();
+        leafRenderer.betterfoliage$resetVerticalScale();
 
         return true;
     }
