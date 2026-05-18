@@ -1,6 +1,10 @@
 package mods.betterfoliage.client.render;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class RenderUtils {
@@ -9,6 +13,10 @@ public class RenderUtils {
     private static final float COUNTERCLOCK_COS = MathHelper.cos((float) (Math.PI / 2D));
     private static final float CLOCKWISE_SIN = MathHelper.sin((float) (3D * Math.PI / 2D));
     private static final float CLOCKWISE_COS = MathHelper.cos((float) (3D * Math.PI / 2D));
+
+    public static float getColorMultiplierBySide(ForgeDirection side) {
+        return getColorMultiplierBySide(side.ordinal());
+    }
 
     public static float getColorMultiplierBySide(int side) {
         return switch (side) {
@@ -138,5 +146,128 @@ public class RenderUtils {
                 xyz[2] = b;
             }
         }
+    }
+
+    public static void setAOForCrossedSquareVertex(RenderBlocks renderer, int x, int y, int z, ForgeDirection firstAxis,
+        ForgeDirection secondAxis, ForgeDirection thirdAxis) {
+
+        Block block = renderer.blockAccess.getBlock(x, y, z);
+
+        int aoX = x;
+        int aoY = y;
+        int aoZ = z;
+
+        ForgeDirection aoFirst = firstAxis;
+        ForgeDirection aoSecond = secondAxis;
+        ForgeDirection aoThird = thirdAxis;
+
+        int color = block.colorMultiplier(renderer.blockAccess, x, y, z);
+        float colorMult = getColorMultiplierBySide(firstAxis);
+
+        if (!isFaceOccluded(renderer.blockAccess, x, y, z, thirdAxis)) {
+            colorMult = getColorMultiplierBySide(thirdAxis);
+            aoFirst = thirdAxis;
+            aoThird = firstAxis;
+        } else if (isFaceOccluded(renderer.blockAccess, x, y, z, firstAxis)) {
+            colorMult = getColorMultiplierBySide(secondAxis);
+
+            if (isFaceOccluded(
+                renderer.blockAccess,
+                x + secondAxis.offsetX,
+                y + secondAxis.offsetY,
+                z + secondAxis.offsetZ,
+                firstAxis)) {
+                aoX = x + secondAxis.offsetX + thirdAxis.offsetX;
+                aoY = y + secondAxis.offsetY + thirdAxis.offsetY;
+                aoZ = z + secondAxis.offsetZ + thirdAxis.offsetZ;
+                aoSecond = secondAxis.getOpposite();
+                aoThird = secondAxis.getOpposite();
+            } else {
+                aoX = x + secondAxis.offsetX;
+                aoY = y + secondAxis.offsetY;
+                aoZ = z + secondAxis.offsetZ;
+                aoSecond = secondAxis.getOpposite();
+            }
+        }
+
+        setAOForBlockCorner(renderer, block, aoX, aoY, aoZ, aoFirst, aoSecond, aoThird, color, colorMult);
+    }
+
+    public static void setAOForBlockCorner(RenderBlocks renderer, Block block, int x, int y, int z,
+        ForgeDirection firstAxis, ForgeDirection secondAxis, ForgeDirection thirdAxis, int color,
+        float colorMultiplier) {
+
+        x += firstAxis.offsetX;
+        y += firstAxis.offsetY;
+        z += firstAxis.offsetZ;
+
+        Block secondNeighbor = renderer.blockAccess
+            .getBlock(x + secondAxis.offsetX, y + secondAxis.offsetY, z + secondAxis.offsetZ);
+        Block thirdNeighbor = renderer.blockAccess
+            .getBlock(x + thirdAxis.offsetX, y + thirdAxis.offsetY, z + thirdAxis.offsetZ);
+
+        float secondAO = secondNeighbor.getAmbientOcclusionLightValue();
+        int secondBrightness = block.getMixedBrightnessForBlock(
+            renderer.blockAccess,
+            x + secondAxis.offsetX,
+            y + secondAxis.offsetY,
+            z + secondAxis.offsetZ);
+
+        float thirdAO = thirdNeighbor.getAmbientOcclusionLightValue();
+        int thirdBrightness = block.getMixedBrightnessForBlock(
+            renderer.blockAccess,
+            x + thirdAxis.offsetX,
+            y + thirdAxis.offsetY,
+            z + thirdAxis.offsetZ);
+
+        float diagonalAO;
+        int diagonalBrightness;
+
+        if (secondNeighbor.getCanBlockGrass() && thirdNeighbor.getCanBlockGrass()) {
+            diagonalAO = secondAO;
+            diagonalBrightness = secondBrightness;
+        } else {
+            int diagX = x + firstAxis.offsetX + secondAxis.offsetX + thirdAxis.offsetX;
+            int diagY = y + firstAxis.offsetY + secondAxis.offsetY + thirdAxis.offsetY;
+            int diagZ = z + firstAxis.offsetZ + secondAxis.offsetZ + thirdAxis.offsetZ;
+
+            Block diagonalNeighbor = renderer.blockAccess.getBlock(diagX, diagY, diagZ);
+
+            diagonalAO = diagonalNeighbor.getAmbientOcclusionLightValue();
+            diagonalBrightness = block.getMixedBrightnessForBlock(renderer.blockAccess, diagX, diagY, diagZ);
+        }
+
+        x -= firstAxis.offsetX;
+        y -= firstAxis.offsetY;
+        z -= firstAxis.offsetZ;
+
+        Block neighbor = renderer.blockAccess
+            .getBlock(x + firstAxis.offsetX, y + firstAxis.offsetY, z + firstAxis.offsetZ);
+
+        float neighborAO = neighbor.getAmbientOcclusionLightValue();
+        int blockBrightness = neighbor.isOpaqueCube() ? block.getMixedBrightnessForBlock(renderer.blockAccess, x, y, z)
+            : block.getMixedBrightnessForBlock(
+                renderer.blockAccess,
+                x + firstAxis.offsetX,
+                y + firstAxis.offsetY,
+                z + firstAxis.offsetZ);
+
+        float ao = colorMultiplier * (neighborAO + secondAO + thirdAO + diagonalAO) / 4f;
+        int brightness = renderer
+            .getAoBrightness(secondBrightness, thirdBrightness, diagonalBrightness, blockBrightness);
+
+        float r = ao * (float) (color >> 16 & 0xFF) / 255.0f;
+        float g = ao * (float) (color >> 8 & 0xFF) / 255.0f;
+        float b = ao * (float) (color & 0xFF) / 255.0f;
+
+        Tessellator tess = Tessellator.instance;
+        tess.setBrightness(brightness);
+        tess.setColorOpaque_F(r, g, b);
+    }
+
+    public static boolean isFaceOccluded(IBlockAccess world, int x, int y, int z, ForgeDirection face) {
+        Block neighbor = world.getBlock(x + face.offsetX, y + face.offsetY, z + face.offsetZ);
+
+        return neighbor.isOpaqueCube() || neighbor == world.getBlock(x, y, z);
     }
 }
