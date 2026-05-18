@@ -76,15 +76,10 @@ public class LeafRenderer extends BlockRenderer {
         double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
         double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
-        int color = block.colorMultiplier(world, x, y, z);
-        float r = (float) (color >> 16 & 0xFF) / 255.0f;
-        float g = (float) (color >> 8 & 0xFF) / 255.0f;
-        float b = (float) (color & 0xFF) / 255.0f;
-
         ICrossedSquaresRenderer leafRenderer = (ICrossedSquaresRenderer) renderer;
 
         leafRenderer.betterfoliage$setVerticalScale(verticalScale);
-        leafRenderer.betterfoliage$setAORender(block, x, y, z, r, g, b);
+        leafRenderer.betterfoliage$setAORender(block, x, y, z);
         renderer.drawCrossedSquares(
             leaf.getSpriteForCoord(x, y, z),
             xOffset,
