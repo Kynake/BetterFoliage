@@ -78,14 +78,27 @@ public class LeafRenderer extends BlockRenderer {
 
         ICrossedSquaresRenderer leafRenderer = (ICrossedSquaresRenderer) renderer;
 
+        IIcon sprite = leaf.getSpriteForCoord(x, y, z);
+        float horizontalScale = scale * HORIZONTAL_SCALE_FACTOR;
+
         leafRenderer.betterfoliage$setVerticalScale(verticalScale);
         leafRenderer.betterfoliage$setAORender(block, x, y, z);
-        renderer.drawCrossedSquares(
-            leaf.getSpriteForCoord(x, y, z),
-            xOffset,
-            yOffset,
-            zOffset,
-            scale * HORIZONTAL_SCALE_FACTOR);
+        renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, horizontalScale);
+
+        if (Config.leaves.INSTANCE.getDense()) {
+            double rotX = x + 0.5;
+            double rotY = y + 0.5;
+            double rotZ = z + 0.5;
+
+            leafRenderer.betterfoliage$setRotation(rotX, rotY, rotZ, ForgeDirection.SOUTH);
+            renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, horizontalScale);
+
+            leafRenderer.betterfoliage$setRotation(rotX, rotY, rotZ, ForgeDirection.EAST);
+            renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, horizontalScale);
+
+            leafRenderer.betterfoliage$resetRotation();
+        }
+
         leafRenderer.betterfoliage$resetAORender();
         leafRenderer.betterfoliage$resetVerticalScale();
 
