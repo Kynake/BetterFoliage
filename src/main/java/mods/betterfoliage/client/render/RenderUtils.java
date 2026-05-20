@@ -178,7 +178,7 @@ public class RenderUtils {
 
     /// Rotates a point in 3D space 90 degrees counter-clockwise along an axis
     public static void rotateCounterclock(ForgeDirection rotationAxis, double axisX, double axisY, double axisZ,
-                                          double[] xyz) {
+        double[] xyz) {
         double centerA, centerB;
         double a, b;
         float rotSin, rotCos;
@@ -271,9 +271,46 @@ public class RenderUtils {
         }
     }
 
-    /// Performs  90 degrees counter-clockwise rotation along and axis,
-    /// remapping the 3 axes that define each block vertex.
-    public static void rotateAxesCounterclock(ForgeDirection rotationAxis, ForgeDirection[] axes) {
-        // TODO: Implement fix for AO shadows when rotated
+    /// Swizzles AO Axes by the given rotation axis 90 degrees counter-clockwise.
+    /// Used for adding AO to extra leaves in dense mode
+    /// NORTH / WEST rotation axis are not implemented, as they're not required
+    public static void swizzleCrossAOCounterclock(ForgeDirection rotationAxis, ForgeDirection[] axes) {
+        switch (rotationAxis) {
+            case SOUTH -> {
+                switch (axes[0]) {
+                    case NORTH, SOUTH -> {
+                        axes[1] = rotationAxis.getOpposite()
+                            .getRotation(axes[1]);
+                        axes[2] = rotationAxis.getRotation(axes[2]);
+                    }
+
+                    case WEST, EAST -> {
+                        ForgeDirection first = axes[0];
+                        axes[0] = rotationAxis.getRotation(axes[2]);
+                        axes[2] = axes[1];
+                        axes[1] = rotationAxis.getOpposite()
+                            .getRotation(first);
+                    }
+                }
+            }
+
+            case EAST -> {
+                switch (axes[0]) {
+                    case NORTH, SOUTH -> {
+                        ForgeDirection first = axes[0];
+                        axes[0] = rotationAxis.getOpposite()
+                            .getRotation(axes[2]);
+                        axes[2] = axes[1];
+                        axes[1] = rotationAxis.getRotation(first);
+                    }
+
+                    case WEST, EAST -> {
+                        axes[1] = rotationAxis.getRotation(axes[1]);
+                        axes[2] = rotationAxis.getOpposite()
+                            .getRotation(axes[2]);
+                    }
+                }
+            }
+        }
     }
 }

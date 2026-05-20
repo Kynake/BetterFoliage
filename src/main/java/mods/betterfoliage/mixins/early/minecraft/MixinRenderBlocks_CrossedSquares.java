@@ -7,7 +7,6 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -527,7 +526,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         betterfoliage$rotatedAOAxes[2] = thirdAxis;
 
         if (betterfoliage$rotationAxis.ordinal() <= 5) {
-            RenderUtils.rotateAxesCounterclock(betterfoliage$rotationAxis, betterfoliage$rotatedAOAxes);
+            RenderUtils.swizzleCrossAOCounterclock(betterfoliage$rotationAxis, betterfoliage$rotatedAOAxes);
         }
 
         RenderUtils.setAOForCrossedSquareVertex(

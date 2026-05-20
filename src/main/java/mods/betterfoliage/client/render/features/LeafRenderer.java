@@ -22,7 +22,7 @@ public class LeafRenderer extends BlockRenderer {
     // Multiply Horizontal scale by this factor to ensure the horizontal scale equals the vertical one.
     private static final float HORIZONTAL_SCALE_FACTOR = 0.5f / 0.45f;
 
-    // Original renderer scaled the vertical axis so that the squares o the diagonal look square instead of rectangular.
+    // Original renderer scaled the vertical axis so that the diagonal pixels look square instead of rectangular.
     private static final float VERTICAL_SCALE_FACTOR = 1.41f;
 
     private static LeafRenderer instance;
