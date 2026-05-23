@@ -11,6 +11,9 @@ import mods.betterfoliage.client.ClientRegistry;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.registries.LeafInfo;
 import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.client.render.ISpriteProvider;
+import mods.betterfoliage.client.render.Utils;
+import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.utils.MathUtils;
 import mods.octarinecore.client.render.BlockContext;
@@ -26,6 +29,11 @@ public class LeafRenderer extends BlockRenderer {
     private static final float VERTICAL_SCALE_FACTOR = 1.41f;
 
     private static LeafRenderer instance;
+
+    private final ISpriteProvider snowCovering = new SpriteSet(
+        BetterFoliageMod.LEGACY_DOMAIN,
+        "textures/blocks/better_leaves_snowed_",
+        ".png");
 
     public static LeafRenderer getInstance() {
         if (instance == null) {
@@ -99,6 +107,12 @@ public class LeafRenderer extends BlockRenderer {
             renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, horizontalScale);
 
             leafRenderer.betterfoliage$resetRotation();
+        }
+
+        if (Config.leaves.INSTANCE.getSnowEnabled() && Utils.isSnow(world.getBlock(x, y + 1, z))) {
+            sprite = snowCovering.getSpriteForCoord(x, y, z, ForgeDirection.UP.ordinal());
+            leafRenderer.betterfoliage$setAORender(block, x, y, z, false);
+            renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, horizontalScale);
         }
 
         leafRenderer.betterfoliage$resetAORender();
