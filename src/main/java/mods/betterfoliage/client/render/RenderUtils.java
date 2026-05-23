@@ -27,6 +27,11 @@ public class RenderUtils {
         };
     }
 
+    public static void setColorMultiplierBySide(Tessellator tessellator, int side) {
+        int multiplier = (int) (getColorMultiplierBySide(side) * 255f);
+        tessellator.setColorRGBA(multiplier, multiplier, multiplier, 0xFF);
+    }
+
     // TODO: use [0, 1] ratio instead
     /// Colors are in ARGB format. Alpha is copied from first color
     public static int blendRGB(int colorA, int colorB, float ratio) {

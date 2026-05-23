@@ -13,6 +13,7 @@ import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
+import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.EmptySprite;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
@@ -150,7 +151,7 @@ public class CoralRenderer extends BlockRenderer {
             double zOffset = zSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
             tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, xSide, ySide, zSide));
-            setColorMultiplierBySide(tessellator, ordinal);
+            RenderUtils.setColorMultiplierBySide(tessellator, ordinal);
 
             coralRenderer.betterfoliage$setSecondSprite(spriteTwo);
             coralRenderer.betterfoliage$setRotation(xSide + 0.5, ySide + 0.5, zSide + 0.5, ROTATIONS[i]);

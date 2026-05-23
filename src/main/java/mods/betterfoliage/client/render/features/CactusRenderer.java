@@ -12,6 +12,7 @@ import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
+import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.client.resource.SpriteSingle;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
@@ -151,7 +152,7 @@ public class CactusRenderer extends BlockRenderer {
                 double zOffset = zSide + MathUtils.hashToRange(MathUtils.hash(sideHash + 2), -hOffset, hOffset);
 
                 tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, xSide, ySide, zSide));
-                setColorMultiplierBySide(tessellator, ordinal);
+                RenderUtils.setColorMultiplierBySide(tessellator, ordinal);
 
                 cactusRenderer.betterfoliage$setRotation(xSide + 0.5, ySide + 0.5, zSide + 0.5, ROTATIONS[i]);
                 renderer.drawCrossedSquares(

@@ -2,7 +2,6 @@ package mods.betterfoliage.client.render;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -35,9 +34,4 @@ public abstract class BlockRenderer implements ISimpleBlockRenderingHandler {
     }
 
     public abstract boolean isEligible(BlockContext context);
-
-    protected final void setColorMultiplierBySide(Tessellator tessellator, int side) {
-        int multiplier = (int) (RenderUtils.getColorMultiplierBySide(side) * 255f);
-        tessellator.setColorRGBA(multiplier, multiplier, multiplier, 0xFF);
-    }
 }
