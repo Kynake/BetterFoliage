@@ -91,8 +91,6 @@ public class CactusRenderer extends BlockRenderer {
 
         // Render Stem
         if (Config.cactus.INSTANCE.getStem()) {
-            tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y, z));
-
             int hash = MathUtils.hashCoords(x, y, z);
 
             double sizeOffset = Config.cactus.INSTANCE.getSizeVariation();
@@ -118,6 +116,7 @@ public class CactusRenderer extends BlockRenderer {
             }
 
             cactusRenderer.betterfoliage$setVerticalScale(STEM_VERTICAL_SCALE);
+            cactusRenderer.betterfoliage$setAORender(block, x, y, z);
 
             renderer.drawCrossedSquares(
                 stem.getSpriteForCoord(x, y, z),
@@ -126,6 +125,7 @@ public class CactusRenderer extends BlockRenderer {
                 zOffset,
                 scale);
 
+            cactusRenderer.betterfoliage$resetAORender();
             cactusRenderer.betterfoliage$resetVerticalScale();
         }
 
