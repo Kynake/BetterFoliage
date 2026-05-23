@@ -1,6 +1,7 @@
 package mods.betterfoliage.mixins.early.minecraft;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
@@ -105,7 +106,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         betterfoliage$AOx = x;
         betterfoliage$AOy = y;
         betterfoliage$AOz = z;
-        betterfoliage$useAO = true;
+        betterfoliage$useAO = Minecraft.isAmbientOcclusionEnabled();
     }
 
     @Override
@@ -181,7 +182,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
             : maxV;
     }
 
-    /// QUAD 1
+    /// \ QUAD 1
+    /// v
     @WrapOperation(
         method = "drawCrossedSquares",
         at = @At(
@@ -262,7 +264,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
             v);
     }
 
-    /// QUAD 2
+    /// ^ QUAD 2
+    /// \
     @WrapOperation(
         method = "drawCrossedSquares",
         at = @At(
@@ -343,7 +346,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
             v);
     }
 
-    /// QUAD 3
+    /// / QUAD 3
+    /// v
     @WrapOperation(
         method = "drawCrossedSquares",
         at = @At(
@@ -424,7 +428,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
             v);
     }
 
-    /// QUAD 4
+    /// ^ QUAD 4
+    /// /
     @WrapOperation(
         method = "drawCrossedSquares",
         at = @At(
@@ -534,7 +539,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         }
 
         RenderUtils.setAOForCrossedSquareVertex(
-            (RenderBlocks) ((Object) this),
+            (RenderBlocks) (Object) this,
             betterfoliage$AOx,
             betterfoliage$AOy,
             betterfoliage$AOz,
