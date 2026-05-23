@@ -59,7 +59,7 @@ public class RenderUtils {
     }
 
     public static void setAOForCrossedSquareVertex(RenderBlocks renderer, int x, int y, int z, ForgeDirection firstAxis,
-        ForgeDirection secondAxis, ForgeDirection thirdAxis) {
+        ForgeDirection secondAxis, ForgeDirection thirdAxis, boolean useBlockColor) {
 
         Block block = renderer.blockAccess.getBlock(x, y, z);
 
@@ -71,7 +71,8 @@ public class RenderUtils {
         ForgeDirection aoSecond = secondAxis;
         ForgeDirection aoThird = thirdAxis;
 
-        int color = block.colorMultiplier(renderer.blockAccess, x, y, z);
+        int color = useBlockColor ? block.colorMultiplier(renderer.blockAccess, x, y, z) : 0xFF_FF_FF;
+
         float colorMult = getColorMultiplierBySide(firstAxis);
 
         if (!isFaceOccluded(renderer.blockAccess, x, y, z, thirdAxis)) {

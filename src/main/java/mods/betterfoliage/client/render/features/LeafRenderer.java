@@ -78,11 +78,11 @@ public class LeafRenderer extends BlockRenderer {
 
         ICrossedSquaresRenderer leafRenderer = (ICrossedSquaresRenderer) renderer;
 
-        IIcon sprite = leaf.getSpriteForCoord(x, y, z);
+        IIcon sprite = leaf.getSpriteForCoord(x, y, z, ForgeDirection.UP.ordinal());
         float horizontalScale = scale * HORIZONTAL_SCALE_FACTOR;
 
         leafRenderer.betterfoliage$setVerticalScale(verticalScale);
-        leafRenderer.betterfoliage$setAORender(block, x, y, z);
+        leafRenderer.betterfoliage$setAORender(block, x, y, z, true);
         renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, horizontalScale);
 
         if (Config.leaves.INSTANCE.getDense()) {
@@ -90,9 +90,11 @@ public class LeafRenderer extends BlockRenderer {
             double rotY = y + 0.5;
             double rotZ = z + 0.5;
 
+            sprite = leaf.getSpriteForCoord(x, y, z, ForgeDirection.SOUTH.ordinal());
             leafRenderer.betterfoliage$setRotation(rotX, rotY, rotZ, ForgeDirection.SOUTH);
             renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, horizontalScale);
 
+            sprite = leaf.getSpriteForCoord(x, y, z, ForgeDirection.EAST.ordinal());
             leafRenderer.betterfoliage$setRotation(rotX, rotY, rotZ, ForgeDirection.EAST);
             renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, horizontalScale);
 

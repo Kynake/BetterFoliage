@@ -20,7 +20,7 @@ public interface ICrossedSquaresRenderer {
     void betterfoliage$resetRotation();
 
     /// Ambient Occlusion
-    void betterfoliage$setAORender(Block block, int x, int y, int z);
+    void betterfoliage$setAORender(Block block, int x, int y, int z, boolean useBlockColor);
 
     void betterfoliage$resetAORender();
 }

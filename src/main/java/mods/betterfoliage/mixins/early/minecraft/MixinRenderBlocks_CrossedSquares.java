@@ -57,6 +57,9 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private boolean betterfoliage$useAO;
 
     @Unique
+    private boolean betterfoliage$useBlockColor;
+
+    @Unique
     private int betterfoliage$AOx;
 
     @Unique
@@ -98,7 +101,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     }
 
     @Override
-    public void betterfoliage$setAORender(Block block, int x, int y, int z) {
+    public void betterfoliage$setAORender(Block block, int x, int y, int z, boolean useBlockColor) {
         // TODO: Don't Apply AO if "Smooth Shadows: Off" or if Shaders are enabled.
         // "Smooth Shadows: Off" -> Should use simpler "Color by Side" if AO is requested
         // "Shaders" -> Don't use any AO or coloring at all? (maybe same as above)
@@ -107,6 +110,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         betterfoliage$AOy = y;
         betterfoliage$AOz = z;
         betterfoliage$useAO = Minecraft.isAmbientOcclusionEnabled();
+        betterfoliage$useBlockColor = useBlockColor;
     }
 
     @Override
@@ -545,6 +549,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
             betterfoliage$AOz,
             betterfoliage$rotatedAOAxes[0],
             betterfoliage$rotatedAOAxes[1],
-            betterfoliage$rotatedAOAxes[2]);
+            betterfoliage$rotatedAOAxes[2],
+            betterfoliage$useBlockColor);
     }
 }

@@ -116,7 +116,7 @@ public class CactusRenderer extends BlockRenderer {
             }
 
             cactusRenderer.betterfoliage$setVerticalScale(STEM_VERTICAL_SCALE);
-            cactusRenderer.betterfoliage$setAORender(block, x, y, z);
+            cactusRenderer.betterfoliage$setAORender(block, x, y, z, false);
 
             renderer.drawCrossedSquares(
                 stem.getSpriteForCoord(x, y, z),
