@@ -3,31 +3,29 @@ package mods.betterfoliage.client.integration
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import gregapi.block.multitileentity.MultiTileEntityBlock
-import mods.betterfoliage.client.Client
-import mods.betterfoliage.client.texture.LeafRegistry.registerLeaf
 import mods.betterfoliage.mixins.interfaces.gt6.ITreeHoleMTE
 import mods.octarinecore.client.render.BlockContext
 import mods.octarinecore.client.render.Int3
 import net.minecraft.util.IIcon
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.common.util.ForgeDirection
-import org.apache.logging.log4j.Level
 
 @SideOnly(Side.CLIENT)
 object GT6Integration {
 
     fun registerLeafTextures(event: TextureStitchEvent.Pre) {
-        if (!Mod.GT6.isLoaded) return
-        listOf("BLUEMAHOE", "BLUESPRUCE", "BLUESPRUCE_XMAS", "CINNAMON", "COCONUT", "HAZEL", "MAPLE", "MAPLE_BROWN", "MAPLE_ORANGE", "MAPLE_RED", "MAPLE_YELLOW", "RAINBOWOOD", "RUBBER", "WILLOW").forEach { leafType ->
-            listOf("", "OPAQUE_").forEach { renderTypePrefix ->
-                val location = "${Mod.GT6.modID}:iconsets/LEAVES_$renderTypePrefix$leafType"
-                val original = event.map.getTextureExtry(location)
-                if (original != null) {
-                    Client.log(Level.INFO, "Registering ${Mod.GT6.modName} leaf texture: $location")
-                    registerLeaf(event.map, original)
-                }
-            }
-        }
+        // TODO reimplement this fix
+//        if (!Mod.GT6.isLoaded) return
+//        listOf("BLUEMAHOE", "BLUESPRUCE", "BLUESPRUCE_XMAS", "CINNAMON", "COCONUT", "HAZEL", "MAPLE", "MAPLE_BROWN", "MAPLE_ORANGE", "MAPLE_RED", "MAPLE_YELLOW", "RAINBOWOOD", "RUBBER", "WILLOW").forEach { leafType ->
+//            listOf("", "OPAQUE_").forEach { renderTypePrefix ->
+//                val location = "${Mod.GT6.modID}:iconsets/LEAVES_$renderTypePrefix$leafType"
+//                val original = event.map.getTextureExtry(location)
+//                if (original != null) {
+//                    Client.log(Level.INFO, "Registering ${Mod.GT6.modName} leaf texture: $location")
+//                    registerLeaf(event.map, original)
+//                }
+//            }
+//        }
     }
 
     @JvmStatic fun allowSpecialGT6LogRender(ctx: BlockContext) = // Is MTE, but not a log block (we don't want to make round a normal GT6 machine, after all)
