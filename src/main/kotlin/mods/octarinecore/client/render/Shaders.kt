@@ -17,12 +17,6 @@ val cornerFlat = { face: ForgeDirection, dir1: ForgeDirection, dir2: ForgeDirect
     FaceFlat(face)
 }
 
-fun cornerAoTri(func: (AoData, AoData) -> AoData) = { face: ForgeDirection, dir1: ForgeDirection, dir2: ForgeDirection ->
-    CornerTri(face, dir1, dir2, func)
-}
-
-val cornerAoMaxGreen = cornerAoTri { s1, s2 -> if (s1.green > s2.green) s1 else s2 }
-
 fun cornerInterpolate(edgeAxis: Axis, weight: Float, dimming: Float): CornerShaderFactory = { dir1, dir2, dir3 ->
     val edgeDir = listOf(dir1, dir2, dir3).find { it.axis == edgeAxis }!!
     val faceDirs = listOf(dir1, dir2, dir3).filter { it.axis != edgeAxis }
@@ -63,30 +57,6 @@ class CornerSingleFallback(
         fallbackDir.rotate(rot),
         fallbackDimming,
     )
-}
-
-inline fun accumulate(v1: AoData?, v2: AoData?, func: ((AoData, AoData) -> AoData)): AoData? {
-    val v1ok = v1 != null && v1.valid
-    val v2ok = v2 != null && v2.valid
-    if (v1ok && v2ok) return func(v1!!, v2!!)
-    if (v1ok) return v1
-    if (v2ok) return v2
-    return null
-}
-
-class CornerTri(
-    val face: ForgeDirection,
-    val dir1: ForgeDirection,
-    val dir2: ForgeDirection,
-    val func: ((AoData, AoData) -> AoData),
-) : Shader {
-    override fun shade(context: ShadingContext, vertex: RenderVertex) {
-        var acc =
-            accumulate(context.aoShading(face, dir1, dir2), context.aoShading(dir1, face, dir2), func)
-        acc = accumulate(acc, context.aoShading(dir2, face, dir1), func)
-        vertex.shade(acc ?: AoData.black)
-    }
-    override fun rotate(rot: Rotation) = CornerTri(face.rotate(rot), dir1.rotate(rot), dir2.rotate(rot), func)
 }
 
 class EdgeInterpolateFallback(
@@ -186,12 +156,4 @@ class FaceFlat(val face: ForgeDirection) : Shader {
         vertex.shade(context.blockBrightness(face.offset), color)
     }
     override fun rotate(rot: Rotation): Shader = FaceFlat(face.rotate(rot))
-}
-
-class FlatOffset(val offset: Int3) : Shader {
-    override fun shade(context: ShadingContext, vertex: RenderVertex) {
-        vertex.brightness = context.blockBrightness(offset)
-        vertex.setColor(context.blockColor(offset))
-    }
-    override fun rotate(rot: Rotation): Shader = this
 }

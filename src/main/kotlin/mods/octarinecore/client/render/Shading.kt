@@ -124,33 +124,6 @@ fun faceOrientedAuto(
     }
 }
 
-/**
- * Returns a shader factory for quads that point towards one of the 12 block edges. The resolver
- * works the following way:
- * - determines which edge the _quad_ normal points towards (if not overridden)
- * - determines which face midpoint the _vertex_ is closest to, of the 2 block faces that share this
- * edge
- * - determines which block corner _of this face_ the _vertex_ is closest to
- * - returns the [Shader] created by _corner_
- *
- * @param[overrideEdge] assume the given edge instead of going by the _quad_ normal
- * @param[corner] shader instantiation lambda
- */
-fun edgeOrientedAuto(
-    overrideEdge: Pair<ForgeDirection, ForgeDirection>? = null,
-    corner: CornerShaderFactory,
-) = fun(quad: Quad, vertex: Vertex): Shader {
-    val edgeDir =
-        overrideEdge ?: nearestAngle(quad.normal, boxEdges) { it.first.vec + it.second.vec }.first
-    val nearestFace = nearestPosition(vertex.xyz, edgeDir.toList()) { it.vec }.first
-    val nearestCorner =
-        nearestPosition(vertex.xyz, faceCorners[nearestFace.ordinal].asList) {
-            (nearestFace.vec + it.first.vec + it.second.vec) * 0.5
-        }
-            .first
-    return corner(nearestFace, nearestCorner.first, nearestCorner.second)
-}
-
 fun faceOrientedInterpolate(overrideFace: ForgeDirection? = null) = fun(quad: Quad, vertex: Vertex): Shader {
     val resolver =
         faceOrientedAuto(

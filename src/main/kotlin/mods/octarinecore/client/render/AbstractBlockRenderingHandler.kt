@@ -177,15 +177,5 @@ class BlockContext {
     /** Is the block surrounded by other blocks that satisfy the predicate on all sides? */
     fun isSurroundedBy(predicate: (Block) -> Boolean) = forgeDirOffsets.all { predicate(block(it)) }
 
-    /** Get a semi-random value based on the block coordinate and the given seed. */
-    fun random(seed: Int): Int {
-        var value = (x * x + y * y + z * z + x * y + y * z + z * x + (seed * seed)) and 63
-        value = (3 * x * value + 5 * y * value + 7 * z * value + (11 * seed)) and 63
-        return value
-    }
-
-    /** Get an array of semi-random values based on the block coordinate. */
-    fun semiRandomArray(num: Int): Array<Int> = Array(num) { random(it) }
-
     private fun getIconSpecialCases(face: ForgeDirection, offset: Int3): IIcon? = GT6Integration.getGT6LogMTEIcon(this, face, offset)
 }

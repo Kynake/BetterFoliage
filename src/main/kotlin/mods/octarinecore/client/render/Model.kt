@@ -18,8 +18,6 @@ data class UV(val u: Double, val v: Double) {
     }
 
     fun clamp(minU: Double = -0.5, maxU: Double = 0.5, minV: Double = -0.5, maxV: Double = 0.5) = UV(u.clamp(minU, maxU), v.clamp(minV, maxV))
-
-    fun mirror(mirrorU: Boolean, mirrorV: Boolean) = UV(if (mirrorU) -u else u, if (mirrorV) -v else v)
 }
 
 /**
@@ -61,9 +59,6 @@ data class Quad(val v1: Vertex, val v2: Vertex, val v3: Vertex, val v4: Vertex) 
     fun clampUV(minU: Double = -0.5, maxU: Double = 0.5, minV: Double = -0.5, maxV: Double = 0.5) = transformV {
         it.copy(uv = it.uv.clamp(minU, maxU, minV, maxV))
     }
-    fun mirrorUV(mirrorU: Boolean, mirrorV: Boolean) = transformV {
-        it.copy(uv = it.uv.mirror(mirrorU, mirrorV))
-    }
     fun setAoShader(factory: ShaderFactory, predicate: (Vertex, Int) -> Boolean = { v, vi -> true }) = transformVI { vertex, idx ->
         if (!predicate(vertex, idx)) vertex else vertex.copy(aoShader = factory(this@Quad, vertex))
     }
@@ -91,7 +86,6 @@ class Model() : Cloneable {
     val quads = mutableListOf<Quad>()
 
     fun Quad.add() = quads.add(this)
-    fun Iterable<Quad>.addAll() = forEach { quads.add(it) }
 
     fun verticalRectangle(
         x1: Double,

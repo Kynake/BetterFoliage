@@ -5,15 +5,11 @@ import cpw.mods.fml.relauncher.SideOnly
 import mods.betterfoliage.BetterFoliageMod
 import mods.betterfoliage.client.integration.AbyssalCraftIntegration
 import mods.betterfoliage.client.integration.IC2Integration
-import mods.betterfoliage.client.integration.TFCIntegration
 import mods.betterfoliage.client.render.LeafWindTracker
-import mods.betterfoliage.client.render.RenderLeaves
 import mods.betterfoliage.client.render.RenderLog
 import mods.betterfoliage.client.render.RisingSoulTextures
 import mods.betterfoliage.client.texture.GrassRegistry
-import mods.betterfoliage.client.texture.LeafGenerator
 import mods.betterfoliage.client.texture.LeafRegistry
-import mods.octarinecore.client.resource.GeneratorPack
 import org.apache.logging.log4j.Level
 
 /**
@@ -26,18 +22,11 @@ import org.apache.logging.log4j.Level
 @SideOnly(Side.CLIENT)
 object Client {
 
-    val genLeaves = LeafGenerator("bf_gen_leaves") // TODO revise extra leaves masks. Any texture other than _default is never used
-
     @Suppress("unused")
-    val generatorPack = GeneratorPack("Better Foliage generated", genLeaves)
-
     val logRenderer = RenderLog()
-
-    val leafRenderer = RenderLeaves()
 
     val renderers =
         listOf(
-            leafRenderer,
             logRenderer,
         )
 
@@ -48,7 +37,6 @@ object Client {
             GrassRegistry,
             LeafWindTracker,
             RisingSoulTextures,
-            TFCIntegration,
             IC2Integration,
             AbyssalCraftIntegration,
         )

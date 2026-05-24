@@ -12,9 +12,6 @@ import net.minecraft.client.resources.IResourceManager
 import net.minecraft.client.resources.SimpleReloadableResourceManager
 import net.minecraft.util.ResourceLocation
 import java.awt.image.BufferedImage
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
 import javax.imageio.ImageIO
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -48,16 +45,6 @@ operator fun BufferedImage.get(x: Int, y: Int) = this.getRGB(x, y)
 
 /** Index operator to set the RGB value of a pixel. */
 operator fun BufferedImage.set(x: Int, y: Int, value: Int) = this.setRGB(x, y, value)
-
-/** Get an [InputStream] to an image object in PNG format. */
-val BufferedImage.asStream: InputStream
-    get() =
-        ByteArrayInputStream(
-            ByteArrayOutputStream().let {
-                ImageIO.write(this, "PNG", it)
-                it.toByteArray()
-            },
-        )
 
 /**
  * Calculate the average color of a texture.
@@ -100,12 +87,3 @@ val TextureAtlasSprite.averageColor: Int?
         return HSB(avgHue, sumSaturation / numOpaque.toFloat(), sumBrightness / numOpaque.toFloat())
             .asColor
     }
-
-/** Get the actual location of a texture from the name of its [TextureAtlasSprite]. */
-fun textureLocation(iconName: String) = ResourceLocation(iconName).let {
-    if (it.resourcePath.startsWith("mcpatcher")) {
-        it
-    } else {
-        ResourceLocation(it.resourceDomain, "textures/blocks/${it.resourcePath}")
-    }
-}

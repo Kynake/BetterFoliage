@@ -3,7 +3,6 @@
 
 package mods.octarinecore
 
-import net.minecraft.util.ResourceLocation
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.reflect.KProperty
@@ -11,8 +10,6 @@ import kotlin.reflect.KProperty
 const val PI2 = 2.0 * kotlin.math.PI
 
 inline fun String.stripStart(str: String) = if (startsWith(str)) substring(str.length) else this
-
-inline fun ResourceLocation.stripStart(str: String) = ResourceLocation(resourceDomain, resourcePath.stripStart(str))
 
 /** Exchange the two elements of the list with the given indices */
 inline fun <T> MutableList<T>.exchange(idx1: Int, idx2: Int) {

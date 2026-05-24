@@ -3,7 +3,6 @@ package mods.octarinecore.client.render
 import mods.octarinecore.client.render.Dir.N
 import mods.octarinecore.client.render.Dir.P
 import mods.octarinecore.cross
-import net.minecraft.util.AxisAlignedBB
 import net.minecraftforge.common.util.ForgeDirection
 
 // ================================
@@ -64,7 +63,6 @@ val ForgeDirection.vec: Double3
  * notation.
  */
 data class Double3(var x: Double, var y: Double, var z: Double) {
-    constructor(x: Float, y: Float, z: Float) : this(x.toDouble(), y.toDouble(), z.toDouble())
     constructor(
         dir: ForgeDirection,
     ) : this(dir.offsetX.toDouble(), dir.offsetY.toDouble(), dir.offsetZ.toDouble())
@@ -148,13 +146,6 @@ data class Double3(var x: Double, var y: Double, var z: Double) {
  */
 data class Int3(var x: Int, var y: Int, var z: Int) {
     constructor(dir: ForgeDirection) : this(dir.offsetX, dir.offsetY, dir.offsetZ)
-    constructor(
-        offset: Pair<Int, ForgeDirection>,
-    ) : this(
-        offset.first * offset.second.offsetX,
-        offset.first * offset.second.offsetY,
-        offset.first * offset.second.offsetZ,
-    )
     companion object {
         val zero = Int3(0, 0, 0)
     }
@@ -246,12 +237,6 @@ class Rotation(val forward: Array<ForgeDirection>, val reverse: Array<ForgeDirec
 // Miscellaneous
 // ================================
 
-data class ModelData(val scale: Double3, val center: Double3, val model: Model)
-
-/** List of all 12 box edges, represented as a [Pair] of [ForgeDirection]s */
-val boxEdges =
-    forgeDirs.flatMap { face1 -> forgeDirs.filter { it.axis > face1.axis }.map { face1 to it } }
-
 /**
  * Get the closest object to the specified point from a list of objects.
  *
@@ -306,21 +291,3 @@ val faceCorners =
             else -> FaceCorners(ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN)
         }
     }
-
-/** Extensions of [AxisAlignedBB] */
-
-/** Get the center of the AABB */
-val AxisAlignedBB.center: Double3
-    get() = Double3(
-        (minX + maxX) / 2.0,
-        (minY + maxY) / 2.0,
-        (minZ + maxZ) / 2.0,
-    )
-
-/** Get the scale for each axis of the AABB. Assumes a normal block is the default scale of (1, 1, 1) */
-val AxisAlignedBB.scale: Double3
-    get() = Double3(
-        maxX - minX,
-        maxY - minY,
-        maxZ - minZ,
-    )

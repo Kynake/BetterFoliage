@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.util.IIcon
 import net.minecraftforge.common.util.ForgeDirection
-import kotlin.math.min
 
 typealias QuadIconResolver = (ShadingContext, Int, Quad) -> IIcon
 
@@ -152,12 +151,6 @@ class RenderVertex {
         return this
     }
 
-    inline fun setGrey(level: Float) {
-        val grey = min((red + green + blue) * 0.333f * level, 1.0f)
-        red = grey
-        green = grey
-        blue = grey
-    }
     inline fun setColor(color: Int) {
         red = (color shr 16 and 255) / 256.0f
         green = (color shr 8 and 255) / 256.0f

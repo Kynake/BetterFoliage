@@ -9,9 +9,7 @@ import mods.betterfoliage.client.config.Config
 import mods.betterfoliage.client.integration.ForestryIntegration
 import mods.betterfoliage.client.integration.GT6Integration
 import mods.octarinecore.client.resource.IconSet
-import mods.octarinecore.client.resource.averageColor
 import net.minecraft.block.Block
-import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.client.renderer.texture.TextureMap
 import net.minecraft.util.IIcon
 import net.minecraft.util.ResourceLocation
@@ -23,14 +21,12 @@ const val DEFAULT_LEAF_COLOR = 0
 
 /** Rendering-related information for a leaf block. */
 class LeafInfo(
-    /** The generated round leaf texture. */
-    val roundLeafTexture: TextureAtlasSprite,
-
     /** Type of the leaf block (configurable by user). */
     val leafType: String,
 
     /** Average color of the round leaf texture. */
-    val averageColor: Int = roundLeafTexture.averageColor ?: DEFAULT_LEAF_COLOR,
+    // TODO reimplement in new LeafRegistry
+    val averageColor: Int = DEFAULT_LEAF_COLOR,
 ) {
     /** [IconSet] of the textures to use for leaf particles emitted from this block. */
     val particleTextures: IconSet
@@ -62,14 +58,15 @@ object LeafRegistry {
             particles.put("default", it)
         }
 
-        // OptifineIntegration.dumpCTMData()
-
         Block.blockRegistry.forEach { block ->
             if (Config.blocks.leaves.matchesClass(block as Block)) {
                 block.registerBlockIcons { location ->
                     val original = event.map.getTextureExtry(location)
                     Client.log(Level.INFO, "Registering leaf texture: $location")
-                    registerLeaf(event.map, original)
+
+                    var leafType = typeMappings.getType(original) ?: "default"
+                    leafType = registerParticle(event.map, leafType)
+                    leaves[original] = LeafInfo(leafType)
 
                     return@registerBlockIcons original
                 }
@@ -78,14 +75,6 @@ object LeafRegistry {
 
         ForestryIntegration.registerLeafTextures(event)
         GT6Integration.registerLeafTextures(event)
-    }
-
-    fun registerLeaf(atlas: TextureMap, icon: TextureAtlasSprite) {
-        var leafType = typeMappings.getType(icon) ?: "default"
-        val generated =
-            atlas.registerIcon(Client.genLeaves.generatedResource(icon.iconName, "type" to leafType).toString())
-        leafType = registerParticle(atlas, leafType)
-        leaves[icon] = LeafInfo(generated as TextureAtlasSprite, leafType)
     }
 
     fun registerParticle(atlas: TextureMap, leafType: String): String {

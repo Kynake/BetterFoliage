@@ -3,7 +3,6 @@ package mods.octarinecore.client.resource
 import cpw.mods.fml.client.event.ConfigChangedEvent
 import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
-import mods.octarinecore.client.render.Double3
 import mods.octarinecore.client.render.Model
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.util.IIcon
@@ -58,7 +57,6 @@ open class ResourceHandler(val modId: String) {
     fun iconStatic(domain: String, path: String) = IconHolder(domain, path).apply { resources.add(this) }
     fun iconSet(domain: String, pathPattern: String) = IconSet(domain, pathPattern).apply { resources.add(this) }
     fun model(init: Model.() -> Unit) = ModelHolder(init).apply { resources.add(this) }
-    fun vectorSet(num: Int, init: (Int) -> Double3) = VectorSet(num, init).apply { resources.add(this) }
 
     // ============================
     // Event registration
@@ -113,12 +111,4 @@ class IconSet(val domain: String, val namePattern: String) : IStitchListener {
     }
 
     operator fun get(idx: Int) = if (num == 0) null else icons[idx % num]
-}
-
-class VectorSet(val num: Int, val init: (Int) -> Double3) : IConfigChangeListener {
-    val models = Array(num) { init(it) }
-    override fun onConfigChange() {
-        (0..num - 1).forEach { models[it] = init(it) }
-    }
-    operator fun get(idx: Int) = models[idx % num]
 }
