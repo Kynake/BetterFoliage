@@ -13,11 +13,11 @@ import mods.betterfoliage.utils.MathUtils;
 
 public class SpriteSet extends StitchListener implements ISpriteProvider {
 
-    private final String domain;
-    private final String prefix;
-    private final String suffix;
+    protected final String domain;
+    protected final String prefix;
+    protected final String suffix;
 
-    private List<IIcon> sprites;
+    protected List<IIcon> sprites;
 
     // TODO: Consider regex instead?
     // Had to remove unused some mycelium textures so that they wouldn't be selected as valid
