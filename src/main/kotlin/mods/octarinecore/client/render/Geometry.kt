@@ -78,7 +78,6 @@ data class Double3(var x: Double, var y: Double, var z: Double) {
 
     // immutable operations
     operator fun plus(other: Double3) = Double3(x + other.x, y + other.y, z + other.z)
-    operator fun unaryMinus() = Double3(-x, -y, -z)
     operator fun minus(other: Double3) = Double3(x - other.x, y - other.y, z - other.z)
     operator fun times(scale: Double) = Double3(x * scale, y * scale, z * scale)
     operator fun times(other: Double3) = Double3(x * other.x, y * other.y, z * other.z)
