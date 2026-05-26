@@ -1,5 +1,7 @@
 package mods.betterfoliage.utils;
 
+import java.util.Random;
+
 public final class MathUtils {
 
     // TODO: Make configurable
@@ -44,5 +46,13 @@ public final class MathUtils {
     public static double remapToRange(double fromRangeMin, double fromRangeMax, double toRangeMin, double toRangeMax,
         double value) {
         return lerp(toRangeMin, toRangeMax, inverseLerp(fromRangeMin, fromRangeMax, value));
+    }
+
+    public static double randomBetween(double min, double max) {
+        return lerp(min, max, Math.random());
+    }
+
+    public static double randomBetween(Random rng, double min, double max) {
+        return lerp(min, max, rng.nextDouble());
     }
 }
