@@ -16,11 +16,16 @@ public class LeafParticleRenderer extends ParticleRenderer {
         "textures/blocks/falling_leaf_default_",
         ".png");
 
+    public static void spawnLeafParticle(World world, int x, int y, int z) {
+        // TODO consider using an object pool (only if better performance)
+        new LeafParticleRenderer(world, x, y, z);
+    }
+
     public static void initSprites() {
         BetterFoliageMod.log.info("LeafParticleRenderer sprites initialized");
     }
 
-    public LeafParticleRenderer(World world, int x, int y, int z) {
+    protected LeafParticleRenderer(World world, int x, int y, int z) {
         super(leafParticle.getRandomSprite(), world, x, y, z);
         particleMaxAge = (int) (MathUtils.randomBetween(rand, 0.6, 1.0) * Config.fallingLeaves.INSTANCE.getLifetime()
             * 20.0);

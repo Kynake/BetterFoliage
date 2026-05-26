@@ -7,6 +7,8 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
+import mods.betterfoliage.BetterFoliageMod;
+
 public abstract class ParticleRenderer extends EntityFX {
 
     protected Tessellator tessellator;
@@ -26,17 +28,16 @@ public abstract class ParticleRenderer extends EntityFX {
     /// float particleScale;
     /// float particleRed, particleGreen, particleBlue, particleAlpha;
 
-    public static void addIfValid(ParticleRenderer particle) {
-        if (particle.particleIcon != null) {
-            Minecraft.getMinecraft().effectRenderer.addEffect(particle);
-        }
-    }
-
-    public ParticleRenderer(IIcon sprite, World world, int x, int y, int z) {
+    protected ParticleRenderer(IIcon sprite, World world, int x, int y, int z) {
         super(world, x + 0.5, y + 0.5, z + 0.5);
         if (sprite != null) {
             particleIcon = sprite;
+            Minecraft.getMinecraft().effectRenderer.addEffect(this);
         } else {
+            BetterFoliageMod.log.error(
+                "Can't spawn particle of type [{}], IIcon is null.",
+                this.getClass()
+                    .getCanonicalName());
             setDead();
         }
     }

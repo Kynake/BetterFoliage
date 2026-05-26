@@ -11,7 +11,6 @@ import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.EntityRisingSoulFX;
 import mods.betterfoliage.client.render.particles.LeafParticleRenderer;
-import mods.betterfoliage.client.render.particles.ParticleRenderer;
 import mods.octarinecore.client.render.AbstractBlockRenderingHandler;
 import mods.octarinecore.client.render.BlockContext;
 import mods.octarinecore.client.render.RendererHolder;
@@ -84,7 +83,7 @@ public class Hooks {
             && world.isAirBlock(x, y - 1, z)
             && Config.blocks.INSTANCE.getFallingLeaves()
                 .matchesID(block)) {
-            ParticleRenderer.addIfValid(new LeafParticleRenderer(world, x, y, z));
+            LeafParticleRenderer.spawnLeafParticle(world, x, y, z);
         }
     }
 }
