@@ -9,8 +9,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
-import mods.betterfoliage.client.render.EntityFallingLeavesFX;
 import mods.betterfoliage.client.render.EntityRisingSoulFX;
+import mods.betterfoliage.client.render.particles.LeafParticleRenderer;
+import mods.betterfoliage.client.render.particles.ParticleRenderer;
 import mods.octarinecore.client.render.AbstractBlockRenderingHandler;
 import mods.octarinecore.client.render.BlockContext;
 import mods.octarinecore.client.render.RendererHolder;
@@ -82,10 +83,8 @@ public class Hooks {
         if (Config.fallingLeaves.INSTANCE.getEnabled() && Math.random() < Config.fallingLeaves.INSTANCE.getChance()
             && world.isAirBlock(x, y - 1, z)
             && Config.blocks.INSTANCE.getFallingLeaves()
-                .matchesID(block)
-            && EntityFallingLeavesFX.checkModSpecialLeafParticles(block, world, x, y, z)) {
-            EntityFallingLeavesFX leaf = new EntityFallingLeavesFX(world, x, y, z);
-            leaf.addIfValid();
+                .matchesID(block)) {
+            ParticleRenderer.addIfValid(new LeafParticleRenderer(world, x, y, z));
         }
     }
 }

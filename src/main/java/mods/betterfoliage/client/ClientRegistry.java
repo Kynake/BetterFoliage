@@ -24,6 +24,7 @@ import mods.betterfoliage.client.render.features.LilypadRenderer;
 import mods.betterfoliage.client.render.features.MyceliumRenderer;
 import mods.betterfoliage.client.render.features.NetherrackRenderer;
 import mods.betterfoliage.client.render.features.ReedsRenderer;
+import mods.betterfoliage.client.render.particles.LeafParticleRenderer;
 import mods.octarinecore.client.render.BlockContext;
 
 @SideOnly(Side.CLIENT)
@@ -59,6 +60,7 @@ public class ClientRegistry {
         leafRegistry = LeafRegistry.getInstance();
 
         initBlockRenderers();
+        initParticleRenderers();
 
         openConfigMenu = new KeyBinding("key.betterfoliage.gui", F8_KEYCODE, BetterFoliageMod.MOD_NAME);
         cpw.mods.fml.client.registry.ClientRegistry.registerKeyBinding(openConfigMenu);
@@ -84,6 +86,10 @@ public class ClientRegistry {
             DirtGrassLogRenderer.getInstance(),
             // spotless:on
         };
+    }
+
+    private static void initParticleRenderers() {
+        LeafParticleRenderer.initSprites();
     }
 
     public static LeafRegistry getLeafRegistry() {
