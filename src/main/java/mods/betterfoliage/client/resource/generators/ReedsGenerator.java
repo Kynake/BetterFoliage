@@ -11,10 +11,10 @@ import java.util.Set;
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.TextureStitchEvent;
 
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.ResourceUtils;
@@ -37,15 +37,15 @@ public class ReedsGenerator extends TextureGenerator implements ISpriteProvider 
     }
 
     @Override
-    protected void onSpriteStitch(TextureStitchEvent.Pre event) {
-        if (event.map.getTextureType() != 0) return;
+    protected void onSpriteStitch(TextureMap atlas) {
+        if (atlas.getTextureType() != 0) return;
 
         sprites = new ArrayList<>(backingResources.size());
 
         for (ResourceLocation res : backingResources) {
             String textureName = ResourceUtils.convertToSpriteName(res, domain);
             if (textureName == null) continue;
-            sprites.add(event.map.registerIcon(textureName));
+            sprites.add(atlas.registerIcon(textureName));
         }
     }
 

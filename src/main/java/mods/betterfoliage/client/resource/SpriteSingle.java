@@ -1,8 +1,8 @@
 package mods.betterfoliage.client.resource;
 
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.TextureStitchEvent;
 
 import mods.betterfoliage.client.render.ISpriteProvider;
 
@@ -12,13 +12,17 @@ public class SpriteSingle extends StitchListener implements ISpriteProvider {
     private IIcon sprite;
 
     public SpriteSingle(String domain, String path) {
-        super();
+        this(domain, path, true);
+    }
+
+    public SpriteSingle(String domain, String path, boolean selfRegister) {
+        super(selfRegister);
         spriteLocation = new ResourceLocation(domain, path);
     }
 
     @Override
-    protected void onSpriteStitch(TextureStitchEvent.Pre event) {
-        int type = event.map.getTextureType();
+    protected void onSpriteStitch(TextureMap atlas) {
+        int type = atlas.getTextureType();
         boolean isValid = (type == 0 && spriteLocation.getResourcePath()
             .startsWith("textures/blocks/")) || (type == 1
                 && spriteLocation.getResourcePath()
@@ -30,7 +34,7 @@ public class SpriteSingle extends StitchListener implements ISpriteProvider {
 
         String textureName = ResourceUtils.convertToSpriteName(spriteLocation);
         if (textureName != null) {
-            sprite = event.map.registerIcon(textureName);
+            sprite = atlas.registerIcon(textureName);
         }
     }
 

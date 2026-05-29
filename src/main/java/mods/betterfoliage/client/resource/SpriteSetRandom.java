@@ -9,7 +9,11 @@ public class SpriteSetRandom extends SpriteSet {
     protected final Random rng = new Random();
 
     public SpriteSetRandom(String domain, String prefix, String suffix) {
-        super(domain, prefix, suffix);
+        this(domain, prefix, suffix, true);
+    }
+
+    public SpriteSetRandom(String domain, String prefix, String suffix, boolean selfRegister) {
+        super(domain, prefix, suffix, selfRegister);
     }
 
     public final IIcon getRandomSprite() {

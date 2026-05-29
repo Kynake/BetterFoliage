@@ -3,9 +3,9 @@ package mods.betterfoliage.client.resource.generators;
 import java.io.IOException;
 import java.io.InputStream;
 
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.TextureStitchEvent;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.render.ISpriteProvider;
@@ -25,8 +25,8 @@ public abstract class SingleTextureGenerator extends TextureGenerator implements
     }
 
     @Override
-    protected void onSpriteStitch(TextureStitchEvent.Pre event) {
-        if (event.map.getTextureType() != 0) {
+    protected void onSpriteStitch(TextureMap atlas) {
+        if (atlas.getTextureType() != 0) {
             return;
         }
 
@@ -40,7 +40,7 @@ public abstract class SingleTextureGenerator extends TextureGenerator implements
         }
 
         String textureName = domain + ":" + name.substring(startIndex, endIndex);
-        generatedTexture = event.map.registerIcon(textureName);
+        generatedTexture = atlas.registerIcon(textureName);
     }
 
     // TODO: support for Normal (_n) and Specular (_s)?

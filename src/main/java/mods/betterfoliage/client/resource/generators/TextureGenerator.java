@@ -34,7 +34,11 @@ public abstract class TextureGenerator extends StitchListener implements IResour
     protected final String domain;
 
     protected TextureGenerator(String name, String description, String domain) {
-        super();
+        this(name, description, domain, true);
+    }
+
+    protected TextureGenerator(String name, String description, String domain, boolean selfRegister) {
+        super(selfRegister);
         this.name = name;
         this.description = description;
         this.domain = BetterFoliageMod.MOD_ID.toLowerCase() + "_" + domain;
