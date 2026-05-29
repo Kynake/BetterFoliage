@@ -9,7 +9,6 @@ import mods.betterfoliage.client.render.LeafWindTracker
 import mods.betterfoliage.client.render.RenderLog
 import mods.betterfoliage.client.render.RisingSoulTextures
 import mods.betterfoliage.client.texture.GrassRegistry
-import mods.betterfoliage.client.texture.LeafRegistry
 import org.apache.logging.log4j.Level
 
 /**
@@ -33,7 +32,6 @@ object Client {
     @Suppress("unused")
     val singletons =
         listOf(
-            LeafRegistry,
             GrassRegistry,
             LeafWindTracker,
             RisingSoulTextures,
