@@ -1,9 +1,14 @@
 package mods.betterfoliage.client.resource;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +24,8 @@ import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Lists;
 
@@ -39,16 +46,36 @@ public class ResourceUtils {
     public static List<IResourcePack> getResourcePacksWithDomain(String domain) {
         Map<String, FallbackResourceManager> resourceManagers = getResourceManager().domainResourceManagers;
 
-        if (!resourceManagers.containsKey(domain)) {
-            return Collections.emptyList();
-        }
+        if (!resourceManagers.containsKey(domain)) return Collections.emptyList();
 
         FallbackResourceManager resourceManager = resourceManagers.get(domain);
-        if (resourceManager.resourcePacks.isEmpty()) {
-            return Collections.emptyList();
-        }
+        if (resourceManager.resourcePacks.isEmpty()) return Collections.emptyList();
 
         return Lists.reverse(resourceManager.resourcePacks);
+    }
+
+    public static List<InputStream> findAllResourcesAtLocation(ResourceLocation location) {
+        List<IResourcePack> packs = getResourcePacksWithDomain(location.getResourceDomain());
+
+        if (packs.isEmpty()) return Collections.emptyList();
+
+        ArrayList<InputStream> files = new ArrayList<>(packs.size());
+        for (IResourcePack pack : packs) {
+            if (pack.resourceExists(location)) {
+                try {
+                    files.add(pack.getInputStream(location));
+                } catch (IOException e) {
+                    BetterFoliageMod.log.error(
+                        "Error trying to fetch {} from pack {}: {}",
+                        location,
+                        pack.getPackName(),
+                        e.getMessage());
+                }
+            }
+        }
+
+        files.trimToSize();
+        return files;
     }
 
     public static boolean resourceExists(ResourceLocation location) {
@@ -66,9 +93,7 @@ public class ResourceUtils {
         List<IResourcePack> packs = getResourcePacksWithDomain(domain);
         for (IResourcePack pack : packs) {
             // Ignore mod's own generated packs
-            if (pack instanceof TextureGenerator) {
-                continue;
-            }
+            if (pack instanceof TextureGenerator) continue;
 
             // Normal resource packs
             if (pack instanceof AbstractResourcePack abstractPack) {
@@ -107,6 +132,11 @@ public class ResourceUtils {
             .endsWith(".mcmeta");
     }
 
+    public static boolean isPropertiesFile(ResourceLocation location) {
+        return location.getResourcePath()
+            .endsWith(".cfg");
+    }
+
     public static ResourceLocation getBaseForMcMeta(ResourceLocation mcMeta) {
         int endIndex = mcMeta.getResourcePath()
             .lastIndexOf(".mcmeta");
@@ -118,9 +148,7 @@ public class ResourceUtils {
     }
 
     public static boolean resourceHasMcMeta(ResourceLocation location) {
-        if (isMcMeta(location)) {
-            return false;
-        }
+        if (isMcMeta(location)) return false;
 
         List<IResourcePack> resourcePacks = getResourcePacksWithDomain(location.getResourceDomain());
         for (IResourcePack pack : resourcePacks) {
@@ -156,6 +184,65 @@ public class ResourceUtils {
         return new ResourceLocation(
             partial.getResourceDomain(),
             "textures/blocks/" + partial.getResourcePath() + ".png");
+    }
+
+    public static Map<String, String> assemblePropertiesByResource(ResourceLocation location) {
+        if (!isPropertiesFile(location)) {
+            BetterFoliageMod.log.error("Failed to read properties: {} is not a properties file.", location);
+            return Collections.emptyMap();
+        }
+
+        List<InputStream> files = findAllResourcesAtLocation(location);
+
+        if (files.isEmpty()) return Collections.emptyMap();
+
+        HashMap<String, String> properties = new HashMap<>();
+
+        for (InputStream is : files) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    parsePropertyLine(line, properties);
+                }
+            } catch (IOException e) {
+                BetterFoliageMod.log
+                    .error("Failed to read InputStream for ResourceLocation {}. {}", location, e.getMessage());
+            }
+        }
+
+        return properties;
+    }
+
+    private static void parsePropertyLine(String line, Map<String, String> outputMap) {
+        line = line.trim();
+        if (line.isEmpty() || StringUtils.startsWithAny(line, "#", "//", "!")) return;
+
+        String[] parts = StringUtils.split(line, "=");
+        if (parts == null || parts.length != 2) {
+            BetterFoliageMod.log.warn("Skipping unparseable line: {}", line);
+            return;
+        }
+
+        String key = parts[0].trim();
+
+        if (key.isEmpty()) {
+            BetterFoliageMod.log.warn("Skipping unparseable key in line: {}", line);
+            return;
+        }
+
+        String value = parts[1].trim();
+        if (value.isEmpty()) {
+            BetterFoliageMod.log.warn("Skipping unparseable value in line: {}", line);
+            return;
+        }
+
+        if (outputMap.containsKey(key)) {
+            BetterFoliageMod.log
+                .debug("Skipping existing key: {}. Original: {}, New: {}", key, outputMap.get(key), value);
+            return;
+        }
+
+        outputMap.put(key, value);
     }
 
     private static void addFromFolderIfPossible(File dir, String domain, String prefix, String suffix,
