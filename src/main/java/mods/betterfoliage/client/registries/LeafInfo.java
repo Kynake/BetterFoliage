@@ -1,29 +1,58 @@
 package mods.betterfoliage.client.registries;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
+import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.ResourceUtils;
+import mods.betterfoliage.client.resource.SpriteSetRandom;
 
 public class LeafInfo implements ISpriteProvider {
 
-    public final ResourceLocation baseResource;
-    public final ResourceLocation generatedResource;
-    public final IIcon roundLeafTexture;
+    private static final Map<String, SpriteSetRandom> registeredParticleTypes = new HashMap<>();
 
-    // private String roundLeafType;
-    // private String particleLeafType;
+    public final String maskType;
+    public final String particleType;
 
-    public LeafInfo(TextureMap atlas, ResourceLocation baseResource, String domain) {
-        this.baseResource = baseResource;
-        this.generatedResource = new ResourceLocation(domain, baseResource.getResourcePath());
-        this.roundLeafTexture = atlas.registerIcon(ResourceUtils.convertToSpriteName(baseResource, domain));
+    public final ResourceLocation baseLeafResource;
+    public final ResourceLocation generatedLeafResource;
+    public final IIcon roundLeafSprite;
+
+    public final SpriteSetRandom particleSprites;
+
+    public static void clearRegistries() {
+        registeredParticleTypes.clear();
+    }
+
+    public LeafInfo(TextureMap atlas, IIcon baseSprite, String leafDomain, String maskType, String particleType) {
+        this.maskType = maskType;
+        this.particleType = particleType;
+
+        this.baseLeafResource = ResourceUtils.convertToResourceLocation(baseSprite);
+        this.generatedLeafResource = new ResourceLocation(leafDomain, baseLeafResource.getResourcePath());
+        this.roundLeafSprite = atlas.registerIcon(ResourceUtils.convertToSpriteName(baseLeafResource, leafDomain));
+
+        if (registeredParticleTypes.containsKey(particleType)) {
+            particleSprites = registeredParticleTypes.get(particleType);
+        } else {
+            particleSprites = new SpriteSetRandom(
+                BetterFoliageMod.DOMAIN,
+                "textures/blocks/falling_leaf_" + particleType + "_",
+                ".png",
+                false);
+            particleSprites.registerManually(atlas);
+
+            registeredParticleTypes.put(particleType, particleSprites);
+        }
     }
 
     @Override
     public IIcon getSpriteForCoord(int x, int y, int z, int side) {
-        return roundLeafTexture;
+        return roundLeafSprite;
     }
 }

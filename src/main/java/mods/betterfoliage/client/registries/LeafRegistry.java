@@ -16,7 +16,8 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -29,7 +30,17 @@ import mods.betterfoliage.client.resource.generators.TextureGenerator;
 @SideOnly(Side.CLIENT)
 public final class LeafRegistry extends TextureGenerator {
 
+    private static final ResourceLocation maskMappings = new ResourceLocation(
+        BetterFoliageMod.DOMAIN,
+        "leafMaskTextureMappings.cfg");
+
+    private static final ResourceLocation particleMappings = new ResourceLocation(
+        BetterFoliageMod.DOMAIN,
+        "leafParticleTextureMappings.cfg");
+
     private static LeafRegistry instance = null;
+    private static SpriteTypeMap maskTypes;
+    private static SpriteTypeMap particleTypes;
 
     private final Map<IIcon, LeafInfo> leaves = new HashMap<>();
 
@@ -42,7 +53,17 @@ public final class LeafRegistry extends TextureGenerator {
     }
 
     private LeafRegistry() {
-        super("Generated Round Leaves", "Round leaves generator", "gen_leaves");
+        super("Generated Round Leaves and Particles", "Round leaves and leaf particles generator", "gen_leaves");
+    }
+
+    public LeafInfo getLeafForBlock(IBlockAccess world, int x, int y, int z) {
+        return getLeafForBlock(world, x, y, z, 0);
+    }
+
+    public LeafInfo getLeafForBlock(IBlockAccess world, int x, int y, int z, int side) {
+        final IIcon sprite = world.getBlock(x, y, z)
+            .getIcon(world, x, y, z, side);
+        return getLeafForSprite(sprite);
     }
 
     public LeafInfo getLeafForSprite(IIcon sprite) {
@@ -50,9 +71,13 @@ public final class LeafRegistry extends TextureGenerator {
     }
 
     @Override
-    protected void onSpriteStitch(TextureStitchEvent.Pre event) {
-        if (event.map.getTextureType() != 0) return;
+    protected void onSpriteStitch(TextureMap atlas) {
+        if (atlas.getTextureType() != 0) return;
 
+        maskTypes = new SpriteTypeMap(maskMappings);
+        particleTypes = new SpriteTypeMap(particleMappings);
+
+        LeafInfo.clearRegistries();
         leaves.clear();
 
         for (Object obj : Block.blockRegistry) {
@@ -61,10 +86,10 @@ public final class LeafRegistry extends TextureGenerator {
                 .matchesClass(block)) continue;
 
             block.registerBlockIcons(location -> {
-                IIcon original = event.map.getTextureExtry(location);
+                IIcon original = atlas.getTextureExtry(location);
+                BetterFoliageMod.log.info("Registering Particles and Extra Leaf textures for {}", location);
 
-                BetterFoliageMod.log.info("LEAF BLOCK SPRITE LOCATION: {}", location);
-                registerLeaf(event.map, original);
+                registerLeaf(atlas, original);
 
                 return original;
             });
@@ -72,26 +97,31 @@ public final class LeafRegistry extends TextureGenerator {
 
     }
 
-    private void registerLeaf(TextureMap atlas, IIcon baseSprite) {
-        LeafInfo leaf = new LeafInfo(atlas, ResourceUtils.convertToResourceLocation(baseSprite), domain);
-        leaves.put(baseSprite, leaf);
+    private void registerLeaf(TextureMap atlas, IIcon baseLeafSprite) {
+
+        String maskType = maskTypes.getSpriteType(baseLeafSprite, "default");
+        String particleType = particleTypes.getSpriteType(baseLeafSprite, "default");
+
+        LeafInfo leaf = new LeafInfo(atlas, baseLeafSprite, domain, maskType, particleType);
+        leaves.put(baseLeafSprite, leaf);
     }
 
     @Override
     protected BufferedImage getGeneratedTexture(ResourceLocation location) throws IOException {
-        BufferedImage baseImage = null;
-        for (LeafInfo leaf : leaves.values()) {
-            if (!location.equals(leaf.generatedResource)) continue;
-
-            baseImage = ImageIO.read(
-                ResourceUtils.getResource(leaf.baseResource)
-                    .getInputStream());
+        LeafInfo leaf = null;
+        for (LeafInfo leafInfo : leaves.values()) {
+            if (!location.equals(leafInfo.generatedLeafResource)) continue;
+            leaf = leafInfo;
             break;
         }
 
-        if (baseImage == null) {
+        if (leaf == null) {
             throw new IOException("Resource " + location + " is not handled by this generator!");
         }
+
+        BufferedImage baseImage = ImageIO.read(
+            ResourceUtils.getResource(leaf.baseLeafResource)
+                .getInputStream());
 
         int width = baseImage.getWidth();
         int height = baseImage.getHeight();
@@ -99,8 +129,7 @@ public final class LeafRegistry extends TextureGenerator {
 
         int genWidth = width * 2;
 
-        // TODO allow for other mask types(configurable from a new file: "betterfoliage/leafMaskMappings.cfg")
-        IResource leafMask = getBiggestAvailableLeafMask("default", genWidth);
+        IResource leafMask = getBiggestAvailableLeafMask(leaf.maskType, genWidth);
 
         BufferedImage maskImage = ImageIO.read(leafMask.getInputStream());
         if (maskImage.getWidth() != genWidth) {
@@ -157,9 +186,10 @@ public final class LeafRegistry extends TextureGenerator {
     protected InputStream getGeneratedMcMeta(ResourceLocation location) throws IOException {
         ResourceLocation nonMeta = ResourceUtils.getBaseForMcMeta(location);
         for (LeafInfo leaf : leaves.values()) {
-            if (!nonMeta.equals(leaf.generatedResource)) continue;
+            if (!nonMeta.equals(leaf.generatedLeafResource)) continue;
             return ResourceUtils
-                .getResource(new ResourceLocation(leaf.baseResource.getResourceDomain(), location.getResourcePath()))
+                .getResource(
+                    new ResourceLocation(leaf.baseLeafResource.getResourceDomain(), location.getResourcePath()))
                 .getInputStream();
         }
 
@@ -172,11 +202,11 @@ public final class LeafRegistry extends TextureGenerator {
 
         for (LeafInfo leaf : leaves.values()) {
             if (isMcMeta) {
-                if (ResourceUtils.resourceHasMcMeta(leaf.baseResource)) return true;
+                if (ResourceUtils.resourceHasMcMeta(leaf.baseLeafResource)) return true;
                 continue;
             }
 
-            if (location.equals(leaf.generatedResource)) return true;
+            if (location.equals(leaf.generatedLeafResource)) return true;
         }
 
         return false;
