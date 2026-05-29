@@ -5,28 +5,29 @@ import net.minecraft.world.World;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
-import mods.betterfoliage.client.resource.SpriteSetRandom;
+import mods.betterfoliage.client.registries.LeafInfo;
+import mods.betterfoliage.client.registries.LeafRegistry;
 import mods.betterfoliage.utils.MathUtils;
 
 public class LeafParticleRenderer extends ParticleRenderer {
 
-    // TODO fetch from LeafRegistry
-    private static final SpriteSetRandom leafParticle = new SpriteSetRandom(
-        BetterFoliageMod.DOMAIN,
-        "textures/blocks/falling_leaf_default_",
-        ".png");
-
     public static void spawnLeafParticle(World world, int x, int y, int z) {
         // TODO consider using an object pool (only if better performance)
-        new LeafParticleRenderer(world, x, y, z);
+        final LeafInfo leafInfo = LeafRegistry.getInstance()
+            .getLeafForBlock(world, x, y, z);
+
+        // No need to even try, as the texture would've been null
+        if (leafInfo != null) {
+            new LeafParticleRenderer(leafInfo, world, x, y, z);
+        }
     }
 
     public static void initSprites() {
         BetterFoliageMod.log.info("LeafParticleRenderer sprites initialized");
     }
 
-    protected LeafParticleRenderer(World world, int x, int y, int z) {
-        super(leafParticle.getRandomSprite(), world, x, y, z);
+    protected LeafParticleRenderer(LeafInfo leafInfo, World world, int x, int y, int z) {
+        super(leafInfo.particleSprites.getRandomSprite(), world, x, y, z);
         particleMaxAge = (int) (MathUtils.randomBetween(rand, 0.6, 1.0) * Config.fallingLeaves.INSTANCE.getLifetime()
             * 20.0);
         motionY = -Config.fallingLeaves.INSTANCE.getSpeed();
