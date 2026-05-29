@@ -24,8 +24,9 @@ class LeafInfo(
     /** Type of the leaf block (configurable by user). */
     val leafType: String,
 
-    /** Average color of the round leaf texture. */
     // TODO reimplement in new LeafRegistry
+
+    /** Average color of the round leaf texture. */
     val averageColor: Int = DEFAULT_LEAF_COLOR,
 ) {
     /** [IconSet] of the textures to use for leaf particles emitted from this block. */
@@ -50,7 +51,7 @@ object LeafRegistry {
         if (event.map.textureType != 0) return
         leaves.clear()
         particles.clear()
-        typeMappings.loadMappings(ResourceLocation("betterfoliage", "leafTextureMappings.cfg"))
+        typeMappings.loadMappings(ResourceLocation("betterfoliage", "leafParticleTextureMappings.cfg"))
         Client.log(Level.INFO, "Generating leaf textures")
 
         IconSet("betterfoliage", "falling_leaf_default_%d").let {
