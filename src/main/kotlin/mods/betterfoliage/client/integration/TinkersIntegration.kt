@@ -1,7 +1,10 @@
 package mods.betterfoliage.client.integration
 
-//@SideOnly(Side.CLIENT)
-//object TinkersIntegration {
+import cpw.mods.fml.relauncher.Side
+import cpw.mods.fml.relauncher.SideOnly
+
+@SideOnly(Side.CLIENT)
+object TinkersIntegration {
 //    private const val BUSH_GROWTH_STAGES = 3
 //    private const val BUSH_METAS_PER_STAGE = 4
 //
@@ -37,4 +40,4 @@ package mods.betterfoliage.client.integration
 //    }
 //
 //    private fun getBushGrowth(ctx: BlockContext) = min(ctx.meta / BUSH_METAS_PER_STAGE, BUSH_GROWTH_STAGES - 1)
-//}
+}

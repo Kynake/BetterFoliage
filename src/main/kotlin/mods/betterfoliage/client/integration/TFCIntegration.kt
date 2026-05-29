@@ -1,19 +1,11 @@
 package mods.betterfoliage.client.integration
 
-//import com.bioxx.tfc.Blocks.Terrain.BlockDirt
-//import com.bioxx.tfc.Blocks.Terrain.BlockGrass
-//import cpw.mods.fml.relauncher.Side
-//import cpw.mods.fml.relauncher.SideOnly
-//import mods.betterfoliage.client.Client
-//import mods.betterfoliage.client.config.Config
-//import mods.betterfoliage.client.config.SimpleBlockMatcher
-//import mods.octarinecore.client.render.Axis
-//import net.minecraft.block.Block
-//import org.apache.logging.log4j.Level
-//
-///** Integration for TerraFirmaCraft */
-//@SideOnly(Side.CLIENT)
-//object TFCIntegration {
+import cpw.mods.fml.relauncher.Side
+import cpw.mods.fml.relauncher.SideOnly
+
+// /** Integration for TerraFirmaCraft */
+@SideOnly(Side.CLIENT)
+object TFCIntegration {
 //
 //    @JvmStatic fun isTFCDirtOrGrass(block: Block) = Mod.TFC.isLoaded && (block is BlockGrass || block is BlockDirt)
 //
@@ -51,4 +43,4 @@ package mods.betterfoliage.client.integration
 //            }
 //        }
 //    }
-//}
+}
