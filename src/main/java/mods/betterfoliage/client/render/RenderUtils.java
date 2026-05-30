@@ -1,11 +1,22 @@
 package mods.betterfoliage.client.render;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.client.resource.ResourceUtils;
 
 public class RenderUtils {
 
@@ -33,6 +44,7 @@ public class RenderUtils {
     }
 
     // TODO: use [0, 1] ratio instead
+    // TODO: consider using square root blend (instead of linear)
     /// Colors are in ARGB format. Alpha is copied from first color
     public static int blendRGB(int colorA, int colorB, float ratio) {
         float invRatio = (1f / ratio);
@@ -56,6 +68,53 @@ public class RenderUtils {
         int res = colorA & 0x00_FF_FF_FF;
         res |= alpha << 24;
         return res;
+    }
+
+    /// Average visible colors in a Sprite using their squares
+    public static int averageSpriteSquare(IIcon sprite, int defaultColor) {
+        ResourceLocation location = ResourceUtils.convertToResourceLocation(sprite);
+
+        BufferedImage spriteImage;
+        try {
+            IResource resource = ResourceUtils.getResource(location);
+            spriteImage = ImageIO.read(resource.getInputStream());
+        } catch (IOException e) {
+            BetterFoliageMod.log
+                .error("Error loading sprite [{}] at [{}] for color averaging.", sprite.getIconName(), location);
+            return defaultColor;
+        }
+
+        int opaquePixelsCount = 0;
+        double rSqr = 0;
+        double gSqr = 0;
+        double bSqr = 0;
+
+        for (int x = 0; x < spriteImage.getWidth(); x++) {
+            for (int y = 0; y < spriteImage.getHeight(); y++) {
+                final int pixel = spriteImage.getRGB(x, y);
+
+                // Only fully opaque pixels are considered
+                if ((pixel & 0xFF_00_00_00) != 0xFF_00_00_00) continue;
+
+                opaquePixelsCount++;
+
+                final double r = (double) (pixel >> 16 & 0xFF) / 255.0;
+                final double g = (double) (pixel >> 8 & 0xFF) / 255.0;
+                final double b = (double) (pixel & 0xFF) / 255.0;
+
+                rSqr += r * r;
+                gSqr += g * g;
+                bSqr += b * b;
+            }
+        }
+
+        int color = 0xFF_00_00_00;
+        color |= (int) (Math.sqrt(rSqr / opaquePixelsCount) * 255.0) << 16;
+        color |= (int) (Math.sqrt(gSqr / opaquePixelsCount) * 255.0) << 8;
+        color |= (int) (Math.sqrt(bSqr / opaquePixelsCount) * 255.0);
+
+        BetterFoliageMod.log.info("Average color for [{}]: {}", sprite.getIconName(), String.format("0x%08x", color));
+        return color;
     }
 
     public static void setAOForCrossedSquareVertex(RenderBlocks renderer, int x, int y, int z, ForgeDirection firstAxis,
