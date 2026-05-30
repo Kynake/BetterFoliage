@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.render.ISpriteProvider;
+import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.ResourceUtils;
 import mods.betterfoliage.client.resource.SpriteSetRandom;
 
@@ -18,6 +19,8 @@ public class LeafInfo implements ISpriteProvider {
 
     public final String maskType;
     public final String particleType;
+
+    public final int averageColor;
 
     public final ResourceLocation baseLeafResource;
     public final ResourceLocation generatedLeafResource;
@@ -32,6 +35,8 @@ public class LeafInfo implements ISpriteProvider {
     public LeafInfo(TextureMap atlas, IIcon baseSprite, String leafDomain, String maskType, String particleType) {
         this.maskType = maskType;
         this.particleType = particleType;
+
+        this.averageColor = RenderUtils.averageSpriteSquare(baseSprite, 0);
 
         this.baseLeafResource = ResourceUtils.convertToResourceLocation(baseSprite);
         this.generatedLeafResource = new ResourceLocation(leafDomain, baseLeafResource.getResourcePath());
