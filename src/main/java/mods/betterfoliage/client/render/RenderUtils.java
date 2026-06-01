@@ -44,13 +44,12 @@ public class RenderUtils {
     }
 
     // TODO: use [0, 1] ratio instead
-    // TODO: consider using square root blend (instead of linear)
     /// Colors are in ARGB format. Alpha is copied from first color
     public static int blendRGB(int colorA, int colorB, float ratio) {
         float invRatio = (1f / ratio);
-        int r = (int) (ratio * ((colorA >> 16) & 0xFF) + invRatio * ((colorB >> 16) & 0xFF));
-        int g = (int) (ratio * ((colorA >> 8) & 0xFF) + invRatio * ((colorB >> 8) & 0xFF));
-        int b = (int) (ratio * ((colorA) & 0xFF) + invRatio * ((colorB) & 0xFF));
+        int r = (int) (ratio * (colorA >> 16 & 0xFF) + invRatio * (colorB >> 16 & 0xFF));
+        int g = (int) (ratio * (colorA >> 8 & 0xFF) + invRatio * (colorB >> 8 & 0xFF));
+        int b = (int) (ratio * (colorA & 0xFF) + invRatio * (colorB & 0xFF));
 
         int res = colorA & 0xFF_00_00_00;
         res |= r << 16;
