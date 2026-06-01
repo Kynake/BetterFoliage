@@ -50,20 +50,24 @@ public class LeafParticleRenderer extends ParticleRenderer {
         int g = spriteAverageColor >> 8 & 0xFF;
         int b = spriteAverageColor & 0xFF;
 
-        final float[] hsbSprite = Color.RGBtoHSB(r, g, b, null);
+        final float[] hsb = Color.RGBtoHSB(r, g, b, null);
+
+        final float hSprite = hsb[0];
+        final float sSprite = hsb[1];
+        final float bSprite = hsb[2];
 
         r = blockColor >> 16 & 0xFF;
         g = blockColor >> 8 & 0xFF;
         b = blockColor & 0xFF;
 
-        final float[] hsbBlock = Color.RGBtoHSB(r, g, b, null);
+        Color.RGBtoHSB(r, g, b, hsb);
 
-        final float spriteRatio = hsbSprite[1] / (hsbSprite[1] + hsbBlock[1]);
+        final float spriteRatio = sSprite / (sSprite + hsb[1]);
         final float blockRatio = 1.0f - spriteRatio;
 
-        final float hue = hsbSprite[0] * spriteRatio + hsbBlock[0] * blockRatio;
-        final float saturation = hsbSprite[1] * spriteRatio + hsbBlock[1] * blockRatio;
-        final float brightness = hsbSprite[2] * spriteRatio + hsbBlock[2] * blockRatio * BLOCK_BRIGHTNESS_MULTIPLIER;
+        final float hue = hSprite * spriteRatio + hsb[0] * blockRatio;
+        final float saturation = sSprite * spriteRatio + hsb[1] * blockRatio;
+        final float brightness = bSprite * spriteRatio + hsb[2] * blockRatio * BLOCK_BRIGHTNESS_MULTIPLIER;
 
         setRGBColor(Color.HSBtoRGB(hue, saturation, brightness));
     }
