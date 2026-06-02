@@ -43,6 +43,10 @@ public final class MathUtils {
         return (max - min) * lerpAmount + min;
     }
 
+    public static float lerp(float min, float max, float lerpAmount) {
+        return (max - min) * lerpAmount + min;
+    }
+
     public static double remapToRange(double fromRangeMin, double fromRangeMax, double toRangeMin, double toRangeMax,
         double value) {
         return lerp(toRangeMin, toRangeMax, inverseLerp(fromRangeMin, fromRangeMax, value));
