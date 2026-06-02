@@ -15,6 +15,12 @@ public class LeafParticleRenderer extends ParticleRenderer {
 
     private static final float BLOCK_BRIGHTNESS_MULTIPLIER = 0.5f;
 
+    // TODO: make configurable
+    private static final float ROTATION_SPEED = (float) (Math.PI * 2.0 / 64.0);
+
+    private boolean didHitGround = false;
+    private float rotationPerTick;
+
     public static void spawnLeafParticle(World world, int x, int y, int z) {
         // TODO consider using an object pool (only if better performance)
         final LeafInfo leafInfo = LeafRegistry.getInstance()
@@ -34,9 +40,13 @@ public class LeafParticleRenderer extends ParticleRenderer {
         super(leafInfo.particleSprites.getRandomSprite(), world, x, y, z);
         particleMaxAge = (int) (MathUtils.randomBetween(rand, 0.6, 1.0) * Config.fallingLeaves.INSTANCE.getLifetime()
             * 20.0);
+
         motionY = -Config.fallingLeaves.INSTANCE.getSpeed();
         particleScale = (float) Config.fallingLeaves.INSTANCE.getSize() * 0.1f;
+
         quadMirrorHorizontally = rand.nextBoolean();
+        rotationPerTick = ROTATION_SPEED;
+        changeRandomRotation();
 
         Block block = world.getBlock(x, y, z);
         setParticleColor(leafInfo.averageColor, block.colorMultiplier(world, x, y, z));
@@ -75,13 +85,39 @@ public class LeafParticleRenderer extends ParticleRenderer {
     @Override
     protected void update() {
         // TODO movement / wind
+
+        // 1 second fadeout
+        if (particleAge > particleMaxAge - 20) {
+            particleAlpha = 0.05f * (particleMaxAge - particleAge);
+        }
+
+        if (didHitGround || onGround) {
+            motionY = 0;
+
+            if (!didHitGround) {
+                // TODO add configurable
+                // start fadeout upon hitting ground
+                particleAge = Math.max(particleAge, particleMaxAge - 20);
+                didHitGround = true;
+            }
+            return;
+        }
+
+        changeRandomRotation();
+        rotationRadians += rotationPerTick;
+
         motionY = -Config.fallingLeaves.INSTANCE.getSpeed();
     }
 
     @Override
     protected void render() {
-        quadRotationRadians = 0;
         calculateQuadCenter(posX, posY, posZ, prevPosX, prevPosY, prevPosZ);
         renderBillboardQuad();
+    }
+
+    private void changeRandomRotation() {
+        if (rand.nextFloat() > 0.95f) {
+            rotationPerTick = -rotationPerTick;
+        }
     }
 }

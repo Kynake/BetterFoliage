@@ -1,5 +1,6 @@
 package mods.betterfoliage.client.render.particles;
 
+import mods.betterfoliage.utils.MathUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
@@ -17,7 +18,9 @@ public abstract class ParticleRenderer extends EntityFX {
 
     protected boolean quadMirrorHorizontally;
     protected double quadCenterX, quadCenterY, quadCenterZ;
-    protected float quadRotationRadians;
+
+    protected float rotationRadians = 0f;
+    private float previousTickRotation = 0f;
 
     /// Other vars also use in rendering, inherited from superclass:
     ///
@@ -47,6 +50,7 @@ public abstract class ParticleRenderer extends EntityFX {
     @Override
     public final void onUpdate() {
         super.onUpdate();
+        previousTickRotation = rotationRadians;
         update();
     }
 
@@ -55,7 +59,6 @@ public abstract class ParticleRenderer extends EntityFX {
         // Assumes superclass vars + tessellator and partialTickTime are already set.
 
         quadMirrorHorizontally = false;
-        quadRotationRadians = 0.0f;
         calculateQuadCenter(posX, posY, posZ, prevPosX, prevPosY, prevPosZ);
 
         renderBillboardQuad();
@@ -86,25 +89,27 @@ public abstract class ParticleRenderer extends EntityFX {
             maxU = particleIcon.getMaxU();
         }
 
-        float minV = particleIcon.getMinV();
-        float maxV = particleIcon.getMaxV();
+        final float minV = particleIcon.getMinV();
+        final float maxV = particleIcon.getMaxV();
 
-        float firstRotX = quadRotX + quadRotXY;
-        float firstRotZ = quadRotYZ + quadRotXZ;
+        final float firstRotX = quadRotX + quadRotXY;
+        final float firstRotZ = quadRotYZ + quadRotXZ;
 
-        float secondRotX = quadRotX - quadRotXY;
-        float secondRotZ = quadRotYZ - quadRotXZ;
+        final float secondRotX = quadRotX - quadRotXY;
+        final float secondRotZ = quadRotYZ - quadRotXZ;
 
-        float rotSin = MathHelper.sin(quadRotationRadians);
-        float rotCos = MathHelper.cos(quadRotationRadians);
+        final float frameRotation = MathUtils.lerp(previousTickRotation, rotationRadians, partialTickTime);
 
-        float rotAX = (rotCos * firstRotX + rotSin * secondRotX) * particleScale;
-        float rotAY = (rotCos * quadRotZ + rotSin * -quadRotZ) * particleScale;
-        float rotAZ = (rotCos * firstRotZ + rotSin * secondRotZ) * particleScale;
+        final float rotSin = MathHelper.sin(frameRotation);
+        final float rotCos = MathHelper.cos(frameRotation);
 
-        float rotBX = (-rotSin * firstRotX + rotCos * secondRotX) * particleScale;
-        float rotBY = (-rotSin * quadRotZ + rotCos * -quadRotZ) * particleScale;
-        float rotBZ = (-rotSin * firstRotZ + rotCos * secondRotZ) * particleScale;
+        final float rotAX = (rotCos * firstRotX + rotSin * secondRotX) * particleScale;
+        final float rotAY = (rotCos * quadRotZ + rotSin * -quadRotZ) * particleScale;
+        final float rotAZ = (rotCos * firstRotZ + rotSin * secondRotZ) * particleScale;
+
+        final float rotBX = (-rotSin * firstRotX + rotCos * secondRotX) * particleScale;
+        final float rotBY = (-rotSin * quadRotZ + rotCos * -quadRotZ) * particleScale;
+        final float rotBZ = (-rotSin * firstRotZ + rotCos * secondRotZ) * particleScale;
 
         tessellator.setColorRGBA_F(particleRed, particleGreen, particleBlue, particleAlpha);
         tessellator.addVertexWithUV(quadCenterX - rotAX, quadCenterY - rotAY, quadCenterZ - rotAZ, maxU, maxV);
