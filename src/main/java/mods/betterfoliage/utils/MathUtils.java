@@ -29,18 +29,11 @@ public final class MathUtils {
         return hash;
     }
 
+    // TODO: convert to floats, use float lerp instead
     // The hash is assumed to be in the range [Integer.MIN_VALUE, Integer.MAX_VALUE]
     public static double hashToRange(int hash, double min, double max) {
         double invLerp = (double) ((long) hash - 0xFFFFFFFF80000000L) / (double) 0xFFFFFFFFL;
         return lerp(min, max, invLerp);
-    }
-
-    public static double inverseLerp(double min, double max, double value) {
-        return (value - min) / (max - min);
-    }
-
-    public static float inverseLerp(float min, float max, float value) {
-        return (value - min) / (max - min);
     }
 
     public static double lerp(double min, double max, double lerpAmount) {
@@ -51,16 +44,11 @@ public final class MathUtils {
         return (max - min) * lerpAmount + min;
     }
 
-    public static double remapToRange(double fromRangeMin, double fromRangeMax, double toRangeMin, double toRangeMax,
-        double value) {
-        return lerp(toRangeMin, toRangeMax, inverseLerp(fromRangeMin, fromRangeMax, value));
+    public static float inverseLerp(float min, float max, float value) {
+        return (value - min) / (max - min);
     }
 
-    public static double randomBetween(double min, double max) {
-        return lerp(min, max, Math.random());
-    }
-
-    public static double randomBetween(Random rng, double min, double max) {
-        return lerp(min, max, rng.nextDouble());
+    public static float randomBetween(Random rng, float min, float max) {
+        return lerp(min, max, rng.nextFloat());
     }
 }

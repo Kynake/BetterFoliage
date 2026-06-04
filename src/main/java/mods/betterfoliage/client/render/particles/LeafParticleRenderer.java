@@ -43,7 +43,7 @@ public class LeafParticleRenderer extends ParticleRenderer {
 
     protected LeafParticleRenderer(LeafInfo leafInfo, World world, int x, int y, int z) {
         super(leafInfo.particleSprites.getRandomSprite(), world, x, y, z);
-        particleMaxAge = (int) (MathUtils.randomBetween(rand, 0.6, 1.0) * Config.fallingLeaves.INSTANCE.getLifetime()
+        particleMaxAge = (int) (MathUtils.randomBetween(rand, 0.6f, 1.0f) * Config.fallingLeaves.INSTANCE.getLifetime()
             * 20.0);
 
         motionY = -Config.fallingLeaves.INSTANCE.getSpeed();
