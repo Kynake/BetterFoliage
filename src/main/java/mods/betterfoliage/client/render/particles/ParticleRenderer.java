@@ -1,6 +1,5 @@
 package mods.betterfoliage.client.render.particles;
 
-import mods.betterfoliage.utils.MathUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
@@ -9,6 +8,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.utils.MathUtils;
 
 public abstract class ParticleRenderer extends EntityFX {
 

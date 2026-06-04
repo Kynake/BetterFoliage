@@ -39,6 +39,10 @@ public final class MathUtils {
         return (value - min) / (max - min);
     }
 
+    public static float inverseLerp(float min, float max, float value) {
+        return (value - min) / (max - min);
+    }
+
     public static double lerp(double min, double max, double lerpAmount) {
         return (max - min) * lerpAmount + min;
     }
