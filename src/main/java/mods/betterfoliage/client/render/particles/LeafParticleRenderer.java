@@ -1,9 +1,12 @@
 package mods.betterfoliage.client.render.particles;
 
-import java.awt.*;
+import java.awt.Color;
 
 import net.minecraft.block.Block;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+
+import org.lwjgl.opengl.GL11;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
@@ -15,10 +18,12 @@ public class LeafParticleRenderer extends ParticleRenderer {
 
     private static final float BLOCK_BRIGHTNESS_MULTIPLIER = 0.5f;
 
-    // TODO: make configurable
+    // TODO: make all configurable
+    private static final int FADEOUT_TICKS = 20;
     private static final float ROTATION_SPEED = (float) (Math.PI * 2.0 / 64.0);
+    private static final float GROUND_MOVE_DAMPENING = 0.5f;
 
-    private boolean didHitGround = false;
+    private boolean firstGroundHit = false;
     private float rotationPerTick;
 
     public static void spawnLeafParticle(World world, int x, int y, int z) {
@@ -53,7 +58,6 @@ public class LeafParticleRenderer extends ParticleRenderer {
         particleAlpha = 1.0f;
     }
 
-    // TODO consider using blendRGB (squares?)
     protected void setParticleColor(int spriteAverageColor, int blockColor) {
 
         int r = spriteAverageColor >> 16 & 0xFF;
@@ -84,21 +88,28 @@ public class LeafParticleRenderer extends ParticleRenderer {
 
     @Override
     protected void update() {
-        // TODO movement / wind
-
         // 1 second fadeout
-        if (particleAge > particleMaxAge - 20) {
-            particleAlpha = 0.05f * (particleMaxAge - particleAge);
+        final int fadeoutAge = particleMaxAge - FADEOUT_TICKS;
+
+        if (particleAge > fadeoutAge) {
+            particleAlpha = MathUtils.inverseLerp(particleMaxAge, fadeoutAge, particleAge);
         }
 
-        if (didHitGround || onGround) {
-            motionY = 0;
+        final float speed = (float) Config.fallingLeaves.INSTANCE.getSpeed();
+        motionY = -speed;
 
-            if (!didHitGround) {
+        if (onGround) {
+
+            // Dampen movement when hitting the ground, rather than a complete stop.
+            // This adds a very small "settling" effect to the leaves.
+            motionX *= GROUND_MOVE_DAMPENING;
+            motionZ *= GROUND_MOVE_DAMPENING;
+
+            if (!firstGroundHit) {
                 // TODO add configurable
-                // start fadeout upon hitting ground
-                particleAge = Math.max(particleAge, particleMaxAge - 20);
-                didHitGround = true;
+                // start fadeout when hitting ground
+                particleAge = Math.max(particleAge, fadeoutAge);
+                firstGroundHit = true;
             }
             return;
         }
@@ -106,11 +117,20 @@ public class LeafParticleRenderer extends ParticleRenderer {
         changeRandomRotation();
         rotationRadians += rotationPerTick;
 
-        motionY = -Config.fallingLeaves.INSTANCE.getSpeed();
+        final float perturb = (float) Config.fallingLeaves.INSTANCE.getPerturb();
+
+        // TODO movement due to wind (after * perturb, before * speed)
+        motionX = MathHelper.cos(rotationRadians) * perturb * speed;
+        motionZ = MathHelper.sin(rotationRadians) * perturb * speed;
     }
 
     @Override
     protected void render() {
+        // TODO retest properly (vanilla, angelica, swansong)
+        if (Config.fallingLeaves.INSTANCE.getOpacityHack()) {
+            GL11.glDepthMask(true);
+        }
+
         calculateQuadCenter(posX, posY, posZ, prevPosX, prevPosY, prevPosZ);
         renderBillboardQuad();
     }
