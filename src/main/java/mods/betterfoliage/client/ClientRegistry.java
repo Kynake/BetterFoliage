@@ -25,6 +25,7 @@ import mods.betterfoliage.client.render.features.MyceliumRenderer;
 import mods.betterfoliage.client.render.features.NetherrackRenderer;
 import mods.betterfoliage.client.render.features.ReedsRenderer;
 import mods.betterfoliage.client.render.particles.LeafParticleRenderer;
+import mods.betterfoliage.client.render.particles.SoulParticleRenderer;
 import mods.octarinecore.client.render.BlockContext;
 
 @SideOnly(Side.CLIENT)
@@ -89,6 +90,7 @@ public class ClientRegistry {
 
     private static void initParticleRenderers() {
         LeafParticleRenderer.initSprites();
+        SoulParticleRenderer.initSprites();
     }
 
     public static BlockRenderer getEligibleBlockRenderer(BlockContext ctx) {

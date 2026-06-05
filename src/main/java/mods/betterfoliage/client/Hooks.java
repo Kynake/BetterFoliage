@@ -1,7 +1,6 @@
 package mods.betterfoliage.client;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -9,8 +8,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
-import mods.betterfoliage.client.render.EntityRisingSoulFX;
 import mods.betterfoliage.client.render.particles.LeafParticleRenderer;
+import mods.betterfoliage.client.render.particles.SoulParticleRenderer;
 import mods.octarinecore.client.render.AbstractBlockRenderingHandler;
 import mods.octarinecore.client.render.BlockContext;
 import mods.octarinecore.client.render.RendererHolder;
@@ -72,11 +71,10 @@ public class Hooks {
     public static void onRandomDisplayTick(Block block, World world, int x, int y, int z) {
         if (!Config.INSTANCE.getEnabled()) return;
 
-        if (Config.risingSoul.INSTANCE.getEnabled() && block == Blocks.soul_sand
+        if (Config.risingSoul.INSTANCE.getEnabled() && SoulParticleRenderer.isValidSoulBlock(block)
             && Math.random() < Config.risingSoul.INSTANCE.getChance()
             && world.isAirBlock(x, y + 1, z)) {
-            EntityRisingSoulFX soul = new EntityRisingSoulFX(world, x, y, z);
-            soul.addIfValid();
+            SoulParticleRenderer.spawnSoulParticle(world, x, y, z);
         }
 
         if (Config.fallingLeaves.INSTANCE.getEnabled() && Math.random() < Config.fallingLeaves.INSTANCE.getChance()
