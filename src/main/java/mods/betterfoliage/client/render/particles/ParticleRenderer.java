@@ -31,8 +31,8 @@ public abstract class ParticleRenderer extends EntityFX {
     /// float particleScale;
     /// float particleRed, particleGreen, particleBlue, particleAlpha;
 
-    protected ParticleRenderer(IIcon sprite, World world, int x, int y, int z) {
-        super(world, x + 0.5, y + 0.5, z + 0.5);
+    protected ParticleRenderer(IIcon sprite, World world, double x, double y, double z) {
+        super(world, x, y, z);
         if (sprite != null) {
             particleIcon = sprite;
             Minecraft.getMinecraft().effectRenderer.addEffect(this);
@@ -43,6 +43,11 @@ public abstract class ParticleRenderer extends EntityFX {
                     .getCanonicalName());
             setDead();
         }
+    }
+
+    protected ParticleRenderer(IIcon sprite, World world, int x, int y, int z) {
+        // Spawn particle in the center of the block
+        this(sprite, world, x + 0.5, y + 0.5, z + 0.5);
     }
 
     protected abstract void update();
