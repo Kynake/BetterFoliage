@@ -129,10 +129,4 @@ abstract class AbstractEntityFX(world: World, x: Double, y: Double, z: Double) :
     }
 
     override fun getFXLayer() = 1
-
-    fun setColor(color: Int) {
-        particleBlue = (color and 255) / 256.0f
-        particleGreen = ((color shr 8) and 255) / 256.0f
-        particleRed = ((color shr 16) and 255) / 256.0f
-    }
 }

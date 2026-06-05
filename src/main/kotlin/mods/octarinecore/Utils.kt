@@ -9,8 +9,6 @@ import kotlin.reflect.KProperty
 
 const val PI2 = 2.0 * kotlin.math.PI
 
-inline fun String.stripStart(str: String) = if (startsWith(str)) substring(str.length) else this
-
 /** Exchange the two elements of the list with the given indices */
 inline fun <T> MutableList<T>.exchange(idx1: Int, idx2: Int) {
     val e = this[idx1]
@@ -55,9 +53,6 @@ fun <T> tryDefault(default: T, work: () -> T) = try {
 } catch (e: Throwable) {
     default
 }
-
-/** Return a random [Double] value between the given two limits (inclusive min, exclusive max). */
-fun random(min: Double, max: Double) = Math.random().let { min + (max - min) * it }
 
 /**
  * Return this [Double] value if it lies between the two limits. If outside, return the
