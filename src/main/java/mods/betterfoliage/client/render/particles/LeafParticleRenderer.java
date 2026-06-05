@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.client.WindTracker;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.registries.LeafInfo;
 import mods.betterfoliage.client.registries.LeafRegistry;
@@ -119,9 +120,8 @@ public class LeafParticleRenderer extends ParticleRenderer {
 
         final float perturb = (float) Config.fallingLeaves.INSTANCE.getPerturb();
 
-        // TODO movement due to wind (after * perturb, before * speed)
-        motionX = MathHelper.cos(rotationRadians) * perturb * speed;
-        motionZ = MathHelper.sin(rotationRadians) * perturb * speed;
+        motionX = (MathHelper.cos(rotationRadians) * perturb + WindTracker.currentX) * speed;
+        motionZ = (MathHelper.sin(rotationRadians) * perturb + WindTracker.currentZ) * speed;
     }
 
     @Override

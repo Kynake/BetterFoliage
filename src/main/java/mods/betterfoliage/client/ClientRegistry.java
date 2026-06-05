@@ -56,6 +56,7 @@ public class ClientRegistry {
         BetterFoliageMod.log.info("New ClientRegistry postInit()");
 
         LeafRegistry.getInstance();
+        WindTracker.getInstance();
 
         initBlockRenderers();
         initParticleRenderers();
