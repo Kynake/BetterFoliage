@@ -51,4 +51,8 @@ public final class MathUtils {
     public static float randomBetween(Random rng, float min, float max) {
         return lerp(min, max, rng.nextFloat());
     }
+
+    public static int randomBetween(Random rng, int min, int max) {
+        return min + rng.nextInt(max - min);
+    }
 }
