@@ -7,9 +7,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.ClientRegistry;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.registries.LeafInfo;
+import mods.betterfoliage.client.registries.LeafRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.render.Utils;
@@ -27,6 +27,8 @@ public class LeafRenderer extends BlockRenderer {
 
     // Original renderer scaled the vertical axis so that the diagonal pixels look square instead of rectangular.
     private static final float VERTICAL_SCALE_FACTOR = 1.41f;
+
+    private static final LeafRegistry leafRegistry = LeafRegistry.getInstance();
 
     private static LeafRenderer instance;
 
@@ -66,8 +68,7 @@ public class LeafRenderer extends BlockRenderer {
         if (!renderResult) return false;
 
         IIcon keySprite = block.getIcon(world, x, y, z, ForgeDirection.DOWN.ordinal());
-        LeafInfo leaf = ClientRegistry.getLeafRegistry()
-            .getLeafForSprite(keySprite);
+        LeafInfo leaf = leafRegistry.getLeafForSprite(keySprite);
 
         if (leaf == null) return true;
 

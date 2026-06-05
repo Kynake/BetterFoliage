@@ -37,8 +37,6 @@ public class ClientRegistry {
 
     private static BlockRenderer[] blockRenderers;
 
-    private static LeafRegistry leafRegistry;
-
     private ClientRegistry() {}
 
     public static void preInit() {
@@ -57,7 +55,7 @@ public class ClientRegistry {
     public static void postInit() {
         BetterFoliageMod.log.info("New ClientRegistry postInit()");
 
-        leafRegistry = LeafRegistry.getInstance();
+        LeafRegistry.getInstance();
 
         initBlockRenderers();
         initParticleRenderers();
@@ -90,10 +88,6 @@ public class ClientRegistry {
 
     private static void initParticleRenderers() {
         LeafParticleRenderer.initSprites();
-    }
-
-    public static LeafRegistry getLeafRegistry() {
-        return leafRegistry;
     }
 
     public static BlockRenderer getEligibleBlockRenderer(BlockContext ctx) {
