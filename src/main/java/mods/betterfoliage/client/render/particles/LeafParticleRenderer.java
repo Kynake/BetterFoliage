@@ -20,6 +20,7 @@ public class LeafParticleRenderer extends ParticleRenderer {
     private static final float BLOCK_BRIGHTNESS_MULTIPLIER = 0.5f;
 
     // TODO: make all configurable
+    // 1 second fadeout
     private static final int FADEOUT_TICKS = 20;
     private static final float ROTATION_SPEED = (float) (Math.PI * 2.0 / 64.0);
     private static final float GROUND_MOVE_DAMPENING = 0.5f;
@@ -89,7 +90,11 @@ public class LeafParticleRenderer extends ParticleRenderer {
 
     @Override
     protected void update() {
-        // 1 second fadeout
+        if (!(Config.INSTANCE.getEnabled() & Config.fallingLeaves.INSTANCE.getEnabled())) {
+            setDead();
+            return;
+        }
+
         final int fadeoutAge = particleMaxAge - FADEOUT_TICKS;
 
         if (particleAge > fadeoutAge) {
