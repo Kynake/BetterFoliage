@@ -178,9 +178,7 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
         val trailSize by double(min = 0.25, max = 1.5, default = 0.75)
         val opacity by float(min = 0.05, max = 1.0, default = 0.5)
         val sizeDecay by double(min = 0.5, max = 1.0, default = 0.97)
-        val opacityDecay by float(min = 0.5, max = 1.0, default = 0.97)
         val lifetime by double(min = 1.0, max = 15.0, default = 4.0)
-        val trailLength by int(min = 2, max = 128, default = 48)
         val trailDensity by int(min = 1, max = 16, default = 3)
     }
 
