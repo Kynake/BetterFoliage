@@ -22,7 +22,7 @@ public class LeafParticleRenderer extends ParticleRenderer {
     // TODO: make all configurable
     // 1 second fadeout
     private static final int FADEOUT_TICKS = 20;
-    private static final float ROTATION_SPEED = (float) (Math.PI * 2.0 / 64.0);
+    private static final float ROTATION_SPEED = MathUtils.PI2 / 64.0f;
     private static final float GROUND_MOVE_DAMPENING = 0.5f;
 
     private boolean firstGroundHit = false;

@@ -19,8 +19,6 @@ import mods.betterfoliage.utils.MathUtils;
 @SideOnly(Side.CLIENT)
 public final class WindTracker {
 
-    private static final float PI2 = (float) Math.PI * 2f;
-
     private static WindTracker instance = null;
 
     public static float currentX, currentZ;
@@ -75,7 +73,7 @@ public final class WindTracker {
         // Schedule next change to happen in the next 6 to 10 seconds;
         nextChangeTime = world.getWorldTime() + MathUtils.randomBetween(rng, 120, 200);
 
-        final float dirRadians = PI2 * rng.nextFloat();
+        final float dirRadians = MathUtils.PI2 * rng.nextFloat();
         float speed = Math.abs((float) (rng.nextGaussian() * Config.fallingLeaves.INSTANCE.getWindStrength()));
         if (world.isRaining()) {
             speed += Math.abs((float) (rng.nextGaussian() * Config.fallingLeaves.INSTANCE.getStormStrength()));
