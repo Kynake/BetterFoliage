@@ -50,6 +50,10 @@ public final class MathUtils {
         return (value - min) / (max - min);
     }
 
+    public static float remapToRange(float fromMin, float fromMax, float toMin, float toMax, float value) {
+        return lerp(toMin, toMax, inverseLerp(fromMin, fromMax, value));
+    }
+
     public static float randomBetween(Random rng, float min, float max) {
         return lerp(min, max, rng.nextFloat());
     }
