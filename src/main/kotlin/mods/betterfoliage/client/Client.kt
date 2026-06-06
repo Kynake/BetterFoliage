@@ -6,7 +6,6 @@ import mods.betterfoliage.BetterFoliageMod
 import mods.betterfoliage.client.integration.AbyssalCraftIntegration
 import mods.betterfoliage.client.integration.IC2Integration
 import mods.betterfoliage.client.render.RenderLog
-import mods.betterfoliage.client.render.RisingSoulTextures
 import mods.betterfoliage.client.texture.GrassRegistry
 import org.apache.logging.log4j.Level
 
@@ -32,7 +31,6 @@ object Client {
     val singletons =
         listOf(
             GrassRegistry,
-            RisingSoulTextures,
             IC2Integration,
             AbyssalCraftIntegration,
         )

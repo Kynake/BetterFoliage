@@ -66,15 +66,6 @@ data class Double3(var x: Double, var y: Double, var z: Double) {
     constructor(
         dir: ForgeDirection,
     ) : this(dir.offsetX.toDouble(), dir.offsetY.toDouble(), dir.offsetZ.toDouble())
-    companion object {
-        val zero: Double3
-            get() = Double3(0.0, 0.0, 0.0)
-        fun weight(v1: Double3, weight1: Double, v2: Double3, weight2: Double) = Double3(
-            v1.x * weight1 + v2.x * weight2,
-            v1.y * weight1 + v2.y * weight2,
-            v1.z * weight1 + v2.z * weight2,
-        )
-    }
 
     // immutable operations
     operator fun plus(other: Double3) = Double3(x + other.x, y + other.y, z + other.z)
@@ -90,13 +81,6 @@ data class Double3(var x: Double, var y: Double, var z: Double) {
     )
 
     // mutable operations
-    fun setTo(x: Double, y: Double, z: Double): Double3 {
-        this.x = x
-        this.y = y
-        this.z = z
-        return this
-    }
-    fun setTo(x: Float, y: Float, z: Float) = setTo(x.toDouble(), y.toDouble(), z.toDouble())
     fun add(other: Double3): Double3 {
         x += other.x
         y += other.y
@@ -107,24 +91,6 @@ data class Double3(var x: Double, var y: Double, var z: Double) {
         this.x += x
         this.y += y
         this.z += z
-        return this
-    }
-    fun sub(other: Double3): Double3 {
-        x -= other.x
-        y -= other.y
-        z -= other.z
-        return this
-    }
-    fun sub(x: Double, y: Double, z: Double): Double3 {
-        this.x -= x
-        this.y -= y
-        this.z -= z
-        return this
-    }
-    fun mul(scale: Double): Double3 {
-        x *= scale
-        y *= scale
-        z *= scale
         return this
     }
 

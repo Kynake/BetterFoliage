@@ -5,8 +5,6 @@ import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import mods.octarinecore.client.render.Model
 import net.minecraft.client.renderer.texture.IIconRegister
-import net.minecraft.util.IIcon
-import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.common.MinecraftForge
@@ -54,8 +52,6 @@ open class ResourceHandler(val modId: String) {
     // ============================
     // Resource declarations
     // ============================
-    fun iconStatic(domain: String, path: String) = IconHolder(domain, path).apply { resources.add(this) }
-    fun iconSet(domain: String, pathPattern: String) = IconSet(domain, pathPattern).apply { resources.add(this) }
     fun model(init: Model.() -> Unit) = ModelHolder(init).apply { resources.add(this) }
 
     // ============================
@@ -81,34 +77,9 @@ open class ResourceHandler(val modId: String) {
 // ============================
 // Resource container classes
 // ============================
-class IconHolder(val domain: String, val name: String) : IStitchListener {
-    var icon: IIcon? = null
-    override fun onStitch(atlas: IIconRegister) {
-        icon = atlas.registerIcon("$domain:$name")
-    }
-}
-
 class ModelHolder(val init: Model.() -> Unit) : IConfigChangeListener {
     var model: Model = Model().apply(init)
     override fun onConfigChange() {
         model = Model().apply(init)
     }
-}
-
-class IconSet(val domain: String, val namePattern: String) : IStitchListener {
-    val icons = arrayOfNulls<IIcon>(16)
-    var num = 0
-
-    override fun onStitch(atlas: IIconRegister) {
-        num = 0
-        (0..15).forEach { idx ->
-            icons[idx] = null
-            val locReal = ResourceLocation(domain, "textures/blocks/${namePattern.format(idx)}.png")
-            if (resourceManager[locReal] != null) {
-                icons[num++] = atlas.registerIcon("$domain:${namePattern.format(idx)}")
-            }
-        }
-    }
-
-    operator fun get(idx: Int) = if (num == 0) null else icons[idx % num]
 }

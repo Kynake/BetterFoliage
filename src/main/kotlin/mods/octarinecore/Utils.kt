@@ -33,18 +33,6 @@ class ThreadLocalDelegate<T>(init: () -> T) {
 }
 
 /**
- * Starting with the second element of this [Iterable] until the last, call the supplied lambda with
- * the parameters (index, element, previous element).
- */
-inline fun <reified T> Iterable<T>.forEachPairIndexed(func: (Int, T, T) -> Unit) {
-    var previous: T? = null
-    forEachIndexed { idx, current ->
-        if (previous != null) func(idx, current, previous)
-        previous = current
-    }
-}
-
-/**
  * Call the supplied lambda and return its result, or the given default value if an exception is
  * thrown.
  */
