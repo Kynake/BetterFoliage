@@ -30,7 +30,6 @@ object Client {
     @Suppress("unused")
     val singletons =
         listOf(
-            GrassRegistry,
             IC2Integration,
             AbyssalCraftIntegration,
         )

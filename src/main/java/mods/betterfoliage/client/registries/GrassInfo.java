@@ -24,9 +24,7 @@ public class GrassInfo {
 
         final float[] hsb = Color.RGBtoHSB(r, g, b, null);
 
-        customColor = hsb[1] > Config.shortGrass.INSTANCE.getSaturationThreshold() ? averageColor // TODO: set
-                                                                                                  // brightness to 0.8?
-                                                                                                  // (maybe)
-            : 0;
+        // TODO: set brightness to 0.8? (maybe)
+        customColor = hsb[1] > Config.shortGrass.INSTANCE.getSaturationThreshold() ? averageColor : 0;
     }
 }

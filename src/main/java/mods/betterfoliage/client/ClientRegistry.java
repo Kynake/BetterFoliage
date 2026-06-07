@@ -11,6 +11,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.gui.ConfigGuiFactory;
+import mods.betterfoliage.client.registries.GrassRegistry;
 import mods.betterfoliage.client.registries.LeafRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.features.AlgaeRenderer;
@@ -57,6 +58,7 @@ public class ClientRegistry {
         BetterFoliageMod.log.info("New ClientRegistry postInit()");
 
         LeafRegistry.getInstance();
+        GrassRegistry.getInstance();
         WindTracker.getInstance();
 
         initBlockRenderers();

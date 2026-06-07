@@ -1,7 +1,5 @@
 package mods.betterfoliage.client.render.features;
 
-import java.util.Map;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -12,14 +10,13 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
+import mods.betterfoliage.client.registries.GrassRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.render.Utils;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.client.resource.generators.ShortGrassGenerator;
 import mods.betterfoliage.client.resource.generators.ShortGrassSnowGenerator;
-import mods.betterfoliage.client.texture.GrassInfo;
-import mods.betterfoliage.client.texture.GrassRegistry;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.IGrassBlockRenderer;
 import mods.betterfoliage.utils.MathUtils;
@@ -198,18 +195,16 @@ public class GrassRenderer extends BlockRenderer {
     }
 
     private void setGrassColor(IBlockAccess world, Tessellator tessellator, Block grassBlock, int x, int y, int z) {
+
         IIcon grassTopTexture = grassBlock.getIcon(world, x, y, z, ForgeDirection.UP.ordinal());
 
-        Map<IIcon, GrassInfo> grassMap = GrassRegistry.INSTANCE.getGrass();
-        if (!grassMap.containsKey(grassTopTexture)) {
-            return;
-        }
+        int color = GrassRegistry.getInstance()
+            .getColorForSprite(grassTopTexture);
 
-        GrassInfo grass = grassMap.get(grassTopTexture);
-
-        int color = grass.getOverrideColor() != null ? grass.getOverrideColor()
-            : world.getBiomeGenForCoords(x, z)
+        if (color == 0) {
+            color = world.getBiomeGenForCoords(x, z)
                 .getBiomeGrassColor(x, y, z);
+        }
 
         tessellator.setColorOpaque_I(color);
     }
