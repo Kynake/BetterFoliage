@@ -14,12 +14,12 @@ import mods.betterfoliage.client.registries.GrassInfo;
 import mods.betterfoliage.client.registries.GrassRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
-import mods.betterfoliage.client.render.Utils;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.client.resource.generators.ShortGrassGenerator;
 import mods.betterfoliage.client.resource.generators.ShortGrassSnowGenerator;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.IGrassBlockRenderer;
+import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
 import mods.octarinecore.client.render.BlockContext;
 
@@ -83,7 +83,7 @@ public class GrassRenderer extends BlockRenderer {
 
         // Render grass block
         Block blockAbove = world.getBlock(x, y + 1, z);
-        boolean hasSnowAbove = Utils.isSnow(blockAbove);
+        boolean hasSnowAbove = BlockUtils.isSnow(blockAbove);
 
         boolean isConnected = Config.connectedGrass.INSTANCE.getEnabled();
         if (isConnected) {

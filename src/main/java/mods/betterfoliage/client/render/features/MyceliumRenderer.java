@@ -11,9 +11,9 @@ import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
-import mods.betterfoliage.client.render.Utils;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
+import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
 import mods.octarinecore.client.render.BlockContext;
 
@@ -56,7 +56,7 @@ public class MyceliumRenderer extends BlockRenderer {
         boolean renderResult = renderer.renderStandardBlock(block, x, y, z);
 
         Block blockAbove = world.getBlock(x, y + 1, z);
-        boolean hasSnowAbove = Utils.isSnow(blockAbove);
+        boolean hasSnowAbove = BlockUtils.isSnow(blockAbove);
 
         if (hasSnowAbove && !Config.connectedGrass.INSTANCE.getSnowEnabled()) return renderResult;
         if (blockAbove.isOpaqueCube()) return renderResult;

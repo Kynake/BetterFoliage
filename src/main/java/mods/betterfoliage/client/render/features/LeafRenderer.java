@@ -12,9 +12,9 @@ import mods.betterfoliage.client.registries.LeafInfo;
 import mods.betterfoliage.client.registries.LeafRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
-import mods.betterfoliage.client.render.Utils;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
+import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
 import mods.octarinecore.client.render.BlockContext;
 
@@ -110,7 +110,7 @@ public class LeafRenderer extends BlockRenderer {
             leafRenderer.betterfoliage$resetRotation();
         }
 
-        if (Config.leaves.INSTANCE.getSnowEnabled() && Utils.isSnow(world.getBlock(x, y + 1, z))) {
+        if (Config.leaves.INSTANCE.getSnowEnabled() && BlockUtils.isSnow(world.getBlock(x, y + 1, z))) {
             sprite = snowCovering.getSpriteForCoord(x, y, z, ForgeDirection.UP.ordinal());
             leafRenderer.betterfoliage$setAORender(block, x, y, z, false);
             renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, horizontalScale);

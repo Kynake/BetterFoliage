@@ -5,12 +5,7 @@ package mods.betterfoliage.client.render
 import mods.octarinecore.client.render.Model
 import mods.octarinecore.client.render.Quad
 import mods.octarinecore.client.render.Rotation
-import net.minecraft.block.Block
-import net.minecraft.block.material.Material
 import net.minecraftforge.common.util.ForgeDirection
-
-val Block.isSnow: Boolean
-    get() = material.let { it == Material.snow || it == Material.craftedSnow }
 
 val rotationFromUp =
     arrayOf(
