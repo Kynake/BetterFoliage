@@ -22,7 +22,7 @@ import mods.betterfoliage.utils.MathUtils;
 
 public class ReedsGenerator extends TextureGenerator implements ISpriteProvider {
 
-    public static float HORIZONTAL_SCALING = 2f;
+    public static final float HORIZONTAL_SCALING = 2f;
 
     private final String baseDomain;
 
