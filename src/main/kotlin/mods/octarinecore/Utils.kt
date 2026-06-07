@@ -7,8 +7,6 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.reflect.KProperty
 
-const val PI2 = 2.0 * kotlin.math.PI
-
 /** Exchange the two elements of the list with the given indices */
 inline fun <T> MutableList<T>.exchange(idx1: Int, idx2: Int) {
     val e = this[idx1]

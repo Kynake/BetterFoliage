@@ -2,8 +2,6 @@
 
 package mods.octarinecore.client.render
 
-import java.awt.Color
-
 /**
  * List of bit-shift offsets in packed brightness values where meaningful (4-bit) data is contained.
  */
@@ -63,16 +61,4 @@ fun brWeighted(br1: Int, weight1: Float, br2: Int, weight2: Float): Int {
         result = result or ((compWeighted and 15) shl shift)
     }
     return result
-}
-
-data class HSB(var hue: Float, var saturation: Float, var brightness: Float) {
-    companion object {
-        fun fromColor(color: Int): HSB {
-            val hsbVals =
-                Color.RGBtoHSB((color shr 16) and 255, (color shr 8) and 255, color and 255, null)
-            return HSB(hsbVals[0], hsbVals[1], hsbVals[2])
-        }
-    }
-    val asColor: Int
-        get() = Color.HSBtoRGB(hue, saturation, brightness)
 }
