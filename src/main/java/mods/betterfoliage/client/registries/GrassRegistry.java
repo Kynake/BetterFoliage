@@ -31,10 +31,11 @@ public class GrassRegistry extends StitchListener {
 
     public int getColorForSprite(IIcon sprite) {
         if (grasses == null || !grasses.containsKey(sprite)) {
-            return 0;
+            return GrassInfo.DEFAULT_COLOR_MULTIPLIER;
         }
 
-        return grasses.get(sprite).customColor;
+        return grasses.get(sprite)
+            .customColor();
     }
 
     @Override

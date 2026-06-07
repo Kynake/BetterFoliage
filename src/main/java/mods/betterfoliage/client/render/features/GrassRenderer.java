@@ -10,6 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
+import mods.betterfoliage.client.registries.GrassInfo;
 import mods.betterfoliage.client.registries.GrassRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
@@ -196,17 +197,14 @@ public class GrassRenderer extends BlockRenderer {
 
     private void setGrassColor(IBlockAccess world, Tessellator tessellator, Block grassBlock, int x, int y, int z) {
 
-        IIcon grassTopTexture = grassBlock.getIcon(world, x, y, z, ForgeDirection.UP.ordinal());
-
-        int color = GrassRegistry.getInstance()
-            .getColorForSprite(grassTopTexture);
-
-        if (color == 0) {
-            color = world.getBiomeGenForCoords(x, z)
-                .getBiomeGrassColor(x, y, z);
+        int colorMultiplier = grassBlock.colorMultiplier(world, x, y, z);
+        if (colorMultiplier == GrassInfo.DEFAULT_COLOR_MULTIPLIER) {
+            final IIcon grassTopTexture = grassBlock.getIcon(world, x, y, z, 1);
+            colorMultiplier = GrassRegistry.getInstance()
+                .getColorForSprite(grassTopTexture);
         }
 
-        tessellator.setColorOpaque_I(color);
+        tessellator.setColorOpaque_I(colorMultiplier);
     }
 
     private boolean blocksShortGrassRendering(IBlockAccess world, Block blockAbove, int x, int y, int z) {

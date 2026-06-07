@@ -1,30 +1,19 @@
 package mods.betterfoliage.client.registries;
 
-import java.awt.Color;
-
 import net.minecraft.util.IIcon;
 
-import mods.betterfoliage.client.config.Config;
+import com.github.bsideup.jabel.Desugar;
+
 import mods.betterfoliage.client.render.RenderUtils;
 
-public class GrassInfo {
+@Desugar
+public record GrassInfo(int customColor) {
 
-    public final int customColor;
+    /// The default color multiplier for blocks that don't use custom coloring, like standard grass.
+    /// If a block's value for this is different from the default, then we should _not_ use customColor.
+    public static final int DEFAULT_COLOR_MULTIPLIER = 0xFF_FF_FF;
 
-    public GrassInfo(IIcon grassSprite) {
-        final int averageColor = RenderUtils.averageSpriteSquare(grassSprite, 0);
-        if (averageColor == 0) {
-            customColor = 0;
-            return;
-        }
-
-        final int r = averageColor >> 16 & 0xFF;
-        final int g = averageColor >> 8 & 0xFF;
-        final int b = averageColor & 0xFF;
-
-        final float[] hsb = Color.RGBtoHSB(r, g, b, null);
-
-        // TODO: set brightness to 0.8? (maybe)
-        customColor = hsb[1] > Config.shortGrass.INSTANCE.getSaturationThreshold() ? averageColor : 0;
+    public GrassInfo(IIcon customColor) {
+        this(RenderUtils.averageSpriteSquare(customColor, DEFAULT_COLOR_MULTIPLIER));
     }
 }
