@@ -199,9 +199,7 @@ public final class LeafRegistry extends TextureGenerator {
     public boolean resourceExists(ResourceLocation location) {
         boolean isMcMeta = ResourceUtils.isMcMeta(location);
 
-        final ResourceLocation baseLocation = isMcMeta
-            ? ResourceUtils.getBaseForMcMeta(location)
-            : location;
+        final ResourceLocation baseLocation = isMcMeta ? ResourceUtils.getBaseForMcMeta(location) : location;
 
         for (LeafInfo leaf : leaves.values()) {
             if (!baseLocation.equals(leaf.generatedLeafResource)) continue;

@@ -41,7 +41,7 @@ public abstract class TextureGenerator extends StitchListener implements IResour
         super(selfRegister);
         this.name = name;
         this.description = description;
-        this.domain = BetterFoliageMod.MOD_ID.toLowerCase() + "_" + domain;
+        this.domain = BetterFoliageMod.DOMAIN + "_" + domain;
 
         // Add self to the list of default resource packs
         FMLClientHandler.instance().resourcePackList.add(this);

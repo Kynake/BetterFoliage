@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
-import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.ResourceUtils;
 
