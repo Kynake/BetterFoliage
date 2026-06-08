@@ -141,13 +141,13 @@ public final class LeafRegistry extends TextureGenerator {
         Graphics2D graphics = genImage.createGraphics();
 
         for (int frame = 0; frame < frames; frame++) {
-            BufferedImage baseSubFrame = baseImage.getSubimage(0, height * frame, width, height);
+            BufferedImage baseSubFrame = baseImage.getSubimage(0, width * frame, width, width);
 
             // Copy base image to the four quadrants of the generated texture
-            graphics.drawImage(baseSubFrame, 0, 0, width, height, null);
-            graphics.drawImage(baseSubFrame, width, 0, width, height, null);
-            graphics.drawImage(baseSubFrame, 0, height, width, height, null);
-            graphics.drawImage(baseSubFrame, width, height, width, height, null);
+            graphics.drawImage(baseSubFrame, 0, genWidth * frame, width, width, null);
+            graphics.drawImage(baseSubFrame, width, genWidth * frame, width, width, null);
+            graphics.drawImage(baseSubFrame, 0, genWidth * frame + width, width, width, null);
+            graphics.drawImage(baseSubFrame, width, genWidth * frame + width, width, width, null);
 
             // Multiply alpha mask
             for (int x = 0; x < maskImage.getWidth(); x++) {
@@ -199,13 +199,13 @@ public final class LeafRegistry extends TextureGenerator {
     public boolean resourceExists(ResourceLocation location) {
         boolean isMcMeta = ResourceUtils.isMcMeta(location);
 
-        for (LeafInfo leaf : leaves.values()) {
-            if (isMcMeta) {
-                if (ResourceUtils.resourceHasMcMeta(leaf.baseLeafResource)) return true;
-                continue;
-            }
+        final ResourceLocation baseLocation = isMcMeta
+            ? ResourceUtils.getBaseForMcMeta(location)
+            : location;
 
-            if (location.equals(leaf.generatedLeafResource)) return true;
+        for (LeafInfo leaf : leaves.values()) {
+            if (!baseLocation.equals(leaf.generatedLeafResource)) continue;
+            return !isMcMeta || ResourceUtils.resourceHasMcMeta(leaf.baseLeafResource);
         }
 
         return false;
