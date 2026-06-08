@@ -30,16 +30,7 @@ public abstract class SingleTextureGenerator extends TextureGenerator implements
             return;
         }
 
-        String name = generatedResource.getResourcePath();
-        int startIndex = name.lastIndexOf('/') + 1;
-        int endIndex = name.lastIndexOf('.');
-
-        if (startIndex <= 0 || startIndex > endIndex) {
-            BetterFoliageMod.log.error("Invalid resource location: {}", generatedResource);
-            return;
-        }
-
-        String textureName = domain + ":" + name.substring(startIndex, endIndex);
+        final String textureName = ResourceUtils.convertToSpriteName(generatedResource);
         generatedTexture = atlas.registerIcon(textureName);
     }
 
