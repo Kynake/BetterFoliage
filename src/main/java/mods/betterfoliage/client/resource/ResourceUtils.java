@@ -166,17 +166,20 @@ public class ResourceUtils {
         return convertToSpriteName(location, location.getResourceDomain());
     }
 
+    /// Strips "textures/blocks/" and ".png" from the beginning and end of a resource's location.
     public static String convertToSpriteName(ResourceLocation location, String domain) {
         String name = location.getResourcePath();
-        int startIndex = name.lastIndexOf('/') + 1;
-        int endIndex = name.lastIndexOf('.');
-
-        if (startIndex <= 0 || startIndex > endIndex) {
-            BetterFoliageMod.log.error("Invalid resource location: {}", location);
-            return null;
+        if (name.startsWith("textures/")) {
+            name = name.substring(9);
         }
 
-        return domain + ":" + name.substring(startIndex, endIndex);
+        if (name.startsWith("blocks/")) {
+            name = name.substring(7);
+        }
+
+        int endIndex = name.lastIndexOf('.');
+
+        return domain + ":" + name.substring(0, endIndex);
     }
 
     public static ResourceLocation convertToResourceLocation(IIcon sprite) {
