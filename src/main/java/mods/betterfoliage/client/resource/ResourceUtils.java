@@ -189,6 +189,28 @@ public class ResourceUtils {
             "textures/blocks/" + partial.getResourcePath() + ".png");
     }
 
+    /// Include the other mod's domain as part of the new resource path,
+    /// to prevent overlaps in case two mods have equally named textures.
+    public static ResourceLocation convertToPrefixedDomain(String domain, ResourceLocation original) {
+        String originalPath = original.getResourcePath();
+
+        String path = "";
+
+        if (originalPath.startsWith("textures/")) {
+            originalPath = originalPath.substring(9);
+            path = "textures/";
+        }
+
+
+        if (originalPath.startsWith("blocks/")) {
+            originalPath = originalPath.substring(7);
+            path += "blocks/";
+        }
+
+        path += original.getResourceDomain() + "/" + originalPath;
+        return new ResourceLocation(domain, path);
+    }
+
     public static Map<String, String> assemblePropertiesByResource(ResourceLocation location) {
         if (!isPropertiesFile(location)) {
             BetterFoliageMod.log.error("Failed to read properties: {} is not a properties file.", location);

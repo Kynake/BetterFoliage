@@ -37,10 +37,11 @@ public class LeafInfo implements ISpriteProvider {
         this.particleType = particleType;
 
         this.averageColor = RenderUtils.averageSpriteSquare(baseSprite, 0);
-
         this.baseLeafResource = ResourceUtils.convertToResourceLocation(baseSprite);
-        this.generatedLeafResource = new ResourceLocation(leafDomain, baseLeafResource.getResourcePath());
-        this.roundLeafSprite = atlas.registerIcon(ResourceUtils.convertToSpriteName(baseLeafResource, leafDomain));
+        this.generatedLeafResource = ResourceUtils.convertToPrefixedDomain(leafDomain, baseLeafResource);
+
+        final String generatedSpriteName = ResourceUtils.convertToSpriteName(generatedLeafResource);
+        this.roundLeafSprite = atlas.registerIcon(generatedSpriteName);
 
         if (registeredParticleTypes.containsKey(particleType)) {
             particleSprites = registeredParticleTypes.get(particleType);
