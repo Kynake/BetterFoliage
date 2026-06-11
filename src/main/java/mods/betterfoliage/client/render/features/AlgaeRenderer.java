@@ -1,5 +1,6 @@
 package mods.betterfoliage.client.render.features;
 
+import mods.betterfoliage.utils.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -39,22 +40,21 @@ public class AlgaeRenderer extends BlockRenderer {
     }
 
     @Override
-    public boolean isEligible(BlockContext ctx) {
+    public boolean isEligible(IBlockAccess world, int x, int y, int z) {
         if (!Config.algae.INSTANCE.getEnabled()) return false;
-        if (ctx.block(0, 1, 0)
-            .getMaterial() != Material.water
-            || ctx.block(0, 2, 0)
-                .getMaterial() != Material.water)
+        if (!(BlockUtils.isWater(world.getBlock(x, y + 1, z)) &&
+            BlockUtils.isWater(world.getBlock(x, y + 2, z)))) {
             return false;
+        }
 
         if (!Config.blocks.INSTANCE.getDirt()
-            .matchesID(ctx.getBlock())) return false;
+            .matchesID(world.getBlock(x, y, z))) return false;
 
         // TODO: Use [0, 1] based range
-        float threshold = Config.algae.INSTANCE.getPopulation() / 32.0f;
-        if (noise.isAboveThreshold(ctx.getX(), ctx.getZ(), threshold)) return false;
+        final float threshold = Config.algae.INSTANCE.getPopulation() / 32.0f;
+        if (noise.isAboveThreshold(x, z, threshold)) return false;
 
-        int currentBiomeId = ctx.getBiomeId();
+        final int currentBiomeId = world.getBiomeGenForCoords(x, z).biomeID;
         for (int biomeId : Config.algae.INSTANCE.getBiomes()) {
             if (currentBiomeId == biomeId) return true;
         }

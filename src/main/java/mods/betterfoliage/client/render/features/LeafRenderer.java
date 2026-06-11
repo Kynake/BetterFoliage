@@ -47,11 +47,13 @@ public class LeafRenderer extends BlockRenderer {
     }
 
     @Override
-    public boolean isEligible(BlockContext ctx) {
+    public boolean isEligible(IBlockAccess world, int x, int y, int z) {
+        final Block block = world.getBlock(x, y, z);
+
         return Config.leaves.INSTANCE.getEnabled() && Config.blocks.INSTANCE.getLeaves()
-            .matchesID(ctx.getBlock())
+            .matchesID(block)
             && (!Config.leaves.INSTANCE.getSurfaceOnly()
-                || isExposed(ctx.getWorld(), ctx.getBlock(), ctx.getX(), ctx.getY(), ctx.getZ()));
+                || isExposed(world, block, x, y, z));
     }
 
     @Override
@@ -63,27 +65,27 @@ public class LeafRenderer extends BlockRenderer {
             return renderer.renderStandardBlock(block, x, y, z);
         }
 
-        boolean renderResult = renderer.renderStandardBlock(block, x, y, z);
+        final boolean renderResult = renderer.renderStandardBlock(block, x, y, z);
 
         if (!renderResult) return false;
 
-        IIcon keySprite = block.getIcon(world, x, y, z, ForgeDirection.DOWN.ordinal());
-        LeafInfo leaf = leafRegistry.getLeafForSprite(keySprite);
+        final IIcon keySprite = block.getIcon(world, x, y, z, ForgeDirection.DOWN.ordinal());
+        final LeafInfo leaf = leafRegistry.getLeafForSprite(keySprite);
 
         if (leaf == null) return true;
 
         // Render Round Leaves
-        float scale = (float) Config.leaves.INSTANCE.getSize();
-        float verticalScale = scale * VERTICAL_SCALE_FACTOR;
+        final float scale = (float) Config.leaves.INSTANCE.getSize();
+        final float verticalScale = scale * VERTICAL_SCALE_FACTOR;
 
-        int coordHash = MathUtils.hashCoords(x, y, z, SALT);
+        final int coordHash = MathUtils.hashCoords(x, y, z, SALT);
 
-        double vOffset = Config.leaves.INSTANCE.getVOffset();
-        double yOffset = y + MathUtils.hashToRange(coordHash, -vOffset, vOffset) + (1f - verticalScale) / 2f;
+        final double vOffset = Config.leaves.INSTANCE.getVOffset();
+        final double yOffset = y + MathUtils.hashToRange(coordHash, -vOffset, vOffset) + (1f - verticalScale) / 2f;
 
-        double hOffset = Config.leaves.INSTANCE.getHOffset();
-        double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
-        double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
+        final double hOffset = Config.leaves.INSTANCE.getHOffset();
+        final double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
+        final double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
         ICrossedSquaresRenderer leafRenderer = (ICrossedSquaresRenderer) renderer;
 
@@ -95,9 +97,9 @@ public class LeafRenderer extends BlockRenderer {
         renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, horizontalScale);
 
         if (Config.leaves.INSTANCE.getDense()) {
-            double rotX = x + 0.5;
-            double rotY = y + 0.5;
-            double rotZ = z + 0.5;
+            final double rotX = x + 0.5;
+            final double rotY = y + 0.5;
+            final double rotZ = z + 0.5;
 
             sprite = leaf.getSpriteForCoord(x, y, z, ForgeDirection.SOUTH.ordinal());
             leafRenderer.betterfoliage$setRotation(rotX, rotY, rotZ, ForgeDirection.SOUTH);
@@ -124,7 +126,7 @@ public class LeafRenderer extends BlockRenderer {
 
     private static boolean isExposed(IBlockAccess world, Block block, int x, int y, int z) {
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-            Block blockSide = world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
+            final Block blockSide = world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
             if (!blocksLeafRendering(blockSide, block)) return true;
         }
 

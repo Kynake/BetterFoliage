@@ -28,6 +28,7 @@ import mods.betterfoliage.client.render.features.ReedsRenderer;
 import mods.betterfoliage.client.render.particles.LeafParticleRenderer;
 import mods.betterfoliage.client.render.particles.SoulParticleRenderer;
 import mods.octarinecore.client.render.BlockContext;
+import net.minecraft.world.IBlockAccess;
 
 @SideOnly(Side.CLIENT)
 public class ClientRegistry {
@@ -95,10 +96,10 @@ public class ClientRegistry {
         SoulParticleRenderer.initSprites();
     }
 
-    public static BlockRenderer getEligibleBlockRenderer(BlockContext ctx) {
+    public static BlockRenderer getEligibleBlockRenderer(IBlockAccess world, int x, int y, int z) {
         if (blockRenderers != null) {
             for (BlockRenderer blockRenderer : blockRenderers) {
-                if (blockRenderer.isEligible(ctx)) return blockRenderer;
+                if (blockRenderer.isEligible(world, x, y, z)) return blockRenderer;
             }
         }
         return null;

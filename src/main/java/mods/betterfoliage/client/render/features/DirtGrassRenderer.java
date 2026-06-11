@@ -25,27 +25,24 @@ public class DirtGrassRenderer extends BlockRenderer {
     }
 
     @Override
-    public boolean isEligible(BlockContext context) {
+    public boolean isEligible(IBlockAccess world, int x, int y, int z) {
         if (!Config.connectedGrass.INSTANCE.getEnabled()) {
             return false;
         }
 
-        Block block = context.getBlock();
         if (!Config.blocks.INSTANCE.getDirt()
-            .matchesID(block)) {
+            .matchesID(world.getBlock(x, y, z))) {
             return false;
         }
 
-        Block blockAbove = context.block(0, 1, 0);
         if (!Config.blocks.INSTANCE.getGrass()
-            .matchesID(blockAbove)) {
+            .matchesID(world.getBlock(x, y + 1, z))) {
             return false;
         }
 
         // If snow grass is disabled, don't render if the grass block above is rendering normally
         if (!Config.connectedGrass.INSTANCE.getSnowEnabled()) {
-            Block blockTwoAbove = context.block(0, 2, 0);
-            return !BlockUtils.isSnow(blockTwoAbove);
+            return !BlockUtils.isSnow(world.getBlock(x, y + 2, z));
         }
 
         return true;

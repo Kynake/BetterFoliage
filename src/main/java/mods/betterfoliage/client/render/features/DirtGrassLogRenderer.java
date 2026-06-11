@@ -24,19 +24,18 @@ public class DirtGrassLogRenderer extends BlockRenderer {
     }
 
     @Override
-    public boolean isEligible(BlockContext ctx) {
+    public boolean isEligible(IBlockAccess world, int x, int y, int z) {
         if (!Config.roundLogs.INSTANCE.getEnabled() || !Config.roundLogs.INSTANCE.getConnectGrass()) {
             return false;
         }
 
         if (!Config.blocks.INSTANCE.getDirt()
-            .matchesID(ctx.getBlock())) {
+            .matchesID(world.getBlock(x, y, z))) {
             return false;
         }
 
-        Block blockAbove = ctx.block(0, 1, 0);
         return Config.blocks.INSTANCE.getLogs()
-            .matchesID(blockAbove);
+            .matchesID(world.getBlock(x, y + 1, z));
     }
 
     @Override

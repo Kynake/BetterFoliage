@@ -1,5 +1,6 @@
 package mods.betterfoliage.client.render.features;
 
+import mods.betterfoliage.utils.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -41,23 +42,21 @@ public class ReedsRenderer extends BlockRenderer {
     }
 
     @Override
-    public boolean isEligible(BlockContext ctx) {
+    public boolean isEligible(IBlockAccess world, int x, int y, int z) {
         if (!Config.reed.INSTANCE.getEnabled()) return false;
 
-        Block blockAbove = ctx.block(0, 1, 0);
-        if (blockAbove.getMaterial() != Material.water) return false;
+        if (!BlockUtils.isWater(world.getBlock(x, y + 1, z))) return false;
 
-        Block blockTwoAbove = ctx.block(0, 2, 0);
-        if (blockTwoAbove.getMaterial() != Material.air) return false;
+        if (world.getBlock(x, y + 2, z).getMaterial() != Material.air) return false;
 
         if (!Config.blocks.INSTANCE.getDirt()
-            .matchesID(ctx.getBlock())) return false;
+            .matchesID(world.getBlock(x, y, z))) return false;
 
         // TODO: Use [0, 1] based range
-        float threshold = Config.reed.INSTANCE.getPopulation() / 32.0f;
-        if (noise.isAboveThreshold(ctx.getX(), ctx.getZ(), threshold)) return false;
+        final float threshold = Config.reed.INSTANCE.getPopulation() / 32.0f;
+        if (noise.isAboveThreshold(x, z, threshold)) return false;
 
-        int currentBiomeId = ctx.getBiomeId();
+        final int currentBiomeId = world.getBiomeGenForCoords(x, z).biomeID;
         for (int biomeId : Config.reed.INSTANCE.getBiomes()) {
             if (currentBiomeId == biomeId) return true;
         }

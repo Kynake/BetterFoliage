@@ -20,18 +20,18 @@ public class Hooks {
     // What: Invoke BF code to overrule the return value of Block.getRenderType()
     // Why: This allows us to use custom block renderers for any block,
     // without touching block code
-    public static int getRenderTypeOverride(IBlockAccess blockAccess, int x, int y, int z, int original) {
+    public static int getRenderTypeOverride(IBlockAccess world, int x, int y, int z, int original) {
         if (!Config.INSTANCE.getEnabled()) return original;
 
-        BlockContext ctx = RendererHolder.getBlockContext();
-        ctx.set(blockAccess, x, y, z);
-
         // Look for new renderers first
-        BlockRenderer renderer = ClientRegistry.getEligibleBlockRenderer(ctx);
+        BlockRenderer renderer = ClientRegistry.getEligibleBlockRenderer(world, x, y, z);
         if (renderer != null) return renderer.getRenderId();
 
         // TODO remove eventually
         // Only then use legacy renderers
+        final BlockContext ctx = RendererHolder.getBlockContext();
+        ctx.set(world, x, y, z);
+
         for (AbstractBlockRenderingHandler legacyRenderer : Client.INSTANCE.getRenderers()) {
             if (legacyRenderer.isEligible(ctx)) return legacyRenderer.getRenderId();
         }

@@ -44,9 +44,9 @@ public class LilypadRenderer extends BlockRenderer {
     }
 
     @Override
-    public boolean isEligible(BlockContext ctx) {
+    public boolean isEligible(IBlockAccess world, int x, int y, int z) {
         return Config.lilypad.INSTANCE.getEnabled() && Config.blocks.INSTANCE.getLilypad()
-            .matchesID(ctx.getBlock());
+            .matchesID(world.getBlock(x, y, z));
     }
 
     @Override

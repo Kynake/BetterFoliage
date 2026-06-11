@@ -65,10 +65,10 @@ public class GrassRenderer extends BlockRenderer {
     }
 
     @Override
-    public boolean isEligible(BlockContext ctx) {
+    public boolean isEligible(IBlockAccess world, int x, int y, int z) {
         return (Config.connectedGrass.INSTANCE.getEnabled() || Config.shortGrass.INSTANCE.getGrassEnabled())
             && Config.blocks.INSTANCE.getGrass()
-                .matchesID(ctx.getBlock());
+                .matchesID(world.getBlock(x, y, z));
     }
 
     @Override
@@ -82,7 +82,7 @@ public class GrassRenderer extends BlockRenderer {
         }
 
         // Render grass block
-        Block blockAbove = world.getBlock(x, y + 1, z);
+        final Block blockAbove = world.getBlock(x, y + 1, z);
         boolean hasSnowAbove = BlockUtils.isSnow(blockAbove);
 
         boolean isConnected = Config.connectedGrass.INSTANCE.getEnabled();

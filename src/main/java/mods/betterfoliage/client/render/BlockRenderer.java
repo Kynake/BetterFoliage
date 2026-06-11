@@ -7,7 +7,7 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import mods.octarinecore.client.render.BlockContext;
+import net.minecraft.world.IBlockAccess;
 
 @SideOnly(Side.CLIENT)
 public abstract class BlockRenderer implements ISimpleBlockRenderingHandler {
@@ -33,5 +33,5 @@ public abstract class BlockRenderer implements ISimpleBlockRenderingHandler {
         return renderId;
     }
 
-    public abstract boolean isEligible(BlockContext context);
+    public abstract boolean isEligible(IBlockAccess world, int x, int y, int z);
 }
