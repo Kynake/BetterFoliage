@@ -162,10 +162,6 @@ class BlockContext {
     /** Get the block brightness at the given offset. */
     fun blockBrightness(offset: Int3) = block(offset).getMixedBrightnessForBlock(world, x + offset.x, y + offset.y, z + offset.z)
 
-    /** Get the biome ID at the block position. */
-    val biomeId: Int
-        get() = world!!.getBiomeGenForCoords(x, z).biomeID
-
     /** Get the texture on a given face of the block at the given offset. */
     fun icon(face: ForgeDirection, offset: Int3 = Int3.zero) = getIconSpecialCases(face, offset)
         ?: block(offset).getIcon(world, x + offset.x, y + offset.y, z + offset.z, face.ordinal)
