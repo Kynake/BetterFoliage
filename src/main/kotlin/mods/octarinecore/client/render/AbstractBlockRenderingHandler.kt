@@ -122,11 +122,6 @@ abstract class AbstractBlockRenderingHandler(modId: String) :
  * block in block-relative coordinates.
  */
 class BlockContext {
-    companion object {
-        @JvmStatic fun blockColor(block: Block, world: IBlockAccess?, x: Int, y: Int, z: Int) = block.colorMultiplier(world, x, y, z).let {
-            GT5UIntegration.tryTintWithPollution(it, block, x, z)
-        }
-    }
 
     var world: IBlockAccess? = null
     var x: Int = 0
@@ -157,7 +152,7 @@ class BlockContext {
     fun tileEntity(offset: Int3): TileEntity? = world!!.getTileEntity(x + offset.x, y + offset.y, z + offset.z)
 
     /** Get the block color multiplier at the given offset. */
-    fun blockColor(offset: Int3) = blockColor(block(offset), world, x + offset.x, y + offset.y, z + offset.z)
+    fun blockColor(offset: Int3) = block.colorMultiplier(world, x + offset.x, y + offset.y, z + offset.z)
 
     /** Get the block brightness at the given offset. */
     fun blockBrightness(offset: Int3) = block(offset).getMixedBrightnessForBlock(world, x + offset.x, y + offset.y, z + offset.z)
