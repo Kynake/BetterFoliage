@@ -2,7 +2,6 @@ package mods.betterfoliage.client.render.particles;
 
 import java.awt.Color;
 
-import net.minecraft.block.Block;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -13,6 +12,7 @@ import mods.betterfoliage.client.WindTracker;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.registries.LeafInfo;
 import mods.betterfoliage.client.registries.LeafRegistry;
+import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
 
 public class LeafParticleRenderer extends ParticleRenderer {
@@ -55,8 +55,7 @@ public class LeafParticleRenderer extends ParticleRenderer {
         rotationPerTick = ROTATION_SPEED;
         changeRandomRotation();
 
-        Block block = world.getBlock(x, y, z);
-        setParticleColor(leafInfo.averageColor, block.colorMultiplier(world, x, y, z));
+        setParticleColor(leafInfo.averageColor, BlockUtils.getStandardColorMultiplier(world, x, y, z));
         particleAlpha = 1.0f;
     }
 

@@ -17,8 +17,13 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.resource.ResourceUtils;
+import mods.betterfoliage.utils.BlockUtils;
 
 public class RenderUtils {
+
+    /// The default color multiplier for blocks that don't use custom coloring, like standard grass.
+    /// If a block's value for this is different from the default, then we should _not_ use customColor.
+    public static final int DEFAULT_COLOR_MULTIPLIER = 0xFF_FF_FF;
 
     private static final float COUNTERCLOCK_SIN = MathHelper.sin((float) (Math.PI / 2D));
     private static final float COUNTERCLOCK_COS = MathHelper.cos((float) (Math.PI / 2D));
@@ -129,7 +134,11 @@ public class RenderUtils {
         ForgeDirection aoSecond = secondAxis;
         ForgeDirection aoThird = thirdAxis;
 
-        int color = useBlockColor ? block.colorMultiplier(renderer.blockAccess, x, y, z) : 0xFF_FF_FF;
+        // We use standard block multiplier here because our only use of AO with block color is extra leaves,
+        // which would need the same multiplier as the standard leaf block.
+        // (If this ever changes then this method has to be refactored)
+        int color = useBlockColor ? BlockUtils.getStandardColorMultiplier(renderer.blockAccess, block, x, y, z)
+            : DEFAULT_COLOR_MULTIPLIER;
 
         float colorMult = getColorMultiplierBySide(firstAxis);
 

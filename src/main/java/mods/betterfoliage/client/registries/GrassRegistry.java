@@ -9,6 +9,7 @@ import net.minecraft.util.IIcon;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
+import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.StitchListener;
 
 public class GrassRegistry extends StitchListener {
@@ -31,7 +32,7 @@ public class GrassRegistry extends StitchListener {
 
     public int getColorForSprite(IIcon sprite) {
         if (grasses == null || !grasses.containsKey(sprite)) {
-            return GrassInfo.DEFAULT_COLOR_MULTIPLIER;
+            return RenderUtils.DEFAULT_COLOR_MULTIPLIER;
         }
 
         return grasses.get(sprite)

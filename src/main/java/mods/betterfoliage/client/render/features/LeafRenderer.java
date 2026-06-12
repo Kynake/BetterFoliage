@@ -16,7 +16,6 @@ import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
-import mods.octarinecore.client.render.BlockContext;
 
 public class LeafRenderer extends BlockRenderer {
 
@@ -51,9 +50,7 @@ public class LeafRenderer extends BlockRenderer {
         final Block block = world.getBlock(x, y, z);
 
         return Config.leaves.INSTANCE.getEnabled() && Config.blocks.INSTANCE.getLeaves()
-            .matchesID(block)
-            && (!Config.leaves.INSTANCE.getSurfaceOnly()
-                || isExposed(world, block, x, y, z));
+            .matchesID(block) && (!Config.leaves.INSTANCE.getSurfaceOnly() || isExposed(world, block, x, y, z));
     }
 
     @Override

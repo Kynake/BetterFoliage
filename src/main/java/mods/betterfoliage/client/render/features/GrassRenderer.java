@@ -10,10 +10,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
-import mods.betterfoliage.client.registries.GrassInfo;
 import mods.betterfoliage.client.registries.GrassRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
+import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.client.resource.generators.ShortGrassGenerator;
 import mods.betterfoliage.client.resource.generators.ShortGrassSnowGenerator;
@@ -21,7 +21,6 @@ import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.IGrassBlockRenderer;
 import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
-import mods.octarinecore.client.render.BlockContext;
 
 public class GrassRenderer extends BlockRenderer {
 
@@ -197,14 +196,14 @@ public class GrassRenderer extends BlockRenderer {
 
     private void setGrassColor(IBlockAccess world, Tessellator tessellator, Block grassBlock, int x, int y, int z) {
 
-        int colorMultiplier = grassBlock.colorMultiplier(world, x, y, z);
-        if (colorMultiplier == GrassInfo.DEFAULT_COLOR_MULTIPLIER) {
-            final IIcon grassTopTexture = grassBlock.getIcon(world, x, y, z, 1);
-            colorMultiplier = GrassRegistry.getInstance()
-                .getColorForSprite(grassTopTexture);
-        }
+        final IIcon grassTopTexture = grassBlock.getIcon(world, x, y, z, 1);
 
-        tessellator.setColorOpaque_I(colorMultiplier);
+        final int blockMultiplier = BlockUtils.getStandardColorMultiplier(world, grassBlock, x, y, z);
+
+        final int color = blockMultiplier == RenderUtils.DEFAULT_COLOR_MULTIPLIER ? GrassRegistry.getInstance()
+            .getColorForSprite(grassTopTexture) : blockMultiplier;
+
+        tessellator.setColorOpaque_I(color);
     }
 
     private boolean blocksShortGrassRendering(IBlockAccess world, Block blockAbove, int x, int y, int z) {
