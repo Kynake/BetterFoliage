@@ -2,6 +2,7 @@ package mods.betterfoliage.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.world.IBlockAccess;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -27,8 +28,6 @@ import mods.betterfoliage.client.render.features.NetherrackRenderer;
 import mods.betterfoliage.client.render.features.ReedsRenderer;
 import mods.betterfoliage.client.render.particles.LeafParticleRenderer;
 import mods.betterfoliage.client.render.particles.SoulParticleRenderer;
-import mods.octarinecore.client.render.BlockContext;
-import net.minecraft.world.IBlockAccess;
 
 @SideOnly(Side.CLIENT)
 public class ClientRegistry {
