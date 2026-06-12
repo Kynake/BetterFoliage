@@ -1,6 +1,5 @@
 package mods.betterfoliage.client.render.features;
 
-import mods.betterfoliage.utils.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -15,9 +14,9 @@ import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.generators.ReedsGenerator;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
+import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
 import mods.betterfoliage.utils.SimplexNoiseGenerator;
-import mods.octarinecore.client.render.BlockContext;
 
 public class ReedsRenderer extends BlockRenderer {
 
@@ -47,7 +46,8 @@ public class ReedsRenderer extends BlockRenderer {
 
         if (!BlockUtils.isWater(world.getBlock(x, y + 1, z))) return false;
 
-        if (world.getBlock(x, y + 2, z).getMaterial() != Material.air) return false;
+        if (world.getBlock(x, y + 2, z)
+            .getMaterial() != Material.air) return false;
 
         if (!Config.blocks.INSTANCE.getDirt()
             .matchesID(world.getBlock(x, y, z))) return false;

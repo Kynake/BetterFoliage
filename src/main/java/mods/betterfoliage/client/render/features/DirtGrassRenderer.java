@@ -9,7 +9,6 @@ import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.IOffsetSpriteRenderer;
 import mods.betterfoliage.utils.BlockUtils;
-import mods.octarinecore.client.render.BlockContext;
 
 public class DirtGrassRenderer extends BlockRenderer {
 

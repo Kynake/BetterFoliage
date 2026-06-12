@@ -17,7 +17,6 @@ import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.client.resource.SpriteSingle;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.utils.MathUtils;
-import mods.octarinecore.client.render.BlockContext;
 
 public class CactusRenderer extends BlockRenderer {
 

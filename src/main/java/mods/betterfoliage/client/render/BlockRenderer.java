@@ -2,12 +2,12 @@ package mods.betterfoliage.client.render;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.world.IBlockAccess;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.world.IBlockAccess;
 
 @SideOnly(Side.CLIENT)
 public abstract class BlockRenderer implements ISimpleBlockRenderingHandler {

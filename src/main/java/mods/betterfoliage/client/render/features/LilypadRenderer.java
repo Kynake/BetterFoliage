@@ -13,7 +13,6 @@ import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.utils.MathUtils;
-import mods.octarinecore.client.render.BlockContext;
 
 public class LilypadRenderer extends BlockRenderer {
 

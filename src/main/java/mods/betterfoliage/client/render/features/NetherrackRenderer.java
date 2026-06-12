@@ -14,7 +14,6 @@ import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.utils.MathUtils;
-import mods.octarinecore.client.render.BlockContext;
 
 public class NetherrackRenderer extends BlockRenderer {
 

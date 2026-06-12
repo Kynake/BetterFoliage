@@ -1,8 +1,6 @@
 package mods.betterfoliage.client.render.features;
 
-import mods.betterfoliage.utils.BlockUtils;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.init.Blocks;
@@ -14,9 +12,9 @@ import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.SpriteSet;
+import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
 import mods.betterfoliage.utils.SimplexNoiseGenerator;
-import mods.octarinecore.client.render.BlockContext;
 
 public class AlgaeRenderer extends BlockRenderer {
 
@@ -42,8 +40,7 @@ public class AlgaeRenderer extends BlockRenderer {
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
         if (!Config.algae.INSTANCE.getEnabled()) return false;
-        if (!(BlockUtils.isWater(world.getBlock(x, y + 1, z)) &&
-            BlockUtils.isWater(world.getBlock(x, y + 2, z)))) {
+        if (!(BlockUtils.isWater(world.getBlock(x, y + 1, z)) && BlockUtils.isWater(world.getBlock(x, y + 2, z)))) {
             return false;
         }
 

@@ -201,7 +201,6 @@ public class ResourceUtils {
             path = "textures/";
         }
 
-
         if (originalPath.startsWith("blocks/")) {
             originalPath = originalPath.substring(7);
             path += "blocks/";

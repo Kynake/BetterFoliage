@@ -1,8 +1,6 @@
 package mods.betterfoliage.client.render.features;
 
-import mods.betterfoliage.utils.BlockUtils;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.init.Blocks;
@@ -20,9 +18,9 @@ import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICustomSidePositionRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICustomSideSpritesRenderer;
+import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
 import mods.betterfoliage.utils.SimplexNoiseGenerator;
-import mods.octarinecore.client.render.BlockContext;
 
 public class CoralRenderer extends BlockRenderer {
 

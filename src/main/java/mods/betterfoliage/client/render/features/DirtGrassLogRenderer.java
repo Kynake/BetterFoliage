@@ -8,7 +8,6 @@ import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.BlockMatcher;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
-import mods.octarinecore.client.render.BlockContext;
 
 public class DirtGrassLogRenderer extends BlockRenderer {
 
