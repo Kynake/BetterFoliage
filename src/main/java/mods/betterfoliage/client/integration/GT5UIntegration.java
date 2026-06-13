@@ -18,4 +18,14 @@ public final class GT5UIntegration {
 
         return colorOverride.getColor(baseColor, x, z);
     }
+
+    public static int applyFlowerPollutionTint(int baseColor, int x, int z) {
+        if (!Mod.GT5U.isLoaded() || !PollutionConfig.pollution) return baseColor;
+        return ColorOverrideType.FLOWER.getColor(baseColor, x, z);
+    }
+
+    public static int applyLeafPollutionTint(int baseColor, int x, int z) {
+        if (!Mod.GT5U.isLoaded() || !PollutionConfig.pollution) return baseColor;
+        return ColorOverrideType.LEAVES.getColor(baseColor, x, z);
+    }
 }

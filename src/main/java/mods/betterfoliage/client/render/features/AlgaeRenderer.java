@@ -9,8 +9,10 @@ import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
+import mods.betterfoliage.client.integration.GT5UIntegration;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
+import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
@@ -80,7 +82,9 @@ public class AlgaeRenderer extends BlockRenderer {
 
         Tessellator tessellator = Tessellator.instance;
         tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y + 1, z));
-        tessellator.setColorOpaque(0xFF, 0xFF, 0xFF);
+
+        final int color = GT5UIntegration.applyLeafPollutionTint(RenderUtils.DEFAULT_COLOR_MULTIPLIER, x, z);
+        tessellator.setColorOpaque_I(color);
 
         IIcon sprite = algae.getSpriteForCoord(x, y + 1, z);
 
