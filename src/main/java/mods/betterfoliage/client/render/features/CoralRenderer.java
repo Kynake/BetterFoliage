@@ -1,5 +1,6 @@
 package mods.betterfoliage.client.render.features;
 
+import mods.betterfoliage.client.resource.SpriteSingle;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -13,7 +14,6 @@ import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.render.RenderUtils;
-import mods.betterfoliage.client.resource.EmptySprite;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICustomSidePositionRenderer;
@@ -93,18 +93,18 @@ public class CoralRenderer extends BlockRenderer {
             return renderer.renderStandardBlock(block, x, y, z);
         }
 
-        boolean renderResult = renderer.renderStandardBlock(block, x, y, z);
+        final boolean renderResult = renderer.renderStandardBlock(block, x, y, z);
 
         if (!renderResult) return false;
 
         // TODO Add configurable
         // Render Crust
-        int coordHash = MathUtils.hashCoords(x, y, z, SALT);
+        final int coordHash = MathUtils.hashCoords(x, y, z, SALT);
 
-        ICustomSideSpritesRenderer customSpriteRenderer = (ICustomSideSpritesRenderer) renderer;
+        final ICustomSideSpritesRenderer customSpriteRenderer = (ICustomSideSpritesRenderer) renderer;
         customSpriteRenderer.betterfoliage$setSpriteProvider(spriteProvider);
 
-        ICustomSidePositionRenderer customSizeRenderer = (ICustomSidePositionRenderer) renderer;
+        final ICustomSidePositionRenderer customSizeRenderer = (ICustomSidePositionRenderer) renderer;
         customSizeRenderer.betterfoliage$setSidesWithCustomProperties(
             MathUtils.hashToRange(coordHash, 0.01, Config.coral.INSTANCE.getVOffset()),
             Config.coral.INSTANCE.getCrustSize() - 1.0,
@@ -119,20 +119,20 @@ public class CoralRenderer extends BlockRenderer {
 
         // TODO Add configurable
         // Render Coral
-        ICrossedSquaresRenderer coralRenderer = (ICrossedSquaresRenderer) renderer;
+        final ICrossedSquaresRenderer coralRenderer = (ICrossedSquaresRenderer) renderer;
 
         Tessellator tessellator = Tessellator.instance;
 
         for (int i = 0; i < SIDES.length; i++) {
-            int ordinal = SIDES[i].ordinal();
+            final int ordinal = SIDES[i].ordinal();
 
             if (!CoralSpriteProvider.shouldRenderSide(x, y, z, ordinal)) {
                 continue;
             }
 
-            int xSide = x + SIDES[i].offsetX;
-            int ySide = y + SIDES[i].offsetY;
-            int zSide = z + SIDES[i].offsetZ;
+            final int xSide = x + SIDES[i].offsetX;
+            final int ySide = y + SIDES[i].offsetY;
+            final int zSide = z + SIDES[i].offsetZ;
 
             if (world.getBlock(xSide, ySide, zSide)
                 .isOpaqueCube()) {
@@ -140,12 +140,12 @@ public class CoralRenderer extends BlockRenderer {
             }
 
             // TODO: Add config using only one sprite on the same crossed square
-            IIcon spriteOne = spriteProvider.getFirstCoralForCoord(x, y, z, ordinal);
-            IIcon spriteTwo = spriteProvider.getSecondCoralForCoord(x, y, z, ordinal);
+            final IIcon spriteOne = spriteProvider.getFirstCoralForCoord(x, y, z, ordinal);
+            final IIcon spriteTwo = spriteProvider.getSecondCoralForCoord(x, y, z, ordinal);
 
-            double hOffset = Config.shortGrass.INSTANCE.getHOffset();
-            double xOffset = xSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
-            double zOffset = zSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
+            final double hOffset = Config.shortGrass.INSTANCE.getHOffset();
+            final double xOffset = xSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
+            final double zOffset = zSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
             tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, xSide, ySide, zSide));
             RenderUtils.setColorMultiplierBySide(tessellator, ordinal);
@@ -172,12 +172,17 @@ public class CoralRenderer extends BlockRenderer {
             "textures/blocks/better_crust_",
             ".png");
 
+        private final ISpriteProvider empty = new SpriteSingle(
+            BetterFoliageMod.DOMAIN, "textures/blocks/empty.png");
+
         CoralSpriteProvider() {}
 
         @Override
         public IIcon getSpriteForCoord(int x, int y, int z, int side) {
             // TODO: Add option for rendering the same crust sprite on all sides (legacy behaviour)
-            return shouldRenderSide(x, y, z, side) ? crust.getSpriteForCoord(x, y, z, side) : EmptySprite.getInstance();
+            return shouldRenderSide(x, y, z, side)
+                ? crust.getSpriteForCoord(x, y, z, side)
+                : empty.getSpriteForCoord(x, y, z, side);
         }
 
         public IIcon getFirstCoralForCoord(int x, int y, int z, int side) {
