@@ -33,9 +33,7 @@ public class SpriteSingle extends StitchListener implements ISpriteProvider {
         }
 
         String textureName = ResourceUtils.convertToSpriteName(spriteLocation);
-        if (textureName != null) {
-            sprite = atlas.registerIcon(textureName);
-        }
+        sprite = atlas.registerIcon(textureName);
     }
 
     @Override

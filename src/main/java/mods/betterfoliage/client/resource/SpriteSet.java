@@ -47,7 +47,6 @@ public class SpriteSet extends StitchListener implements ISpriteProvider {
 
         for (ResourceLocation res : resources) {
             String textureName = ResourceUtils.convertToSpriteName(res);
-            if (textureName == null) continue;
             sprites.add(atlas.registerIcon(textureName));
         }
     }
