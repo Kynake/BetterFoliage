@@ -1,5 +1,6 @@
 package mods.betterfoliage.client;
 
+import mods.betterfoliage.client.render.features.LogRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.world.IBlockAccess;
@@ -76,6 +77,7 @@ public class ClientRegistry {
         blockRenderers = new BlockRenderer[] {
             // spotless:off
             GrassRenderer.getInstance(),
+            LogRenderer.getInstance(),
             MyceliumRenderer.getInstance(),
             LeafRenderer.getInstance(),
             CactusRenderer.getInstance(),
