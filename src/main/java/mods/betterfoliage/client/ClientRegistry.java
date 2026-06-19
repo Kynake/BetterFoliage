@@ -1,6 +1,5 @@
 package mods.betterfoliage.client;
 
-import mods.betterfoliage.client.render.features.LogRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.world.IBlockAccess;
@@ -24,6 +23,7 @@ import mods.betterfoliage.client.render.features.DirtGrassRenderer;
 import mods.betterfoliage.client.render.features.GrassRenderer;
 import mods.betterfoliage.client.render.features.LeafRenderer;
 import mods.betterfoliage.client.render.features.LilypadRenderer;
+import mods.betterfoliage.client.render.features.LogRenderer;
 import mods.betterfoliage.client.render.features.MyceliumRenderer;
 import mods.betterfoliage.client.render.features.NetherrackRenderer;
 import mods.betterfoliage.client.render.features.ReedsRenderer;

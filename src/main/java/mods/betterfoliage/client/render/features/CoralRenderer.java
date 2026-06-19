@@ -1,6 +1,5 @@
 package mods.betterfoliage.client.render.features;
 
-import mods.betterfoliage.client.resource.SpriteSingle;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -15,6 +14,7 @@ import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.SpriteSet;
+import mods.betterfoliage.client.resource.SpriteSingle;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICustomSidePositionRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICustomSideSpritesRenderer;
@@ -172,16 +172,14 @@ public class CoralRenderer extends BlockRenderer {
             "textures/blocks/better_crust_",
             ".png");
 
-        private final ISpriteProvider empty = new SpriteSingle(
-            BetterFoliageMod.DOMAIN, "textures/blocks/empty.png");
+        private final ISpriteProvider empty = new SpriteSingle(BetterFoliageMod.DOMAIN, "textures/blocks/empty.png");
 
         CoralSpriteProvider() {}
 
         @Override
         public IIcon getSpriteForCoord(int x, int y, int z, int side) {
             // TODO: Add option for rendering the same crust sprite on all sides (legacy behaviour)
-            return shouldRenderSide(x, y, z, side)
-                ? crust.getSpriteForCoord(x, y, z, side)
+            return shouldRenderSide(x, y, z, side) ? crust.getSpriteForCoord(x, y, z, side)
                 : empty.getSpriteForCoord(x, y, z, side);
         }
 
