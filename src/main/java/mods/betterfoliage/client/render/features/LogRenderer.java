@@ -1,9 +1,5 @@
 package mods.betterfoliage.client.render.features;
 
-import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.config.Config;
-import mods.betterfoliage.client.render.BlockRenderer;
-import mods.betterfoliage.utils.MathUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -11,11 +7,15 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.client.config.Config;
+import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.utils.MathUtils;
+
 public class LogRenderer extends BlockRenderer {
 
-    private static final ForgeDirection[] VERTICAL_LOG_SIDES = {
-        ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.WEST
-    };
+    private static final ForgeDirection[] VERTICAL_LOG_SIDES = { ForgeDirection.NORTH, ForgeDirection.SOUTH,
+        ForgeDirection.EAST, ForgeDirection.WEST };
 
     private static LogRenderer instance;
 
@@ -32,11 +32,13 @@ public class LogRenderer extends BlockRenderer {
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
         if (!Config.roundLogs.INSTANCE.getEnabled()) return false;
 
-        return Config.blocks.INSTANCE.getLogs().matchesID(world.getBlock(x, y, z));
+        return Config.blocks.INSTANCE.getLogs()
+            .matchesID(world.getBlock(x, y, z));
     }
 
     @Override
-    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
+    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
+        RenderBlocks renderer) {
 
         // Use original render path when rendering block breaking overlay
         if (renderer.hasOverrideBlockTexture()) {
@@ -110,22 +112,24 @@ public class LogRenderer extends BlockRenderer {
                 diagLeftX = midX + diagDist;
                 diagRightX = midX - diagDist;
 
-                topLeftU = upCenterU + (upDistU / 2 * clockDir.offsetX);
-                topEdgeLeftU = upCenterU + (upDistU * edgeDist);
+                topLeftU = upCenterU + upDistU / 2 * clockDir.offsetX;
+                topEdgeLeftU = upCenterU + upDistU * edgeDist;
                 topMiddleU = upCenterU;
-                topEdgeRightU = upCenterU - (upDistU * edgeDist);
-                topRightU = upCenterU - (upDistU / 2 * clockDir.offsetX);
+                topEdgeRightU = upCenterU - upDistU * edgeDist;
+                topRightU = upCenterU - upDistU / 2 * clockDir.offsetX;
 
-                topLeftV = topEdgeLeftV = topMiddleV = topEdgeRightV = topRightV = upCenterV + upDistV / 2 * dir.offsetZ;
+                topLeftV = topEdgeLeftV = topMiddleV = topEdgeRightV = topRightV = upCenterV
+                    + upDistV / 2 * dir.offsetZ;
 
                 ///
-                botLeftU = downCenterU + (downDistU / 2 * clockDir.getOpposite().offsetX);
-                botEdgeLeftU = downCenterU + (downDistU * edgeDist);
+                botLeftU = downCenterU + downDistU / 2 * clockDir.offsetX;
+                botEdgeLeftU = downCenterU + downDistU * edgeDist;
                 botMiddleU = downCenterU;
-                botEdgeRightU = downCenterU - (downDistU * edgeDist);
-                botRightU = downCenterU - (downDistU / 2 * clockDir.getOpposite().offsetX);
+                botEdgeRightU = downCenterU - downDistU * edgeDist;
+                botRightU = downCenterU - downDistU / 2 * clockDir.offsetX;
 
-                botLeftV = botEdgeLeftV = botMiddleV = botEdgeRightV = botRightV = downCenterV + downDistV / 2 * dir.offsetZ;
+                botLeftV = botEdgeLeftV = botMiddleV = botEdgeRightV = botRightV = downCenterV
+                    - downDistV / 2 * dir.offsetZ;
 
             } else {
                 leftX = midFaceX = rightX = x + (1 + dir.offsetX) / 2.0;
@@ -141,22 +145,24 @@ public class LogRenderer extends BlockRenderer {
                 diagLeftZ = midZ + diagDist;
                 diagRightZ = midZ - diagDist;
 
-                topLeftV = upCenterV + (upDistV / 2 * clockDir.offsetZ);
-                topEdgeLeftV = upCenterV + (upDistV * edgeDist);
+                topLeftV = upCenterV + upDistV / 2 * clockDir.offsetZ;
+                topEdgeLeftV = upCenterV + upDistV * edgeDist;
                 topMiddleV = upCenterV;
-                topEdgeRightV = upCenterV - (upDistV * edgeDist);
-                topRightV = upCenterV - (upDistV / 2 * clockDir.offsetZ);
+                topEdgeRightV = upCenterV - upDistV * edgeDist;
+                topRightV = upCenterV - upDistV / 2 * clockDir.offsetZ;
 
-                topLeftU = topEdgeLeftU = topMiddleU = topEdgeRightU = topRightU = upCenterU + upDistU / 2 * dir.offsetX;
+                topLeftU = topEdgeLeftU = topMiddleU = topEdgeRightU = topRightU = upCenterU
+                    + upDistU / 2 * dir.offsetX;
 
                 ///
-                botLeftV = downCenterV + (downDistV / 2 * clockDir.getOpposite().offsetZ);
-                botEdgeLeftV = downCenterV + (downDistV * edgeDist);
+                botLeftV = downCenterV - downDistV / 2 * clockDir.offsetZ;
+                botEdgeLeftV = downCenterV - downDistV * edgeDist;
                 botMiddleV = downCenterV;
-                botEdgeRightV = downCenterV - (downDistV * edgeDist);
-                botRightV = downCenterV - (downDistV / 2 * clockDir.getOpposite().offsetZ);
+                botEdgeRightV = downCenterV + downDistV * edgeDist;
+                botRightV = downCenterV + downDistV / 2 * clockDir.offsetZ;
 
-                botLeftU = botEdgeLeftU = botMiddleU = botEdgeRightU = botRightU = downCenterU + downDistU / 2 * dir.offsetX;
+                botLeftU = botEdgeLeftU = botMiddleU = botEdgeRightU = botRightU = downCenterU
+                    + downDistU / 2 * dir.offsetX;
 
             }
 
@@ -179,29 +185,28 @@ public class LogRenderer extends BlockRenderer {
             tess.addVertexWithUV(diagRightX, y + 1, diagRightZ, rightU, topV);
 
             /// Top Left
-            tess.addVertexWithUV(midX,      y + 1, midZ,      upCenterU, upCenterV);
-            tess.addVertexWithUV(diagLeftX, y + 1, diagLeftZ, topLeftU,  topLeftV);
-            tess.addVertexWithUV(leftX,     y + 1, leftZ,     topEdgeLeftU, topEdgeLeftV);
-            tess.addVertexWithUV(midFaceX,  y + 1, midFaceZ,  topMiddleU, topMiddleV);
+            tess.addVertexWithUV(midX, y + 1, midZ, upCenterU, upCenterV);
+            tess.addVertexWithUV(diagLeftX, y + 1, diagLeftZ, topLeftU, topLeftV);
+            tess.addVertexWithUV(leftX, y + 1, leftZ, topEdgeLeftU, topEdgeLeftV);
+            tess.addVertexWithUV(midFaceX, y + 1, midFaceZ, topMiddleU, topMiddleV);
 
             /// Top Right
-            tess.addVertexWithUV(midX,       y + 1, midZ,       upCenterU,     upCenterV);
-            tess.addVertexWithUV(midFaceX,   y + 1, midFaceZ,   topMiddleU,    topMiddleV);
-            tess.addVertexWithUV(rightX,     y + 1, rightZ,     topEdgeRightU, topEdgeRightV);
-            tess.addVertexWithUV(diagRightX, y + 1, diagRightZ, topRightU,     topRightV);
+            tess.addVertexWithUV(midX, y + 1, midZ, upCenterU, upCenterV);
+            tess.addVertexWithUV(midFaceX, y + 1, midFaceZ, topMiddleU, topMiddleV);
+            tess.addVertexWithUV(rightX, y + 1, rightZ, topEdgeRightU, topEdgeRightV);
+            tess.addVertexWithUV(diagRightX, y + 1, diagRightZ, topRightU, topRightV);
 
+            /// Bottom Left
+            tess.addVertexWithUV(midX, y, midZ, downCenterU, downCenterV);
+            tess.addVertexWithUV(midFaceX, y, midFaceZ, botMiddleU, botMiddleV);
+            tess.addVertexWithUV(leftX, y, leftZ, botEdgeLeftU, botEdgeLeftV);
+            tess.addVertexWithUV(diagLeftX, y, diagLeftZ, botLeftU, botLeftV);
 
-            // Bottom Left
-            tess.addVertexWithUV(midFaceX,  y, midFaceZ,  botMiddleU, botMiddleV);
-            tess.addVertexWithUV(leftX,     y, leftZ,     botEdgeLeftU, botEdgeLeftV);
-            tess.addVertexWithUV(diagLeftX, y, diagLeftZ, botLeftU,  botLeftV);
-            tess.addVertexWithUV(midX,      y, midZ,      downCenterU, downCenterV);
-
-            // Bottom Right
-            tess.addVertexWithUV(diagRightX, y, diagRightZ, botRightU,     botRightV);
-            tess.addVertexWithUV(rightX,     y, rightZ,     botEdgeRightU, botEdgeRightV);
-            tess.addVertexWithUV(midFaceX,   y, midFaceZ,   botMiddleU,    botMiddleV);
-            tess.addVertexWithUV(midX,       y, midZ,       downCenterU,   downCenterV);
+            /// Bottom Right
+            tess.addVertexWithUV(midX, y, midZ, downCenterU, downCenterV);
+            tess.addVertexWithUV(diagRightX, y, diagRightZ, botRightU, botRightV);
+            tess.addVertexWithUV(rightX, y, rightZ, botEdgeRightU, botEdgeRightV);
+            tess.addVertexWithUV(midFaceX, y, midFaceZ, botMiddleU, botMiddleV);
         }
 
         return true;
