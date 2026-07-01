@@ -1,5 +1,6 @@
 package mods.betterfoliage.client.render.features;
 
+import mods.betterfoliage.client.render.RenderUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -46,6 +47,197 @@ public class LogRenderer extends BlockRenderer {
             return renderer.renderStandardBlock(block, x, y, z);
         }
 
+        RenderLog(world, x, y, z, block, renderer, ForgeDirection.UP);
+
+        return true;
+    }
+
+    private static void RenderLog(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer, ForgeDirection axis) {
+        final Tessellator tess = Tessellator.instance;
+        tess.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
+        tess.setColorRGBA(0xFF, 0xFF, 0xFF, 0xFF);
+
+        final double midX = x + 0.5;
+        final double midY = y + 0.5;
+        final double midZ = z + 0.5;
+
+        final double radiusSmall = Config.roundLogs.INSTANCE.getRadiusSmall();
+
+        final double diagEdgeToCenterSmall = 0.5 - radiusSmall;
+        final double diagMiddleToCenterSmall = (radiusSmall / 2.0) + diagEdgeToCenterSmall;
+
+        /// Top Octagon Sprite
+        final IIcon topOctSprite = renderer.getBlockIcon(block, world, x, y, z, axis.ordinal());
+        final double topOctLeftU = topOctSprite.getMinU(), topOctRightU = topOctSprite.getMaxU();
+        final double topOctLeftV = topOctSprite.getMinV(), topOctRightV = topOctSprite.getMaxV();
+
+        final double topOctCenterU = (topOctLeftU + topOctRightU) / 2.0;
+        final double topOctCenterV = (topOctLeftV + topOctRightV) / 2.0;
+
+        final double topOctLengthU = topOctRightU - topOctLeftU;
+        final double topOctLengthV = topOctRightV - topOctLeftV;
+
+        /// Bottom Octagon Sprite
+        final IIcon botOctSprite = renderer.getBlockIcon(block, world, x, y, z, axis.getOpposite().ordinal());
+        final double botOctLeftU = botOctSprite.getMinU(), botOctRightU = botOctSprite.getMaxU();
+        final double botOctLeftV = botOctSprite.getMinV(), botOctRightV = botOctSprite.getMaxV();
+
+        final double botOctCenterU = (botOctLeftU + botOctRightU) / 2.0;
+        final double botOctCenterV = (botOctLeftV + botOctRightV) / 2.0;
+
+        final double botOctLengthU = botOctRightU - botOctLeftU;
+        final double botOctLengthV = botOctRightV - botOctLeftV;
+
+        final ForgeDirection[] sides = RenderUtils.getAxisSides(axis);
+        for (final ForgeDirection sideDir : sides) {
+            final ForgeDirection clockDir = sideDir.getRotation(axis);
+
+            /// Axes:
+            //                  A axis
+            //                  |
+            //                 /|\
+            //                / * \
+            //               |\___/|
+            // clockDir <--- * | | |
+            //               | |*| | sideDir
+            //                \|_|/
+
+            final IIcon sprite = renderer.getBlockIcon(block, world, x, y, z, sideDir.ordinal());
+
+            final double leftU = sprite.getMinU(), rightU = sprite.getMaxU();
+            final double topV = sprite.getMinV(), bottomV = sprite.getMaxV();
+
+            final double edgeLeftU = MathUtils.lerp(leftU, rightU, radiusSmall);
+            final double edgeRightU = MathUtils.lerp(leftU, rightU, 1 - radiusSmall);
+
+            /// 3D coords (6 vertexes per side, 2 sides, 3 axes per vertex = 6 * 2 * 3 = 36)
+            //      *       --> topCenter
+            //     / \
+            //    /   \
+            //   /     \
+            //  *   *    *  --> topDiagLeft, topDiagRight | botCenter (in the middle)
+            //  |\ / \ /|
+            //  | *-*-* |   --> topEdgeLeft, topEdgeCenter, topEdgeRight
+            //  | |   | |
+            //  |/|   |\|
+            //  * |   | *   --> botDiagLeft, botDiagRight
+            //   \|   |/
+            //    *-*-*     --> botEdgeLeft, botEdgeCenter, botEdgeRight
+
+            /// Top
+            final double topCenterX, topCenterY, topCenterZ;
+            topCenterX = midX + axis.offsetX / 2.0;
+            topCenterY = midY + axis.offsetY / 2.0;
+            topCenterZ = midZ + axis.offsetZ / 2.0;
+
+            final double topDiagLeftX, topDiagLeftY, topDiagLeftZ;
+            topDiagLeftX = topCenterX + diagMiddleToCenterSmall * (sideDir.offsetX + clockDir.offsetX);
+            topDiagLeftY = topCenterY + diagMiddleToCenterSmall * (sideDir.offsetY + clockDir.offsetY);
+            topDiagLeftZ = topCenterZ + diagMiddleToCenterSmall * (sideDir.offsetZ + clockDir.offsetZ);
+
+            final double topDiagRightX, topDiagRightY, topDiagRightZ;
+            topDiagRightX = topCenterX + diagMiddleToCenterSmall * (sideDir.offsetX + clockDir.getOpposite().offsetX);
+            topDiagRightY = topCenterY + diagMiddleToCenterSmall * (sideDir.offsetY + clockDir.getOpposite().offsetY);
+            topDiagRightZ = topCenterZ + diagMiddleToCenterSmall * (sideDir.offsetZ + clockDir.getOpposite().offsetZ);
+
+            final double topEdgeCenterX, topEdgeCenterY, topEdgeCenterZ;
+            topEdgeCenterX = topCenterX + sideDir.offsetX / 2.0;
+            topEdgeCenterY = topCenterY + sideDir.offsetY / 2.0;
+            topEdgeCenterZ = topCenterZ + sideDir.offsetZ / 2.0;
+
+            final double topEdgeLeftX, topEdgeLeftY, topEdgeLeftZ;
+            topEdgeLeftX = topEdgeCenterX + diagEdgeToCenterSmall * clockDir.offsetX;
+            topEdgeLeftY = topEdgeCenterY + diagEdgeToCenterSmall * clockDir.offsetY;
+            topEdgeLeftZ = topEdgeCenterZ + diagEdgeToCenterSmall * clockDir.offsetZ;
+
+            final double topEdgeRightX, topEdgeRightY, topEdgeRightZ;
+            topEdgeRightX = topEdgeCenterX - diagEdgeToCenterSmall * clockDir.offsetX;
+            topEdgeRightY = topEdgeCenterY - diagEdgeToCenterSmall * clockDir.offsetY;
+            topEdgeRightZ = topEdgeCenterZ - diagEdgeToCenterSmall * clockDir.offsetZ;
+
+            /// Bottom
+            final double botCenterX, botCenterY, botCenterZ;
+            botCenterX = midX - axis.offsetX / 2.0;
+            botCenterY = midY - axis.offsetY / 2.0;
+            botCenterZ = midZ - axis.offsetZ / 2.0;
+
+            final double botDiagLeftX, botDiagLeftY, botDiagLeftZ;
+            botDiagLeftX = botCenterX + diagMiddleToCenterSmall * (sideDir.offsetX + clockDir.offsetX);
+            botDiagLeftY = botCenterY + diagMiddleToCenterSmall * (sideDir.offsetY + clockDir.offsetY);
+            botDiagLeftZ = botCenterZ + diagMiddleToCenterSmall * (sideDir.offsetZ + clockDir.offsetZ);
+
+            final double botDiagRightX, botDiagRightY, botDiagRightZ;
+            botDiagRightX = botCenterX + diagMiddleToCenterSmall * (sideDir.offsetX + clockDir.getOpposite().offsetX);
+            botDiagRightY = botCenterY + diagMiddleToCenterSmall * (sideDir.offsetY + clockDir.getOpposite().offsetY);
+            botDiagRightZ = botCenterZ + diagMiddleToCenterSmall * (sideDir.offsetZ + clockDir.getOpposite().offsetZ);
+
+            final double botEdgeCenterX, botEdgeCenterY, botEdgeCenterZ;
+            botEdgeCenterX = botCenterX + sideDir.offsetX / 2.0;
+            botEdgeCenterY = botCenterY + sideDir.offsetY / 2.0;
+            botEdgeCenterZ = botCenterZ + sideDir.offsetZ / 2.0;
+
+            final double botEdgeLeftX, botEdgeLeftY, botEdgeLeftZ;
+            botEdgeLeftX = botEdgeCenterX + diagEdgeToCenterSmall * clockDir.offsetX;
+            botEdgeLeftY = botEdgeCenterY + diagEdgeToCenterSmall * clockDir.offsetY;
+            botEdgeLeftZ = botEdgeCenterZ + diagEdgeToCenterSmall * clockDir.offsetZ;
+
+            final double botEdgeRightX, botEdgeRightY, botEdgeRightZ;
+            botEdgeRightX = botEdgeCenterX - diagEdgeToCenterSmall * clockDir.offsetX;
+            botEdgeRightY = botEdgeCenterY - diagEdgeToCenterSmall * clockDir.offsetY;
+            botEdgeRightZ = botEdgeCenterZ - diagEdgeToCenterSmall * clockDir.offsetZ;
+
+            /// UV Mapping
+            final double localLeftU, localLeftV;
+            final double localEdgeU, localEdgeV;
+            final double localRightU, localRightV;
+
+            /// DRAW
+
+            /// Left Diagonal
+            tess.addVertexWithUV(topDiagLeftX, topDiagLeftY, topDiagLeftZ, leftU, topV);
+            tess.addVertexWithUV(botDiagLeftX, botDiagLeftY, botDiagLeftZ, leftU, bottomV);
+            tess.addVertexWithUV(botEdgeLeftX, botEdgeLeftY, botEdgeLeftZ, edgeLeftU, bottomV);
+            tess.addVertexWithUV(topEdgeLeftX, topEdgeLeftY, topEdgeLeftZ, edgeLeftU, topV);
+
+            /// Side
+            tess.addVertexWithUV(topEdgeLeftX, topEdgeLeftY, topEdgeLeftZ, edgeLeftU, topV);
+            tess.addVertexWithUV(botEdgeLeftX, botEdgeLeftY, botEdgeLeftZ, edgeLeftU, bottomV);
+            tess.addVertexWithUV(botEdgeRightX, botEdgeRightY, botEdgeRightZ, edgeRightU, bottomV);
+            tess.addVertexWithUV(topEdgeRightX, topEdgeRightY, topEdgeRightZ, edgeRightU, topV);
+
+            /// Right Diagonal
+            tess.addVertexWithUV(topEdgeRightX, topEdgeRightY, topEdgeRightZ, edgeRightU, topV);
+            tess.addVertexWithUV(botEdgeRightX, botEdgeRightY, botEdgeRightZ, edgeRightU, bottomV);
+            tess.addVertexWithUV(botDiagRightX, botDiagRightY, botDiagRightZ, rightU, bottomV);
+            tess.addVertexWithUV(topDiagRightX, topDiagRightY, topDiagRightZ, rightU, topV);
+
+            /// Top Left
+//            tess.addVertexWithUV(topCenterX, topCenterY, topCenterZ, topOctCenterU, topOctCenterV);
+//            tess.addVertexWithUV(topDiagLeftX, topDiagLeftY, topDiagLeftZ, topLeftU, topLeftV);
+//            tess.addVertexWithUV(leftX, y + 1, leftZ, topEdgeLeftU, topEdgeLeftV);
+//            tess.addVertexWithUV(midFaceX, y + 1, midFaceZ, topMiddleU, topMiddleV);
+
+//            /// Top Right
+//            tess.addVertexWithUV(midX, y + 1, midZ, upCenterU, upCenterV);
+//            tess.addVertexWithUV(midFaceX, y + 1, midFaceZ, topMiddleU, topMiddleV);
+//            tess.addVertexWithUV(rightX, y + 1, rightZ, topEdgeRightU, topEdgeRightV);
+//            tess.addVertexWithUV(diagRightX, y + 1, diagRightZ, topRightU, topRightV);
+//
+//            /// Bottom Left
+//            tess.addVertexWithUV(midX, y, midZ, downCenterU, downCenterV);
+//            tess.addVertexWithUV(midFaceX, y, midFaceZ, botMiddleU, botMiddleV);
+//            tess.addVertexWithUV(leftX, y, leftZ, botEdgeLeftU, botEdgeLeftV);
+//            tess.addVertexWithUV(diagLeftX, y, diagLeftZ, botLeftU, botLeftV);
+//
+//            /// Bottom Right
+//            tess.addVertexWithUV(midX, y, midZ, downCenterU, downCenterV);
+//            tess.addVertexWithUV(diagRightX, y, diagRightZ, botRightU, botRightV);
+//            tess.addVertexWithUV(rightX, y, rightZ, botEdgeRightU, botEdgeRightV);
+//            tess.addVertexWithUV(midFaceX, y, midFaceZ, botMiddleU, botMiddleV);
+        }
+    }
+
+    private static void RenderVerticalLog(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer) {
         final Tessellator tess = Tessellator.instance;
         tess.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
         tess.setColorRGBA(0xFF, 0xFF, 0xFF, 0xFF);
@@ -91,7 +283,6 @@ public class LogRenderer extends BlockRenderer {
             final double topEdgeRightU, topEdgeRightV;
             final double topRightU, topRightV;
 
-            ///
             final double botLeftU, botLeftV;
             final double botEdgeLeftU, botEdgeLeftV;
             final double botMiddleU, botMiddleV;
@@ -208,7 +399,5 @@ public class LogRenderer extends BlockRenderer {
             tess.addVertexWithUV(rightX, y, rightZ, botEdgeRightU, botEdgeRightV);
             tess.addVertexWithUV(midFaceX, y, midFaceZ, botMiddleU, botMiddleV);
         }
-
-        return true;
     }
 }
