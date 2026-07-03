@@ -47,9 +47,23 @@ public class LogRenderer extends BlockRenderer {
             return renderer.renderStandardBlock(block, x, y, z);
         }
 
-        RenderLog(world, x, y, z, block, renderer, ForgeDirection.UP);
+        ForgeDirection axis = determineLogAxis(world, x, y, z, block);
+        RenderLog(world, x, y, z, block, renderer, axis);
 
         return true;
+    }
+
+    private static ForgeDirection determineLogAxis(IBlockAccess world, int x, int y, int z, Block block) {
+        int meta = world.getBlockMetadata(x, y, z);
+        if (meta == 0) {
+            return ForgeDirection.UP;
+        }
+
+        if (meta == 4) {
+            return ForgeDirection.WEST;
+        }
+
+        return ForgeDirection.NORTH;
     }
 
     private static void RenderLog(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer, ForgeDirection axis) {
@@ -69,28 +83,136 @@ public class LogRenderer extends BlockRenderer {
         /// Top Octagon Sprite
         final IIcon topOctSprite = renderer.getBlockIcon(block, world, x, y, z, axis.ordinal());
         final double topOctLeftU = topOctSprite.getMinU(), topOctRightU = topOctSprite.getMaxU();
-        final double topOctLeftV = topOctSprite.getMinV(), topOctRightV = topOctSprite.getMaxV();
+        final double topOctTopV = topOctSprite.getMinV(), topOctBotV = topOctSprite.getMaxV();
 
         final double topOctCenterU = (topOctLeftU + topOctRightU) / 2.0;
-        final double topOctCenterV = (topOctLeftV + topOctRightV) / 2.0;
+        final double topOctCenterV = (topOctTopV + topOctBotV) / 2.0;
 
         final double topOctLengthU = topOctRightU - topOctLeftU;
-        final double topOctLengthV = topOctRightV - topOctLeftV;
+        final double topOctLengthV = topOctTopV - topOctBotV;
 
         /// Bottom Octagon Sprite
         final IIcon botOctSprite = renderer.getBlockIcon(block, world, x, y, z, axis.getOpposite().ordinal());
         final double botOctLeftU = botOctSprite.getMinU(), botOctRightU = botOctSprite.getMaxU();
-        final double botOctLeftV = botOctSprite.getMinV(), botOctRightV = botOctSprite.getMaxV();
+        final double botOctTopV = botOctSprite.getMinV(), botOctBotV = botOctSprite.getMaxV();
 
         final double botOctCenterU = (botOctLeftU + botOctRightU) / 2.0;
-        final double botOctCenterV = (botOctLeftV + botOctRightV) / 2.0;
+        final double botOctCenterV = (botOctTopV + botOctBotV) / 2.0;
 
         final double botOctLengthU = botOctRightU - botOctLeftU;
-        final double botOctLengthV = botOctRightV - botOctLeftV;
+        final double botOctLengthV = botOctBotV - botOctTopV;
 
         final ForgeDirection[] sides = RenderUtils.getAxisSides(axis);
-        for (final ForgeDirection sideDir : sides) {
+        for (int i = 0; i < sides.length; i++) {
+            final ForgeDirection sideDir = sides[i];
             final ForgeDirection clockDir = sideDir.getRotation(axis);
+
+            /// UV Mapping
+            final double topLeftU, topLeftV;
+            final double topLeftEdgeU, topLeftEdgeV;
+            final double topEdgeU, topEdgeV;
+            final double topRightEdgeU, topRightEdgeV;
+            final double topRightU, topRightV;
+
+            final double botLeftU, botLeftV;
+            final double botLeftEdgeU, botLeftEdgeV;
+            final double botEdgeU, botEdgeV;
+            final double botRightEdgeU, botRightEdgeV;
+            final double botRightU, botRightV;
+
+            final double topRadiusDist = radiusSmall * (clockDir.offsetX + clockDir.offsetY + clockDir.offsetZ);
+
+            switch (i) {
+                case 0:
+                    topLeftU = topOctRightU; topLeftV = topOctTopV;
+                    topEdgeU = topOctCenterU; topEdgeV = topOctTopV;
+                    topRightU = topOctLeftU; topRightV = topOctTopV;
+
+                    topLeftEdgeU = topEdgeU + topOctLengthU * topRadiusDist;
+                    topLeftEdgeV = topOctTopV;
+
+                    topRightEdgeU = topEdgeU - topOctLengthU * topRadiusDist;
+                    topRightEdgeV = topOctTopV;
+
+                    botLeftU = botOctRightU; botLeftV = botOctBotV;
+                    botEdgeU = botOctCenterU; botEdgeV = botOctBotV;
+                    botRightU = botOctLeftU; botRightV = botOctBotV;
+
+                    botLeftEdgeU = botEdgeU + botOctLengthU * topRadiusDist;
+                    botLeftEdgeV = botOctBotV;
+
+                    botRightEdgeU = botEdgeU - botOctLengthU * topRadiusDist;
+                    botRightEdgeV = botOctBotV;
+                    break;
+
+                case 1:
+                    topLeftU = topOctRightU; topLeftV = topOctBotV;
+                    topEdgeU = topOctRightU; topEdgeV = topOctCenterV;
+                    topRightU = topOctRightU; topRightV = topOctTopV;
+
+                    topLeftEdgeU = topOctRightU;
+                    topLeftEdgeV = topEdgeV - topOctLengthV * topRadiusDist;
+
+                    topRightEdgeU = topOctRightU;
+                    topRightEdgeV = topEdgeV + topOctLengthV * topRadiusDist;
+
+                    botLeftU = botOctRightU; botLeftV = botOctTopV;
+                    botEdgeU = botOctRightU; botEdgeV = botOctCenterV;
+                    botRightU = botOctRightU; botRightV = botOctBotV;
+
+                    botLeftEdgeU = botOctRightU;
+                    botLeftEdgeV = botEdgeV - botOctLengthV * topRadiusDist;
+
+                    botRightEdgeU = botOctRightU;
+                    botRightEdgeV = botEdgeV + botOctLengthV * topRadiusDist;
+                    break;
+
+                case 2:
+                    topLeftU = topOctLeftU; topLeftV = topOctBotV;
+                    topEdgeU = topOctCenterU; topEdgeV = topOctBotV;
+                    topRightU = topOctRightU; topRightV = topOctBotV;
+
+                    topLeftEdgeU = topEdgeU + topOctLengthU * topRadiusDist;
+                    topLeftEdgeV = topOctBotV;
+
+                    topRightEdgeU = topEdgeU - topOctLengthU * topRadiusDist;
+                    topRightEdgeV = topOctBotV;
+
+                    botLeftU = botOctLeftU; botLeftV = botOctTopV;
+                    botEdgeU = botOctCenterU; botEdgeV = botOctTopV;
+                    botRightU = botOctRightU; botRightV = botOctTopV;
+
+                    botLeftEdgeU = botEdgeU + botOctLengthU * topRadiusDist;
+                    botLeftEdgeV = botOctTopV;
+
+                    botRightEdgeU = botEdgeU - botOctLengthU * topRadiusDist;
+                    botRightEdgeV = botOctTopV;
+                    break;
+
+                case 3:
+                    topLeftU = topOctLeftU; topLeftV = topOctTopV;
+                    topEdgeU = topOctLeftU; topEdgeV = topOctCenterV;
+                    topRightU = topOctLeftU; topRightV = topOctBotV;
+
+                    topLeftEdgeU = topOctLeftU;
+                    topLeftEdgeV = topEdgeV - topOctLengthV * topRadiusDist;
+
+                    topRightEdgeU = topOctLeftU;
+                    topRightEdgeV = topEdgeV + topOctLengthV * topRadiusDist;
+
+                    botLeftU = botOctLeftU; botLeftV = botOctBotV;
+                    botEdgeU = botOctLeftU; botEdgeV = botOctCenterV;
+                    botRightU = botOctLeftU; botRightV = botOctTopV;
+
+                    botLeftEdgeU = botOctLeftU;
+                    botLeftEdgeV = botEdgeV - botOctLengthV * topRadiusDist;
+
+                    botRightEdgeU = botOctLeftU;
+                    botRightEdgeV = botEdgeV + botOctLengthV * topRadiusDist;
+                    break;
+
+                default: return;
+            }
 
             /// Axes:
             //                  A axis
@@ -186,11 +308,6 @@ public class LogRenderer extends BlockRenderer {
             botEdgeRightY = botEdgeCenterY - diagEdgeToCenterSmall * clockDir.offsetY;
             botEdgeRightZ = botEdgeCenterZ - diagEdgeToCenterSmall * clockDir.offsetZ;
 
-            /// UV Mapping
-            final double localLeftU, localLeftV;
-            final double localEdgeU, localEdgeV;
-            final double localRightU, localRightV;
-
             /// DRAW
 
             /// Left Diagonal
@@ -212,192 +329,30 @@ public class LogRenderer extends BlockRenderer {
             tess.addVertexWithUV(topDiagRightX, topDiagRightY, topDiagRightZ, rightU, topV);
 
             /// Top Left
-//            tess.addVertexWithUV(topCenterX, topCenterY, topCenterZ, topOctCenterU, topOctCenterV);
-//            tess.addVertexWithUV(topDiagLeftX, topDiagLeftY, topDiagLeftZ, topLeftU, topLeftV);
-//            tess.addVertexWithUV(leftX, y + 1, leftZ, topEdgeLeftU, topEdgeLeftV);
-//            tess.addVertexWithUV(midFaceX, y + 1, midFaceZ, topMiddleU, topMiddleV);
-
-//            /// Top Right
-//            tess.addVertexWithUV(midX, y + 1, midZ, upCenterU, upCenterV);
-//            tess.addVertexWithUV(midFaceX, y + 1, midFaceZ, topMiddleU, topMiddleV);
-//            tess.addVertexWithUV(rightX, y + 1, rightZ, topEdgeRightU, topEdgeRightV);
-//            tess.addVertexWithUV(diagRightX, y + 1, diagRightZ, topRightU, topRightV);
-//
-//            /// Bottom Left
-//            tess.addVertexWithUV(midX, y, midZ, downCenterU, downCenterV);
-//            tess.addVertexWithUV(midFaceX, y, midFaceZ, botMiddleU, botMiddleV);
-//            tess.addVertexWithUV(leftX, y, leftZ, botEdgeLeftU, botEdgeLeftV);
-//            tess.addVertexWithUV(diagLeftX, y, diagLeftZ, botLeftU, botLeftV);
-//
-//            /// Bottom Right
-//            tess.addVertexWithUV(midX, y, midZ, downCenterU, downCenterV);
-//            tess.addVertexWithUV(diagRightX, y, diagRightZ, botRightU, botRightV);
-//            tess.addVertexWithUV(rightX, y, rightZ, botEdgeRightU, botEdgeRightV);
-//            tess.addVertexWithUV(midFaceX, y, midFaceZ, botMiddleU, botMiddleV);
-        }
-    }
-
-    private static void RenderVerticalLog(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer) {
-        final Tessellator tess = Tessellator.instance;
-        tess.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
-        tess.setColorRGBA(0xFF, 0xFF, 0xFF, 0xFF);
-
-        final double midX = x + 0.5;
-        final double midZ = z + 0.5;
-
-        final double radius = Config.roundLogs.INSTANCE.getRadiusSmall();
-
-        final IIcon upSprite = renderer.getBlockIcon(block, world, x, y, z, ForgeDirection.UP.ordinal());
-        final double upLeftU = upSprite.getMinU(), upRightU = upSprite.getMaxU();
-        final double upTopV = upSprite.getMinV(), upBottomV = upSprite.getMaxV();
-        final double upCenterU = (upLeftU + upRightU) / 2.0, upCenterV = (upTopV + upBottomV) / 2.0;
-        final double upDistU = upRightU - upLeftU, upDistV = upBottomV - upTopV;
-
-        final IIcon downSprite = renderer.getBlockIcon(block, world, x, y, z, ForgeDirection.DOWN.ordinal());
-        final double downLeftU = downSprite.getMinU(), downRightU = downSprite.getMaxU();
-        final double downTopV = downSprite.getMinV(), downBottomV = downSprite.getMaxV();
-        final double downCenterU = (downLeftU + downRightU) / 2.0, downCenterV = (downTopV + downBottomV) / 2.0;
-        final double downDistU = downRightU - downLeftU, downDistV = downBottomV - downTopV;
-
-        final double edgeFromCenter = 0.5 - radius;
-        final double diagFromCenter = (radius / 2.0) + edgeFromCenter;
-
-        for (final ForgeDirection dir : VERTICAL_LOG_SIDES) {
-            final ForgeDirection clockDir = dir.getRotation(ForgeDirection.UP);
-
-            final IIcon sprite = renderer.getBlockIcon(block, world, x, y, z, dir.ordinal());
-
-            final double leftU = sprite.getMinU(), rightU = sprite.getMaxU();
-            final double topV = sprite.getMinV(), bottomV = sprite.getMaxV();
-
-            final double edgeLeftU = MathUtils.lerp(leftU, rightU, radius);
-            final double edgeRightU = MathUtils.lerp(leftU, rightU, 1 - radius);
-
-            final double leftX, rightX, leftZ, rightZ;
-            final double diagLeftX, diagRightX, diagLeftZ, diagRightZ;
-            final double midFaceX, midFaceZ;
-
-            final double topLeftU, topLeftV;
-            final double topEdgeLeftU, topEdgeLeftV;
-            final double topMiddleU, topMiddleV;
-            final double topEdgeRightU, topEdgeRightV;
-            final double topRightU, topRightV;
-
-            final double botLeftU, botLeftV;
-            final double botEdgeLeftU, botEdgeLeftV;
-            final double botMiddleU, botMiddleV;
-            final double botEdgeRightU, botEdgeRightV;
-            final double botRightU, botRightV;
-
-            if (dir == ForgeDirection.NORTH || dir == ForgeDirection.SOUTH) {
-                leftZ = midFaceZ = rightZ = z + (1 + dir.offsetZ) / 2.0;
-                diagLeftZ = diagRightZ = midZ + diagFromCenter * dir.offsetZ;
-
-                midFaceX = midX;
-
-                final double edgeDist = edgeFromCenter * clockDir.offsetX;
-                leftX = midX + edgeDist;
-                rightX = midX - edgeDist;
-
-                final double diagDist = diagFromCenter * clockDir.offsetX;
-                diagLeftX = midX + diagDist;
-                diagRightX = midX - diagDist;
-
-                topLeftU = upCenterU + upDistU / 2 * clockDir.offsetX;
-                topEdgeLeftU = upCenterU + upDistU * edgeDist;
-                topMiddleU = upCenterU;
-                topEdgeRightU = upCenterU - upDistU * edgeDist;
-                topRightU = upCenterU - upDistU / 2 * clockDir.offsetX;
-
-                topLeftV = topEdgeLeftV = topMiddleV = topEdgeRightV = topRightV = upCenterV
-                    + upDistV / 2 * dir.offsetZ;
-
-                ///
-                botLeftU = downCenterU + downDistU / 2 * clockDir.offsetX;
-                botEdgeLeftU = downCenterU + downDistU * edgeDist;
-                botMiddleU = downCenterU;
-                botEdgeRightU = downCenterU - downDistU * edgeDist;
-                botRightU = downCenterU - downDistU / 2 * clockDir.offsetX;
-
-                botLeftV = botEdgeLeftV = botMiddleV = botEdgeRightV = botRightV = downCenterV
-                    - downDistV / 2 * dir.offsetZ;
-
-            } else {
-                leftX = midFaceX = rightX = x + (1 + dir.offsetX) / 2.0;
-                diagLeftX = diagRightX = x + 0.5 + diagFromCenter * dir.offsetX;
-
-                midFaceZ = midZ;
-
-                final double edgeDist = edgeFromCenter * clockDir.offsetZ;
-                leftZ = midZ + edgeDist;
-                rightZ = midZ - edgeDist;
-
-                final double diagDist = diagFromCenter * clockDir.offsetZ;
-                diagLeftZ = midZ + diagDist;
-                diagRightZ = midZ - diagDist;
-
-                topLeftV = upCenterV + upDistV / 2 * clockDir.offsetZ;
-                topEdgeLeftV = upCenterV + upDistV * edgeDist;
-                topMiddleV = upCenterV;
-                topEdgeRightV = upCenterV - upDistV * edgeDist;
-                topRightV = upCenterV - upDistV / 2 * clockDir.offsetZ;
-
-                topLeftU = topEdgeLeftU = topMiddleU = topEdgeRightU = topRightU = upCenterU
-                    + upDistU / 2 * dir.offsetX;
-
-                ///
-                botLeftV = downCenterV - downDistV / 2 * clockDir.offsetZ;
-                botEdgeLeftV = downCenterV - downDistV * edgeDist;
-                botMiddleV = downCenterV;
-                botEdgeRightV = downCenterV + downDistV * edgeDist;
-                botRightV = downCenterV + downDistV / 2 * clockDir.offsetZ;
-
-                botLeftU = botEdgeLeftU = botMiddleU = botEdgeRightU = botRightU = downCenterU
-                    + downDistU / 2 * dir.offsetX;
-
-            }
-
-            /// Left Diagonal
-            tess.addVertexWithUV(diagLeftX, y + 1, diagLeftZ, leftU, topV);
-            tess.addVertexWithUV(diagLeftX, y, diagLeftZ, leftU, bottomV);
-            tess.addVertexWithUV(leftX, y, leftZ, edgeLeftU, bottomV);
-            tess.addVertexWithUV(leftX, y + 1, leftZ, edgeLeftU, topV);
-
-            /// Side
-            tess.addVertexWithUV(leftX, y + 1, leftZ, edgeLeftU, topV);
-            tess.addVertexWithUV(leftX, y, leftZ, edgeLeftU, bottomV);
-            tess.addVertexWithUV(rightX, y, rightZ, edgeRightU, bottomV);
-            tess.addVertexWithUV(rightX, y + 1, rightZ, edgeRightU, topV);
-
-            /// Right Diagonal
-            tess.addVertexWithUV(rightX, y + 1, rightZ, edgeRightU, topV);
-            tess.addVertexWithUV(rightX, y, rightZ, edgeRightU, bottomV);
-            tess.addVertexWithUV(diagRightX, y, diagRightZ, rightU, bottomV);
-            tess.addVertexWithUV(diagRightX, y + 1, diagRightZ, rightU, topV);
-
-            /// Top Left
-            tess.addVertexWithUV(midX, y + 1, midZ, upCenterU, upCenterV);
-            tess.addVertexWithUV(diagLeftX, y + 1, diagLeftZ, topLeftU, topLeftV);
-            tess.addVertexWithUV(leftX, y + 1, leftZ, topEdgeLeftU, topEdgeLeftV);
-            tess.addVertexWithUV(midFaceX, y + 1, midFaceZ, topMiddleU, topMiddleV);
+            tess.addVertexWithUV(topCenterX, topCenterY, topCenterZ, topOctCenterU, topOctCenterV);
+            tess.addVertexWithUV(topDiagLeftX, topDiagLeftY, topDiagLeftZ, topLeftU, topLeftV);
+            tess.addVertexWithUV(topEdgeLeftX, topEdgeLeftY, topEdgeLeftZ, topLeftEdgeU, topLeftEdgeV);
+            tess.addVertexWithUV(topEdgeCenterX, topEdgeCenterY, topEdgeCenterZ, topEdgeU, topEdgeV);
 
             /// Top Right
-            tess.addVertexWithUV(midX, y + 1, midZ, upCenterU, upCenterV);
-            tess.addVertexWithUV(midFaceX, y + 1, midFaceZ, topMiddleU, topMiddleV);
-            tess.addVertexWithUV(rightX, y + 1, rightZ, topEdgeRightU, topEdgeRightV);
-            tess.addVertexWithUV(diagRightX, y + 1, diagRightZ, topRightU, topRightV);
+            tess.addVertexWithUV(topCenterX, topCenterY, topCenterZ, topOctCenterU, topOctCenterV);
+            tess.addVertexWithUV(topEdgeCenterX, topEdgeCenterY, topEdgeCenterZ, topEdgeU, topEdgeV);
+            tess.addVertexWithUV(topEdgeRightX, topEdgeRightY, topEdgeRightZ, topRightEdgeU, topRightEdgeV);
+            tess.addVertexWithUV(topDiagRightX, topDiagRightY, topDiagRightZ, topRightU, topRightV);
 
             /// Bottom Left
-            tess.addVertexWithUV(midX, y, midZ, downCenterU, downCenterV);
-            tess.addVertexWithUV(midFaceX, y, midFaceZ, botMiddleU, botMiddleV);
-            tess.addVertexWithUV(leftX, y, leftZ, botEdgeLeftU, botEdgeLeftV);
-            tess.addVertexWithUV(diagLeftX, y, diagLeftZ, botLeftU, botLeftV);
+            tess.addVertexWithUV(botCenterX, botCenterY, botCenterZ, botOctCenterU, botOctCenterV);
+            tess.addVertexWithUV(botEdgeCenterX, botEdgeCenterY, botEdgeCenterZ, botEdgeU, botEdgeV);
+            tess.addVertexWithUV(botEdgeLeftX, botEdgeLeftY, botEdgeLeftZ, botLeftEdgeU, botLeftEdgeV);
+            tess.addVertexWithUV(botDiagLeftX, botDiagLeftY, botDiagLeftZ, botLeftU, botLeftV);
 
             /// Bottom Right
-            tess.addVertexWithUV(midX, y, midZ, downCenterU, downCenterV);
-            tess.addVertexWithUV(diagRightX, y, diagRightZ, botRightU, botRightV);
-            tess.addVertexWithUV(rightX, y, rightZ, botEdgeRightU, botEdgeRightV);
-            tess.addVertexWithUV(midFaceX, y, midFaceZ, botMiddleU, botMiddleV);
+            tess.addVertexWithUV(botCenterX, botCenterY, botCenterZ, botOctCenterU, botOctCenterV);
+            tess.addVertexWithUV(botDiagRightX, botDiagRightY, botDiagRightZ, botRightU, botRightV);
+            tess.addVertexWithUV(botEdgeRightX, botEdgeRightY, botEdgeRightZ, botRightEdgeU, botRightEdgeV);
+            tess.addVertexWithUV(botEdgeCenterX, botEdgeCenterY, botEdgeCenterZ, botEdgeU, botEdgeV);
+
         }
     }
+
 }
