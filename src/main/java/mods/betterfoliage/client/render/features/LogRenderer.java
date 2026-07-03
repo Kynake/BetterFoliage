@@ -55,15 +55,12 @@ public class LogRenderer extends BlockRenderer {
 
     private static ForgeDirection determineLogAxis(IBlockAccess world, int x, int y, int z, Block block) {
         int meta = world.getBlockMetadata(x, y, z);
-        if (meta == 0) {
-            return ForgeDirection.UP;
-        }
 
-        if (meta == 4) {
-            return ForgeDirection.WEST;
-        }
-
-        return ForgeDirection.NORTH;
+        return switch ((meta >> 2) & 3) {
+            case 1 -> ForgeDirection.EAST;
+            case 2 -> ForgeDirection.NORTH;
+            default -> ForgeDirection.UP;
+        };
     }
 
     private static void RenderLog(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer, ForgeDirection axis) {
