@@ -37,16 +37,16 @@ public class RenderUtils {
         { ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST };
 
     public static final ForgeDirection[] SIDES_NORTH =
-        { ForgeDirection.UP, ForgeDirection.WEST, ForgeDirection.DOWN, ForgeDirection.EAST };
+        { ForgeDirection.DOWN, ForgeDirection.EAST, ForgeDirection.UP, ForgeDirection.WEST };
 
     public static final ForgeDirection[] SIDES_SOUTH =
-        { ForgeDirection.UP, ForgeDirection.EAST, ForgeDirection.DOWN, ForgeDirection.WEST };
+        { ForgeDirection.WEST, ForgeDirection.UP, ForgeDirection.EAST, ForgeDirection.DOWN };
 
     public static final ForgeDirection[] SIDES_WEST =
-        { ForgeDirection.UP, ForgeDirection.SOUTH, ForgeDirection.DOWN, ForgeDirection.NORTH };
+        { ForgeDirection.NORTH, ForgeDirection.UP, ForgeDirection.SOUTH, ForgeDirection.DOWN };
 
     public static final ForgeDirection[] SIDES_EAST =
-        { ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.DOWN, ForgeDirection.SOUTH };
+        { ForgeDirection.DOWN, ForgeDirection.SOUTH, ForgeDirection.UP, ForgeDirection.NORTH };
 
     public static float getColorMultiplierBySide(ForgeDirection side) {
         return getColorMultiplierBySide(side.ordinal());
