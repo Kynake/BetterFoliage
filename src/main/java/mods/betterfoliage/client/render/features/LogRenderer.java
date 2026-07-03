@@ -48,9 +48,7 @@ public class LogRenderer extends BlockRenderer {
         }
 
         ForgeDirection axis = determineLogAxis(world, x, y, z, block);
-        RenderLog(world, x, y, z, block, renderer, axis);
-
-        return true;
+        return RenderLog(world, x, y, z, block, renderer, axis);
     }
 
     private static ForgeDirection determineLogAxis(IBlockAccess world, int x, int y, int z, Block block) {
@@ -63,7 +61,9 @@ public class LogRenderer extends BlockRenderer {
         };
     }
 
-    private static void RenderLog(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer, ForgeDirection axis) {
+    private static boolean RenderLog(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer, ForgeDirection axis) {
+        boolean didRender = false;
+
         final Tessellator tess = Tessellator.instance;
         tess.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
         tess.setColorRGBA(0xFF, 0xFF, 0xFF, 0xFF);
@@ -208,7 +208,7 @@ public class LogRenderer extends BlockRenderer {
                     botRightEdgeV = botEdgeV + botOctLengthV * topRadiusDist;
                     break;
 
-                default: return;
+                default: return false;
             }
 
             /// Axes:
@@ -349,7 +349,10 @@ public class LogRenderer extends BlockRenderer {
             tess.addVertexWithUV(botEdgeRightX, botEdgeRightY, botEdgeRightZ, botRightEdgeU, botRightEdgeV);
             tess.addVertexWithUV(botEdgeCenterX, botEdgeCenterY, botEdgeCenterZ, botEdgeU, botEdgeV);
 
+            didRender = true;
         }
+
+        return didRender;
     }
 
 }
