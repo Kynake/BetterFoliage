@@ -30,23 +30,23 @@ public class RenderUtils {
     private static final float CLOCKWISE_SIN = MathHelper.sin((float) (3D * Math.PI / 2D));
     private static final float CLOCKWISE_COS = MathHelper.cos((float) (3D * Math.PI / 2D));
 
-    public static final ForgeDirection[] SIDES_DOWN =
-        { ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.NORTH, ForgeDirection.WEST };
+    public static final ForgeDirection[] SIDES_DOWN = { ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.NORTH,
+        ForgeDirection.WEST };
 
-    public static final ForgeDirection[] SIDES_UP =
-        { ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST };
+    public static final ForgeDirection[] SIDES_UP = { ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH,
+        ForgeDirection.WEST };
 
-    public static final ForgeDirection[] SIDES_NORTH =
-        { ForgeDirection.DOWN, ForgeDirection.EAST, ForgeDirection.UP, ForgeDirection.WEST };
+    public static final ForgeDirection[] SIDES_NORTH = { ForgeDirection.DOWN, ForgeDirection.EAST, ForgeDirection.UP,
+        ForgeDirection.WEST };
 
-    public static final ForgeDirection[] SIDES_SOUTH =
-        { ForgeDirection.WEST, ForgeDirection.UP, ForgeDirection.EAST, ForgeDirection.DOWN };
+    public static final ForgeDirection[] SIDES_SOUTH = { ForgeDirection.WEST, ForgeDirection.UP, ForgeDirection.EAST,
+        ForgeDirection.DOWN };
 
-    public static final ForgeDirection[] SIDES_WEST =
-        { ForgeDirection.NORTH, ForgeDirection.UP, ForgeDirection.SOUTH, ForgeDirection.DOWN };
+    public static final ForgeDirection[] SIDES_WEST = { ForgeDirection.NORTH, ForgeDirection.UP, ForgeDirection.SOUTH,
+        ForgeDirection.DOWN };
 
-    public static final ForgeDirection[] SIDES_EAST =
-        { ForgeDirection.DOWN, ForgeDirection.SOUTH, ForgeDirection.UP, ForgeDirection.NORTH };
+    public static final ForgeDirection[] SIDES_EAST = { ForgeDirection.DOWN, ForgeDirection.SOUTH, ForgeDirection.UP,
+        ForgeDirection.NORTH };
 
     public static float getColorMultiplierBySide(ForgeDirection side) {
         return getColorMultiplierBySide(side.ordinal());
