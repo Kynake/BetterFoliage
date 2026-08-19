@@ -178,6 +178,9 @@ public class LogRenderer extends BlockRenderer {
         double lengthU = rightU - leftU;
         double lengthV = botV - topV;
 
+        double halfU = lengthU / 2.0;
+        double halfV = lengthV / 2.0;
+
         UVPlane plane = UVPlane.toUVPlane(axis);
 
         double clockOffsetU = plane.getOffsetU(clockwise);
@@ -186,20 +189,20 @@ public class LogRenderer extends BlockRenderer {
         double counterOffsetU = plane.getOffsetU(counterclockwise);
         double counterOffsetV = plane.getOffsetV(counterclockwise);
 
-        double clockU = midU + clockOffsetU * lengthU / 2.0;
-        double clockV = midV + clockOffsetV * lengthV / 2.0;
+        double clockU = midU + clockOffsetU * halfU;
+        double clockV = midV + clockOffsetV * halfV;
 
-        double counterU = midU + counterOffsetU * lengthU / 2.0;
-        double counterV = midV + counterOffsetV * lengthV / 2.0;
+        double counterU = midU + counterOffsetU * halfU;
+        double counterV = midV + counterOffsetV * halfV;
 
-        double clockEdgeU = midU + clockOffsetU * lengthU * frontEdgeToCenter;
-        double clockEdgeV = midV + clockOffsetV * lengthV * frontEdgeToCenter;
+        double cornerU = midU + (clockOffsetU + counterOffsetU) * halfU;
+        double cornerV = midV + (clockOffsetV + counterOffsetV) * halfV;
 
-        double counterEdgeU = midU + counterOffsetU * lengthU * frontEdgeToCenter;
-        double counterEdgeV = midV + counterOffsetV * lengthV * frontEdgeToCenter;
+        double clockEdgeU = cornerU - counterOffsetU * frontRadius * lengthU;
+        double clockEdgeV = cornerV - counterOffsetV * frontRadius * lengthU;
 
-        double cornerU = midU + (clockOffsetU + counterOffsetU) * lengthU / 2.0;
-        double cornerV = midV + (clockOffsetV + counterOffsetV) * lengthV / 2.0;
+        double counterEdgeU = cornerU - clockOffsetU * frontRadius * lengthU;
+        double counterEdgeV = cornerV - clockOffsetV * frontRadius * lengthV;
 
         tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
         tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, clockU, clockV);
@@ -223,15 +226,41 @@ public class LogRenderer extends BlockRenderer {
         lengthU = rightU - leftU;
         lengthV = botV - topV;
 
-        tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
-        tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, 0, 1);
-        tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, 1, 1);
-        tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, 1, 0);
+        halfU = lengthU / 2.0;
+        halfV = lengthV / 2.0;
+
+        plane = UVPlane.toUVPlane(axis.getOpposite());
+
+        clockOffsetU = plane.getOffsetU(clockwise);
+        clockOffsetV = plane.getOffsetV(clockwise);
+
+        counterOffsetU = plane.getOffsetU(counterclockwise);
+        counterOffsetV = plane.getOffsetV(counterclockwise);
+
+        clockU = midU + clockOffsetU * halfU;
+        clockV = midV + clockOffsetV * halfV;
+
+        counterU = midU + counterOffsetU * halfU;
+        counterV = midV + counterOffsetV * halfV;
+
+        cornerU = midU + (clockOffsetU + counterOffsetU) * halfU;
+        cornerV = midV + (clockOffsetV + counterOffsetV) * halfV;
+
+        clockEdgeU = cornerU - counterOffsetU * frontRadius * lengthU;
+        clockEdgeV = cornerV - counterOffsetV * frontRadius * lengthU;
+
+        counterEdgeU = cornerU - clockOffsetU * frontRadius * lengthU;
+        counterEdgeV = cornerV - clockOffsetV * frontRadius * lengthV;
 
         tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
-        tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, 1, 0);
-        tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, 1, 1);
-        tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, 0, 1);
+        tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, counterU, counterV);
+        tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterEdgeU, counterEdgeV);
+        tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
+
+        tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+        tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
+        tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockEdgeU, clockEdgeV);
+        tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, clockU, clockV);
 
         /// Sides
         tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, 0, 0);
