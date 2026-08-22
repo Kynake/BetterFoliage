@@ -12,7 +12,6 @@ import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.RenderUtils;
-import mods.betterfoliage.utils.MathUtils;
 
 public class LogRenderer extends BlockRenderer {
 
@@ -47,9 +46,9 @@ public class LogRenderer extends BlockRenderer {
 
         ForgeDirection axis = determineLogAxis(world, x, y, z, block);
 
-        return RenderRoundLog(world, x, y, z, block, renderer, axis);
+        //return RenderRoundLog(world, x, y, z, block, renderer, axis);
 
-        //return debugRenderHalfLog(world, x, y, z, block, renderer, axis);
+        return debugRenderHalfLog(world, x, y, z, block, renderer, axis);
     }
 
     private static boolean debugRenderHalfLog(IBlockAccess world, int x, int y, int z, Block block,
@@ -68,6 +67,185 @@ public class LogRenderer extends BlockRenderer {
             case 2 -> ForgeDirection.SOUTH;
             default -> ForgeDirection.UP;
         };
+    }
+
+    /// Renders a log block with all rounded corners
+    private static boolean RenderRoundLog(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer,
+                                          ForgeDirection axis) {
+
+        boolean didRender = false;
+
+        final ForgeDirection[] sides = RenderUtils.getAxisSides(axis);
+        for (final ForgeDirection clock : sides) {
+            final ForgeDirection counter = axis.getRotation(clock);
+            didRender = didRender | RenderRoundCorner(world, x, y, z, block, renderer, axis, clock, counter);
+        }
+
+        return didRender;
+    }
+
+    /// Renders a log block with two adjacent rounded corners and two adjacent square corners
+    private static boolean RenderRoundHalfLog(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer,
+        ForgeDirection axis, ForgeDirection side) {
+
+        boolean didRender = false;
+        final Tessellator tess = Tessellator.instance;
+
+        // TODO: AO for each vertex
+        tess.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
+        tess.setColorRGBA(0xFF, 0xFF, 0xFF, 0xFF);
+
+        final ForgeDirection counterclockwise = axis.getRotation(side);
+
+        final double midX = x + 0.5;
+        final double midY = y + 0.5;
+        final double midZ = z + 0.5;
+
+        final double axisX = (axis.offsetX / 2.0);
+        final double axisY = (axis.offsetY / 2.0);
+        final double axisZ = (axis.offsetZ / 2.0);
+
+        final double sideX = (side.offsetX / 2.0);
+        final double sideY = (side.offsetY / 2.0);
+        final double sideZ = (side.offsetZ / 2.0);
+
+        final double counterX = (counterclockwise.offsetX / 2.0);
+        final double counterY = (counterclockwise.offsetY / 2.0);
+        final double counterZ = (counterclockwise.offsetZ / 2.0);
+
+        /// Coords
+        // Front
+        final double frontCenterX = midX + axisX;
+        final double frontCenterY = midY + axisY;
+        final double frontCenterZ = midZ + axisZ;
+
+        final double frontCenterCounterX = frontCenterX + counterX;
+        final double frontCenterCounterY = frontCenterY + counterY;
+        final double frontCenterCounterZ = frontCenterZ + counterZ;
+
+        final double frontCenterClockX = frontCenterX - counterX;
+        final double frontCenterClockY = frontCenterY - counterY;
+        final double frontCenterClockZ = frontCenterZ - counterZ;
+
+        final double frontCornerCounterX = frontCenterCounterX - sideX;
+        final double frontCornerCounterY = frontCenterCounterY - sideY;
+        final double frontCornerCounterZ = frontCenterCounterZ - sideZ;
+
+        final double frontCornerClockX = frontCenterClockX - sideX;
+        final double frontCornerClockY = frontCenterClockY - sideY;
+        final double frontCornerClockZ = frontCenterClockZ - sideZ;
+
+        // Back
+        final double backCenterX = midX - axisX;
+        final double backCenterY = midY - axisY;
+        final double backCenterZ = midZ - axisZ;
+
+        final double backCenterCounterX = backCenterX + counterX;
+        final double backCenterCounterY = backCenterY + counterY;
+        final double backCenterCounterZ = backCenterZ + counterZ;
+
+        final double backCenterClockX = backCenterX - counterX;
+        final double backCenterClockY = backCenterY - counterY;
+        final double backCenterClockZ = backCenterZ - counterZ;
+
+        final double backCornerCounterX = backCenterCounterX - sideX;
+        final double backCornerCounterY = backCenterCounterY - sideY;
+        final double backCornerCounterZ = backCenterCounterZ - sideZ;
+
+        final double backCornerClockX = backCenterClockX - sideX;
+        final double backCornerClockY = backCenterClockY - sideY;
+        final double backCornerClockZ = backCenterClockZ - sideZ;
+
+        /// Square corners
+//        double leftU;
+//        double rightU;
+//        double topV;
+//        double botV;
+//
+//        double midU;
+//        double midV;
+//
+//        double lengthU;
+//        double lengthV;
+//
+//        double halfU;
+//        double halfV;
+//
+//        UVPlane plane;
+//
+//        double offsetU;
+//        double offsetV;
+//
+//        double squareLeftU;
+//        double squareRightU;
+//        double squareTopV;
+//        double squareBotV;
+//
+//        final IIcon spriteFront = renderer.getBlockIcon(block, world, x, y, z, axis.ordinal());
+//        leftU = spriteFront.getMinU();
+//        rightU = spriteFront.getMaxU();
+//        topV = spriteFront.getMinV();
+//        botV = spriteFront.getMaxV();
+//
+//        midU = (rightU + leftU) / 2.0;
+//        midV = (botV + topV) / 2.0;
+//
+//        lengthU = rightU - leftU;
+//        lengthV = botV - topV;
+//
+//        halfU = leftU / 2.0;
+//        halfV = lengthV / 2.0;
+//
+//        plane = UVPlane.toUVPlane(axis);
+//        offsetU = plane.getOffsetU(side);
+//        offsetV = plane.getOffsetV(side);
+//
+//        squareLeftU = midU - offsetU * halfU;
+//        squareRightU = midU + offsetU * halfU;
+//
+//        squareTopV = midV - offsetV * halfV;
+//        squareBotV = midV + offsetV * halfV;
+
+        // Faces
+        tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, 0.25, 0.25);
+        tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, 0.25, 0.26);
+        tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, 0.26, 0.26);
+        tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, 0.26, 0.25);
+        didRender = true;
+
+        final IIcon spriteBack = renderer.getBlockIcon(block, world, x, y, z, axis.getOpposite().ordinal());
+
+        tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, 0.25, 0.25);
+        tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, 0.25, 0.26);
+        tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, 0.26, 0.26);
+        tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, 0.26, 0.25);
+        didRender = true;
+
+        // Sides
+        tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, 0.25, 0.25);
+        tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, 0.25, 0.26);
+        tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, 0.26, 0.26);
+        tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, 0.26, 0.25);
+        didRender = true;
+
+        tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, 0.26, 0.25);
+        tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, 0.26, 0.26);
+        tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, 0.25, 0.26);
+        tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, 0.25, 0.25);
+        didRender = true;
+
+        // Back
+        tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, 0.26, 0.25);
+        tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, 0.26, 0.26);
+        tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, 0.25, 0.26);
+        tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, 0.25, 0.25);
+        didRender = true;
+
+        /// Round corners
+        didRender = didRender | RenderRoundCorner(world, x, y, z, block, renderer, axis, side, counterclockwise);
+        didRender = didRender | RenderRoundCorner(world, x, y, z, block, renderer, axis, counterclockwise.getOpposite(), side);
+
+        return didRender;
     }
 
     private static boolean RenderRoundCorner(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer,
@@ -361,32 +539,6 @@ public class LogRenderer extends BlockRenderer {
         return didRender;
     }
 
-    private static boolean RenderRoundLog(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer,
-        ForgeDirection axis) {
 
-        boolean didRender = false;
-
-        final ForgeDirection[] sides = RenderUtils.getAxisSides(axis);
-        for (final ForgeDirection clock : sides) {
-            final ForgeDirection counter = axis.getRotation(clock);
-            didRender = didRender | RenderRoundCorner(world, x, y, z, block, renderer, axis, clock, counter);
-        }
-
-        return didRender;
-    }
-
-    ///  Renders a log block with two adjacent rounded corners and two adjacent square corners
-    private static boolean RenderRoundHalfLog(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer,
-        ForgeDirection axis, ForgeDirection side) {
-
-        boolean didRender = false;
-
-
-
-        didRender = true;
-
-
-        return didRender;
-    }
 
 }
