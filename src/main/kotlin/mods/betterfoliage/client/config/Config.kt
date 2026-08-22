@@ -90,6 +90,7 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
 
     object roundLogs {
         val enabled by featureEnable(false)
+        // Note, For al sides equally sized: 0.292893218813
         val radiusSmall by double(max = 0.5, default = 0.25)
         val radiusLarge by double(max = 0.5, default = 0.44)
         val dimming by float(default = 0.7)
