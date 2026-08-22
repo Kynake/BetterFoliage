@@ -54,7 +54,7 @@ public class LogRenderer extends BlockRenderer {
     private static boolean debugRenderHalfLog(IBlockAccess world, int x, int y, int z, Block block,
           RenderBlocks renderer, ForgeDirection axis) {
 
-        final ForgeDirection[] sides = RenderUtils.getAxisSides(axis);
+        final ForgeDirection[] sides = UVPlane.getSides(axis);
         final ForgeDirection side = sides[y % sides.length];
         return RenderRoundHalfLog(world, x, y, z, block, renderer, axis, side);
     }
@@ -75,7 +75,7 @@ public class LogRenderer extends BlockRenderer {
 
         boolean didRender = false;
 
-        final ForgeDirection[] sides = RenderUtils.getAxisSides(axis);
+        final ForgeDirection[] sides = UVPlane.getSides(axis);
         for (final ForgeDirection clock : sides) {
             final ForgeDirection counter = axis.getRotation(clock);
             didRender = didRender | RenderRoundCorner(world, x, y, z, block, renderer, axis, clock, counter);

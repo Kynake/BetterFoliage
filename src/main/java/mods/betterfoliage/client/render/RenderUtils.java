@@ -30,16 +30,6 @@ public class RenderUtils {
     private static final float CLOCKWISE_SIN = MathHelper.sin((float) (3D * Math.PI / 2D));
     private static final float CLOCKWISE_COS = MathHelper.cos((float) (3D * Math.PI / 2D));
 
-    //TODO: Consider move to UVPlane.java
-    // spotless:off
-    public static final ForgeDirection[] SIDES_DOWN  = { ForgeDirection.SOUTH, ForgeDirection.EAST,  ForgeDirection.NORTH, ForgeDirection.WEST  };
-    public static final ForgeDirection[] SIDES_UP    = { ForgeDirection.NORTH, ForgeDirection.EAST,  ForgeDirection.SOUTH, ForgeDirection.WEST  };
-    public static final ForgeDirection[] SIDES_NORTH = { ForgeDirection.DOWN,  ForgeDirection.EAST,  ForgeDirection.UP,    ForgeDirection.WEST  };
-    public static final ForgeDirection[] SIDES_SOUTH = { ForgeDirection.UP,    ForgeDirection.EAST,  ForgeDirection.DOWN,  ForgeDirection.WEST  };
-    public static final ForgeDirection[] SIDES_WEST  = { ForgeDirection.NORTH, ForgeDirection.UP,    ForgeDirection.SOUTH, ForgeDirection.DOWN  };
-    public static final ForgeDirection[] SIDES_EAST  = { ForgeDirection.UP,    ForgeDirection.NORTH, ForgeDirection.DOWN,  ForgeDirection.SOUTH };
-    // spotless:on
-
     public static float getColorMultiplierBySide(ForgeDirection side) {
         return getColorMultiplierBySide(side.ordinal());
     }
@@ -56,18 +46,6 @@ public class RenderUtils {
     public static void setColorMultiplierBySide(Tessellator tessellator, int side) {
         int multiplier = (int) (getColorMultiplierBySide(side) * 255f);
         tessellator.setColorRGBA(multiplier, multiplier, multiplier, 0xFF);
-    }
-
-    public static ForgeDirection[] getAxisSides(ForgeDirection axis) {
-        return switch (axis) {
-            case DOWN -> SIDES_DOWN;
-            case UP -> SIDES_UP;
-            case NORTH -> SIDES_NORTH;
-            case SOUTH -> SIDES_SOUTH;
-            case WEST -> SIDES_WEST;
-            case EAST -> SIDES_EAST;
-            default -> new ForgeDirection[] {};
-        };
     }
 
     // TODO: use [0, 1] ratio instead
