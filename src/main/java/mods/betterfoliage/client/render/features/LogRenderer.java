@@ -564,16 +564,39 @@ public class LogRenderer extends BlockRenderer {
             cornerClockU = centerClockU - halfOffsetU;
             cornerClockV = centerClockV - halfOffsetV;
 
+            // Side opposite face
             tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
             tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, cornerClockV);
             tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, cornerCounterV);
             tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, centerCounterU, centerCounterV);
+
+            // Quarter face
+            tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, 0, 0);
+            tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, 0, 1);
+            tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, 1, 1);
+            tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, 1, 0);
+
             didRender = true;
         }
 
         final double axisOffset = axisX + axisY + axisZ;
 
         // Sides
+        {
+            // Main Side
+            sprite = renderer.getBlockIcon(block, world, x, y, z, side.ordinal());
+            leftU = sprite.getMinU();
+            topV = sprite.getMinV();
+            botV = sprite.getMaxV();
+            midU = (sprite.getMaxU() + leftU) / 2.0;
+
+            tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, leftU, topV);
+            tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, leftU, botV);
+            tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, midU, botV);
+            tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, midU, topV);
+            didRender = true;
+        }
+
         {
             // Counter
             sprite = renderer.getBlockIcon(block, world, x, y, z, counterclockwise.ordinal());
