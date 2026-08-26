@@ -476,6 +476,12 @@ public class LogRenderer extends BlockRenderer {
         double cornerClockU;
         double cornerClockV;
 
+        double centerSideU;
+        double centerSideV;
+
+        double cornerSideU;
+        double cornerSideV;
+
         // Faces
         {
             sprite = renderer.getBlockIcon(block, world, x, y, z, axis.ordinal());
@@ -519,11 +525,17 @@ public class LogRenderer extends BlockRenderer {
             tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, cornerClockV);
             tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
 
+            centerSideU = midU + halfOffsetU;
+            centerSideV = midV + halfOffsetV;
+
+            cornerSideU = centerSideU - halfCounterOffsetU;
+            cornerSideV = centerSideV - halfCounterOffsetV;
+
             // Quarter face
-            tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, 0, 0);
-            tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, 0, 1);
-            tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, 1, 1);
-            tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, 1, 0);
+            tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, centerSideU, centerSideV);
+            tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+            tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
+            tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, cornerSideU, cornerSideV);
 
             didRender = true;
         }
@@ -570,11 +582,17 @@ public class LogRenderer extends BlockRenderer {
             tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, cornerCounterV);
             tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, centerCounterU, centerCounterV);
 
+            centerSideU = midU + halfOffsetU;
+            centerSideV = midV + halfOffsetV;
+
+            cornerSideU = centerSideU - halfCounterOffsetU;
+            cornerSideV = centerSideV - halfCounterOffsetV;
+
             // Quarter face
-            tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, 0, 0);
-            tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, 0, 1);
-            tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, 1, 1);
-            tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, 1, 0);
+            tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, cornerSideU, cornerSideV);
+            tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+            tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+            tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, centerSideU, centerSideV);
 
             didRender = true;
         }
