@@ -54,12 +54,14 @@ public class LogRenderer extends BlockRenderer {
     private static boolean debugRender(IBlockAccess world, int x, int y, int z, Block block,
           RenderBlocks renderer, ForgeDirection axis) {
 
-        boolean didRender = RenderRoundLog(world, x, y, z, block, renderer, axis, false);
+        boolean didRender = RenderRoundLog(world, x, y, z, x, y, z, block, renderer, axis, false);
 
         final int meta = world.getBlockMetadata(x, y, z);
         if (((meta >> 2) & 3) == 0) {
             for (final ForgeDirection side : UVPlane.getSides(axis)) {
-                didRender |= RenderRoundLog(world, x, y, z, block, renderer, side, true);
+                didRender |= RenderRoundLog(world, x, y, z, x, y, z, block, renderer, side, true);
+                didRender |= RenderRoundLog(world, x + side.offsetX, y + side.offsetY, z + side.offsetZ, x, y, z,
+                    block, renderer, side.getOpposite(), true);
             }
         }
 
@@ -77,15 +79,15 @@ public class LogRenderer extends BlockRenderer {
     }
 
     /// Renders a log block with all rounded corners
-    private static boolean RenderRoundLog(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer,
-        ForgeDirection axis, boolean isConnectorPiece) {
+    private static boolean RenderRoundLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase,
+        Block block, RenderBlocks renderer, ForgeDirection axis, boolean isConnectorPiece) {
 
         boolean didRender = false;
 
         final ForgeDirection[] sides = UVPlane.getSides(axis);
         for (final ForgeDirection clock : sides) {
             final ForgeDirection counter = axis.getRotation(clock);
-            didRender |= RenderRoundCorner(world, x, y, z, block, renderer, axis, clock, counter,
+            didRender |= RenderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, clock, counter,
                 isConnectorPiece);
         }
 
@@ -93,8 +95,8 @@ public class LogRenderer extends BlockRenderer {
     }
 
     /// Renders a log block with two adjacent rounded corners and two adjacent square corners
-    private static boolean RenderRoundHalfLog(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer,
-        ForgeDirection axis, ForgeDirection side) {
+    private static boolean RenderRoundHalfLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase,
+        Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection side) {
 
         boolean didRender = false;
         final Tessellator tess = Tessellator.instance;
@@ -349,16 +351,19 @@ public class LogRenderer extends BlockRenderer {
         }
 
         /// Round corners
-        didRender = didRender | RenderRoundCorner(world, x, y, z, block, renderer, axis, side, counterclockwise, false);
-        didRender = didRender | RenderRoundCorner(world, x, y, z, block, renderer, axis, counterclockwise.getOpposite(), side, false);
+        didRender |= RenderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, side,
+            counterclockwise, false);
+
+        didRender |= RenderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis,
+            counterclockwise.getOpposite(), side, false);
 
         return didRender;
     }
 
     /// Renders a log block with one rounded corner and three square corners.
     /// Rounded corner is always counterclockwise of side.
-    private static boolean RenderRoundQuarterLog(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer,
-        ForgeDirection axis, ForgeDirection side) {
+    private static boolean RenderRoundQuarterLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase,
+        int zBase, Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection side) {
 
         boolean didRender = false;
         final Tessellator tess = Tessellator.instance;
@@ -682,12 +687,13 @@ public class LogRenderer extends BlockRenderer {
         }
 
         /// Round corners
-        didRender = didRender | RenderRoundCorner(world, x, y, z, block, renderer, axis, side, counterclockwise, false);
+        didRender |= RenderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, side,
+            counterclockwise, false);
 
         return didRender;
     }
 
-    private static boolean RenderRoundCorner(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer,
+    private static boolean RenderRoundCorner(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase, Block block, RenderBlocks renderer,
         ForgeDirection axis, ForgeDirection clockwise, ForgeDirection counterclockwise, boolean isConnectorPiece) {
 
         boolean didRender = false;
@@ -854,7 +860,7 @@ public class LogRenderer extends BlockRenderer {
         if (!isConnectorPiece) {
             /// Front
             {
-                final IIcon spriteFront = renderer.getBlockIcon(block, world, x, y, z, axis.ordinal());
+                final IIcon spriteFront = renderer.getBlockIcon(block, world, xBase, yBase, zBase, axis.ordinal());
 
                 leftU = spriteFront.getMinU();
                 rightU = spriteFront.getMaxU();
@@ -908,7 +914,7 @@ public class LogRenderer extends BlockRenderer {
 
             /// Back
             {
-                final IIcon spriteBack = renderer.getBlockIcon(block, world, x, y, z, axis.getOpposite().ordinal());
+                final IIcon spriteBack = renderer.getBlockIcon(block, world, xBase, yBase, zBase, axis.getOpposite().ordinal());
 
                 leftU = spriteBack.getMinU();
                 rightU = spriteBack.getMaxU();
@@ -973,17 +979,20 @@ public class LogRenderer extends BlockRenderer {
         if (isConnectorPiece) {
             axisOffsetConnector = 0;
 
-            final ForgeDirection baseAxis = determineLogAxis(world, x, y, z, block);
+            final ForgeDirection baseAxis = determineLogAxis(world, xBase, yBase, zBase, block);
             final ForgeDirection transposeConnector = baseAxis.getRotation(axis);
 
-            spriteClock = renderer.getBlockIcon(block, world, x, y, z, clockwise.getRotation(transposeConnector).ordinal());
-            spriteCounter = renderer.getBlockIcon(block, world, x, y, z, counterclockwise.getRotation(transposeConnector).ordinal());
+            spriteClock = renderer.getBlockIcon(block, world, xBase, yBase, zBase,
+                clockwise.getRotation(transposeConnector).ordinal());
+
+            spriteCounter = renderer.getBlockIcon(block, world, xBase, yBase, zBase,
+                counterclockwise.getRotation(transposeConnector).ordinal());
         }
         else {
             axisOffsetConnector = axisOffsetHalf;
 
-            spriteClock = renderer.getBlockIcon(block, world, x, y, z, clockwise.ordinal());
-            spriteCounter = renderer.getBlockIcon(block, world, x, y, z, counterclockwise.ordinal());
+            spriteClock = renderer.getBlockIcon(block, world, xBase, yBase, zBase, clockwise.ordinal());
+            spriteCounter = renderer.getBlockIcon(block, world, xBase, yBase, zBase, counterclockwise.ordinal());
         }
 
 
