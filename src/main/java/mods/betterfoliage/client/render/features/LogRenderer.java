@@ -54,17 +54,12 @@ public class LogRenderer extends BlockRenderer {
     private static boolean debugRender(IBlockAccess world, int x, int y, int z, Block block,
           RenderBlocks renderer, ForgeDirection axis) {
 
-        boolean didRender = false;
+        boolean didRender = RenderRoundLog(world, x, y, z, block, renderer, axis, false);
 
-        final ForgeDirection[] sides = UVPlane.getSides(axis);
-        for (final ForgeDirection clock : sides) {
-            final ForgeDirection counter = axis.getRotation(clock);
-
-            if (z % 2 == 0) {
-                didRender = didRender | RenderRoundCorner(world, x, y, z, block, renderer, axis, clock, counter, true);
-                didRender = didRender | RenderRoundCorner(world, x, y, z, block, renderer, axis.getOpposite(), counter, clock, true);
-            } else {
-                didRender = didRender | RenderRoundCorner(world, x, y, z, block, renderer, axis, clock, counter, false);
+        final int meta = world.getBlockMetadata(x, y, z);
+        if (((meta >> 2) & 3) == 0) {
+            for (final ForgeDirection side : UVPlane.getSides(axis)) {
+                didRender |= RenderRoundLog(world, x, y, z, block, renderer, side, true);
             }
         }
 
@@ -72,7 +67,7 @@ public class LogRenderer extends BlockRenderer {
     }
 
     private static ForgeDirection determineLogAxis(IBlockAccess world, int x, int y, int z, Block block) {
-        int meta = world.getBlockMetadata(x, y, z);
+        final int meta = world.getBlockMetadata(x, y, z);
 
         return switch ((meta >> 2) & 3) {
             case 1 -> ForgeDirection.EAST;
@@ -83,15 +78,15 @@ public class LogRenderer extends BlockRenderer {
 
     /// Renders a log block with all rounded corners
     private static boolean RenderRoundLog(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer,
-        ForgeDirection axis) {
+        ForgeDirection axis, boolean isConnectorPiece) {
 
         boolean didRender = false;
 
         final ForgeDirection[] sides = UVPlane.getSides(axis);
         for (final ForgeDirection clock : sides) {
             final ForgeDirection counter = axis.getRotation(clock);
-            //didRender = didRender | RenderRoundCorner(world, x, y, z, block, renderer, axis, clock, counter, false);
-            didRender = didRender | RenderRoundCorner(world, x, y, z, block, renderer, axis, clock, counter, true);
+            didRender |= RenderRoundCorner(world, x, y, z, block, renderer, axis, clock, counter,
+                isConnectorPiece);
         }
 
         return didRender;
@@ -726,7 +721,6 @@ public class LogRenderer extends BlockRenderer {
         final double frontDiagToCenter = (frontRadius / 2.0) + frontEdgeToCenter;
 
         final double backEdgeToCenter = 0.5 - backRadius;
-        double backDiagToCenter = (backRadius / 2.0) + backEdgeToCenter;
 
         /// COORDS
         // Front
@@ -773,6 +767,7 @@ public class LogRenderer extends BlockRenderer {
 
         if (isConnectorPiece) {
             final double zProtection = Config.roundLogs.INSTANCE.getZProtection();
+            final double backConnector = (backRadius * zProtection / 2.0) + backEdgeToCenter;
 
             backCenterX = midX;
             backCenterY = midY;
@@ -786,11 +781,13 @@ public class LogRenderer extends BlockRenderer {
             backCounterCenterY = backCenterY + counterY * zProtection;
             backCounterCenterZ = backCenterZ + counterZ * zProtection;
 
-            backDiagX = backCenterX + backDiagToCenter * (clockwise.offsetX + counterclockwise.offsetX) * zProtection;
-            backDiagY = backCenterY + backDiagToCenter * (clockwise.offsetY + counterclockwise.offsetY) * zProtection;
-            backDiagZ = backCenterZ + backDiagToCenter * (clockwise.offsetZ + counterclockwise.offsetZ) * zProtection;
+            backDiagX = backCenterX + backConnector * (clockwise.offsetX + counterclockwise.offsetX);
+            backDiagY = backCenterY + backConnector * (clockwise.offsetY + counterclockwise.offsetY);
+            backDiagZ = backCenterZ + backConnector * (clockwise.offsetZ + counterclockwise.offsetZ);
         }
         else {
+            final double backDiagToCenter = (backRadius / 2.0) + backEdgeToCenter;
+
             backCenterX = midX - axisX;
             backCenterY = midY - axisY;
             backCenterZ = midZ - axisZ;
@@ -968,9 +965,27 @@ public class LogRenderer extends BlockRenderer {
         final double axisOffset = axis.offsetX + axis.offsetY + axis.offsetZ;
         final double axisOffsetHalf = axisX + axisY + axisZ;
 
-        final double axisOffsetConnector = isConnectorPiece ? 0 : axisOffsetHalf;
+        final double axisOffsetConnector;
 
-        final IIcon spriteClock = renderer.getBlockIcon(block, world, x, y, z, clockwise.ordinal());
+        final IIcon spriteClock;
+        final IIcon spriteCounter;
+
+        if (isConnectorPiece) {
+            axisOffsetConnector = 0;
+
+            final ForgeDirection baseAxis = determineLogAxis(world, x, y, z, block);
+            final ForgeDirection transposeConnector = baseAxis.getRotation(axis);
+
+            spriteClock = renderer.getBlockIcon(block, world, x, y, z, clockwise.getRotation(transposeConnector).ordinal());
+            spriteCounter = renderer.getBlockIcon(block, world, x, y, z, counterclockwise.getRotation(transposeConnector).ordinal());
+        }
+        else {
+            axisOffsetConnector = axisOffsetHalf;
+
+            spriteClock = renderer.getBlockIcon(block, world, x, y, z, clockwise.ordinal());
+            spriteCounter = renderer.getBlockIcon(block, world, x, y, z, counterclockwise.ordinal());
+        }
+
 
         leftU = spriteClock.getMinU();
         rightU = spriteClock.getMaxU();
@@ -1004,8 +1019,6 @@ public class LogRenderer extends BlockRenderer {
         tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, frontV);
 
         didRender = true;
-
-        final IIcon spriteCounter = renderer.getBlockIcon(block, world, x, y, z, counterclockwise.ordinal());
 
         leftU = spriteCounter.getMinU();
         rightU = spriteCounter.getMaxU();
@@ -1042,7 +1055,4 @@ public class LogRenderer extends BlockRenderer {
 
         return didRender;
     }
-
-
-
 }
