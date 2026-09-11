@@ -11,7 +11,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
-import mods.betterfoliage.client.render.RenderUtils;
 
 public class LogRenderer extends BlockRenderer {
 
@@ -56,20 +55,22 @@ public class LogRenderer extends BlockRenderer {
 
         boolean didRender = false;
 
-//        boolean didRender = RenderRoundLog(world, x, y, z, x, y, z, block, renderer, axis, false);
+        final int meta = world.getBlockMetadata(x, y, z);
 
-        final ForgeDirection[] sides = UVPlane.getSides(axis);
-        didRender |= RenderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[y % sides.length], true);
-        didRender |= RenderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis.getOpposite(), sides[y % sides.length], true);
+        if (((meta >> 2) & 3) == 0) {
+            didRender |= RenderRoundLog(world, x, y, z, x, y, z, block, renderer, axis, false);
+        } else {
+            final ForgeDirection side = ForgeDirection.UP;
 
-//        final int meta = world.getBlockMetadata(x, y, z);
-//        if (((meta >> 2) & 3) == 0) {
-//            for (final ForgeDirection side : UVPlane.getSides(axis)) {
-//                didRender |= RenderRoundLog(world, x, y, z, x, y, z, block, renderer, side, true);
-//                didRender |= RenderRoundLog(world, x + side.offsetX, y + side.offsetY, z + side.offsetZ, x, y, z,
-//                    block, renderer, side.getOpposite(), true);
-//            }
-//        }
+            didRender |= RenderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, side, false);
+
+            // Quarter clock connector: axis, side
+            // Quarter clock opposite: axis.getOpposite(), axis.getRotation(side)
+            didRender |= RenderRoundQuarterLog(world, x - axis.offsetX, y - axis.offsetY, z - axis.offsetZ, x, y, z, block, renderer, axis,
+                side, true);
+            didRender |= RenderRoundQuarterLog(world, x + axis.offsetX, y + axis.offsetY, z + axis.offsetZ, x, y, z, block, renderer, axis.getOpposite(),
+                axis.getRotation(side), true);
+        }
 
         return didRender;
     }
@@ -264,7 +265,7 @@ public class LogRenderer extends BlockRenderer {
         if (!isConnector) {
             /// Front
             {
-                final IIcon sprite = renderer.getBlockIcon(block, world, x, y, z, axis.ordinal());
+                final IIcon sprite = renderer.getBlockIcon(block, world, xBase, yBase, zBase, axis.ordinal());
                 leftU = sprite.getMinU();
                 rightU = sprite.getMaxU();
                 topV = sprite.getMinV();
@@ -308,7 +309,7 @@ public class LogRenderer extends BlockRenderer {
             }
             /// Back
             {
-                final IIcon sprite = renderer.getBlockIcon(block, world, x, y, z, axis.getOpposite().ordinal());
+                final IIcon sprite = renderer.getBlockIcon(block, world, xBase, yBase, zBase, axis.getOpposite().ordinal());
                 leftU = sprite.getMinU();
                 rightU = sprite.getMaxU();
                 topV = sprite.getMinV();
@@ -351,15 +352,12 @@ public class LogRenderer extends BlockRenderer {
             }
         }
 
-        final double axisOffset = axis.offsetX + axis.offsetY + axis.offsetZ;
         final double axisOffsetHalf = axisX + axisY + axisZ;
-
         final double axisOffsetConnector;
 
-        final IIcon spriteClock;
         final IIcon spriteCounter;
+        final IIcon spriteClock;
         final IIcon spriteBack;
-
 
         if (isConnector) {
             axisOffsetConnector = 0;
@@ -367,9 +365,14 @@ public class LogRenderer extends BlockRenderer {
             final ForgeDirection baseAxis = determineLogAxis(world, xBase, yBase, zBase, block);
             final ForgeDirection transposeConnector = baseAxis.getRotation(axis);
 
-            spriteCounter = renderer.getBlockIcon(block, world, xBase, yBase, zBase, counterclockwise.getRotation(transposeConnector).ordinal());
-            spriteClock = renderer.getBlockIcon(block, world, xBase, yBase, zBase, counterclockwise.getOpposite().ordinal());
-            spriteBack = renderer.getBlockIcon(block, world, xBase, yBase, zBase, side.getOpposite().ordinal());
+            spriteCounter = renderer.getBlockIcon(block, world, xBase, yBase, zBase,
+                counterclockwise.getRotation(transposeConnector).ordinal());
+
+            spriteClock = renderer.getBlockIcon(block, world, xBase, yBase, zBase,
+                transposeConnector.getRotation(counterclockwise).ordinal());
+
+            spriteBack = renderer.getBlockIcon(block, world, xBase, yBase, zBase,
+                transposeConnector.getRotation(side).ordinal());
         }
         else  {
             axisOffsetConnector = axisOffsetHalf;
@@ -534,34 +537,103 @@ public class LogRenderer extends BlockRenderer {
         final double frontCornerSideZ = frontCenterClockZ + sideZ;
 
         // Back
-        final double backCenterX = midX - axisX;
-        final double backCenterY = midY - axisY;
-        final double backCenterZ = midZ - axisZ;
+        final double backCenterX;
+        final double backCenterY;
+        final double backCenterZ;
 
-        final double backCenterCounterX = backCenterX + counterX;
-        final double backCenterCounterY = backCenterY + counterY;
-        final double backCenterCounterZ = backCenterZ + counterZ;
+        final double backCenterCounterX;
+        final double backCenterCounterY;
+        final double backCenterCounterZ;
 
-        final double backCenterClockX = backCenterX - counterX;
-        final double backCenterClockY = backCenterY - counterY;
-        final double backCenterClockZ = backCenterZ - counterZ;
+        final double backCenterClockX;
+        final double backCenterClockY;
+        final double backCenterClockZ;
 
-        final double backCornerCounterX = backCenterCounterX - sideX;
-        final double backCornerCounterY = backCenterCounterY - sideY;
-        final double backCornerCounterZ = backCenterCounterZ - sideZ;
+        final double backCornerCounterX;
+        final double backCornerCounterY;
+        final double backCornerCounterZ;
 
-        final double backCornerClockX = backCenterClockX - sideX;
-        final double backCornerClockY = backCenterClockY - sideY;
-        final double backCornerClockZ = backCenterClockZ - sideZ;
+        final double backCornerClockX;
+        final double backCornerClockY;
+        final double backCornerClockZ;
 
         // Back quarter square
-        final double backCenterSideX = backCenterX + sideX;
-        final double backCenterSideY = backCenterY + sideY;
-        final double backCenterSideZ = backCenterZ + sideZ;
+        final double backCenterSideX;
+        final double backCenterSideY;
+        final double backCenterSideZ;
 
-        final double backCornerSideX = backCenterClockX + sideX;
-        final double backCornerSideY = backCenterClockY + sideY;
-        final double backCornerSideZ = backCenterClockZ + sideZ;
+        final double backCornerSideX;
+        final double backCornerSideY;
+        final double backCornerSideZ;
+
+        if (isConnector) {
+            final double zProtection = Config.roundLogs.INSTANCE.getZProtection();
+
+            final double zCounterX = counterX * zProtection;
+            final double zCounterY = counterY * zProtection;
+            final double zCounterZ = counterZ * zProtection;
+
+            final double zSideX = sideX * zProtection;
+            final double zSideY = sideY * zProtection;
+            final double zSideZ = sideZ * zProtection;
+
+            backCenterX = midX;
+            backCenterY = midY;
+            backCenterZ = midZ;
+
+            backCenterCounterX = backCenterX + zCounterX;
+            backCenterCounterY = backCenterY + zCounterY;
+            backCenterCounterZ = backCenterZ + zCounterZ;
+
+            backCenterClockX = backCenterX - zCounterX;
+            backCenterClockY = backCenterY - zCounterY;
+            backCenterClockZ = backCenterZ - zCounterZ;
+
+            backCornerCounterX = backCenterCounterX - zSideX;
+            backCornerCounterY = backCenterCounterY - zSideY;
+            backCornerCounterZ = backCenterCounterZ - zSideZ;
+
+            backCornerClockX = backCenterClockX - zSideX;
+            backCornerClockY = backCenterClockY - zSideY;
+            backCornerClockZ = backCenterClockZ - zSideZ;
+
+            backCenterSideX = backCenterX + zSideX;
+            backCenterSideY = backCenterY + zSideY;
+            backCenterSideZ = backCenterZ + zSideZ;
+
+            backCornerSideX = backCenterClockX + zSideX;
+            backCornerSideY = backCenterClockY + zSideY;
+            backCornerSideZ = backCenterClockZ + zSideZ;
+        }
+        else {
+            backCenterX = midX - axisX;
+            backCenterY = midY - axisY;
+            backCenterZ = midZ - axisZ;
+
+            backCenterCounterX = backCenterX + counterX;
+            backCenterCounterY = backCenterY + counterY;
+            backCenterCounterZ = backCenterZ + counterZ;
+
+            backCenterClockX = backCenterX - counterX;
+            backCenterClockY = backCenterY - counterY;
+            backCenterClockZ = backCenterZ - counterZ;
+
+            backCornerCounterX = backCenterCounterX - sideX;
+            backCornerCounterY = backCenterCounterY - sideY;
+            backCornerCounterZ = backCenterCounterZ - sideZ;
+
+            backCornerClockX = backCenterClockX - sideX;
+            backCornerClockY = backCenterClockY - sideY;
+            backCornerClockZ = backCenterClockZ - sideZ;
+
+            backCenterSideX = backCenterX + sideX;
+            backCenterSideY = backCenterY + sideY;
+            backCenterSideZ = backCenterZ + sideZ;
+
+            backCornerSideX = backCenterClockX + sideX;
+            backCornerSideY = backCenterClockY + sideY;
+            backCornerSideZ = backCenterClockZ + sideZ;
+        }
 
         /// Square corners
         IIcon sprite;
@@ -724,84 +796,147 @@ public class LogRenderer extends BlockRenderer {
             }
         }
 
-        final double axisOffset = axisX + axisY + axisZ;
+        final double axisOffsetHalf = axisX + axisY + axisZ;
+        final double axisOffsetConnector;
+
+        final IIcon spriteMain;
+        final IIcon spriteCounter;
+        final IIcon spriteClock;
+        final IIcon spriteBack;
+
+        if (isConnector) {
+            axisOffsetConnector = 0;
+
+            final ForgeDirection baseAxis = determineLogAxis(world, xBase, yBase, zBase, block);
+            final ForgeDirection transposeConnector = baseAxis.getRotation(axis);
+
+            spriteMain = renderer.getBlockIcon(block, world, xBase, yBase, zBase,
+                side.getRotation(transposeConnector).ordinal());
+
+            spriteCounter = renderer.getBlockIcon(block, world, xBase, yBase, zBase,
+                counterclockwise.getRotation(transposeConnector).ordinal());
+
+            spriteClock = renderer.getBlockIcon(block, world, xBase, yBase, zBase,
+                transposeConnector.getRotation(counterclockwise).ordinal());
+
+            spriteBack = renderer.getBlockIcon(block, world, xBase, yBase, zBase,
+                transposeConnector.getRotation(side).ordinal());
+        }
+        else {
+            axisOffsetConnector = axisOffsetHalf;
+
+            spriteMain = renderer.getBlockIcon(block, world, xBase, yBase, zBase, side.ordinal());
+            spriteCounter = renderer.getBlockIcon(block, world, xBase, yBase, zBase, counterclockwise.ordinal());
+            spriteClock = renderer.getBlockIcon(block, world, xBase, yBase, zBase, counterclockwise.getOpposite().ordinal());
+            spriteBack = renderer.getBlockIcon(block, world, xBase, yBase, zBase, side.getOpposite().ordinal());
+        }
 
         // Sides
         {
             // Main Side
-            sprite = renderer.getBlockIcon(block, world, x, y, z, side.ordinal());
-            leftU = sprite.getMinU();
-            topV = sprite.getMinV();
-            botV = sprite.getMaxV();
-            midU = (sprite.getMaxU() + leftU) / 2.0;
+            leftU = spriteMain.getMinU();
+            rightU = spriteMain.getMaxU();
+            topV = spriteMain.getMinV();
+            botV = spriteMain.getMaxV();
 
-            tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, leftU, topV);
-            tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, leftU, botV);
-            tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, midU, botV);
-            tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, midU, topV);
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            centerCounterU = midU - axisOffsetHalf * lengthU;
+
+            final double frontV = midV - axisOffsetHalf * lengthV;
+            final double backV = midV + axisOffsetConnector * lengthV;
+
+            tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, centerCounterU, frontV);
+            tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, centerCounterU, backV);
+            tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, midU, backV);
+            tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, midU, frontV);
             didRender = true;
         }
 
         {
             // Counter
-            sprite = renderer.getBlockIcon(block, world, x, y, z, counterclockwise.ordinal());
-            leftU = sprite.getMinU();
-            rightU = sprite.getMaxU();
-            topV = sprite.getMinV();
-            botV = sprite.getMaxV();
+            leftU = spriteCounter.getMinU();
+            rightU = spriteCounter.getMaxU();
+            topV = spriteCounter.getMinV();
+            botV = spriteCounter.getMaxV();
 
             midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
             lengthU = rightU - leftU;
+            lengthV = botV - topV;
 
-            centerCounterU = midU + axisOffset * lengthU;
+            centerCounterU = midU + axisOffsetHalf * lengthU;
 
-            tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, midU, topV);
-            tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, midU, botV);
-            tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, centerCounterU, botV);
-            tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, centerCounterU, topV);
+            final double frontV = midV - axisOffsetHalf * lengthV;
+            final double backV = midV + axisOffsetConnector * lengthV;
+
+            tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, midU, frontV);
+            tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, midU, backV);
+            tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, centerCounterU, backV);
+            tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, centerCounterU, frontV);
             didRender = true;
         }
 
         {
             // Clock
-            ForgeDirection clock = counterclockwise.getOpposite();
-
-            sprite = renderer.getBlockIcon(block, world, x, y, z, clock.ordinal());
-            leftU = sprite.getMinU();
-            rightU = sprite.getMaxU();
-            topV = sprite.getMinV();
-            botV = sprite.getMaxV();
+            leftU = spriteClock.getMinU();
+            rightU = spriteClock.getMaxU();
+            topV = spriteClock.getMinV();
+            botV = spriteClock.getMaxV();
 
             midU = (rightU + leftU) / 2.0;
-            lengthU = rightU - leftU;
+            midV = (botV + topV) / 2.0;
 
-            final double axisU = axisOffset * lengthU;
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            final double axisU = axisOffsetHalf * lengthU;
             cornerCounterU = midU - axisU;
             cornerClockU = midU + axisU;
 
-            tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, leftU, topV);
-            tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, leftU, botV);
-            tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, rightU, botV);
-            tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, rightU, topV);
+            final double frontV = midV - axisOffsetHalf * lengthV;
+            final double backV = midV + axisOffsetConnector * lengthV;
+
+            tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerCounterU, frontV);
+            tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerCounterU, backV);
+            tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, cornerClockU, backV);
+            tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, cornerClockU, frontV);
             didRender = true;
         }
 
         {
             // Back
-            sprite = renderer.getBlockIcon(block, world, x, y, z, side.getOpposite().ordinal());
-            leftU = sprite.getMinU();
-            rightU = sprite.getMaxU();
-            topV = sprite.getMinV();
-            botV = sprite.getMaxV();
+            leftU = spriteBack.getMinU();
+            rightU = spriteBack.getMaxU();
+            topV = spriteBack.getMinV();
+            botV = spriteBack.getMaxV();
 
-            tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, leftU, topV);
-            tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, leftU, botV);
-            tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, rightU, botV);
-            tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, rightU, topV);
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            final double axisU = axisOffsetHalf * lengthU;
+            cornerCounterU = midU - axisU;
+            cornerClockU = midU + axisU;
+
+            final double frontV = midV - axisOffsetHalf * lengthV;
+            final double backV = midV + axisOffsetConnector * lengthV;
+
+            tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, cornerCounterU, frontV);
+            tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, backV);
+            tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, backV);
+            tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, frontV);
             didRender = true;
         }
 
-        /// Round corners
+        /// Round corner
         didRender |= RenderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, side,
             counterclockwise, isConnector);
 
