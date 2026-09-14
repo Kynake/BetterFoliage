@@ -1,6 +1,8 @@
 package mods.betterfoliage.client.render.features;
 
+import mods.betterfoliage.client.config.BlockMatcher;
 import mods.betterfoliage.client.render.UVPlane;
+import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -45,34 +47,7 @@ public class LogRenderer extends BlockRenderer {
 
         ForgeDirection axis = determineLogAxis(world, x, y, z, block);
 
-        //return RenderRoundLog(world, x, y, z, block, renderer, axis);
-
-        return debugRender(world, x, y, z, block, renderer, axis);
-    }
-
-    private static boolean debugRender(IBlockAccess world, int x, int y, int z, Block block,
-          RenderBlocks renderer, ForgeDirection axis) {
-
-        boolean didRender = false;
-
-        final int meta = world.getBlockMetadata(x, y, z);
-
-        if (((meta >> 2) & 3) == 0) {
-            didRender |= RenderRoundLog(world, x, y, z, x, y, z, block, renderer, axis, false);
-        } else {
-            final ForgeDirection side = ForgeDirection.UP;
-
-            didRender |= RenderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, side, false);
-
-            // Quarter clock connector: axis, side
-            // Quarter clock opposite: axis.getOpposite(), axis.getRotation(side)
-            didRender |= RenderRoundQuarterLog(world, x - axis.offsetX, y - axis.offsetY, z - axis.offsetZ, x, y, z, block, renderer, axis,
-                side, true);
-            didRender |= RenderRoundQuarterLog(world, x + axis.offsetX, y + axis.offsetY, z + axis.offsetZ, x, y, z, block, renderer, axis.getOpposite(),
-                axis.getRotation(side), true);
-        }
-
-        return didRender;
+        return renderByConnectedSides(world, x, y, z, block, renderer, axis);
     }
 
     private static ForgeDirection determineLogAxis(IBlockAccess world, int x, int y, int z, Block block) {
@@ -85,8 +60,133 @@ public class LogRenderer extends BlockRenderer {
         };
     }
 
+    private static boolean renderByConnectedSides(IBlockAccess world, int x, int y, int z, Block block,
+        RenderBlocks renderer, ForgeDirection axis) {
+
+        final ForgeDirection[] sides = UVPlane.getSides(axis);
+
+        final boolean connect1 = shouldConnectToSide(sides[0], world, x, y, z, axis);
+        final boolean connect2 = shouldConnectToSide(sides[1], world, x, y, z, axis);
+        final boolean connect3 = shouldConnectToSide(sides[2], world, x, y, z, axis);
+        final boolean connect4 = shouldConnectToSide(sides[3], world, x, y, z, axis);
+
+        if ((connect1 && connect3) || (connect2 && connect4)) {
+            IRendererByType baseRenderer = (IRendererByType) renderer;
+            return baseRenderer.betterfoliage$renderBaseBlock(block, x, y, z);
+        }
+
+        if (connect1) {
+            if (connect2) {
+                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[3], false);
+            }
+
+            if (connect4) {
+                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[2], false);
+            }
+
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[2], false);
+        }
+
+        if (connect2) {
+            if (connect3) {
+                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[0], false);
+            }
+
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[3], false);
+        }
+
+        if (connect3) {
+            if (connect4) {
+                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[1], false);
+            }
+
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[0], false);
+        }
+
+        if (connect4) {
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[1], false);
+        }
+
+        return renderRoundLog(world, x, y, z, x, y, z, block, renderer, axis, false);
+    }
+
+    private static boolean shouldConnectToSide(ForgeDirection side, IBlockAccess world, int x, int y, int z,
+        ForgeDirection axis) {
+
+        final BlockMatcher logs = Config.blocks.INSTANCE.getLogs();
+
+        final int sideX = x + side.offsetX;
+        final int sideY = y + side.offsetY;
+        final int sideZ = z + side.offsetZ;
+
+        final Block sideBlock = world.getBlock(sideX, sideY, sideZ);
+        final boolean isSideLog = logs.matchesID(sideBlock);
+
+        if (!isSideLog) {
+            return Config.roundLogs.INSTANCE.getConnectSolids() && sideBlock.isOpaqueCube();
+        }
+
+        final ForgeDirection sideAxis = determineLogAxis(world, sideX, sideY, sideZ, sideBlock);
+        if (sideAxis != axis) {
+            return false;
+        }
+
+        // Left
+        ForgeDirection lat = axis.getRotation(side);
+
+        int latX = x + lat.offsetX;
+        int latY = y + lat.offsetY;
+        int latZ = z + lat.offsetZ;
+
+        int diagX = latX + side.offsetX;
+        int diagY = latY + side.offsetY;
+        int diagZ = latZ + side.offsetZ;
+
+        Block latBlock = world.getBlock(latX, latY, latZ);
+        ForgeDirection latAxis = determineLogAxis(world, latX, latY, latZ, latBlock);
+        boolean isLatLog = latAxis == axis && logs.matchesID(latBlock);
+
+        Block diagBlock = world.getBlock(diagX, diagY, diagZ);
+        ForgeDirection diagAxis = determineLogAxis(world, diagX, diagY, diagZ, diagBlock);
+        boolean isDiagLog = diagAxis == axis && logs.matchesID(diagBlock);
+
+        if (Config.roundLogs.INSTANCE.getLenientConnect()) {
+            if (isLatLog || isDiagLog) {
+                return true;
+            }
+        }
+        else {
+            if (isLatLog && isDiagLog) {
+                return true;
+            }
+        }
+
+        // Right
+        lat = lat.getOpposite();
+
+        latX = x + lat.offsetX;
+        latY = y + lat.offsetY;
+        latZ = z + lat.offsetZ;
+
+        diagX = latX + side.offsetX;
+        diagY = latY + side.offsetY;
+        diagZ = latZ + side.offsetZ;
+
+        latBlock = world.getBlock(latX, latY, latZ);
+        latAxis = determineLogAxis(world, latX, latY, latZ, latBlock);
+        isLatLog = latAxis == axis && logs.matchesID(latBlock);
+
+        diagBlock = world.getBlock(diagX, diagY, diagZ);
+        diagAxis = determineLogAxis(world, diagX, diagY, diagZ, diagBlock);
+        isDiagLog = diagAxis == axis && logs.matchesID(diagBlock);
+
+        return Config.roundLogs.INSTANCE.getLenientConnect()
+            ? isLatLog || isDiagLog
+            : isLatLog && isDiagLog;
+    }
+
     /// Renders a log block with all rounded corners
-    private static boolean RenderRoundLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase,
+    private static boolean renderRoundLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase,
         Block block, RenderBlocks renderer, ForgeDirection axis, boolean isConnector) {
 
         boolean didRender = false;
@@ -94,7 +194,7 @@ public class LogRenderer extends BlockRenderer {
         final ForgeDirection[] sides = UVPlane.getSides(axis);
         for (final ForgeDirection clock : sides) {
             final ForgeDirection counter = axis.getRotation(clock);
-            didRender |= RenderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, clock, counter,
+            didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, clock, counter,
                 isConnector);
         }
 
@@ -102,7 +202,7 @@ public class LogRenderer extends BlockRenderer {
     }
 
     /// Renders a log block with two adjacent rounded corners and two adjacent square corners
-    private static boolean RenderRoundHalfLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase,
+    private static boolean renderRoundHalfLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase,
         Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection side, boolean isConnector) {
 
         boolean didRender = false;
@@ -466,10 +566,10 @@ public class LogRenderer extends BlockRenderer {
         }
 
         /// Round corners
-        didRender |= RenderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, side,
+        didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, side,
             counterclockwise, isConnector);
 
-        didRender |= RenderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis,
+        didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis,
             counterclockwise.getOpposite(), side, isConnector);
 
         return didRender;
@@ -477,7 +577,7 @@ public class LogRenderer extends BlockRenderer {
 
     /// Renders a log block with one rounded corner and three square corners.
     /// Rounded corner is always counterclockwise of side.
-    private static boolean RenderRoundQuarterLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase,
+    private static boolean renderRoundQuarterLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase,
         int zBase, Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection side, boolean isConnector) {
 
         boolean didRender = false;
@@ -937,13 +1037,13 @@ public class LogRenderer extends BlockRenderer {
         }
 
         /// Round corner
-        didRender |= RenderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, side,
+        didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, side,
             counterclockwise, isConnector);
 
         return didRender;
     }
 
-    private static boolean RenderRoundCorner(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase, Block block, RenderBlocks renderer,
+    private static boolean renderRoundCorner(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase, Block block, RenderBlocks renderer,
         ForgeDirection axis, ForgeDirection clockwise, ForgeDirection counterclockwise, boolean isConnector) {
 
         boolean didRender = false;
