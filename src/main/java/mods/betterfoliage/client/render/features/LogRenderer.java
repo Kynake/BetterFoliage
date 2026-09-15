@@ -191,11 +191,44 @@ public class LogRenderer extends BlockRenderer {
 
         boolean didRender = false;
 
+        boolean renderFront = !isConnector;
+        boolean renderBack = renderFront;
+
+        if (Config.roundLogs.INSTANCE.getConnectPerpendicular() && !isConnector) {
+
+            final BlockMatcher logs = Config.blocks.INSTANCE.getLogs();
+
+            int connectorX = x + axis.offsetX;
+            int connectorY = y + axis.offsetY;
+            int connectorZ = z + axis.offsetZ;
+
+            Block connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
+
+            renderFront = !(logs.matchesID(connectorBlock) &&
+                determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
+            if (!renderFront) {
+                renderRoundLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer,
+                    axis.getOpposite(), true);
+            }
+
+            connectorX = x - axis.offsetX;
+            connectorY = y - axis.offsetY;
+            connectorZ = z - axis.offsetZ;
+
+            connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
+            renderBack = !(logs.matchesID(connectorBlock) &&
+                determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
+            if (!renderBack) {
+                renderRoundLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer, axis, true);
+            }
+
+        }
+
         final ForgeDirection[] sides = UVPlane.getSides(axis);
         for (final ForgeDirection clock : sides) {
             final ForgeDirection counter = axis.getRotation(clock);
             didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, clock, counter,
-                isConnector);
+                isConnector, renderFront, renderBack);
         }
 
         return didRender;
@@ -361,97 +394,6 @@ public class LogRenderer extends BlockRenderer {
         double cornerClockU;
         double cornerClockV;
 
-        // Faces
-        if (!isConnector) {
-            /// Front
-            {
-                final IIcon sprite = renderer.getBlockIcon(block, world, xBase, yBase, zBase, axis.ordinal());
-                leftU = sprite.getMinU();
-                rightU = sprite.getMaxU();
-                topV = sprite.getMinV();
-                botV = sprite.getMaxV();
-
-                midU = (rightU + leftU) / 2.0;
-                midV = (botV + topV) / 2.0;
-
-                lengthU = rightU - leftU;
-                lengthV = botV - topV;
-
-                halfU = lengthU / 2.0;
-                halfV = lengthV / 2.0;
-
-                plane = UVPlane.toUVPlane(axis);
-
-                halfOffsetU = plane.getOffsetU(side) * halfU;
-                halfOffsetV = plane.getOffsetV(side) * halfV;
-
-                halfCounterOffsetU = plane.getOffsetU(counterclockwise) * halfU;
-                halfCounterOffsetV = plane.getOffsetV(counterclockwise) * halfV;
-
-                centerCounterU = midU + halfCounterOffsetU;
-                centerCounterV = midV + halfCounterOffsetV;
-
-                centerClockU = midU - halfCounterOffsetU;
-                centerClockV = midV - halfCounterOffsetV;
-
-                cornerCounterU = centerCounterU - halfOffsetU;
-                cornerCounterV = centerCounterV - halfOffsetV;
-
-                cornerClockU = centerClockU - halfOffsetU;
-                cornerClockV = centerClockV - halfOffsetV;
-
-                // Faces
-                tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, centerCounterU, centerCounterV);
-                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, cornerCounterU, cornerCounterV);
-                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, cornerClockV);
-                tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
-                didRender = true;
-            }
-            /// Back
-            {
-                final IIcon sprite = renderer.getBlockIcon(block, world, xBase, yBase, zBase, axis.getOpposite().ordinal());
-                leftU = sprite.getMinU();
-                rightU = sprite.getMaxU();
-                topV = sprite.getMinV();
-                botV = sprite.getMaxV();
-
-                midU = (rightU + leftU) / 2.0;
-                midV = (botV + topV) / 2.0;
-
-                lengthU = rightU - leftU;
-                lengthV = botV - topV;
-
-                halfU = lengthU / 2.0;
-                halfV = lengthV / 2.0;
-
-                plane = UVPlane.toUVPlane(axis.getOpposite());
-
-                halfOffsetU = plane.getOffsetU(side) * halfU;
-                halfOffsetV = plane.getOffsetV(side) * halfV;
-
-                halfCounterOffsetU = plane.getOffsetU(counterclockwise) * halfU;
-                halfCounterOffsetV = plane.getOffsetV(counterclockwise) * halfV;
-
-                centerCounterU = midU + halfCounterOffsetU;
-                centerCounterV = midV + halfCounterOffsetV;
-
-                centerClockU = midU - halfCounterOffsetU;
-                centerClockV = midV - halfCounterOffsetV;
-
-                cornerCounterU = centerCounterU - halfOffsetU;
-                cornerCounterV = centerCounterV - halfOffsetV;
-
-                cornerClockU = centerClockU - halfOffsetU;
-                cornerClockV = centerClockV - halfOffsetV;
-
-                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
-                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, cornerClockV);
-                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, cornerCounterV);
-                tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, centerCounterU, centerCounterV);
-                didRender = true;
-            }
-        }
-
         final double axisOffsetHalf = axisX + axisY + axisZ;
         final double axisOffsetConnector;
 
@@ -565,12 +507,137 @@ public class LogRenderer extends BlockRenderer {
             didRender = true;
         }
 
+        boolean renderFront = !isConnector;
+        boolean renderBack = renderFront;
+
+        // Use connectors?
+        if (Config.roundLogs.INSTANCE.getConnectPerpendicular() && !isConnector && didRender) {
+
+            final BlockMatcher logs = Config.blocks.INSTANCE.getLogs();
+
+            int connectorX = x + axis.offsetX;
+            int connectorY = y + axis.offsetY;
+            int connectorZ = z + axis.offsetZ;
+
+            Block connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
+            renderFront = !(logs.matchesID(connectorBlock) &&
+                determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
+            if (!renderFront) {
+                renderRoundHalfLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer,
+                    axis.getOpposite(), side, true);
+            }
+
+            connectorX = x - axis.offsetX;
+            connectorY = y - axis.offsetY;
+            connectorZ = z - axis.offsetZ;
+
+            connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
+            renderBack = !(logs.matchesID(connectorBlock) &&
+                determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
+            if (!renderBack) {
+                renderRoundHalfLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer,
+                    axis, side, true);
+            }
+        }
+
+        // Faces
+        /// Front
+        if (renderFront)
+        {
+            final IIcon sprite = renderer.getBlockIcon(block, world, xBase, yBase, zBase, axis.ordinal());
+            leftU = sprite.getMinU();
+            rightU = sprite.getMaxU();
+            topV = sprite.getMinV();
+            botV = sprite.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            halfU = lengthU / 2.0;
+            halfV = lengthV / 2.0;
+
+            plane = UVPlane.toUVPlane(axis);
+
+            halfOffsetU = plane.getOffsetU(side) * halfU;
+            halfOffsetV = plane.getOffsetV(side) * halfV;
+
+            halfCounterOffsetU = plane.getOffsetU(counterclockwise) * halfU;
+            halfCounterOffsetV = plane.getOffsetV(counterclockwise) * halfV;
+
+            centerCounterU = midU + halfCounterOffsetU;
+            centerCounterV = midV + halfCounterOffsetV;
+
+            centerClockU = midU - halfCounterOffsetU;
+            centerClockV = midV - halfCounterOffsetV;
+
+            cornerCounterU = centerCounterU - halfOffsetU;
+            cornerCounterV = centerCounterV - halfOffsetV;
+
+            cornerClockU = centerClockU - halfOffsetU;
+            cornerClockV = centerClockV - halfOffsetV;
+
+            // Faces
+            tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, centerCounterU, centerCounterV);
+            tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, cornerCounterU, cornerCounterV);
+            tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, cornerClockV);
+            tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
+            didRender = true;
+        }
+
+        /// Back
+        if (renderBack)
+        {
+            final IIcon sprite = renderer.getBlockIcon(block, world, xBase, yBase, zBase, axis.getOpposite().ordinal());
+            leftU = sprite.getMinU();
+            rightU = sprite.getMaxU();
+            topV = sprite.getMinV();
+            botV = sprite.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            halfU = lengthU / 2.0;
+            halfV = lengthV / 2.0;
+
+            plane = UVPlane.toUVPlane(axis.getOpposite());
+
+            halfOffsetU = plane.getOffsetU(side) * halfU;
+            halfOffsetV = plane.getOffsetV(side) * halfV;
+
+            halfCounterOffsetU = plane.getOffsetU(counterclockwise) * halfU;
+            halfCounterOffsetV = plane.getOffsetV(counterclockwise) * halfV;
+
+            centerCounterU = midU + halfCounterOffsetU;
+            centerCounterV = midV + halfCounterOffsetV;
+
+            centerClockU = midU - halfCounterOffsetU;
+            centerClockV = midV - halfCounterOffsetV;
+
+            cornerCounterU = centerCounterU - halfOffsetU;
+            cornerCounterV = centerCounterV - halfOffsetV;
+
+            cornerClockU = centerClockU - halfOffsetU;
+            cornerClockV = centerClockV - halfOffsetV;
+
+            tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+            tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, cornerClockV);
+            tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, cornerCounterV);
+            tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, centerCounterU, centerCounterV);
+            didRender = true;
+        }
+
         /// Round corners
         didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, side,
-            counterclockwise, isConnector);
+            counterclockwise, isConnector, renderFront, renderBack);
 
         didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis,
-            counterclockwise.getOpposite(), side, isConnector);
+            counterclockwise.getOpposite(), side, isConnector, renderFront, renderBack);
 
         return didRender;
     }
@@ -587,6 +654,7 @@ public class LogRenderer extends BlockRenderer {
         tess.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
         tess.setColorRGBA(0xFF, 0xFF, 0xFF, 0xFF);
 
+        final ForgeDirection opposite = axis.getOpposite();
         final ForgeDirection counterclockwise = axis.getRotation(side);
 
         final double midX = x + 0.5;
@@ -778,124 +846,6 @@ public class LogRenderer extends BlockRenderer {
         double cornerSideU;
         double cornerSideV;
 
-        // Faces
-        if(!isConnector) {
-            /// Front
-            {
-                sprite = renderer.getBlockIcon(block, world, x, y, z, axis.ordinal());
-                leftU = sprite.getMinU();
-                rightU = sprite.getMaxU();
-                topV = sprite.getMinV();
-                botV = sprite.getMaxV();
-
-                midU = (rightU + leftU) / 2.0;
-                midV = (botV + topV) / 2.0;
-
-                lengthU = rightU - leftU;
-                lengthV = botV - topV;
-
-                halfU = lengthU / 2.0;
-                halfV = lengthV / 2.0;
-
-                plane = UVPlane.toUVPlane(axis);
-
-                halfOffsetU = plane.getOffsetU(side) * halfU;
-                halfOffsetV = plane.getOffsetV(side) * halfV;
-
-                halfCounterOffsetU = plane.getOffsetU(counterclockwise) * halfU;
-                halfCounterOffsetV = plane.getOffsetV(counterclockwise) * halfV;
-
-                centerCounterU = midU + halfCounterOffsetU;
-                centerCounterV = midV + halfCounterOffsetV;
-
-                centerClockU = midU - halfCounterOffsetU;
-                centerClockV = midV - halfCounterOffsetV;
-
-                cornerCounterU = centerCounterU - halfOffsetU;
-                cornerCounterV = centerCounterV - halfOffsetV;
-
-                cornerClockU = centerClockU - halfOffsetU;
-                cornerClockV = centerClockV - halfOffsetV;
-
-                // Side opposite face
-                tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, centerCounterU, centerCounterV);
-                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, cornerCounterU, cornerCounterV);
-                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, cornerClockV);
-                tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
-
-                centerSideU = midU + halfOffsetU;
-                centerSideV = midV + halfOffsetV;
-
-                cornerSideU = centerSideU - halfCounterOffsetU;
-                cornerSideV = centerSideV - halfCounterOffsetV;
-
-                // Quarter face
-                tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, centerSideU, centerSideV);
-                tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
-                tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
-                tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, cornerSideU, cornerSideV);
-
-                didRender = true;
-            }
-            /// Back
-            {
-                sprite = renderer.getBlockIcon(block, world, x, y, z, axis.getOpposite().ordinal());
-                leftU = sprite.getMinU();
-                rightU = sprite.getMaxU();
-                topV = sprite.getMinV();
-                botV = sprite.getMaxV();
-
-                midU = (rightU + leftU) / 2.0;
-                midV = (botV + topV) / 2.0;
-
-                lengthU = rightU - leftU;
-                lengthV = botV - topV;
-
-                halfU = lengthU / 2.0;
-                halfV = lengthV / 2.0;
-
-                plane = UVPlane.toUVPlane(axis.getOpposite());
-
-                halfOffsetU = plane.getOffsetU(side) * halfU;
-                halfOffsetV = plane.getOffsetV(side) * halfV;
-
-                halfCounterOffsetU = plane.getOffsetU(counterclockwise) * halfU;
-                halfCounterOffsetV = plane.getOffsetV(counterclockwise) * halfV;
-
-                centerCounterU = midU + halfCounterOffsetU;
-                centerCounterV = midV + halfCounterOffsetV;
-
-                centerClockU = midU - halfCounterOffsetU;
-                centerClockV = midV - halfCounterOffsetV;
-
-                cornerCounterU = centerCounterU - halfOffsetU;
-                cornerCounterV = centerCounterV - halfOffsetV;
-
-                cornerClockU = centerClockU - halfOffsetU;
-                cornerClockV = centerClockV - halfOffsetV;
-
-                // Side opposite face
-                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
-                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, cornerClockV);
-                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, cornerCounterV);
-                tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, centerCounterU, centerCounterV);
-
-                centerSideU = midU + halfOffsetU;
-                centerSideV = midV + halfOffsetV;
-
-                cornerSideU = centerSideU - halfCounterOffsetU;
-                cornerSideV = centerSideV - halfCounterOffsetV;
-
-                // Quarter face
-                tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, cornerSideU, cornerSideV);
-                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
-                tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
-                tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, centerSideU, centerSideV);
-
-                didRender = true;
-            }
-        }
-
         final double axisOffsetHalf = axisX + axisY + axisZ;
         final double axisOffsetConnector;
 
@@ -1036,15 +986,171 @@ public class LogRenderer extends BlockRenderer {
             didRender = true;
         }
 
+        boolean renderFront = !isConnector;
+        boolean renderBack = renderFront;
+
+        // Use connectors?
+        if (Config.roundLogs.INSTANCE.getConnectPerpendicular() && !isConnector && didRender) {
+
+            final BlockMatcher logs = Config.blocks.INSTANCE.getLogs();
+
+            int connectorX = x + axis.offsetX;
+            int connectorY = y + axis.offsetY;
+            int connectorZ = z + axis.offsetZ;
+
+            Block connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
+
+            renderFront = !(logs.matchesID(connectorBlock) &&
+                determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
+            if (!renderFront) {
+                renderRoundQuarterLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer,
+                    opposite, counterclockwise, true);
+            }
+
+            connectorX = x - axis.offsetX;
+            connectorY = y - axis.offsetY;
+            connectorZ = z - axis.offsetZ;
+
+            connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
+
+            renderBack = !(logs.matchesID(connectorBlock) &&
+                determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
+
+            if (!renderBack) {
+                renderRoundQuarterLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer,
+                    axis, side, true);
+            }
+        }
+
+        // Faces
+
+        /// Front
+        if (renderFront)
+        {
+            sprite = renderer.getBlockIcon(block, world, x, y, z, axis.ordinal());
+            leftU = sprite.getMinU();
+            rightU = sprite.getMaxU();
+            topV = sprite.getMinV();
+            botV = sprite.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            halfU = lengthU / 2.0;
+            halfV = lengthV / 2.0;
+
+            plane = UVPlane.toUVPlane(axis);
+
+            halfOffsetU = plane.getOffsetU(side) * halfU;
+            halfOffsetV = plane.getOffsetV(side) * halfV;
+
+            halfCounterOffsetU = plane.getOffsetU(counterclockwise) * halfU;
+            halfCounterOffsetV = plane.getOffsetV(counterclockwise) * halfV;
+
+            centerCounterU = midU + halfCounterOffsetU;
+            centerCounterV = midV + halfCounterOffsetV;
+
+            centerClockU = midU - halfCounterOffsetU;
+            centerClockV = midV - halfCounterOffsetV;
+
+            cornerCounterU = centerCounterU - halfOffsetU;
+            cornerCounterV = centerCounterV - halfOffsetV;
+
+            cornerClockU = centerClockU - halfOffsetU;
+            cornerClockV = centerClockV - halfOffsetV;
+
+            // Side opposite face
+            tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, centerCounterU, centerCounterV);
+            tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, cornerCounterU, cornerCounterV);
+            tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, cornerClockV);
+            tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
+
+            centerSideU = midU + halfOffsetU;
+            centerSideV = midV + halfOffsetV;
+
+            cornerSideU = centerSideU - halfCounterOffsetU;
+            cornerSideV = centerSideV - halfCounterOffsetV;
+
+            // Quarter face
+            tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, centerSideU, centerSideV);
+            tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+            tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
+            tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, cornerSideU, cornerSideV);
+
+            didRender = true;
+        }
+
+        /// Back
+        if (renderBack)
+        {
+            sprite = renderer.getBlockIcon(block, world, x, y, z, opposite.ordinal());
+            leftU = sprite.getMinU();
+            rightU = sprite.getMaxU();
+            topV = sprite.getMinV();
+            botV = sprite.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            halfU = lengthU / 2.0;
+            halfV = lengthV / 2.0;
+
+            plane = UVPlane.toUVPlane(opposite);
+
+            halfOffsetU = plane.getOffsetU(side) * halfU;
+            halfOffsetV = plane.getOffsetV(side) * halfV;
+
+            halfCounterOffsetU = plane.getOffsetU(counterclockwise) * halfU;
+            halfCounterOffsetV = plane.getOffsetV(counterclockwise) * halfV;
+
+            centerCounterU = midU + halfCounterOffsetU;
+            centerCounterV = midV + halfCounterOffsetV;
+
+            centerClockU = midU - halfCounterOffsetU;
+            centerClockV = midV - halfCounterOffsetV;
+
+            cornerCounterU = centerCounterU - halfOffsetU;
+            cornerCounterV = centerCounterV - halfOffsetV;
+
+            cornerClockU = centerClockU - halfOffsetU;
+            cornerClockV = centerClockV - halfOffsetV;
+
+            // Side opposite face
+            tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+            tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, cornerClockV);
+            tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, cornerCounterV);
+            tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, centerCounterU, centerCounterV);
+
+            centerSideU = midU + halfOffsetU;
+            centerSideV = midV + halfOffsetV;
+
+            cornerSideU = centerSideU - halfCounterOffsetU;
+            cornerSideV = centerSideV - halfCounterOffsetV;
+
+            // Quarter face
+            tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, cornerSideU, cornerSideV);
+            tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+            tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+            tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, centerSideU, centerSideV);
+
+            didRender = true;
+        }
+
         /// Round corner
         didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, side,
-            counterclockwise, isConnector);
+            counterclockwise, isConnector, renderFront, renderBack);
 
         return didRender;
     }
 
     private static boolean renderRoundCorner(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase, Block block, RenderBlocks renderer,
-        ForgeDirection axis, ForgeDirection clockwise, ForgeDirection counterclockwise, boolean isConnector) {
+        ForgeDirection axis, ForgeDirection clockwise, ForgeDirection counterclockwise, boolean isConnector, boolean renderFront, boolean renderBack) {
 
         boolean didRender = false;
         final Tessellator tess = Tessellator.instance;
@@ -1208,113 +1314,114 @@ public class LogRenderer extends BlockRenderer {
         double counterEdgeV;
 
         // Faces
-        if (!isConnector) {
-            /// Front
-            {
-                final IIcon spriteFront = renderer.getBlockIcon(block, world, xBase, yBase, zBase, axis.ordinal());
+        /// Front
+        if (renderFront)
+        {
+            final IIcon spriteFront = renderer.getBlockIcon(block, world, xBase, yBase, zBase, axis.ordinal());
 
-                leftU = spriteFront.getMinU();
-                rightU = spriteFront.getMaxU();
-                topV = spriteFront.getMinV();
-                botV = spriteFront.getMaxV();
+            leftU = spriteFront.getMinU();
+            rightU = spriteFront.getMaxU();
+            topV = spriteFront.getMinV();
+            botV = spriteFront.getMaxV();
 
-                midU = (rightU + leftU) / 2.0;
-                midV = (botV + topV) / 2.0;
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
 
-                lengthU = rightU - leftU;
-                lengthV = botV - topV;
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
 
-                halfU = lengthU / 2.0;
-                halfV = lengthV / 2.0;
+            halfU = lengthU / 2.0;
+            halfV = lengthV / 2.0;
 
-                plane = UVPlane.toUVPlane(axis);
+            plane = UVPlane.toUVPlane(axis);
 
-                clockOffsetU = plane.getOffsetU(clockwise);
-                clockOffsetV = plane.getOffsetV(clockwise);
+            clockOffsetU = plane.getOffsetU(clockwise);
+            clockOffsetV = plane.getOffsetV(clockwise);
 
-                counterOffsetU = plane.getOffsetU(counterclockwise);
-                counterOffsetV = plane.getOffsetV(counterclockwise);
+            counterOffsetU = plane.getOffsetU(counterclockwise);
+            counterOffsetV = plane.getOffsetV(counterclockwise);
 
-                clockU = midU + clockOffsetU * halfU;
-                clockV = midV + clockOffsetV * halfV;
+            clockU = midU + clockOffsetU * halfU;
+            clockV = midV + clockOffsetV * halfV;
 
-                counterU = midU + counterOffsetU * halfU;
-                counterV = midV + counterOffsetV * halfV;
+            counterU = midU + counterOffsetU * halfU;
+            counterV = midV + counterOffsetV * halfV;
 
-                cornerU = midU + (clockOffsetU + counterOffsetU) * halfU;
-                cornerV = midV + (clockOffsetV + counterOffsetV) * halfV;
+            cornerU = midU + (clockOffsetU + counterOffsetU) * halfU;
+            cornerV = midV + (clockOffsetV + counterOffsetV) * halfV;
 
-                clockEdgeU = cornerU - counterOffsetU * frontRadius * lengthU;
-                clockEdgeV = cornerV - counterOffsetV * frontRadius * lengthU;
+            clockEdgeU = cornerU - counterOffsetU * frontRadius * lengthU;
+            clockEdgeV = cornerV - counterOffsetV * frontRadius * lengthU;
 
-                counterEdgeU = cornerU - clockOffsetU * frontRadius * lengthU;
-                counterEdgeV = cornerV - clockOffsetV * frontRadius * lengthV;
+            counterEdgeU = cornerU - clockOffsetU * frontRadius * lengthU;
+            counterEdgeV = cornerV - clockOffsetV * frontRadius * lengthV;
 
-                tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
-                tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, clockU, clockV);
-                tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockEdgeU, clockEdgeV);
-                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
+            tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+            tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, clockU, clockV);
+            tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockEdgeU, clockEdgeV);
+            tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
 
-                tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
-                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
-                tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterEdgeU, counterEdgeV);
-                tess.addVertexWithUV(frontCounterCenterX, frontCounterCenterY, frontCounterCenterZ, counterU, counterV);
+            tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+            tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
+            tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterEdgeU, counterEdgeV);
+            tess.addVertexWithUV(frontCounterCenterX, frontCounterCenterY, frontCounterCenterZ, counterU, counterV);
 
-                didRender = true;
-            }
-            /// Back
-            {
-                final IIcon spriteBack = renderer.getBlockIcon(block, world, xBase, yBase, zBase, axis.getOpposite().ordinal());
+            didRender = true;
+        }
 
-                leftU = spriteBack.getMinU();
-                rightU = spriteBack.getMaxU();
-                topV = spriteBack.getMinV();
-                botV = spriteBack.getMaxV();
+        /// Back
+        if (renderBack)
+        {
+            final IIcon spriteBack = renderer.getBlockIcon(block, world, xBase, yBase, zBase, axis.getOpposite().ordinal());
 
-                midU = (rightU + leftU) / 2.0;
-                midV = (botV + topV) / 2.0;
+            leftU = spriteBack.getMinU();
+            rightU = spriteBack.getMaxU();
+            topV = spriteBack.getMinV();
+            botV = spriteBack.getMaxV();
 
-                lengthU = rightU - leftU;
-                lengthV = botV - topV;
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
 
-                halfU = lengthU / 2.0;
-                halfV = lengthV / 2.0;
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
 
-                plane = UVPlane.toUVPlane(axis.getOpposite());
+            halfU = lengthU / 2.0;
+            halfV = lengthV / 2.0;
 
-                clockOffsetU = plane.getOffsetU(clockwise);
-                clockOffsetV = plane.getOffsetV(clockwise);
+            plane = UVPlane.toUVPlane(axis.getOpposite());
 
-                counterOffsetU = plane.getOffsetU(counterclockwise);
-                counterOffsetV = plane.getOffsetV(counterclockwise);
+            clockOffsetU = plane.getOffsetU(clockwise);
+            clockOffsetV = plane.getOffsetV(clockwise);
 
-                clockU = midU + clockOffsetU * halfU;
-                clockV = midV + clockOffsetV * halfV;
+            counterOffsetU = plane.getOffsetU(counterclockwise);
+            counterOffsetV = plane.getOffsetV(counterclockwise);
 
-                counterU = midU + counterOffsetU * halfU;
-                counterV = midV + counterOffsetV * halfV;
+            clockU = midU + clockOffsetU * halfU;
+            clockV = midV + clockOffsetV * halfV;
 
-                cornerU = midU + (clockOffsetU + counterOffsetU) * halfU;
-                cornerV = midV + (clockOffsetV + counterOffsetV) * halfV;
+            counterU = midU + counterOffsetU * halfU;
+            counterV = midV + counterOffsetV * halfV;
 
-                clockEdgeU = cornerU - counterOffsetU * backRadius * lengthU;
-                clockEdgeV = cornerV - counterOffsetV * backRadius * lengthU;
+            cornerU = midU + (clockOffsetU + counterOffsetU) * halfU;
+            cornerV = midV + (clockOffsetV + counterOffsetV) * halfV;
 
-                counterEdgeU = cornerU - clockOffsetU * backRadius * lengthU;
-                counterEdgeV = cornerV - clockOffsetV * backRadius * lengthV;
+            clockEdgeU = cornerU - counterOffsetU * backRadius * lengthU;
+            clockEdgeV = cornerV - counterOffsetV * backRadius * lengthU;
 
-                tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
-                tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, counterU, counterV);
-                tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterEdgeU, counterEdgeV);
-                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
+            counterEdgeU = cornerU - clockOffsetU * backRadius * lengthU;
+            counterEdgeV = cornerV - clockOffsetV * backRadius * lengthV;
 
-                tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
-                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
-                tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockEdgeU, clockEdgeV);
-                tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, clockU, clockV);
+            tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+            tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, counterU, counterV);
+            tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterEdgeU, counterEdgeV);
+            tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
 
-                didRender = true;
-            }
+            tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+            tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
+            tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockEdgeU, clockEdgeV);
+            tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, clockU, clockV);
+
+            didRender = true;
         }
 
         /// Sides
