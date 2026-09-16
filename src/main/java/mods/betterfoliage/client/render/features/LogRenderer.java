@@ -70,44 +70,44 @@ public class LogRenderer extends BlockRenderer {
         final boolean connect3 = shouldConnectToSide(sides[2], world, x, y, z, axis);
         final boolean connect4 = shouldConnectToSide(sides[3], world, x, y, z, axis);
 
-        if ((connect1 && connect3) || (connect2 && connect4)) {
+        if ((connect1 & connect3) | (connect2 & connect4)) {
             IRendererByType baseRenderer = (IRendererByType) renderer;
             return baseRenderer.betterfoliage$renderBaseBlock(block, x, y, z);
         }
 
         if (connect1) {
             if (connect2) {
-                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[3], false);
+                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[3], axis, false);
             }
 
             if (connect4) {
-                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[2], false);
+                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[2], axis, false);
             }
 
-            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[2], false);
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[2], axis, false);
         }
 
         if (connect2) {
             if (connect3) {
-                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[0], false);
+                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[0], axis, false);
             }
 
-            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[3], false);
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[3], axis, false);
         }
 
         if (connect3) {
             if (connect4) {
-                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[1], false);
+                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[1], axis, false);
             }
 
-            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[0], false);
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[0], axis, false);
         }
 
         if (connect4) {
-            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[1], false);
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[1], axis, false);
         }
 
-        return renderRoundLog(world, x, y, z, x, y, z, block, renderer, axis, false);
+        return renderRoundLog(world, x, y, z, x, y, z, block, renderer, axis, axis, false);
     }
 
     private static boolean shouldConnectToSide(ForgeDirection side, IBlockAccess world, int x, int y, int z,
@@ -185,9 +185,46 @@ public class LogRenderer extends BlockRenderer {
             : isLatLog && isDiagLog;
     }
 
+    private static boolean shouldUseLargeAdjacentRadius(ForgeDirection side, ForgeDirection clock,
+        ForgeDirection counter, IBlockAccess world, int x, int y, int z) {
+
+        final BlockMatcher logs = Config.blocks.INSTANCE.getLogs();
+
+        final int sideX = x + side.offsetX;
+        final int sideY = y + side.offsetY;
+        final int sideZ = z + side.offsetZ;
+
+        final Block sideBlock = world.getBlock(sideX, sideY, sideZ);
+        final boolean isSideLog = logs.matchesID(sideBlock);
+
+        if (!isSideLog) {
+            return true;
+        }
+
+        final ForgeDirection adjacentAxis = determineLogAxis(world, sideX, sideY, sideZ, sideBlock);
+
+        if (side.getOpposite() == adjacentAxis) {
+            side = side.getOpposite();
+        }
+
+        if (side != adjacentAxis) {
+            return true;
+        }
+
+        final boolean noExtraConnections = !shouldConnectToSide(clock, world, sideX, sideY, sideZ, side)
+            && !shouldConnectToSide(counter, world, sideX, sideY, sideZ, side);
+
+        if (!noExtraConnections) {
+            return true;
+        }
+
+        return shouldConnectToSide(clock.getOpposite(), world, sideX, sideY, sideZ, side)
+            && shouldConnectToSide(counter.getOpposite(), world, sideX, sideY, sideZ, side);
+    }
+
     /// Renders a log block with all rounded corners
     private static boolean renderRoundLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase,
-        Block block, RenderBlocks renderer, ForgeDirection axis, boolean isConnector) {
+        Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection axisBase, boolean isConnector) {
 
         boolean didRender = false;
 
@@ -208,7 +245,7 @@ public class LogRenderer extends BlockRenderer {
                 determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderFront) {
                 renderRoundLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer,
-                    axis.getOpposite(), true);
+                    axis.getOpposite(), axisBase, true);
             }
 
             connectorX = x - axis.offsetX;
@@ -219,7 +256,8 @@ public class LogRenderer extends BlockRenderer {
             renderBack = !(logs.matchesID(connectorBlock) &&
                 determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderBack) {
-                renderRoundLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer, axis, true);
+                renderRoundLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer, axis, axisBase,
+                    true);
             }
 
         }
@@ -228,7 +266,7 @@ public class LogRenderer extends BlockRenderer {
         for (final ForgeDirection clock : sides) {
             final ForgeDirection counter = axis.getRotation(clock);
             didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, clock, counter,
-                isConnector, renderFront, renderBack);
+                axisBase, isConnector, renderFront, renderBack);
         }
 
         return didRender;
@@ -236,7 +274,7 @@ public class LogRenderer extends BlockRenderer {
 
     /// Renders a log block with two adjacent rounded corners and two adjacent square corners
     private static boolean renderRoundHalfLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase,
-        Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection side, boolean isConnector) {
+        Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection side, ForgeDirection axisBase, boolean isConnector) {
 
         boolean didRender = false;
         final Tessellator tess = Tessellator.instance;
@@ -524,7 +562,7 @@ public class LogRenderer extends BlockRenderer {
                 determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderFront) {
                 renderRoundHalfLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer,
-                    axis.getOpposite(), side, true);
+                    axis.getOpposite(), side, axisBase, true);
             }
 
             connectorX = x - axis.offsetX;
@@ -536,7 +574,7 @@ public class LogRenderer extends BlockRenderer {
                 determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderBack) {
                 renderRoundHalfLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer,
-                    axis, side, true);
+                    axis, side, axisBase, true);
             }
         }
 
@@ -634,10 +672,10 @@ public class LogRenderer extends BlockRenderer {
 
         /// Round corners
         didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, side,
-            counterclockwise, isConnector, renderFront, renderBack);
+            counterclockwise, axisBase, isConnector, renderFront, renderBack);
 
         didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis,
-            counterclockwise.getOpposite(), side, isConnector, renderFront, renderBack);
+            counterclockwise.getOpposite(), side, axisBase, isConnector, renderFront, renderBack);
 
         return didRender;
     }
@@ -645,7 +683,8 @@ public class LogRenderer extends BlockRenderer {
     /// Renders a log block with one rounded corner and three square corners.
     /// Rounded corner is always counterclockwise of side.
     private static boolean renderRoundQuarterLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase,
-        int zBase, Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection side, boolean isConnector) {
+        int zBase, Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection side,
+        ForgeDirection axisBase, boolean isConnector) {
 
         boolean didRender = false;
         final Tessellator tess = Tessellator.instance;
@@ -1004,7 +1043,7 @@ public class LogRenderer extends BlockRenderer {
                 determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderFront) {
                 renderRoundQuarterLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer,
-                    opposite, counterclockwise, true);
+                    opposite, counterclockwise, axisBase, true);
             }
 
             connectorX = x - axis.offsetX;
@@ -1015,10 +1054,9 @@ public class LogRenderer extends BlockRenderer {
 
             renderBack = !(logs.matchesID(connectorBlock) &&
                 determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
-
             if (!renderBack) {
                 renderRoundQuarterLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer,
-                    axis, side, true);
+                    axis, side, axisBase, true);
             }
         }
 
@@ -1144,13 +1182,14 @@ public class LogRenderer extends BlockRenderer {
 
         /// Round corner
         didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, side,
-            counterclockwise, isConnector, renderFront, renderBack);
+            counterclockwise, axisBase, isConnector, renderFront, renderBack);
 
         return didRender;
     }
 
     private static boolean renderRoundCorner(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase, Block block, RenderBlocks renderer,
-        ForgeDirection axis, ForgeDirection clockwise, ForgeDirection counterclockwise, boolean isConnector, boolean renderFront, boolean renderBack) {
+        ForgeDirection axis, ForgeDirection clockwise, ForgeDirection counterclockwise, ForgeDirection axisBase,
+        boolean isConnector, boolean renderFront, boolean renderBack) {
 
         boolean didRender = false;
         final Tessellator tess = Tessellator.instance;
@@ -1175,9 +1214,31 @@ public class LogRenderer extends BlockRenderer {
         final double counterY = counterclockwise.offsetY / 2.0;
         final double counterZ = counterclockwise.offsetZ / 2.0;
 
-        // TODO: Radius definer
-        final double frontRadius = Config.roundLogs.INSTANCE.getRadiusSmall();
-        final double backRadius = Config.roundLogs.INSTANCE.getRadiusSmall();
+        final boolean useLargeRadiusBase = shouldConnectToSide(clockwise.getOpposite(), world, xBase, yBase, zBase, axisBase)
+            && shouldConnectToSide(counterclockwise.getOpposite(), world, xBase, yBase, zBase, axisBase);
+
+        final boolean useLargeRadiusFront;
+        final boolean useLargeRadiusBack;
+
+        if (!isConnector) {
+            useLargeRadiusFront = useLargeRadiusBase && shouldUseLargeAdjacentRadius(axis, clockwise, counterclockwise,
+                world, x, y, z);
+
+            useLargeRadiusBack = useLargeRadiusBase && shouldUseLargeAdjacentRadius(axis.getOpposite(), clockwise, counterclockwise,
+                world, x, y, z);
+        }
+        else {
+            useLargeRadiusFront = useLargeRadiusBase;
+            useLargeRadiusBack = useLargeRadiusBase;
+        }
+
+        final double frontRadius = useLargeRadiusFront
+            ? Config.roundLogs.INSTANCE.getRadiusLarge()
+            : Config.roundLogs.INSTANCE.getRadiusSmall();
+
+        final double backRadius = useLargeRadiusBack
+            ? Config.roundLogs.INSTANCE.getRadiusLarge()
+            : Config.roundLogs.INSTANCE.getRadiusSmall();
 
         final double frontEdgeToCenter = 0.5 - frontRadius;
         final double frontDiagToCenter = (frontRadius / 2.0) + frontEdgeToCenter;
