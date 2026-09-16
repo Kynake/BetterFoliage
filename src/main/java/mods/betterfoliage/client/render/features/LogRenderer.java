@@ -1,8 +1,8 @@
 package mods.betterfoliage.client.render.features;
 
 import mods.betterfoliage.client.config.BlockMatcher;
+import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.render.UVPlane;
-import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -71,8 +71,7 @@ public class LogRenderer extends BlockRenderer {
         final boolean connect4 = shouldConnectToSide(sides[3], world, x, y, z, axis);
 
         if ((connect1 & connect3) | (connect2 & connect4)) {
-            IRendererByType baseRenderer = (IRendererByType) renderer;
-            return baseRenderer.betterfoliage$renderBaseBlock(block, x, y, z);
+            return RenderUtils.renderBaseBlock(x, y, z, block, renderer);
         }
 
         if (connect1) {
