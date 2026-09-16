@@ -184,6 +184,17 @@ public class LogRenderer extends BlockRenderer {
             : isLatLog && isDiagLog;
     }
 
+    public static boolean shouldRenderFace(ForgeDirection side, IBlockAccess world, int x, int y, int z) {
+        final int sideX = x + side.offsetX;
+        final int sideY = y + side.offsetY;
+        final int sideZ = z + side.offsetZ;
+
+        final Block sideBlock = world.getBlock(sideX, sideY, sideZ);
+
+        return !sideBlock.isOpaqueCube() || Config.blocks.INSTANCE.getLogs().matchesID(sideBlock);
+
+    }
+
     private static boolean shouldUseLargeAdjacentRadius(ForgeDirection side, ForgeDirection clock,
         ForgeDirection counter, IBlockAccess world, int x, int y, int z) {
 
