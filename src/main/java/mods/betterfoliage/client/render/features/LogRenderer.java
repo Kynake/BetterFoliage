@@ -184,7 +184,8 @@ public class LogRenderer extends BlockRenderer {
             : isLatLog && isDiagLog;
     }
 
-    public static boolean shouldRenderFace(ForgeDirection side, IBlockAccess world, int x, int y, int z) {
+    /// Least aggressive render checking function, may render non-visible faces when next to other log blocks.
+    private static boolean shouldRenderFace(ForgeDirection side, IBlockAccess world, int x, int y, int z) {
         final int sideX = x + side.offsetX;
         final int sideY = y + side.offsetY;
         final int sideZ = z + side.offsetZ;
@@ -192,7 +193,47 @@ public class LogRenderer extends BlockRenderer {
         final Block sideBlock = world.getBlock(sideX, sideY, sideZ);
 
         return !sideBlock.isOpaqueCube() || Config.blocks.INSTANCE.getLogs().matchesID(sideBlock);
+    }
 
+    /// Medium aggression render check, for faces of connecting log blocks.
+    private static boolean shouldRenderFullFace(ForgeDirection side, IBlockAccess world, int x, int y, int z) {
+        final int sideX = x + side.offsetX;
+        final int sideY = y + side.offsetY;
+        final int sideZ = z + side.offsetZ;
+
+        final Block sideBlock = world.getBlock(sideX, sideY, sideZ);
+
+        if (!sideBlock.isOpaqueCube()) {
+            return true;
+        }
+
+        if (!Config.blocks.INSTANCE.getLogs().matchesID(sideBlock)) {
+            return false;
+        }
+
+        final ForgeDirection sideAxis = determineLogAxis(world, sideX, sideY, sideZ, sideBlock);
+        return !shouldConnectToSide(side.getOpposite(), world, sideX, sideY, sideZ, sideAxis);
+    }
+
+    /// Most aggressive render checking function for rounded corner faces, where some assumptions can be made.
+    /// In best-case scenarios saves up to 16 quad draws for a single log block!
+    private static boolean shouldRenderCornerFace(ForgeDirection side, IBlockAccess world, int x, int y, int z) {
+        final int sideX = x + side.offsetX;
+        final int sideY = y + side.offsetY;
+        final int sideZ = z + side.offsetZ;
+
+        final Block sideBlock = world.getBlock(sideX, sideY, sideZ);
+
+        if (!sideBlock.isOpaqueCube()) {
+            return true;
+        }
+
+        if (!Config.blocks.INSTANCE.getLogs().matchesID(sideBlock)) {
+            return false;
+        }
+
+        final ForgeDirection sideAxis = determineLogAxis(world, sideX, sideY, sideZ, sideBlock);
+        return sideAxis != side && sideAxis != side.getOpposite();
     }
 
     private static boolean shouldUseLargeAdjacentRadius(ForgeDirection side, ForgeDirection clock,
@@ -479,9 +520,9 @@ public class LogRenderer extends BlockRenderer {
 
         /// Sides
 
+        // Counter
         if (shouldRenderFace(counterclockwise, world, x, y, z))
         {
-            // Counter
             leftU = spriteCounter.getMinU();
             rightU = spriteCounter.getMaxU();
             topV = spriteCounter.getMinV();
@@ -506,9 +547,9 @@ public class LogRenderer extends BlockRenderer {
             didRender = true;
         }
 
+        // Clock
         if (shouldRenderFace(clock, world, x, y, z))
         {
-            // Clock
             leftU = spriteClock.getMinU();
             rightU = spriteClock.getMaxU();
             topV = spriteClock.getMinV();
@@ -533,9 +574,9 @@ public class LogRenderer extends BlockRenderer {
             didRender = true;
         }
 
-        if (shouldRenderFace(back, world, x, y, z))
+        // Back
+        if (shouldRenderFullFace(back, world, x, y, z))
         {
-            // Back
             leftU = spriteBack.getMinU();
             rightU = spriteBack.getMaxU();
             topV = spriteBack.getMinV();
@@ -999,7 +1040,7 @@ public class LogRenderer extends BlockRenderer {
         }
 
         // Clock
-        if (shouldRenderFace(clock, world, x, y, z))
+        if (shouldRenderFullFace(clock, world, x, y, z))
         {
             leftU = spriteClock.getMinU();
             rightU = spriteClock.getMaxU();
@@ -1028,7 +1069,7 @@ public class LogRenderer extends BlockRenderer {
         }
 
         // Back
-        if (shouldRenderFace(back, world, x, y, z))
+        if (shouldRenderFullFace(back, world, x, y, z))
         {
             leftU = spriteBack.getMinU();
             rightU = spriteBack.getMaxU();
@@ -1409,7 +1450,7 @@ public class LogRenderer extends BlockRenderer {
 
         // Faces
         /// Front
-        renderFront = renderFront && shouldRenderFace(axis, world, x, y, z);
+        renderFront = renderFront && shouldRenderCornerFace(axis, world, x, y, z);
         if (renderFront)
         {
             final IIcon spriteFront = renderer.getBlockIcon(block, world, xBase, yBase, zBase, axis.ordinal());
@@ -1465,7 +1506,7 @@ public class LogRenderer extends BlockRenderer {
         }
 
         /// Back
-        renderBack = renderBack && shouldRenderFace(opposite, world, x, y, z);
+        renderBack = renderBack && shouldRenderCornerFace(opposite, world, x, y, z);
         if (renderBack)
         {
             final IIcon spriteBack = renderer.getBlockIcon(block, world, xBase, yBase, zBase, opposite.ordinal());
