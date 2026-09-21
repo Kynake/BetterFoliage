@@ -35,10 +35,11 @@ public class CoralRenderer extends BlockRenderer {
         ForgeDirection.EAST
     };
 
+    // TODO: fix rotation
     private static final ForgeDirection[] ROTATIONS = {
         ForgeDirection.UNKNOWN,
-        ForgeDirection.EAST,
         ForgeDirection.WEST,
+        ForgeDirection.EAST,
         ForgeDirection.SOUTH,
         ForgeDirection.NORTH
     };

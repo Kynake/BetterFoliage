@@ -197,7 +197,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert0(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.UP);
+        betterfoliage$applyAO(ForgeDirection.WEST, 0, ForgeDirection.NORTH, ForgeDirection.UP);
 
         original.call(
             instance,
@@ -217,7 +217,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert1(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.DOWN);
+        betterfoliage$applyAO(ForgeDirection.WEST, 1, ForgeDirection.NORTH, ForgeDirection.DOWN);
 
         original.call(
             instance,
@@ -237,7 +237,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert2(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.DOWN);
+        betterfoliage$applyAO(ForgeDirection.SOUTH, 2, ForgeDirection.EAST, ForgeDirection.DOWN);
 
         original.call(
             instance,
@@ -257,7 +257,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert3(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.UP);
+        betterfoliage$applyAO(ForgeDirection.SOUTH, 3, ForgeDirection.EAST, ForgeDirection.UP);
 
         original.call(
             instance,
@@ -279,7 +279,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert4(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.UP);
+        betterfoliage$applyAO(ForgeDirection.EAST, 4, ForgeDirection.SOUTH, ForgeDirection.UP);
 
         original.call(
             instance,
@@ -299,7 +299,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert5(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.DOWN);
+        betterfoliage$applyAO(ForgeDirection.EAST, 5, ForgeDirection.SOUTH, ForgeDirection.DOWN);
 
         original.call(
             instance,
@@ -319,7 +319,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert6(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.NORTH, ForgeDirection.WEST, ForgeDirection.DOWN);
+        betterfoliage$applyAO(ForgeDirection.NORTH, 6, ForgeDirection.WEST, ForgeDirection.DOWN);
 
         original.call(
             instance,
@@ -339,7 +339,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert7(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.NORTH, ForgeDirection.WEST, ForgeDirection.UP);
+        betterfoliage$applyAO(ForgeDirection.NORTH, 7, ForgeDirection.WEST, ForgeDirection.UP);
 
         original.call(
             instance,
@@ -361,7 +361,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert8(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.UP);
+        betterfoliage$applyAO(ForgeDirection.SOUTH, 8, ForgeDirection.WEST, ForgeDirection.UP);
 
         original.call(
             instance,
@@ -381,7 +381,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert9(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.DOWN);
+        betterfoliage$applyAO(ForgeDirection.SOUTH, 9, ForgeDirection.WEST, ForgeDirection.DOWN);
 
         original.call(
             instance,
@@ -401,7 +401,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert10(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.EAST, ForgeDirection.NORTH, ForgeDirection.DOWN);
+        betterfoliage$applyAO(ForgeDirection.EAST, 10, ForgeDirection.NORTH, ForgeDirection.DOWN);
 
         original.call(
             instance,
@@ -421,7 +421,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert11(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.EAST, ForgeDirection.NORTH, ForgeDirection.UP);
+        betterfoliage$applyAO(ForgeDirection.EAST, 11, ForgeDirection.NORTH, ForgeDirection.UP);
 
         original.call(
             instance,
@@ -443,7 +443,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert12(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.UP);
+        betterfoliage$applyAO(ForgeDirection.NORTH, 12, ForgeDirection.EAST, ForgeDirection.UP);
 
         original.call(
             instance,
@@ -463,7 +463,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert13(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.DOWN);
+        betterfoliage$applyAO(ForgeDirection.NORTH, 13, ForgeDirection.EAST, ForgeDirection.DOWN);
 
         original.call(
             instance,
@@ -483,7 +483,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert14(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.WEST, ForgeDirection.SOUTH, ForgeDirection.DOWN);
+        betterfoliage$applyAO(ForgeDirection.WEST, 14, ForgeDirection.SOUTH, ForgeDirection.DOWN);
 
         original.call(
             instance,
@@ -503,7 +503,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$wrapVert15(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
-        betterfoliage$applyAO(ForgeDirection.WEST, ForgeDirection.SOUTH, ForgeDirection.UP);
+        betterfoliage$applyAO(ForgeDirection.WEST, 15, ForgeDirection.SOUTH, ForgeDirection.UP);
 
         original.call(
             instance,
@@ -531,7 +531,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     }
 
     @Unique
-    private void betterfoliage$applyAO(ForgeDirection firstAxis, ForgeDirection secondAxis, ForgeDirection thirdAxis) {
+    private void betterfoliage$applyAO(ForgeDirection firstAxis, int vertIndex, ForgeDirection secondAxis, ForgeDirection thirdAxis) {
         if (!betterfoliage$useAO) return;
 
         betterfoliage$rotatedAOAxes[0] = firstAxis;
@@ -539,7 +539,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         betterfoliage$rotatedAOAxes[2] = thirdAxis;
 
         if (betterfoliage$rotationAxis.ordinal() <= 5) {
-            RenderUtils.swizzleCrossAOCounterclock(betterfoliage$rotationAxis, betterfoliage$rotatedAOAxes);
+            RenderUtils.swizzleCrossAOCounterclock(betterfoliage$rotationAxis, vertIndex, betterfoliage$rotatedAOAxes);
         }
 
         RenderUtils.setAOForCrossedSquareVertex(

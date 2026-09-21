@@ -329,8 +329,7 @@ public class RenderUtils {
         double deltaB = b - centerB;
 
         a = (rotCos * deltaA) + (rotSin * deltaB) + centerA;
-        // TODO fix rotation using worng sign (should be -)
-        b = (rotCos * deltaB) + (rotSin * deltaA) + centerB;
+        b = (rotCos * deltaB) - (rotSin * deltaA) + centerB;
 
         switch (rotationAxis) {
             // Constant Y (XZ)
@@ -353,47 +352,219 @@ public class RenderUtils {
         }
     }
 
-    //TODO fix after rotation fix
-    /// Swizzles AO Axes by the given rotation axis 90 degrees counter-clockwise.
+    /// Redefines AO directions when crossed square is rotated
     /// Used for adding AO to extra leaves in dense mode
     /// NORTH / WEST rotation axis are not implemented, as they're not required
-    public static void swizzleCrossAOCounterclock(ForgeDirection rotationAxis, ForgeDirection[] axes) {
+    public static void swizzleCrossAOCounterclock(ForgeDirection rotationAxis, int vertIndex, ForgeDirection[] axes) {
         switch (rotationAxis) {
             case SOUTH -> {
-                switch (axes[0]) {
-                    case NORTH, SOUTH -> {
-                        axes[1] = rotationAxis.getOpposite()
-                            .getRotation(axes[1]);
-                        axes[2] = rotationAxis.getRotation(axes[2]);
+                switch (vertIndex) {
+                    // Quad 1
+                    case 0 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.NORTH;
+                        axes[2] = ForgeDirection.WEST;
                     }
 
-                    case WEST, EAST -> {
-                        ForgeDirection first = axes[0];
-                        axes[0] = rotationAxis.getRotation(axes[2]);
-                        axes[2] = axes[1];
-                        axes[1] = rotationAxis.getOpposite()
-                            .getRotation(first);
+                    case 1 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.NORTH;
+                        axes[2] = ForgeDirection.EAST;
+                    }
+
+                    case 2 -> {
+                        axes[0] = ForgeDirection.SOUTH;
+                        axes[1] = ForgeDirection.UP;
+                        axes[2] = ForgeDirection.EAST;
+                    }
+
+                    case 3 -> {
+                        axes[0] = ForgeDirection.SOUTH;
+                        axes[1] = ForgeDirection.UP;
+                        axes[2] = ForgeDirection.WEST;
+                    }
+
+                    // Quad 2
+                    case 4 -> {
+                        axes[0] = ForgeDirection.SOUTH;
+                        axes[1] = ForgeDirection.WEST;
+                        axes[2] = ForgeDirection.UP;
+                    }
+
+                    case 5 -> {
+                        axes[0] = ForgeDirection.SOUTH;
+                        axes[1] = ForgeDirection.EAST;
+                        axes[2] = ForgeDirection.UP;
+                    }
+
+                    case 6 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.NORTH;
+                        axes[2] = ForgeDirection.EAST;
+                    }
+
+                    case 7 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.NORTH;
+                        axes[2] = ForgeDirection.WEST;
+                    }
+
+                    // Quad 3
+                    case 8 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.SOUTH;
+                        axes[2] = ForgeDirection.WEST;
+                    }
+
+                    case 9 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.SOUTH;
+                        axes[2] = ForgeDirection.EAST;
+                    }
+
+                    case 10 -> {
+                        axes[0] = ForgeDirection.NORTH;
+                        axes[1] = ForgeDirection.EAST;
+                        axes[2] = ForgeDirection.UP;
+                    }
+
+                    case 11 -> {
+                        axes[0] = ForgeDirection.NORTH;
+                        axes[1] = ForgeDirection.WEST;
+                        axes[2] = ForgeDirection.UP;
+                    }
+
+                    // Quad 4
+                    case 12 -> {
+                        axes[0] = ForgeDirection.NORTH;
+                        axes[1] = ForgeDirection.UP;
+                        axes[2] = ForgeDirection.WEST;
+                    }
+
+                    case 13 -> {
+                        axes[0] = ForgeDirection.NORTH;
+                        axes[1] = ForgeDirection.UP;
+                        axes[2] = ForgeDirection.EAST;
+                    }
+
+                    case 14 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.SOUTH;
+                        axes[2] = ForgeDirection.EAST;
+                    }
+
+                    case 15 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.SOUTH;
+                        axes[2] = ForgeDirection.WEST;
                     }
                 }
             }
 
             case EAST -> {
-                switch (axes[0]) {
-                    case NORTH, SOUTH -> {
-                        ForgeDirection first = axes[0];
-                        axes[0] = rotationAxis.getOpposite()
-                            .getRotation(axes[2]);
-                        axes[2] = axes[1];
-                        axes[1] = rotationAxis.getRotation(first);
+                switch (vertIndex) {
+                    // Quad 1
+                    case 0 -> {
+                        axes[0] = ForgeDirection.WEST;
+                        axes[1] = ForgeDirection.UP;
+                        axes[2] = ForgeDirection.SOUTH;
                     }
 
-                    case WEST, EAST -> {
-                        axes[1] = rotationAxis.getRotation(axes[1]);
-                        axes[2] = rotationAxis.getOpposite()
-                            .getRotation(axes[2]);
+                    case 1 -> {
+                        axes[0] = ForgeDirection.WEST;
+                        axes[1] = ForgeDirection.UP;
+                        axes[2] = ForgeDirection.NORTH;
+                    }
+
+                    case 2 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.EAST;
+                        axes[2] = ForgeDirection.NORTH;
+                    }
+
+                    case 3 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.EAST;
+                        axes[2] = ForgeDirection.SOUTH;
+                    }
+
+                    // Quad 2
+                    case 4 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.EAST;
+                        axes[2] = ForgeDirection.SOUTH;
+                    }
+
+                    case 5 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.EAST;
+                        axes[2] = ForgeDirection.NORTH;
+                    }
+
+                    case 6 -> {
+                        axes[0] = ForgeDirection.WEST;
+                        axes[1] = ForgeDirection.NORTH;
+                        axes[2] = ForgeDirection.UP;
+                    }
+
+                    case 7 -> {
+                        axes[0] = ForgeDirection.WEST;
+                        axes[1] = ForgeDirection.SOUTH;
+                        axes[2] = ForgeDirection.UP;
+                    }
+
+                    // Quad 3
+                    case 8 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.SOUTH;
+                        axes[2] = ForgeDirection.WEST;
+                    }
+
+                    case 9 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.NORTH;
+                        axes[2] = ForgeDirection.WEST;
+                    }
+
+                    case 10 -> {
+                        axes[0] = ForgeDirection.EAST;
+                        axes[1] = ForgeDirection.UP;
+                        axes[2] = ForgeDirection.NORTH;
+                    }
+
+                    case 11 -> {
+                        axes[0] = ForgeDirection.EAST;
+                        axes[1] = ForgeDirection.UP;
+                        axes[2] = ForgeDirection.SOUTH;
+                    }
+
+                    // Quad 4
+                    case 12 -> {
+                        axes[0] = ForgeDirection.EAST;
+                        axes[1] = ForgeDirection.SOUTH;
+                        axes[2] = ForgeDirection.UP;
+                    }
+
+                    case 13 -> {
+                        axes[0] = ForgeDirection.EAST;
+                        axes[1] = ForgeDirection.NORTH;
+                        axes[2] = ForgeDirection.UP;
+                    }
+
+                    case 14 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.WEST;
+                        axes[2] = ForgeDirection.NORTH;
+                    }
+
+                    case 15 -> {
+                        axes[0] = ForgeDirection.DOWN;
+                        axes[1] = ForgeDirection.WEST;
+                        axes[2] = ForgeDirection.SOUTH;
                     }
                 }
             }
         }
     }
+
 }

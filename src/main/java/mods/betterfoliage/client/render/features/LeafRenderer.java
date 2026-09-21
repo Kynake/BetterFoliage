@@ -62,8 +62,8 @@ public class LeafRenderer extends BlockRenderer {
             return renderer.renderStandardBlock(block, x, y, z);
         }
 
+        // TODO add option to skip rendering this when density is high enough
         final boolean renderResult = renderer.renderStandardBlock(block, x, y, z);
-
         if (!renderResult) return false;
 
         final IIcon keySprite = block.getIcon(world, x, y, z, ForgeDirection.DOWN.ordinal());
