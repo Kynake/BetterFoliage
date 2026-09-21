@@ -17,6 +17,13 @@ import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
 
+import static net.minecraftforge.common.util.ForgeDirection.DOWN;
+import static net.minecraftforge.common.util.ForgeDirection.UP;
+import static net.minecraftforge.common.util.ForgeDirection.NORTH;
+import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
+import static net.minecraftforge.common.util.ForgeDirection.WEST;
+import static net.minecraftforge.common.util.ForgeDirection.EAST;
+
 public class LeafRenderer extends BlockRenderer {
 
     private static final int SALT = 39845;
@@ -26,6 +33,60 @@ public class LeafRenderer extends BlockRenderer {
 
     // Original renderer scaled the vertical axis so that the diagonal pixels look square instead of rectangular.
     private static final float VERTICAL_SCALE_FACTOR = 1.41f;
+
+    // spotless:off
+    private static final ForgeDirection[][] QUAD_AO_SOUTH = {
+        // Quad 1
+        { DOWN, NORTH, WEST },
+        { DOWN, NORTH, EAST },
+        { SOUTH, UP, EAST },
+        { SOUTH, UP, WEST },
+
+        // Quad 2
+        { SOUTH, WEST, UP },
+        { SOUTH, EAST, UP },
+        { DOWN, NORTH, EAST },
+        { DOWN, NORTH, WEST },
+
+        // Quad 3
+        { DOWN, SOUTH, WEST },
+        { DOWN, SOUTH, EAST },
+        { NORTH, EAST, UP },
+        { NORTH, WEST, UP },
+
+        // Quad 4
+        { NORTH, UP, WEST },
+        { NORTH, UP, EAST },
+        { DOWN, SOUTH, EAST },
+        { DOWN, SOUTH, WEST },
+    };
+
+    private static final ForgeDirection[][] QUAD_AO_EAST = {
+        // Quad 1
+        { WEST, UP, SOUTH },
+        { WEST, UP, NORTH },
+        { DOWN, EAST, NORTH },
+        { DOWN, EAST, SOUTH },
+
+        // Quad 2
+        { DOWN, EAST, SOUTH },
+        { DOWN, EAST, NORTH },
+        { WEST, NORTH, UP },
+        { WEST, SOUTH, UP },
+
+        // Quad 3
+        { DOWN, SOUTH, WEST },
+        { DOWN, NORTH, WEST },
+        { EAST, UP, NORTH },
+        { EAST, UP, SOUTH },
+
+        // Quad 4
+        { EAST, SOUTH, UP },
+        { EAST, NORTH, UP },
+        { DOWN, WEST, NORTH },
+        { DOWN, WEST, SOUTH },
+    };
+    // spotless:on
 
     private static final LeafRegistry leafRegistry = LeafRegistry.getInstance();
 
@@ -66,7 +127,7 @@ public class LeafRenderer extends BlockRenderer {
         final boolean renderResult = renderer.renderStandardBlock(block, x, y, z);
         if (!renderResult) return false;
 
-        final IIcon keySprite = block.getIcon(world, x, y, z, ForgeDirection.DOWN.ordinal());
+        final IIcon keySprite = block.getIcon(world, x, y, z, DOWN.ordinal());
         final LeafInfo leaf = leafRegistry.getLeafForSprite(keySprite);
 
         if (leaf == null) return true;
@@ -86,7 +147,7 @@ public class LeafRenderer extends BlockRenderer {
 
         ICrossedSquaresRenderer leafRenderer = (ICrossedSquaresRenderer) renderer;
 
-        IIcon sprite = leaf.getSpriteForCoord(x, y, z, ForgeDirection.UP.ordinal());
+        IIcon sprite = leaf.getSpriteForCoord(x, y, z, UP.ordinal());
         float horizontalScale = scale * HORIZONTAL_SCALE_FACTOR;
 
         leafRenderer.betterfoliage$setVerticalScale(verticalScale);
@@ -98,19 +159,19 @@ public class LeafRenderer extends BlockRenderer {
             final double rotY = y + 0.5;
             final double rotZ = z + 0.5;
 
-            sprite = leaf.getSpriteForCoord(x, y, z, ForgeDirection.SOUTH.ordinal());
-            leafRenderer.betterfoliage$setRotation(rotX, rotY, rotZ, ForgeDirection.SOUTH);
+            sprite = leaf.getSpriteForCoord(x, y, z, SOUTH.ordinal());
+            leafRenderer.betterfoliage$setRotation(rotX, rotY, rotZ, SOUTH);
             renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, horizontalScale);
 
-            sprite = leaf.getSpriteForCoord(x, y, z, ForgeDirection.EAST.ordinal());
-            leafRenderer.betterfoliage$setRotation(rotX, rotY, rotZ, ForgeDirection.EAST);
+            sprite = leaf.getSpriteForCoord(x, y, z, EAST.ordinal());
+            leafRenderer.betterfoliage$setRotation(rotX, rotY, rotZ, EAST);
             renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, horizontalScale);
 
             leafRenderer.betterfoliage$resetRotation();
         }
 
         if (Config.leaves.INSTANCE.getSnowEnabled() && BlockUtils.isSnow(world.getBlock(x, y + 1, z))) {
-            sprite = snowCovering.getSpriteForCoord(x, y, z, ForgeDirection.UP.ordinal());
+            sprite = snowCovering.getSpriteForCoord(x, y, z, UP.ordinal());
             leafRenderer.betterfoliage$setAORender(block, x, y, z, false);
             renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, horizontalScale);
         }
@@ -132,5 +193,26 @@ public class LeafRenderer extends BlockRenderer {
 
     private static boolean blocksLeafRendering(Block visonBlocker, Block leaf) {
         return visonBlocker.isOpaqueCube() || visonBlocker == leaf;
+    }
+
+    /// Redefines AO directions when extra leaves are rotated
+    /// Used for adding AO to extra leaves in dense mode
+    /// NORTH / WEST rotation axis are not implemented, as they're not required
+    public static ForgeDirection[] getSwizzledVertexAOs(ForgeDirection rotationAxis, int vertIndex) {
+        switch (rotationAxis) {
+            case SOUTH -> {
+                return QUAD_AO_SOUTH[vertIndex];
+            }
+
+            case EAST -> {
+                return QUAD_AO_EAST[vertIndex];
+            }
+
+            default -> {
+                BetterFoliageMod.log.error("Attempted to get rotated dense leaves AO with invalid axis: {}",
+                    rotationAxis);
+                return null;
+            }
+        }
     }
 }
