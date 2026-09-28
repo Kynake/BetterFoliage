@@ -1,5 +1,6 @@
 package mods.betterfoliage.mixins.early.minecraft;
 
+import mods.betterfoliage.client.render.ShadingInfo;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -59,6 +60,9 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
 
     @Unique
     private boolean betterfoliage$useBlockColor;
+
+    @Unique
+    private ShadingInfo betterfoliage$crossedSquareShadingContainer = new ShadingInfo();
 
     @Unique
     private int betterfoliage$AOx;
@@ -532,30 +536,33 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private void betterfoliage$applyAO(int vertIndex, ForgeDirection firstAxis, ForgeDirection secondAxis, ForgeDirection thirdAxis) {
         if (!betterfoliage$useAO) return;
 
+        final ForgeDirection axis1;
+        final ForgeDirection axis2;
+        final ForgeDirection axis3;
+
         if (betterfoliage$rotationAxis != ForgeDirection.UNKNOWN) {
             final ForgeDirection[] newAOs = LeafRenderer.getSwizzledVertexAOs(betterfoliage$rotationAxis, vertIndex);
 
-            RenderUtils.setAOForCrossedSquareVertex(
-                (RenderBlocks) (Object) this,
-                betterfoliage$AOx,
-                betterfoliage$AOy,
-                betterfoliage$AOz,
-                newAOs[0],
-                newAOs[1],
-                newAOs[2],
-                betterfoliage$useBlockColor);
-
-            return;
+            axis1 = newAOs[0];
+            axis2 = newAOs[1];
+            axis3 = newAOs[2];
+        } else {
+            axis1 = firstAxis;
+            axis2 = secondAxis;
+            axis3 = thirdAxis;
         }
 
-        RenderUtils.setAOForCrossedSquareVertex(
+        RenderUtils.getShadingInfoForCrossedSquareVertex(
             (RenderBlocks) (Object) this,
             betterfoliage$AOx,
             betterfoliage$AOy,
             betterfoliage$AOz,
-            firstAxis,
-            secondAxis,
-            thirdAxis,
-            betterfoliage$useBlockColor);
+            axis1,
+            axis2,
+            axis3,
+            betterfoliage$useBlockColor,
+            betterfoliage$crossedSquareShadingContainer);
+
+        betterfoliage$crossedSquareShadingContainer.applyShading();
     }
 }

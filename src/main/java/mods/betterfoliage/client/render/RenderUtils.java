@@ -129,8 +129,9 @@ public class RenderUtils {
         return color;
     }
 
-    public static void setAOForCrossedSquareVertex(RenderBlocks renderer, int x, int y, int z, ForgeDirection firstAxis,
-        ForgeDirection secondAxis, ForgeDirection thirdAxis, boolean useBlockColor) {
+    public static void getShadingInfoForCrossedSquareVertex(RenderBlocks renderer, int x, int y, int z,
+        ForgeDirection firstAxis, ForgeDirection secondAxis, ForgeDirection thirdAxis, boolean useBlockColor,
+        ShadingInfo shadingContainer) {
 
         Block block = renderer.blockAccess.getBlock(x, y, z);
 
@@ -176,12 +177,13 @@ public class RenderUtils {
             }
         }
 
-        setAOForBlockCorner(renderer, block, aoX, aoY, aoZ, aoFirst, aoSecond, aoThird, color, colorMult);
+        getShadingInfoForBlockCorner(renderer, block, aoX, aoY, aoZ, aoFirst, aoSecond, aoThird, color, colorMult,
+            shadingContainer);
     }
 
-    public static void setAOForBlockCorner(RenderBlocks renderer, Block block, int x, int y, int z,
+    public static void getShadingInfoForBlockCorner(RenderBlocks renderer, Block block, int x, int y, int z,
         ForgeDirection firstAxis, ForgeDirection secondAxis, ForgeDirection thirdAxis, int color,
-        float colorMultiplier) {
+        float colorMultiplier, ShadingInfo shadingContainer) {
 
         x += firstAxis.offsetX;
         y += firstAxis.offsetY;
@@ -242,13 +244,7 @@ public class RenderUtils {
         int brightness = renderer
             .getAoBrightness(secondBrightness, thirdBrightness, diagonalBrightness, blockBrightness);
 
-        float r = ao * (float) (color >> 16 & 0xFF) / 255.0f;
-        float g = ao * (float) (color >> 8 & 0xFF) / 255.0f;
-        float b = ao * (float) (color & 0xFF) / 255.0f;
-
-        Tessellator tess = Tessellator.instance;
-        tess.setBrightness(brightness);
-        tess.setColorOpaque_F(r, g, b);
+        shadingContainer.updateValues(brightness, color, ao);
     }
 
     public static boolean isFaceOccluded(IBlockAccess world, int x, int y, int z, ForgeDirection face) {
