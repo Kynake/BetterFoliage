@@ -22,6 +22,7 @@ public enum Mixins implements IMixins {
             "minecraft.MixinRenderBlocks_CustomSideSprites",
             "minecraft.MixinRenderBlocks_CustomSidePositions",
             "minecraft.MixinRenderBlocks_CrossedSquares",
+            "minecraft.MixinRenderBlocks_RoundLogs",
             "minecraft.MixinRenderBlocks_OffsetSprite")
         .setPhase(Phase.EARLY)),
     GT6(new MixinBuilder()
