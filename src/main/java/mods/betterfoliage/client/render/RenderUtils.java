@@ -6,6 +6,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
+import mods.betterfoliage.utils.MathUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -56,30 +57,33 @@ public class RenderUtils {
         tessellator.setColorRGBA(multiplier, multiplier, multiplier, 0xFF);
     }
 
-    // TODO: use [0, 1] ratio instead
-    /// Colors are in ARGB format. Alpha is copied from first color
-    public static int blendRGB(int colorA, int colorB, float ratio) {
-        float invRatio = (1f / ratio);
-        int r = (int) (ratio * (colorA >> 16 & 0xFF) + invRatio * (colorB >> 16 & 0xFF));
-        int g = (int) (ratio * (colorA >> 8 & 0xFF) + invRatio * (colorB >> 8 & 0xFF));
-        int b = (int) (ratio * (colorA & 0xFF) + invRatio * (colorB & 0xFF));
+    /// Linearly interpolate between two colors in ARGB format. Alpha is also interpolated
+    public static int lerpARGB(int colorA, int colorB, float ratio) {
+        final int a = Math.round(MathUtils.lerp((float) (colorA >> 24 & 0xFF), (float) (colorB >> 24 & 0xFF), ratio));
+        final int r = Math.round(MathUtils.lerp((float) (colorA >> 16 & 0xFF), (float) (colorB >> 16 & 0xFF), ratio));
+        final int g = Math.round(MathUtils.lerp((float) (colorA >> 8 & 0xFF), (float) (colorB >> 8 & 0xFF), ratio));
+        final int b = Math.round(MathUtils.lerp((float) (colorA & 0xFF), (float) (colorB & 0xFF), ratio));
 
-        int res = colorA & 0xFF_00_00_00;
-        res |= r << 16;
-        res |= g << 8;
-        res |= b;
-
-        return res;
+        return (a << 24) | (r << 16) | (g << 8) | b;
     }
 
-    /// Colors are in ARGB format. Color channels are copied from first color
-    public static int multiplyAlphas(int colorA, int colorB) {
-        float alphaA = ((colorA >> 24) & 0xFF) / (float) 0xFF;
-        float alphaB = ((colorB >> 24) & 0xFF) / (float) 0xFF;
-        int alpha = (int) (alphaA * alphaB * 0xFF);
-        int res = colorA & 0x00_FF_FF_FF;
-        res |= alpha << 24;
-        return res;
+    /// Calculate the weighted average of two colors in ARGB format. Alpha is copied from first color
+    public static int averageRGB(int colorA, int colorB, float ratio) {
+        final float invRatio = 1f / ratio;
+        final int r = (int) (ratio * (colorA >> 16 & 0xFF) + invRatio * (colorB >> 16 & 0xFF));
+        final int g = (int) (ratio * (colorA >> 8 & 0xFF) + invRatio * (colorB >> 8 & 0xFF));
+        final int b = (int) (ratio * (colorA & 0xFF) + invRatio * (colorB & 0xFF));
+
+        return (colorA & 0xFF_00_00_00) | (r << 16) | (g << 8) | b;
+    }
+
+    /// Calculates the average alpha channel between two colors in ARGB format. RGB channels are copied from first color
+    public static int averageAlphas(int colorA, int colorB) {
+        final float alphaA = ((colorA >> 24) & 0xFF) / (float) 0xFF;
+        final float alphaB = ((colorB >> 24) & 0xFF) / (float) 0xFF;
+        final int alpha = (int) (alphaA * alphaB * 0xFF);
+
+        return (alpha << 24) | (colorA & 0x00_FF_FF_FF);
     }
 
     /// Average visible colors in a Sprite using their squares
@@ -177,11 +181,12 @@ public class RenderUtils {
             }
         }
 
-        getShadingInfoForBlockCorner(renderer, block, aoX, aoY, aoZ, aoFirst, aoSecond, aoThird, color, colorMult,
+        // TODO use FlatShader when renderAO == false?
+        getAOShadingInfoForBlockCorner(renderer, block, aoX, aoY, aoZ, aoFirst, aoSecond, aoThird, color, colorMult,
             shadingContainer);
     }
 
-    public static void getShadingInfoForBlockCorner(RenderBlocks renderer, Block block, int x, int y, int z,
+    public static void getAOShadingInfoForBlockCorner(RenderBlocks renderer, Block block, int x, int y, int z,
         ForgeDirection firstAxis, ForgeDirection secondAxis, ForgeDirection thirdAxis, int color,
         float colorMultiplier, ShadingInfo shadingContainer) {
 
@@ -245,6 +250,20 @@ public class RenderUtils {
             .getAoBrightness(secondBrightness, thirdBrightness, diagonalBrightness, blockBrightness);
 
         shadingContainer.updateValues(brightness, color, ao);
+    }
+
+    public static void getFlatShadingInfoForBlockFace(RenderBlocks renderer, Block block, int x, int y, int z,
+        ForgeDirection face, int color, ShadingInfo shadingContainer) {
+
+        final float colorMultiplier = getColorMultiplierBySide(face);
+
+        final int brightness = block.getMixedBrightnessForBlock(
+            renderer.blockAccess,
+            x + face.offsetX,
+            y + face.offsetY,
+            z + face.offsetZ);
+
+        shadingContainer.updateValues(brightness, color, colorMultiplier);
     }
 
     public static boolean isFaceOccluded(IBlockAccess world, int x, int y, int z, ForgeDirection face) {

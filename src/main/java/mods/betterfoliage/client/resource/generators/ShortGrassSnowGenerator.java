@@ -23,7 +23,7 @@ public class ShortGrassSnowGenerator extends ShortGrassGenerator {
 
         for (int x = 0; x < base.getWidth(); x++) {
             for (int y = 0; y < base.getHeight(); y++) {
-                base.setRGB(x, y, RenderUtils.blendRGB(base.getRGB(x, y), BLEND_COLOR, BLEND_RATIO));
+                base.setRGB(x, y, RenderUtils.averageRGB(base.getRGB(x, y), BLEND_COLOR, BLEND_RATIO));
             }
         }
 

@@ -41,8 +41,7 @@ public final class ShadingInfo {
 
         int avgColor = pureColor;
         if (pureColor != other.pureColor) {
-            avgColor = RenderUtils.blendRGB(pureColor, other.pureColor, ratio);
-            avgColor = RenderUtils.multiplyAlphas(avgColor, other.pureColor);
+            avgColor = RenderUtils.lerpARGB(pureColor, other.pureColor, ratio);
         }
 
         final float avgR = avgAO * (float) (avgColor >> 16 & 0xFF) / 255.0f;

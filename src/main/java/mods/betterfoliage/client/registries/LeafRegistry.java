@@ -155,7 +155,7 @@ public final class LeafRegistry extends TextureGenerator {
                     int baseY = y + (frame * genWidth);
                     int baseColor = genImage.getRGB(x, baseY);
                     int maskColor = maskImage.getRGB(x, y);
-                    genImage.setRGB(x, baseY, RenderUtils.multiplyAlphas(baseColor, maskColor));
+                    genImage.setRGB(x, baseY, RenderUtils.averageAlphas(baseColor, maskColor));
                 }
             }
         }
