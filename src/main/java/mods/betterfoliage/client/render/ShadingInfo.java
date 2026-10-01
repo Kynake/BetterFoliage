@@ -3,7 +3,7 @@ package mods.betterfoliage.client.render;
 import mods.betterfoliage.utils.MathUtils;
 import net.minecraft.client.renderer.Tessellator;
 
-public class ShadingInfo {
+public final class ShadingInfo {
 
     private float r;
     private float g;
@@ -23,23 +23,32 @@ public class ShadingInfo {
     }
 
     public void applyShading() {
-        final Tessellator tess = Tessellator.instance;
+        applyShading(Tessellator.instance);
+    }
+
+    public void applyShading(final Tessellator tess) {
         tess.setBrightness(brightness);
         tess.setColorOpaque_F(r, g, b);
     }
 
-    public void applyAveragedShading(ShadingInfo other, float ratio) {
+    public void applyAveragedShading(final Tessellator tess, final ShadingInfo other, final float ratio) {
         final float avgAO = MathUtils.lerp(ambientOcclusion, other.ambientOcclusion, ratio);
-        final int avgBrightness = Math.round(MathUtils.lerp((float) brightness, (float) other.brightness, ratio));
 
-        int avgColor = RenderUtils.blendRGB(pureColor, other.pureColor, ratio);
-        avgColor = RenderUtils.multiplyAlphas(avgColor, other.pureColor);
+        int avgBrightness = brightness;
+        if (brightness != other.brightness) {
+            avgBrightness = Math.round(MathUtils.lerp((float) brightness, (float) other.brightness, ratio));
+        }
+
+        int avgColor = pureColor;
+        if (pureColor != other.pureColor) {
+            avgColor = RenderUtils.blendRGB(pureColor, other.pureColor, ratio);
+            avgColor = RenderUtils.multiplyAlphas(avgColor, other.pureColor);
+        }
 
         final float avgR = avgAO * (float) (avgColor >> 16 & 0xFF) / 255.0f;
         final float avgG = avgAO * (float) (avgColor >> 8 & 0xFF) / 255.0f;
         final float avgB = avgAO * (float) (avgColor & 0xFF) / 255.0f;
 
-        final Tessellator tess = Tessellator.instance;
         tess.setBrightness(avgBrightness);
         tess.setColorOpaque_F(avgR, avgG, avgB);
     }
