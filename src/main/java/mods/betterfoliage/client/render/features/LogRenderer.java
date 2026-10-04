@@ -1654,7 +1654,16 @@ public class LogRenderer extends BlockRenderer {
             didRender = true;
         }
 
-        if (renderFront || renderBack || renderClock || renderCounter)
+        // Diagonals
+        boolean renderDiagonal = renderFront || renderBack || renderClock || renderCounter;
+
+        if (!renderDiagonal) {
+            // Test if front and back axis are themselves log blocks, if so we must render the diagonal
+            // even though none of the other sides were rendered.
+            renderDiagonal = shouldRenderFace(axis, world, x, y, z) || shouldRenderFace(opposite, world, x, y, z);
+        }
+
+        if (renderDiagonal)
         {
             // Clock Diag
             tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
