@@ -2,8 +2,12 @@ package mods.betterfoliage.client.render.features;
 
 import mods.betterfoliage.client.config.BlockMatcher;
 import mods.betterfoliage.client.render.RenderUtils;
+import mods.betterfoliage.client.render.ShadingInfo;
 import mods.betterfoliage.client.render.UVPlane;
+import mods.betterfoliage.mixins.interfaces.minecraft.IRoundLogRenderer;
+import mods.betterfoliage.utils.BlockUtils;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
@@ -518,6 +522,10 @@ public class LogRenderer extends BlockRenderer {
         double frontV;
         double backV;
 
+        final boolean aoEnabled = Minecraft.isAmbientOcclusionEnabled();
+        final int blockColor = BlockUtils.getStandardColorMultiplier(world, block, xBase, yBase, zBase);
+        final ShadingInfo[] containers = ((IRoundLogRenderer) renderer).betterfoliage$getShadingContainers();
+
         /// Sides
 
         // Counter
@@ -539,10 +547,21 @@ public class LogRenderer extends BlockRenderer {
             frontV = midV - axisOffsetHalf * lengthV;
             backV = midV + axisOffsetConnector * lengthV;
 
-            tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, midU, frontV);
-            tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, midU, backV);
-            tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, centerCounterU, backV);
-            tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, centerCounterU, frontV);
+            if (aoEnabled) {
+                tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, midU, frontV);
+                tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, midU, backV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, centerCounterU, backV);
+                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, centerCounterU, frontV);
+            }
+            else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, counterclockwise, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, midU, frontV);
+                tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, midU, backV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, centerCounterU, backV);
+                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, centerCounterU, frontV);
+            }
 
             didRender = true;
         }
@@ -566,10 +585,21 @@ public class LogRenderer extends BlockRenderer {
             frontV = midV - axisOffsetHalf * lengthV;
             backV = midV + axisOffsetConnector * lengthV;
 
-            tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerCounterU, frontV);
-            tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerCounterU, backV);
-            tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, midU, backV);
-            tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, midU, frontV);
+            if (aoEnabled) {
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerCounterU, frontV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerCounterU, backV);
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, midU, backV);
+                tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, midU, frontV);
+            }
+            else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, clock, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerCounterU, frontV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerCounterU, backV);
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, midU, backV);
+                tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, midU, frontV);
+            }
 
             didRender = true;
         }
@@ -595,10 +625,21 @@ public class LogRenderer extends BlockRenderer {
             final double counterU = midU - offsetU;
             final double clockU = midU + offsetU;
 
-            tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, counterU, frontV);
-            tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, counterU, backV);
-            tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, clockU, backV);
-            tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, clockU, frontV);
+            if (aoEnabled) {
+                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, counterU, frontV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, counterU, backV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, clockU, backV);
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, clockU, frontV);
+            }
+            else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, back, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, counterU, frontV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, counterU, backV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, clockU, backV);
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, clockU, frontV);
+            }
 
             didRender = true;
         }
@@ -677,11 +718,21 @@ public class LogRenderer extends BlockRenderer {
             cornerClockU = centerClockU - halfOffsetU;
             cornerClockV = centerClockV - halfOffsetV;
 
-            // Faces
-            tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, centerCounterU, centerCounterV);
-            tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, cornerCounterU, cornerCounterV);
-            tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, cornerClockV);
-            tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
+            if (aoEnabled) {
+                tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, centerCounterU, centerCounterV);
+                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, cornerCounterU, cornerCounterV);
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, cornerClockV);
+                tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
+            }
+            else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, axis, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, centerCounterU, centerCounterV);
+                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, cornerCounterU, cornerCounterV);
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, cornerClockV);
+                tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
+            }
 
             didRender = true;
         }
@@ -724,10 +775,22 @@ public class LogRenderer extends BlockRenderer {
             cornerClockU = centerClockU - halfOffsetU;
             cornerClockV = centerClockV - halfOffsetV;
 
-            tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
-            tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, cornerClockV);
-            tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, cornerCounterV);
-            tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, centerCounterU, centerCounterV);
+            if (aoEnabled) {
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, cornerClockV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, cornerCounterV);
+                tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, centerCounterU, centerCounterV);
+            }
+            else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, opposite, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, cornerClockV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, cornerCounterV);
+                tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, centerCounterU, centerCounterV);
+            }
+
             didRender = true;
         }
 
@@ -983,6 +1046,10 @@ public class LogRenderer extends BlockRenderer {
             spriteBack = renderer.getBlockIcon(block, world, xBase, yBase, zBase, back.ordinal());
         }
 
+        final boolean aoEnabled = Minecraft.isAmbientOcclusionEnabled();
+        final int blockColor = BlockUtils.getStandardColorMultiplier(world, block, xBase, yBase, zBase);
+        final ShadingInfo[] containers = ((IRoundLogRenderer) renderer).betterfoliage$getShadingContainers();
+
         /// Sides
 
         // Main Side
@@ -1004,10 +1071,21 @@ public class LogRenderer extends BlockRenderer {
             final double frontV = midV - axisOffsetHalf * lengthV;
             final double backV = midV + axisOffsetConnector * lengthV;
 
-            tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, centerCounterU, frontV);
-            tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, centerCounterU, backV);
-            tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, midU, backV);
-            tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, midU, frontV);
+            if (aoEnabled) {
+                tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, centerCounterU, frontV);
+                tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, centerCounterU, backV);
+                tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, midU, backV);
+                tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, midU, frontV);
+            }
+            else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, side, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, centerCounterU, frontV);
+                tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, centerCounterU, backV);
+                tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, midU, backV);
+                tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, midU, frontV);
+            }
 
             didRender = true;
         }
@@ -1031,10 +1109,21 @@ public class LogRenderer extends BlockRenderer {
             final double frontV = midV - axisOffsetHalf * lengthV;
             final double backV = midV + axisOffsetConnector * lengthV;
 
-            tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, midU, frontV);
-            tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, midU, backV);
-            tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, centerCounterU, backV);
-            tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, centerCounterU, frontV);
+            if (aoEnabled) {
+                tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, midU, frontV);
+                tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, midU, backV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, centerCounterU, backV);
+                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, centerCounterU, frontV);
+            }
+            else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, counterclockwise, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, midU, frontV);
+                tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, midU, backV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, centerCounterU, backV);
+                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, centerCounterU, frontV);
+            }
 
             didRender = true;
         }
@@ -1060,10 +1149,21 @@ public class LogRenderer extends BlockRenderer {
             final double frontV = midV - axisOffsetHalf * lengthV;
             final double backV = midV + axisOffsetConnector * lengthV;
 
-            tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerCounterU, frontV);
-            tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerCounterU, backV);
-            tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, cornerClockU, backV);
-            tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, cornerClockU, frontV);
+            if (aoEnabled) {
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerCounterU, frontV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerCounterU, backV);
+                tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, cornerClockU, backV);
+                tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, cornerClockU, frontV);
+            }
+            else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, clock, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerCounterU, frontV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerCounterU, backV);
+                tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, cornerClockU, backV);
+                tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, cornerClockU, frontV);
+            }
 
             didRender = true;
         }
@@ -1089,10 +1189,21 @@ public class LogRenderer extends BlockRenderer {
             final double frontV = midV - axisOffsetHalf * lengthV;
             final double backV = midV + axisOffsetConnector * lengthV;
 
-            tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, cornerCounterU, frontV);
-            tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, backV);
-            tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, backV);
-            tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, frontV);
+            if (aoEnabled) {
+                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, cornerCounterU, frontV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, backV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, backV);
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, frontV);
+            }
+            else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, back, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, cornerCounterU, frontV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, backV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, backV);
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, frontV);
+            }
 
             didRender = true;
         }
@@ -1172,23 +1283,41 @@ public class LogRenderer extends BlockRenderer {
             cornerClockU = centerClockU - halfOffsetU;
             cornerClockV = centerClockV - halfOffsetV;
 
-            // Side opposite face
-            tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, centerCounterU, centerCounterV);
-            tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, cornerCounterU, cornerCounterV);
-            tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, cornerClockV);
-            tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
-
             centerSideU = midU + halfOffsetU;
             centerSideV = midV + halfOffsetV;
 
             cornerSideU = centerSideU - halfCounterOffsetU;
             cornerSideV = centerSideV - halfCounterOffsetV;
 
-            // Quarter face
-            tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, centerSideU, centerSideV);
-            tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
-            tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
-            tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, cornerSideU, cornerSideV);
+            if (aoEnabled) {
+                // Side opposite face
+                tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, centerCounterU, centerCounterV);
+                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, cornerCounterU, cornerCounterV);
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, cornerClockV);
+                tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
+
+                // Quarter face
+                tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, centerSideU, centerSideV);
+                tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+                tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
+                tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, cornerSideU, cornerSideV);
+            }
+            else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, axis, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                // Side opposite face
+                tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, centerCounterU, centerCounterV);
+                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, cornerCounterU, cornerCounterV);
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, cornerClockV);
+                tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
+
+                // Quarter face
+                tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, centerSideU, centerSideV);
+                tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+                tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
+                tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, cornerSideU, cornerSideV);
+            }
 
             didRender = true;
         }
@@ -1231,23 +1360,41 @@ public class LogRenderer extends BlockRenderer {
             cornerClockU = centerClockU - halfOffsetU;
             cornerClockV = centerClockV - halfOffsetV;
 
-            // Side opposite face
-            tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
-            tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, cornerClockV);
-            tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, cornerCounterV);
-            tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, centerCounterU, centerCounterV);
-
             centerSideU = midU + halfOffsetU;
             centerSideV = midV + halfOffsetV;
 
             cornerSideU = centerSideU - halfCounterOffsetU;
             cornerSideV = centerSideV - halfCounterOffsetV;
 
-            // Quarter face
-            tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, cornerSideU, cornerSideV);
-            tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
-            tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
-            tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, centerSideU, centerSideV);
+            if (aoEnabled) {
+                // Side opposite face
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, cornerClockV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, cornerCounterV);
+                tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, centerCounterU, centerCounterV);
+
+                // Quarter face
+                tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, cornerSideU, cornerSideV);
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+                tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+                tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, centerSideU, centerSideV);
+            }
+            else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, opposite, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                // Side opposite face
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, cornerClockV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, cornerCounterV);
+                tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, centerCounterU, centerCounterV);
+
+                // Quarter face
+                tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, cornerSideU, cornerSideV);
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+                tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+                tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, centerSideU, centerSideV);
+            }
 
             didRender = true;
         }
@@ -1263,14 +1410,14 @@ public class LogRenderer extends BlockRenderer {
         ForgeDirection axis, ForgeDirection clockwise, ForgeDirection counterclockwise, ForgeDirection axisBase,
         boolean isConnector, boolean renderFront, boolean renderBack) {
 
-        boolean didRender = false;
         final Tessellator tess = Tessellator.instance;
-
         final ForgeDirection opposite = axis.getOpposite();
 
         // TODO: AO for each vertex
         tess.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
         tess.setColorRGBA(0xFF, 0xFF, 0xFF, 0xFF);
+
+        boolean didRender = false;
 
         final double midX = x + 0.5;
         final double midY = y + 0.5;
@@ -1448,6 +1595,24 @@ public class LogRenderer extends BlockRenderer {
         double counterEdgeU;
         double counterEdgeV;
 
+        final boolean aoEnabled = Minecraft.isAmbientOcclusionEnabled();
+        final int blockColor = BlockUtils.getStandardColorMultiplier(world, block, xBase, yBase, zBase);
+        final ShadingInfo[] containers = ((IRoundLogRenderer) renderer).betterfoliage$getShadingContainers();
+
+        if (aoEnabled) {
+
+        }
+        else {
+            RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, axis, blockColor,
+                containers[0]);
+            RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, opposite, blockColor,
+                containers[1]);
+            RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, clockwise, blockColor,
+                containers[2]);
+            RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, counterclockwise, blockColor,
+                containers[3]);
+        }
+
         // Faces
         /// Front
         renderFront = renderFront && shouldRenderCornerFace(axis, world, x, y, z);
@@ -1492,15 +1657,31 @@ public class LogRenderer extends BlockRenderer {
             counterEdgeU = cornerU - clockOffsetU * frontRadius * lengthU;
             counterEdgeV = cornerV - clockOffsetV * frontRadius * lengthV;
 
-            tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
-            tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, clockU, clockV);
-            tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockEdgeU, clockEdgeV);
-            tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
+            if (aoEnabled) {
+                tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+                tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, clockU, clockV);
+                tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockEdgeU, clockEdgeV);
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
 
-            tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
-            tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
-            tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterEdgeU, counterEdgeV);
-            tess.addVertexWithUV(frontCounterCenterX, frontCounterCenterY, frontCounterCenterZ, counterU, counterV);
+                tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
+                tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterEdgeU, counterEdgeV);
+                tess.addVertexWithUV(frontCounterCenterX, frontCounterCenterY, frontCounterCenterZ, counterU, counterV);
+            }
+            else {
+
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+                tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, clockU, clockV);
+                tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockEdgeU, clockEdgeV);
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
+
+                tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
+                tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterEdgeU, counterEdgeV);
+                tess.addVertexWithUV(frontCounterCenterX, frontCounterCenterY, frontCounterCenterZ, counterU, counterV);
+            }
 
             didRender = true;
         }
@@ -1548,15 +1729,30 @@ public class LogRenderer extends BlockRenderer {
             counterEdgeU = cornerU - clockOffsetU * backRadius * lengthU;
             counterEdgeV = cornerV - clockOffsetV * backRadius * lengthV;
 
-            tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
-            tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, counterU, counterV);
-            tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterEdgeU, counterEdgeV);
-            tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
+            if (aoEnabled) {
+                tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+                tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, counterU, counterV);
+                tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterEdgeU, counterEdgeV);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
 
-            tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
-            tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
-            tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockEdgeU, clockEdgeV);
-            tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, clockU, clockV);
+                tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
+                tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockEdgeU, clockEdgeV);
+                tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, clockU, clockV);
+            }
+             else {
+                containers[1].applyShading(tess);
+
+                tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+                tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, counterU, counterV);
+                tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterEdgeU, counterEdgeV);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
+
+                tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
+                tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockEdgeU, clockEdgeV);
+                tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, clockU, clockV);
+            }
 
             didRender = true;
         }
@@ -1589,7 +1785,6 @@ public class LogRenderer extends BlockRenderer {
             spriteCounter = renderer.getBlockIcon(block, world, xBase, yBase, zBase, counterclockwise.ordinal());
         }
 
-
         leftU = spriteClock.getMinU();
         rightU = spriteClock.getMaxU();
         topV = spriteClock.getMinV();
@@ -1614,10 +1809,20 @@ public class LogRenderer extends BlockRenderer {
 
         if (renderClock)
         {
-            tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, midU, clockFrontV);
-            tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, midU, clockBackV);
-            tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
-            tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
+            if (aoEnabled) {
+                tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, midU, clockFrontV);
+                tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, midU, clockBackV);
+                tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
+                tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
+            }
+            else {
+                containers[2].applyShading(tess);
+
+                tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, midU, clockFrontV);
+                tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, midU, clockBackV);
+                tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
+                tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
+            }
 
             didRender = true;
         }
@@ -1646,10 +1851,20 @@ public class LogRenderer extends BlockRenderer {
 
         if (renderCounter)
         {
-            tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterFrontEdgeU, counterFrontV);
-            tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterBackEdgeU, counterBackV);
-            tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, midU, counterBackV);
-            tess.addVertexWithUV(frontCounterCenterX, frontCounterCenterY, frontCounterCenterZ, midU, counterFrontV);
+            if (aoEnabled) {
+                tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterFrontEdgeU, counterFrontV);
+                tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterBackEdgeU, counterBackV);
+                tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, midU, counterBackV);
+                tess.addVertexWithUV(frontCounterCenterX, frontCounterCenterY, frontCounterCenterZ, midU, counterFrontV);
+            }
+            else {
+                containers[3].applyShading(tess);
+
+                tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterFrontEdgeU, counterFrontV);
+                tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterBackEdgeU, counterBackV);
+                tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, midU, counterBackV);
+                tess.addVertexWithUV(frontCounterCenterX, frontCounterCenterY, frontCounterCenterZ, midU, counterFrontV);
+            }
 
             didRender = true;
         }
@@ -1665,17 +1880,35 @@ public class LogRenderer extends BlockRenderer {
 
         if (renderDiagonal)
         {
-            // Clock Diag
-            tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
-            tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
-            tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, clockCornerU, clockBackV);
-            tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, clockCornerU, clockFrontV);
+            if (aoEnabled) {
+                // Clock Diag
+                tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
+                tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, clockCornerU, clockBackV);
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, clockCornerU, clockFrontV);
 
-            // Counter Diag
-            tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, counterCornerU, counterFrontV);
-            tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, counterCornerU, counterBackV);
-            tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterBackEdgeU, counterBackV);
-            tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterFrontEdgeU, counterFrontV);
+                // Counter Diag
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, counterCornerU, counterFrontV);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, counterCornerU, counterBackV);
+                tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterBackEdgeU, counterBackV);
+                tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterFrontEdgeU, counterFrontV);
+            }
+            else {
+
+                ShadingInfo.applyFlatDiagonalShading(tess, containers[2], containers[3], containers[0], containers[1]);
+
+                // Clock Diag
+                tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
+                tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, clockCornerU, clockBackV);
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, clockCornerU, clockFrontV);
+
+                // Counter Diag
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, counterCornerU, counterFrontV);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, counterCornerU, counterBackV);
+                tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterBackEdgeU, counterBackV);
+                tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterFrontEdgeU, counterFrontV);
+            }
         }
 
         return didRender;
