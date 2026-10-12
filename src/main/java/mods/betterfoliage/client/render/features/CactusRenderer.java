@@ -38,8 +38,8 @@ public class CactusRenderer extends BlockRenderer {
     };
 
     private static final ForgeDirection[] ROTATIONS = {
-        ForgeDirection.EAST,
         ForgeDirection.WEST,
+        ForgeDirection.EAST,
         ForgeDirection.SOUTH,
         ForgeDirection.NORTH
     };
