@@ -133,6 +133,7 @@ public class RenderUtils {
         return color;
     }
 
+    // TODO: Rework offset selection
     public static void getShadingInfoForCrossedSquareVertex(RenderBlocks renderer, int x, int y, int z,
         ForgeDirection firstAxis, ForgeDirection secondAxis, ForgeDirection thirdAxis, boolean useBlockColor,
         ShadingInfo shadingContainer) {
@@ -182,11 +183,12 @@ public class RenderUtils {
         }
 
         // TODO use FlatShader when renderAO == false?
-        getAOShadingInfoForBlockCorner(renderer, block, aoX, aoY, aoZ, aoFirst, aoSecond, aoThird, color, colorMult,
+        getAOShadingForCrossedSquareCorner(renderer, block, aoX, aoY, aoZ, aoFirst, aoSecond, aoThird, color, colorMult,
             shadingContainer);
     }
 
-    public static void getAOShadingInfoForBlockCorner(RenderBlocks renderer, Block block, int x, int y, int z,
+    // TODO: Remove this after crossed square AO refactor
+    private static void getAOShadingForCrossedSquareCorner(RenderBlocks renderer, Block block, int x, int y, int z,
         ForgeDirection firstAxis, ForgeDirection secondAxis, ForgeDirection thirdAxis, int color,
         float colorMultiplier, ShadingInfo shadingContainer) {
 
@@ -250,6 +252,64 @@ public class RenderUtils {
             .getAoBrightness(secondBrightness, thirdBrightness, diagonalBrightness, blockBrightness);
 
         shadingContainer.updateValues(brightness, color, ao);
+    }
+
+    public static void getAOShadingInfoForBlockCorner(RenderBlocks renderer, Block block, int x, int y, int z,
+        ForgeDirection face, ForgeDirection hor, ForgeDirection vert, int color, float colorMultiplier, ShadingInfo container) {
+
+        final IBlockAccess world = renderer.blockAccess;
+
+        if (hor == ForgeDirection.DOWN || hor == ForgeDirection.UP) {
+            ForgeDirection swap = hor;
+            hor = vert;
+            vert = swap;
+        }
+
+        // South
+        final int faceX = x + face.offsetX;
+        final int faceY = y + face.offsetY;
+        final int faceZ = z + face.offsetZ;
+
+        final int horX = faceX + hor.offsetX;
+        final int horY = faceY + hor.offsetY;
+        final int horZ = faceZ + hor.offsetZ;
+
+        final int vertX = faceX + vert.offsetX;
+        final int vertY = faceY + vert.offsetY;
+        final int vertZ = faceZ + vert.offsetZ;
+
+        final int faceBrightness = block.getMixedBrightnessForBlock(world, faceX, faceY, faceZ);
+        final int horizontalBrightness = block.getMixedBrightnessForBlock(world, horX, horY, horZ);
+        final int verticalBrightness = block.getMixedBrightnessForBlock(world, vertX, vertY, vertZ);
+
+        final float faceAO = world.getBlock(faceX, faceY, faceZ).getAmbientOcclusionLightValue();
+        final float horizontalAO = world.getBlock(horX, horY, horZ).getAmbientOcclusionLightValue();
+        final float verticalAO = world.getBlock(vertX, vertY, vertZ).getAmbientOcclusionLightValue();
+
+        /// Diag
+        final float cornerAO;
+        final int cornerBrightness;
+
+        // Is diagonal completely clear of blocks
+        if (!(world.getBlock(horX + face.offsetX, horY + face.offsetY, horZ + face.offsetZ).getCanBlockGrass() ||
+            world.getBlock(vertX + face.offsetX, vertY + face.offsetY, vertZ + face.offsetZ).getCanBlockGrass())) {
+
+            cornerAO = horizontalAO;
+            cornerBrightness = horizontalBrightness;
+        }
+        else {
+            final int diagX = horX + vert.offsetX;
+            final int diagY = horY + vert.offsetY;
+            final int diagZ = horZ + vert.offsetZ;
+
+            cornerAO = world.getBlock(diagX, diagY, diagZ).getAmbientOcclusionLightValue();
+            cornerBrightness = block.getMixedBrightnessForBlock(world, diagX, diagY, diagZ);
+        }
+
+        float ao = colorMultiplier * (faceAO + horizontalAO + verticalAO + cornerAO) / 4.0F;
+        final int brightness = renderer.getAoBrightness(horizontalBrightness, cornerBrightness, verticalBrightness, faceBrightness);
+
+        container.updateValues(brightness, color, ao);
     }
 
     public static void getFlatShadingInfoForBlockFace(RenderBlocks renderer, Block block, int x, int y, int z,
