@@ -5,6 +5,8 @@ import net.minecraft.client.renderer.Tessellator;
 
 public final class ShadingInfo {
 
+    private static final int BRIGHTNESS_ALPHA_MASK = 0xFF00FF;
+
     private float r;
     private float g;
     private float b;
@@ -31,7 +33,6 @@ public final class ShadingInfo {
         tess.setColorOpaque_F(r, g, b);
         tess.setBrightness(brightness);
     }
-
 
     public void applyShading() {
         applyShading(Tessellator.instance);
@@ -69,20 +70,28 @@ public final class ShadingInfo {
     public void applyAveragedShading(final Tessellator tess, final ShadingInfo other, float ratio) {
         final float avgAO = MathUtils.lerp(ambientOcclusion, other.ambientOcclusion, ratio);
 
+        final int bright = (brightness + other.brightness) >> 1 & BRIGHTNESS_ALPHA_MASK;
+
         int avgColor = pureColor;
         if (avgColor != other.pureColor) {
             avgColor = RenderUtils.lerpARGB(pureColor, other.pureColor, ratio);
         }
 
-        applyShading(tess, brightness, avgColor, avgAO);
+        applyShading(tess, bright, avgColor, avgAO);
     }
 
-    /// Update internal values
     public void updateAverageShadingInfo(final ShadingInfo other, final float ratio) {
-        ambientOcclusion = MathUtils.lerp(ambientOcclusion, other.ambientOcclusion, ratio);
+        updateAverageShadingInfo(this, other, ratio);
+    }
 
-        if (pureColor != other.pureColor) {
-            pureColor = RenderUtils.lerpARGB(pureColor, other.pureColor, ratio);
+    /// Update internal values based on two other ShadingInfos
+    public void updateAverageShadingInfo(final ShadingInfo a, final ShadingInfo b, final float ratio) {
+        ambientOcclusion = MathUtils.lerp(a.ambientOcclusion, b.ambientOcclusion, ratio);
+
+        brightness = (a.brightness + b.brightness) >> 1 & BRIGHTNESS_ALPHA_MASK;
+
+        if (a.pureColor != b.pureColor) {
+            pureColor = RenderUtils.lerpARGB(a.pureColor, b.pureColor, ratio);
         }
 
         setRGB(pureColor);
