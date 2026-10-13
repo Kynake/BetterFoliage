@@ -25,7 +25,7 @@ public class CactusRenderer extends BlockRenderer {
     private static final float STEM_SCALE = 1.4f;
 
     // Height is increased in the original, for some reason
-    private static final float STEM_VERTICAL_SCALE = STEM_SCALE * 1.41f;
+    private static final float STEM_VERTICAL_SCALE = STEM_SCALE * MathUtils.ROOT2;
 
     private static final double OFFSET_EPSILON = 0.002;
 

@@ -31,9 +31,6 @@ public class LeafRenderer extends BlockRenderer {
     // Multiply Horizontal scale by this factor to ensure the horizontal scale equals the vertical one.
     private static final float HORIZONTAL_SCALE_FACTOR = 0.5f / 0.45f;
 
-    // Original renderer scaled the vertical axis so that the diagonal pixels look square instead of rectangular.
-    private static final float VERTICAL_SCALE_FACTOR = 1.41f;
-
     // spotless:off
     private static final ForgeDirection[][] QUAD_AO_SOUTH = {
         // Quad 1
@@ -134,7 +131,9 @@ public class LeafRenderer extends BlockRenderer {
 
         // Render Round Leaves
         final float scale = (float) Config.leaves.INSTANCE.getSize();
-        final float verticalScale = scale * VERTICAL_SCALE_FACTOR;
+
+        // Original renderer scaled the vertical axis so that the diagonal pixels look square instead of rectangular.
+        final float verticalScale = scale * MathUtils.ROOT2;
 
         final int coordHash = MathUtils.hashCoords(x, y, z, SALT);
 
