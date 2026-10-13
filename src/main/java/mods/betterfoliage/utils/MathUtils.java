@@ -5,6 +5,7 @@ import java.util.Random;
 public final class MathUtils {
 
     public static final float PI2 = (float) (Math.PI * 2.0);
+    public static final float ROOT2 = (float) (Math.sqrt(2.0));
 
     // TODO: Make configurable
     // Mods uses a set number as random seed because the world seed can't be accessed Client-side in a server.
