@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
 import mods.betterfoliage.utils.MathUtils;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.IResource;
@@ -31,6 +32,10 @@ public class RenderUtils {
     private static final float COUNTERCLOCK_COS = MathHelper.cos((float) (Math.PI / 2D));
     private static final float CLOCKWISE_SIN = MathHelper.sin((float) (3D * Math.PI / 2D));
     private static final float CLOCKWISE_COS = MathHelper.cos((float) (3D * Math.PI / 2D));
+
+    public static boolean shouldRenderBlockWithAO(Block block) {
+        return Minecraft.isAmbientOcclusionEnabled() && block.getLightValue() == 0;
+    }
 
     /// Defer block rendering back to the original renderer, ignoring BetterFoliage overrides
     public static boolean renderBaseBlock(final int x, final int y, final int z, final Block block,
