@@ -259,8 +259,18 @@ public class RenderUtils {
 
         final IBlockAccess world = renderer.blockAccess;
 
-        if (hor == ForgeDirection.DOWN || hor == ForgeDirection.UP) {
-            ForgeDirection swap = hor;
+        ForgeDirection swap;
+
+        // UP or DOWN
+        if (hor.offsetY != 0) {
+            swap = hor;
+            hor = vert;
+            vert = swap;
+        }
+
+        // EAST or WEST
+        else if (vert.offsetX != 0) {
+            swap = hor;
             hor = vert;
             vert = swap;
         }
