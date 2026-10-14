@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(RenderBlocks.class)
-public class MixinRenderBlocks_RoundLogs implements IRoundLogRenderer {
+public abstract class MixinRenderBlocks_RoundLogs implements IRoundLogRenderer {
 
     @Unique
     private ShadingInfo[] betterfoliage$roundContainers;

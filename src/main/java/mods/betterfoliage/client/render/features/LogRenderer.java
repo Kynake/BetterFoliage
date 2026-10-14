@@ -6,8 +6,8 @@ import mods.betterfoliage.client.render.ShadingInfo;
 import mods.betterfoliage.client.render.UVPlane;
 import mods.betterfoliage.mixins.interfaces.minecraft.IRoundLogRenderer;
 import mods.betterfoliage.utils.BlockUtils;
+import mods.betterfoliage.utils.MathUtils;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
@@ -520,7 +520,9 @@ public class LogRenderer extends BlockRenderer {
 
         final ForgeDirection opposite = axis.getOpposite();
 
-        final boolean aoEnabled = Minecraft.isAmbientOcclusionEnabled();
+        // TODO pass as method arg
+        final boolean aoEnabled = RenderUtils.shouldRenderBlockWithAO(block);
+
         final int blockColor = BlockUtils.getStandardColorMultiplier(world, block, xBase, yBase, zBase);
         final ShadingInfo[] containers = ((IRoundLogRenderer) renderer).betterfoliage$getShadingContainers();
 
@@ -1128,7 +1130,9 @@ public class LogRenderer extends BlockRenderer {
             spriteBack = renderer.getBlockIcon(block, world, xBase, yBase, zBase, back.ordinal());
         }
 
-        final boolean aoEnabled = Minecraft.isAmbientOcclusionEnabled();
+        // TODO pass as method arg
+        final boolean aoEnabled = RenderUtils.shouldRenderBlockWithAO(block);
+
         final int blockColor = BlockUtils.getStandardColorMultiplier(world, block, xBase, yBase, zBase);
         final ShadingInfo[] containers = ((IRoundLogRenderer) renderer).betterfoliage$getShadingContainers();
 
@@ -1472,10 +1476,26 @@ public class LogRenderer extends BlockRenderer {
                 containers[0].applyAveragedShading(tess, containers[3], 0.5f);
                 tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, centerSideU, centerSideV);
 
-                containers[1].applyAveragedShading(tess, containers[3], 0.5f);
+                /* WHEN AVERAGING AO FOR THE CENTER
+                 *
+                 *  When calculating the center point AO instead of averaging across one of the diagonals, such as:
+                 *  average(topLeft, bottomRight) or average(topRight, bottomLeft),
+                 *  We apply shading operations such that the final result is equivalent to:
+                 *  average(average(topLeft, bottomLeft), average(topRight, bottomRight)).
+                 *
+                 *  This is because the diagonals will average to different values depending on which corners are
+                 *  occluded, while the other method will end up using the values of all corners.
+                 *
+                 *  This ensures that the AO color is the same no matter which rotation the log has.
+                 */
+
+                containers[1].updateAverageShadingInfo(containers[0], 0.5f);
+                containers[2].updateAverageShadingInfo(containers[3], 0.5f);
+
+                containers[1].applyAveragedShading(tess, containers[2], 0.5f);
                 tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
 
-                containers[2].applyAveragedShading(tess, containers[3], 0.5f);
+                containers[2].applyShading(tess);
                 tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, centerClockU, centerClockV);
 
                 containers[3].applyShading(tess);
@@ -1574,10 +1594,14 @@ public class LogRenderer extends BlockRenderer {
                 containers[0].applyShading(tess);
                 tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, cornerSideU, cornerSideV);
 
-                containers[0].applyAveragedShading(tess, containers[1], 0.5f);
+                // Average point AOs
+                // See 'WHEN AVERAGING AO FOR THE CENTER' comment above
+                containers[1].updateAverageShadingInfo(containers[0], 0.5f);
+                containers[1].applyShading(tess);
                 tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
 
-                containers[0].applyAveragedShading(tess, containers[2], 0.5f);
+                containers[2].updateAverageShadingInfo(containers[3], 0.5f);
+                containers[2].applyAveragedShading(tess, containers[1], 0.5f);
                 tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
 
                 containers[0].applyAveragedShading(tess, containers[3], 0.5f);
@@ -1615,7 +1639,10 @@ public class LogRenderer extends BlockRenderer {
         boolean isConnector, boolean renderFront, boolean renderBack) {
 
         final Tessellator tess = Tessellator.instance;
+
         final ForgeDirection opposite = axis.getOpposite();
+        final ForgeDirection counterOpp = counterclockwise.getOpposite();
+        final ForgeDirection clockOpp = clockwise.getOpposite();
 
         boolean didRender = false;
 
@@ -1635,8 +1662,8 @@ public class LogRenderer extends BlockRenderer {
         final double counterY = counterclockwise.offsetY / 2.0;
         final double counterZ = counterclockwise.offsetZ / 2.0;
 
-        final boolean useLargeRadiusBase = shouldConnectToSide(clockwise.getOpposite(), world, xBase, yBase, zBase, axisBase)
-            && shouldConnectToSide(counterclockwise.getOpposite(), world, xBase, yBase, zBase, axisBase);
+        final boolean useLargeRadiusBase = shouldConnectToSide(clockOpp, world, xBase, yBase, zBase, axisBase)
+            && shouldConnectToSide(counterOpp, world, xBase, yBase, zBase, axisBase);
 
         final boolean useLargeRadiusFront;
         final boolean useLargeRadiusBack;
@@ -1664,7 +1691,13 @@ public class LogRenderer extends BlockRenderer {
         final double frontEdgeToCenter = 0.5 - frontRadius;
         final double frontDiagToCenter = (frontRadius / 2.0) + frontEdgeToCenter;
 
+        final float frontEdgeRatio = (float) frontEdgeToCenter * 2f;
+        final float fronDiagRatio = (float) frontDiagToCenter * 2f * MathUtils.ROOT2;
+
         final double backEdgeToCenter = 0.5 - backRadius;
+
+        final float backEdgeRatio = (float) backEdgeToCenter * 2f;
+        final float backDiagRatio;
 
         /// COORDS
         // Front
@@ -1713,6 +1746,8 @@ public class LogRenderer extends BlockRenderer {
             final double zProtection = Config.roundLogs.INSTANCE.getZProtection();
             final double backConnector = (backRadius * zProtection / 2.0) + backEdgeToCenter;
 
+            backDiagRatio = (float) backConnector * 2f * MathUtils.ROOT2;
+
             backCenterX = midX;
             backCenterY = midY;
             backCenterZ = midZ;
@@ -1731,6 +1766,8 @@ public class LogRenderer extends BlockRenderer {
         }
         else {
             final double backDiagToCenter = (backRadius / 2.0) + backEdgeToCenter;
+
+            backDiagRatio = (float) backDiagToCenter * 2f * MathUtils.ROOT2;
 
             backCenterX = midX - axisX;
             backCenterY = midY - axisY;
@@ -1795,7 +1832,9 @@ public class LogRenderer extends BlockRenderer {
         double counterEdgeU;
         double counterEdgeV;
 
-        final boolean aoEnabled = Minecraft.isAmbientOcclusionEnabled();
+        // TODO pass as method arg
+        final boolean aoEnabled = RenderUtils.shouldRenderBlockWithAO(block);
+
         final int blockColor = BlockUtils.getStandardColorMultiplier(world, block, xBase, yBase, zBase);
         final ShadingInfo[] containers = ((IRoundLogRenderer) renderer).betterfoliage$getShadingContainers();
 
@@ -1858,14 +1897,48 @@ public class LogRenderer extends BlockRenderer {
             counterEdgeV = cornerV - clockOffsetV * frontRadius * lengthV;
 
             if (aoEnabled) {
+                final float colorMult = RenderUtils.getColorMultiplierBySide(axis);
+
+                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, axis, counterclockwise, clockwise,
+                    blockColor, colorMult, containers[0]);
+                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, axis, counterclockwise, clockOpp,
+                    blockColor, colorMult, containers[1]);
+                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, axis, counterOpp, clockOpp,
+                    blockColor, colorMult, containers[2]);
+                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, axis, counterOpp, clockwise,
+                    blockColor, colorMult, containers[3]);
+
+                // Average point AOs
+                // See 'WHEN AVERAGING AO FOR THE CENTER' comment above
+                containers[1].updateAverageShadingInfo(containers[0], 0.5f);
+                containers[2].updateAverageShadingInfo(containers[3], 0.5f);
+                containers[2].updateAverageShadingInfo(containers[1], 0.5f);
+                containers[3].updateAverageShadingInfo(containers[0], 0.5f);
+
+                // Clock pizza quad
+                containers[2].applyShading(tess);
                 tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+
+                containers[3].applyShading(tess);
                 tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, clockU, clockV);
+
+                containers[3].applyAveragedShading(tess, containers[0], frontEdgeRatio);
                 tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockEdgeU, clockEdgeV);
+
+                containers[2].applyAveragedShading(tess, containers[0], fronDiagRatio);
                 tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
 
+                // Counter pizza quad
+                containers[2].applyShading(tess);
                 tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+
+                containers[2].applyAveragedShading(tess, containers[0], fronDiagRatio);
                 tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
+
+                containers[1].applyAveragedShading(tess, containers[0], frontEdgeRatio);
                 tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterEdgeU, counterEdgeV);
+
+                containers[1].applyShading(tess);
                 tess.addVertexWithUV(frontCounterCenterX, frontCounterCenterY, frontCounterCenterZ, counterU, counterV);
             }
             else {
@@ -1930,14 +2003,48 @@ public class LogRenderer extends BlockRenderer {
             counterEdgeV = cornerV - clockOffsetV * backRadius * lengthV;
 
             if (aoEnabled) {
+                final float colorMult = RenderUtils.getColorMultiplierBySide(opposite);
+
+                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, opposite, counterclockwise, clockwise,
+                    blockColor, colorMult, containers[0]);
+                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, opposite, counterclockwise, clockOpp,
+                    blockColor, colorMult, containers[1]);
+                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, opposite, counterOpp, clockOpp,
+                    blockColor, colorMult, containers[2]);
+                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, opposite, counterOpp, clockwise,
+                    blockColor, colorMult, containers[3]);
+
+                // Average point AOs
+                // See 'WHEN AVERAGING AO FOR THE CENTER' comment above
+                containers[1].updateAverageShadingInfo(containers[0], 0.5f);
+                containers[2].updateAverageShadingInfo(containers[3], 0.5f);
+                containers[2].updateAverageShadingInfo(containers[1], 0.5f);
+                containers[3].updateAverageShadingInfo(containers[0], 0.5f);
+
+                // Counter pizza quad
+                containers[2].applyShading(tess);
                 tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+
+                containers[1].applyShading(tess);
                 tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, counterU, counterV);
+
+                containers[1].applyAveragedShading(tess, containers[0], backEdgeRatio);
                 tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterEdgeU, counterEdgeV);
+
+                containers[2].applyAveragedShading(tess, containers[0], backDiagRatio);
                 tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
 
+                // Clock pizza quad
+                containers[2].applyShading(tess);
                 tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+
+                containers[2].applyAveragedShading(tess, containers[0], backDiagRatio);
                 tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
+
+                containers[3].applyAveragedShading(tess, containers[0], backEdgeRatio);
                 tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockEdgeU, clockEdgeV);
+
+                containers[3].applyShading(tess);
                 tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, clockU, clockV);
             }
              else {
