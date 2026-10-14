@@ -74,43 +74,45 @@ public class LogRenderer extends BlockRenderer {
         final boolean connect3 = shouldConnectToSide(sides[2], world, x, y, z, axis);
         final boolean connect4 = shouldConnectToSide(sides[3], world, x, y, z, axis);
 
-        if ((connect1 & connect3) | (connect2 & connect4)) {
+        if ((connect1 & connect3) || (connect2 & connect4)) {
             return RenderUtils.renderBaseBlock(x, y, z, block, renderer);
         }
 
+        final boolean useAO = RenderUtils.shouldRenderBlockWithAO(block);
+
         if (connect1) {
             if (connect2) {
-                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[3], axis, false);
+                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[3], axis, false, useAO);
             }
 
             if (connect4) {
-                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[2], axis, false);
+                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[2], axis, false, useAO);
             }
 
-            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[2], axis, false);
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[2], axis, false, useAO);
         }
 
         if (connect2) {
             if (connect3) {
-                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[0], axis, false);
+                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[0], axis, false, useAO);
             }
 
-            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[3], axis, false);
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[3], axis, false, useAO);
         }
 
         if (connect3) {
             if (connect4) {
-                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[1], axis, false);
+                return renderRoundQuarterLog(world, x, y, z, x, y, z, block, renderer, axis, sides[1], axis, false, useAO);
             }
 
-            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[0], axis, false);
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[0], axis, false, useAO);
         }
 
         if (connect4) {
-            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[1], axis, false);
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[1], axis, false, useAO);
         }
 
-        return renderRoundLog(world, x, y, z, x, y, z, block, renderer, axis, axis, false);
+        return renderRoundLog(world, x, y, z, x, y, z, block, renderer, axis, axis, false, useAO);
     }
 
     private static boolean shouldConnectToSide(ForgeDirection side, IBlockAccess world, int x, int y, int z,
@@ -279,13 +281,15 @@ public class LogRenderer extends BlockRenderer {
 
     /// Renders a log block with all rounded corners
     private static boolean renderRoundLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase,
-        Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection axisBase, boolean isConnector) {
+        Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection axisBase, boolean isConnector,
+        boolean useAO) {
 
         boolean didRender = false;
 
         boolean renderFront = !isConnector;
         boolean renderBack = renderFront;
 
+        // Render connectors
         if (Config.roundLogs.INSTANCE.getConnectPerpendicular() && !isConnector) {
 
             final BlockMatcher logs = Config.blocks.INSTANCE.getLogs();
@@ -300,7 +304,7 @@ public class LogRenderer extends BlockRenderer {
                 determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderFront) {
                 renderRoundLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer,
-                    axis.getOpposite(), axisBase, true);
+                    axis.getOpposite(), axisBase, true, useAO);
             }
 
             connectorX = x - axis.offsetX;
@@ -312,16 +316,17 @@ public class LogRenderer extends BlockRenderer {
                 determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderBack) {
                 renderRoundLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer, axis, axisBase,
-                    true);
+                    true, useAO);
             }
 
         }
 
+        // Render block
         final ForgeDirection[] sides = UVPlane.getSides(axis);
         for (final ForgeDirection clock : sides) {
             final ForgeDirection counter = axis.getRotation(clock);
             didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, clock, counter,
-                axisBase, isConnector, renderFront, renderBack);
+                axisBase, isConnector, renderFront, renderBack, useAO);
         }
 
         return didRender;
@@ -329,7 +334,8 @@ public class LogRenderer extends BlockRenderer {
 
     /// Renders a log block with two adjacent rounded corners and two adjacent square corners
     private static boolean renderRoundHalfLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase,
-        Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection side, ForgeDirection axisBase, boolean isConnector) {
+        Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection side, ForgeDirection axisBase,
+        boolean isConnector, boolean useAO) {
 
         boolean didRender = false;
         final Tessellator tess = Tessellator.instance;
@@ -520,9 +526,6 @@ public class LogRenderer extends BlockRenderer {
 
         final ForgeDirection opposite = axis.getOpposite();
 
-        // TODO pass as method arg
-        final boolean aoEnabled = RenderUtils.shouldRenderBlockWithAO(block);
-
         final int blockColor = BlockUtils.getStandardColorMultiplier(world, block, xBase, yBase, zBase);
         final ShadingInfo[] containers = ((IRoundLogRenderer) renderer).betterfoliage$getShadingContainers();
 
@@ -547,7 +550,7 @@ public class LogRenderer extends BlockRenderer {
             frontV = midV - axisOffsetHalf * lengthV;
             backV = midV + axisOffsetConnector * lengthV;
 
-            if (aoEnabled) {
+            if (useAO) {
                 final float colorMult = RenderUtils.getColorMultiplierBySide(counterclockwise);
 
                 RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, counterclockwise, side, axis,
@@ -603,7 +606,7 @@ public class LogRenderer extends BlockRenderer {
             frontV = midV - axisOffsetHalf * lengthV;
             backV = midV + axisOffsetConnector * lengthV;
 
-            if (aoEnabled) {
+            if (useAO) {
                 final float colorMult = RenderUtils.getColorMultiplierBySide(clock);
 
                 RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, clock, back, axis, blockColor,
@@ -661,7 +664,7 @@ public class LogRenderer extends BlockRenderer {
             final double counterU = midU - offsetU;
             final double clockU = midU + offsetU;
 
-            if (aoEnabled) {
+            if (useAO) {
                 final float colorMult = RenderUtils.getColorMultiplierBySide(back);
 
                 RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, back, counterclockwise, axis, blockColor,
@@ -715,7 +718,7 @@ public class LogRenderer extends BlockRenderer {
                 determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderFront) {
                 renderRoundHalfLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer,
-                    opposite, side, axisBase, true);
+                    opposite, side, axisBase, true, useAO);
             }
 
             connectorX = x - axis.offsetX;
@@ -727,7 +730,7 @@ public class LogRenderer extends BlockRenderer {
                 determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderBack) {
                 renderRoundHalfLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer,
-                    axis, side, axisBase, true);
+                    axis, side, axisBase, true, useAO);
             }
         }
 
@@ -770,7 +773,7 @@ public class LogRenderer extends BlockRenderer {
             cornerClockU = centerClockU - halfOffsetU;
             cornerClockV = centerClockV - halfOffsetV;
 
-            if (aoEnabled) {
+            if (useAO) {
                 final float colorMult = RenderUtils.getColorMultiplierBySide(axis);
 
                 RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, axis, counterclockwise, side, blockColor,
@@ -845,7 +848,7 @@ public class LogRenderer extends BlockRenderer {
             cornerClockU = centerClockU - halfOffsetU;
             cornerClockV = centerClockV - halfOffsetV;
 
-            if (aoEnabled) {
+            if (useAO) {
                 final float colorMult = RenderUtils.getColorMultiplierBySide(opposite);
 
                 RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, opposite, clock, side, blockColor,
@@ -884,10 +887,10 @@ public class LogRenderer extends BlockRenderer {
 
         /// Round corners
         didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, side,
-            counterclockwise, axisBase, isConnector, renderFront, renderBack);
+            counterclockwise, axisBase, isConnector, renderFront, renderBack, useAO);
 
         didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis,
-            clock, side, axisBase, isConnector, renderFront, renderBack);
+            clock, side, axisBase, isConnector, renderFront, renderBack, useAO);
 
         return didRender;
     }
@@ -896,7 +899,7 @@ public class LogRenderer extends BlockRenderer {
     /// Rounded corner is always counterclockwise of side.
     private static boolean renderRoundQuarterLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase,
         int zBase, Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection side,
-        ForgeDirection axisBase, boolean isConnector) {
+        ForgeDirection axisBase, boolean isConnector, boolean useAO) {
 
         boolean didRender = false;
         final Tessellator tess = Tessellator.instance;
@@ -1130,9 +1133,6 @@ public class LogRenderer extends BlockRenderer {
             spriteBack = renderer.getBlockIcon(block, world, xBase, yBase, zBase, back.ordinal());
         }
 
-        // TODO pass as method arg
-        final boolean aoEnabled = RenderUtils.shouldRenderBlockWithAO(block);
-
         final int blockColor = BlockUtils.getStandardColorMultiplier(world, block, xBase, yBase, zBase);
         final ShadingInfo[] containers = ((IRoundLogRenderer) renderer).betterfoliage$getShadingContainers();
 
@@ -1157,7 +1157,7 @@ public class LogRenderer extends BlockRenderer {
             final double frontV = midV - axisOffsetHalf * lengthV;
             final double backV = midV + axisOffsetConnector * lengthV;
 
-            if (aoEnabled) {
+            if (useAO) {
                 final float colorMult = RenderUtils.getColorMultiplierBySide(side);
 
                 RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, side, clock, axis, blockColor,
@@ -1213,7 +1213,7 @@ public class LogRenderer extends BlockRenderer {
             final double frontV = midV - axisOffsetHalf * lengthV;
             final double backV = midV + axisOffsetConnector * lengthV;
 
-            if (aoEnabled) {
+            if (useAO) {
                 final float colorMult = RenderUtils.getColorMultiplierBySide(counterclockwise);
 
                 RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, counterclockwise, side, axis,
@@ -1271,7 +1271,7 @@ public class LogRenderer extends BlockRenderer {
             final double frontV = midV - axisOffsetHalf * lengthV;
             final double backV = midV + axisOffsetConnector * lengthV;
 
-            if (aoEnabled) {
+            if (useAO) {
                 final float colorMult = RenderUtils.getColorMultiplierBySide(clock);
 
                 RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, clock, back, axis, blockColor,
@@ -1329,7 +1329,7 @@ public class LogRenderer extends BlockRenderer {
             final double frontV = midV - axisOffsetHalf * lengthV;
             final double backV = midV + axisOffsetConnector * lengthV;
 
-            if (aoEnabled) {
+            if (useAO) {
                 final float colorMult = RenderUtils.getColorMultiplierBySide(back);
 
                 RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, back, counterclockwise, axis, blockColor,
@@ -1384,7 +1384,7 @@ public class LogRenderer extends BlockRenderer {
                 determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderFront) {
                 renderRoundQuarterLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer,
-                    opposite, counterclockwise, axisBase, true);
+                    opposite, counterclockwise, axisBase, true, useAO);
             }
 
             connectorX = x - axis.offsetX;
@@ -1397,7 +1397,7 @@ public class LogRenderer extends BlockRenderer {
                 determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderBack) {
                 renderRoundQuarterLog(world, connectorX, connectorY, connectorZ, x, y, z, block, renderer,
-                    axis, side, axisBase, true);
+                    axis, side, axisBase, true, useAO);
             }
         }
 
@@ -1447,7 +1447,7 @@ public class LogRenderer extends BlockRenderer {
             cornerSideU = centerSideU - halfCounterOffsetU;
             cornerSideV = centerSideV - halfCounterOffsetV;
 
-            if (aoEnabled) {
+            if (useAO) {
                 final float colorMult = RenderUtils.getColorMultiplierBySide(axis);
 
                 RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, axis, counterclockwise, side, blockColor,
@@ -1565,7 +1565,7 @@ public class LogRenderer extends BlockRenderer {
             cornerSideU = centerSideU - halfCounterOffsetU;
             cornerSideV = centerSideV - halfCounterOffsetV;
 
-            if (aoEnabled) {
+            if (useAO) {
                 final float colorMult = RenderUtils.getColorMultiplierBySide(opposite);
 
                 RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, opposite, clock, side, blockColor,
@@ -1629,14 +1629,14 @@ public class LogRenderer extends BlockRenderer {
 
         /// Round corner
         didRender |= renderRoundCorner(world, x, y, z, xBase, yBase, zBase, block, renderer, axis, side,
-            counterclockwise, axisBase, isConnector, renderFront, renderBack);
+            counterclockwise, axisBase, isConnector, renderFront, renderBack, useAO);
 
         return didRender;
     }
 
     private static boolean renderRoundCorner(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase, Block block, RenderBlocks renderer,
         ForgeDirection axis, ForgeDirection clockwise, ForgeDirection counterclockwise, ForgeDirection axisBase,
-        boolean isConnector, boolean renderFront, boolean renderBack) {
+        boolean isConnector, boolean renderFront, boolean renderBack, boolean useAO) {
 
         final Tessellator tess = Tessellator.instance;
 
@@ -1832,13 +1832,10 @@ public class LogRenderer extends BlockRenderer {
         double counterEdgeU;
         double counterEdgeV;
 
-        // TODO pass as method arg
-        final boolean aoEnabled = RenderUtils.shouldRenderBlockWithAO(block);
-
         final int blockColor = BlockUtils.getStandardColorMultiplier(world, block, xBase, yBase, zBase);
         final ShadingInfo[] containers = ((IRoundLogRenderer) renderer).betterfoliage$getShadingContainers();
 
-        if (aoEnabled) {
+        if (useAO) {
 
         }
         else {
@@ -1896,7 +1893,7 @@ public class LogRenderer extends BlockRenderer {
             counterEdgeU = cornerU - clockOffsetU * frontRadius * lengthU;
             counterEdgeV = cornerV - clockOffsetV * frontRadius * lengthV;
 
-            if (aoEnabled) {
+            if (useAO) {
                 final float colorMult = RenderUtils.getColorMultiplierBySide(axis);
 
                 RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, axis, counterclockwise, clockwise,
@@ -2002,7 +1999,7 @@ public class LogRenderer extends BlockRenderer {
             counterEdgeU = cornerU - clockOffsetU * backRadius * lengthU;
             counterEdgeV = cornerV - clockOffsetV * backRadius * lengthV;
 
-            if (aoEnabled) {
+            if (useAO) {
                 final float colorMult = RenderUtils.getColorMultiplierBySide(opposite);
 
                 RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, opposite, counterclockwise, clockwise,
@@ -2116,7 +2113,7 @@ public class LogRenderer extends BlockRenderer {
 
         if (renderClock)
         {
-            if (aoEnabled) {
+            if (useAO) {
                 tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, midU, clockFrontV);
                 tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, midU, clockBackV);
                 tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
@@ -2158,7 +2155,7 @@ public class LogRenderer extends BlockRenderer {
 
         if (renderCounter)
         {
-            if (aoEnabled) {
+            if (useAO) {
                 tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterFrontEdgeU, counterFrontV);
                 tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterBackEdgeU, counterBackV);
                 tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, midU, counterBackV);
@@ -2187,7 +2184,7 @@ public class LogRenderer extends BlockRenderer {
 
         if (renderDiagonal)
         {
-            if (aoEnabled) {
+            if (useAO) {
                 // Clock Diag
                 tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
                 tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
