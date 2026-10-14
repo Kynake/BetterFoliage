@@ -1634,9 +1634,10 @@ public class LogRenderer extends BlockRenderer {
         return didRender;
     }
 
-    private static boolean renderRoundCorner(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase, Block block, RenderBlocks renderer,
-        ForgeDirection axis, ForgeDirection clockwise, ForgeDirection counterclockwise, ForgeDirection axisBase,
-        boolean isConnector, boolean renderFront, boolean renderBack, boolean useAO) {
+    private static boolean renderRoundCorner(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase,
+        Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection clockwise,
+        ForgeDirection counterclockwise, ForgeDirection axisBase, boolean isConnector, boolean renderFront,
+        boolean renderBack, boolean useAO) {
 
         final Tessellator tess = Tessellator.instance;
 
@@ -1835,10 +1836,7 @@ public class LogRenderer extends BlockRenderer {
         final int blockColor = BlockUtils.getStandardColorMultiplier(world, block, xBase, yBase, zBase);
         final ShadingInfo[] containers = ((IRoundLogRenderer) renderer).betterfoliage$getShadingContainers();
 
-        if (useAO) {
-
-        }
-        else {
+        if (!useAO) {
             RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, axis, blockColor,
                 containers[0]);
             RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, opposite, blockColor,
@@ -2111,12 +2109,45 @@ public class LogRenderer extends BlockRenderer {
         // Clock Side
         final boolean renderClock = shouldRenderFace(clockwise, world, x, y, z);
 
+        float colorMultClock = 0f;
+        float colorMultCounter = 0f;
+
+        if (useAO) {
+            colorMultClock = RenderUtils.getColorMultiplierBySide(clockwise);
+            colorMultCounter = RenderUtils.getColorMultiplierBySide(counterclockwise);
+
+            // Precalculate side AO that may also be used for diagonals
+            RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, clockwise, counterclockwise, axis,
+                blockColor, colorMultClock, containers[0]);
+            RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, clockwise, counterclockwise, opposite,
+                blockColor, colorMultClock, containers[1]);
+
+            RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, counterclockwise, clockwise, opposite,
+                blockColor, colorMultCounter, containers[2]);
+            RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, counterclockwise, clockwise, axis,
+                blockColor, colorMultCounter, containers[3]);
+        }
+
         if (renderClock)
         {
             if (useAO) {
+                // Order: 4, 5, 1, 0
+                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, clockwise, counterOpp, axis,
+                    blockColor, colorMultClock, containers[4]);
+                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, clockwise, counterOpp, opposite,
+                    blockColor, colorMultClock, containers[5]);
+
+
+                containers[4].applyAveragedShading(tess, containers[0], 0.5f);
                 tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, midU, clockFrontV);
+
+                containers[5].applyAveragedShading(tess, containers[1], 0.5f);
                 tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, midU, clockBackV);
+
+                containers[5].applyAveragedShading(tess, containers[1], backEdgeRatio);
                 tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
+
+                containers[4].applyAveragedShading(tess, containers[0], frontEdgeRatio);
                 tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
             }
             else {
@@ -2156,9 +2187,22 @@ public class LogRenderer extends BlockRenderer {
         if (renderCounter)
         {
             if (useAO) {
+                // Order: 3, 2, 4, 5
+                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, counterclockwise, clockOpp, opposite,
+                    blockColor, colorMultCounter, containers[4]);
+                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, counterclockwise, clockOpp, axis,
+                    blockColor, colorMultCounter, containers[5]);
+
+                containers[5].applyAveragedShading(tess, containers[3], frontEdgeRatio);
                 tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterFrontEdgeU, counterFrontV);
+
+                containers[4].applyAveragedShading(tess, containers[2], backEdgeRatio);
                 tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterBackEdgeU, counterBackV);
+
+                containers[4].applyAveragedShading(tess, containers[2], 0.5f);
                 tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, midU, counterBackV);
+
+                containers[5].applyAveragedShading(tess, containers[3], 0.5f);
                 tess.addVertexWithUV(frontCounterCenterX, frontCounterCenterY, frontCounterCenterZ, midU, counterFrontV);
             }
             else {
