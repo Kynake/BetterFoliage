@@ -31,12 +31,21 @@ public class LogRenderer extends BlockRenderer {
         return instance;
     }
 
+    public static boolean isRoundLog(IBlockAccess world, int x, int y, int z) {
+        if (!Config.INSTANCE.getEnabled() || !Config.roundLogs.INSTANCE.getEnabled()) return false;
+
+        return Config.blocks.INSTANCE.getLogs().matchesID(world.getBlock(x, y, z));
+    }
+
+    public static boolean isRoundLog(Block block) {
+        if (!Config.INSTANCE.getEnabled() || !Config.roundLogs.INSTANCE.getEnabled()) return false;
+
+        return Config.blocks.INSTANCE.getLogs().matchesID(block);
+    }
+
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        if (!Config.roundLogs.INSTANCE.getEnabled()) return false;
-
-        return Config.blocks.INSTANCE.getLogs()
-            .matchesID(world.getBlock(x, y, z));
+        return isRoundLog(world, x, y, z);
     }
 
     @Override
