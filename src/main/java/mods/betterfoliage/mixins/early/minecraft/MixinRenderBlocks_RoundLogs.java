@@ -16,7 +16,7 @@ public abstract class MixinRenderBlocks_RoundLogs implements IRoundLogRenderer {
     @Override
     public ShadingInfo[] betterfoliage$getShadingContainers() {
         if (betterfoliage$roundContainers == null) {
-            betterfoliage$roundContainers = new ShadingInfo[6];
+            betterfoliage$roundContainers = new ShadingInfo[8];
 
             // One for each face of a log corner
             betterfoliage$roundContainers[0] = new ShadingInfo(); // Front
@@ -27,6 +27,8 @@ public abstract class MixinRenderBlocks_RoundLogs implements IRoundLogRenderer {
             // Extra buffers for diagonals
             betterfoliage$roundContainers[4] = new ShadingInfo();
             betterfoliage$roundContainers[5] = new ShadingInfo();
+            betterfoliage$roundContainers[6] = new ShadingInfo();
+            betterfoliage$roundContainers[7] = new ShadingInfo();
         }
 
         return betterfoliage$roundContainers;

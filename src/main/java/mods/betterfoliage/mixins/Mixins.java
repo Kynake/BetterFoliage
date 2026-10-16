@@ -46,6 +46,10 @@ public enum Mixins implements IMixins {
         .addClientMixins("notfine.MixinLeafRenderUtil")
         .addRequiredMod(Mod.NOTFINE)
         .setPhase(Phase.LATE)),
+    ANGELICA_LATE(new MixinBuilder()
+        .addClientMixins("angelica.MixinLightDataCache")
+        .addRequiredMod(Mod.ANGELICA)
+        .setPhase(Phase.LATE))
     ;
     // spotless:on
     private final MixinBuilder builder;

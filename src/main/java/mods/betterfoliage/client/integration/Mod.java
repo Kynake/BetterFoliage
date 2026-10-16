@@ -11,6 +11,7 @@ public enum Mod implements ITargetMod {
 
     // spotless:off
     ABYSSALCRAFT("abyssalcraft", "AbyssalCraft", null, "com.shinoow.abyssalcraft.AbyssalCraft"),
+    ANGELICA("angelica", "Angelica", "com.gtnewhorizons.angelica.loading.AngelicaTweaker", "com.gtnewhorizons.angelica.AngelicaMod"),
     EFR("etfuturum", "Et Futurum Requiem", "ganymedes01.etfuturum.mixinplugin.EtFuturumEarlyMixins", "ganymedes01.etfuturum.EtFuturum"),
     FORESTRY("forestry", "Forestry", null, "forestry.Forestry"),
     GT5U("gregtech_nh", "GregTech GTNH", "gregtech.asm.GTCorePlugin", "gregtech.GTNHMod"),
