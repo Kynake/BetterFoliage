@@ -8,6 +8,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.client.render.features.LogRenderer;
 import mods.betterfoliage.client.render.particles.LeafParticleRenderer;
 import mods.betterfoliage.client.render.particles.SoulParticleRenderer;
 import mods.octarinecore.client.render.AbstractBlockRenderingHandler;
@@ -43,27 +44,31 @@ public class Hooks {
     // Why: Allows us to make log blocks non-solid without messing with isOpaqueBlock(),
     // which would result in side effects for gameplay (e.g. Can redstone be placed on top).
     // Used by rounded logs to prevent the adjacent blocks' side from being invisible
-    public static boolean overrideIsPartialBlock(IBlockAccess blockAccess, int x, int y, int z, boolean isPartial) {
-        return isPartial || (Config.INSTANCE.getEnabled() && Config.roundLogs.INSTANCE.getEnabled()
-            && Config.blocks.INSTANCE.getLogs()
-                .matchesID(blockAccess.getBlock(x, y, z)));
+    public static boolean overrideIsPartialBlock(IBlockAccess world, int x, int y, int z, boolean isPartial) {
+        return isPartial || LogRenderer.isRoundLog(world, x, y, z);
     }
 
+    // What: Wrap external calls to isOpaqueCube to signal that a block is not a opaque cube
+    // Why: Allows us to make other mods think that log blocks are non-solid without messing with the
+    // isOpaqueBlock() method itself, which could affect gameplay (e.g. Can redstone be placed on top).
+    public static boolean overrideIsOpaqueCube(Block block, boolean isOpaque) {
+        return isOpaque && !LogRenderer.isRoundLog(block);
+    }
+
+    // TODO Remove: Not needed anymore (probably, investigate)
     // What: Invoke BF code to overrule AO transparency value
     // Why: Allows us to have light behave properly on non-solid log blocks without
     // messing with isOpaqueBlock(), which could have gameplay effects
     public static float getAmbientOcclusionLightValueOverride(Block block, float original) {
-        return Config.INSTANCE.getEnabled() && Config.roundLogs.INSTANCE.getEnabled()
-            && Config.blocks.INSTANCE.getLogs()
-                .matchesID(block) ? Config.roundLogs.INSTANCE.getDimming() : original;
+        return LogRenderer.isRoundLog(block)
+            ? Config.roundLogs.INSTANCE.getDimming()
+            : original;
     }
 
     // What: Invoke BF code to override block.useNeighborBrightness
     // Why: Allows us to have light behave properly on non-solid log blocks
     public static boolean getUseNeighborBrightnessOverride(Block block, boolean original) {
-        return original || (Config.INSTANCE.getEnabled() && Config.roundLogs.INSTANCE.getEnabled()
-            && Config.blocks.INSTANCE.getLogs()
-                .matchesID(block));
+        return original || LogRenderer.isRoundLog(block);
     }
 
     // What: Invoke BF code for every random display tick
