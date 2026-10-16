@@ -2118,45 +2118,56 @@ public class LogRenderer extends BlockRenderer {
         // Clock Side
         final boolean renderClock = shouldRenderFace(clockwise, world, x, y, z);
 
-        float colorMultClock = 0f;
-        float colorMultCounter = 0f;
+//        float colorMultClock = 0f;
+//        float colorMultCounter = 0f;
 
         if (useAO) {
-            colorMultClock = RenderUtils.getColorMultiplierBySide(clockwise);
-            colorMultCounter = RenderUtils.getColorMultiplierBySide(counterclockwise);
+            final float colorMultClock = RenderUtils.getColorMultiplierBySide(clockwise);
+            final float colorMultCounter = RenderUtils.getColorMultiplierBySide(counterclockwise);
 
-            // Precalculate side AO that may also be used for diagonals
-            RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, clockwise, counterclockwise, axis,
+            // Precalculate side AOs
+            RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, clockwise, counterOpp, axis,
                 blockColor, colorMultClock, containers[0]);
-            RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, clockwise, counterclockwise, opposite,
+            RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, clockwise, counterOpp, opposite,
                 blockColor, colorMultClock, containers[1]);
+            RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, clockwise, counterclockwise, opposite,
+                blockColor, colorMultClock, containers[2]);
+            RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, clockwise, counterclockwise, axis,
+                blockColor, colorMultClock, containers[3]);
 
-            RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, counterclockwise, clockwise, opposite,
-                blockColor, colorMultCounter, containers[2]);
+            containers[0].updateAverageShadingInfo(containers[3], 0.5f);
+            containers[1].updateAverageShadingInfo(containers[2], 0.5f);
+            containers[2].updateAverageShadingInfo(containers[1], containers[2], backEdgeRatio);
+            containers[3].updateAverageShadingInfo(containers[0], containers[3], frontEdgeRatio);
+
             RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, counterclockwise, clockwise, axis,
-                blockColor, colorMultCounter, containers[3]);
+                blockColor, colorMultCounter, containers[4]);
+            RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, counterclockwise, clockwise, opposite,
+                blockColor, colorMultCounter, containers[5]);
+            RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, counterclockwise, clockOpp, opposite,
+                blockColor, colorMultCounter, containers[6]);
+            RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, counterclockwise, clockOpp, axis,
+                blockColor, colorMultCounter, containers[7]);
+
+            containers[7].updateAverageShadingInfo(containers[4], 0.5f);
+            containers[6].updateAverageShadingInfo(containers[5], 0.5f);
+            containers[5].updateAverageShadingInfo(containers[6], containers[5], backEdgeRatio);
+            containers[4].updateAverageShadingInfo(containers[7], containers[4], frontEdgeRatio);
         }
 
         if (renderClock)
         {
             if (useAO) {
-                // Order: 4, 5, 1, 0
-                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, clockwise, counterOpp, axis,
-                    blockColor, colorMultClock, containers[4]);
-                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, clockwise, counterOpp, opposite,
-                    blockColor, colorMultClock, containers[5]);
-
-
-                containers[4].applyAveragedShading(tess, containers[0], 0.5f);
+                containers[0].applyShading(tess);
                 tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, midU, clockFrontV);
 
-                containers[5].applyAveragedShading(tess, containers[1], 0.5f);
+                containers[1].applyShading(tess);
                 tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, midU, clockBackV);
 
-                containers[5].applyAveragedShading(tess, containers[1], backEdgeRatio);
+                containers[2].applyShading(tess);
                 tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
 
-                containers[4].applyAveragedShading(tess, containers[0], frontEdgeRatio);
+                containers[3].applyShading(tess);
                 tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
             }
             else {
@@ -2196,22 +2207,16 @@ public class LogRenderer extends BlockRenderer {
         if (renderCounter)
         {
             if (useAO) {
-                // Order: 3, 2, 4, 5
-                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, counterclockwise, clockOpp, opposite,
-                    blockColor, colorMultCounter, containers[4]);
-                RenderUtils.getAOShadingInfoForBlockCorner(renderer, block, x, y, z, counterclockwise, clockOpp, axis,
-                    blockColor, colorMultCounter, containers[5]);
-
-                containers[5].applyAveragedShading(tess, containers[3], frontEdgeRatio);
+                containers[4].applyShading(tess);
                 tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterFrontEdgeU, counterFrontV);
 
-                containers[4].applyAveragedShading(tess, containers[2], backEdgeRatio);
+                containers[5].applyShading(tess);
                 tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterBackEdgeU, counterBackV);
 
-                containers[4].applyAveragedShading(tess, containers[2], 0.5f);
+                containers[6].applyShading(tess);
                 tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, midU, counterBackV);
 
-                containers[5].applyAveragedShading(tess, containers[3], 0.5f);
+                containers[7].applyShading(tess);
                 tess.addVertexWithUV(frontCounterCenterX, frontCounterCenterY, frontCounterCenterZ, midU, counterFrontV);
             }
             else {
@@ -2238,16 +2243,36 @@ public class LogRenderer extends BlockRenderer {
         if (renderDiagonal)
         {
             if (useAO) {
+                // Combined Corners: 3, 2, 5, 4
+
                 // Clock Diag
+
+                containers[3].applyShading(tess);
                 tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
+
+                containers[2].applyShading(tess);
                 tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
+
+                // Save for later
+                containers[0].updateAverageShadingInfo(containers[2], containers[5], 0.5f);
+                containers[0].applyShading(tess);
                 tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, clockCornerU, clockBackV);
+
+                containers[3].applyAveragedShading(tess, containers[4], 0.5f);
                 tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, clockCornerU, clockFrontV);
 
                 // Counter Diag
+                // Skip, same as previous
                 tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, counterCornerU, counterFrontV);
+
+                // Use the one save before
+                containers[0].applyShading(tess);
                 tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, counterCornerU, counterBackV);
+
+                containers[5].applyShading(tess);
                 tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterBackEdgeU, counterBackV);
+
+                containers[4].applyShading(tess);
                 tess.addVertexWithUV(frontCounterEdgeX, frontCounterEdgeY, frontCounterEdgeZ, counterFrontEdgeU, counterFrontV);
             }
             else {
