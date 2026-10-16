@@ -1,7 +1,8 @@
 package mods.betterfoliage.client.render;
 
-import mods.betterfoliage.utils.MathUtils;
 import net.minecraft.client.renderer.Tessellator;
+
+import mods.betterfoliage.utils.MathUtils;
 
 public final class ShadingInfo {
 
@@ -43,8 +44,8 @@ public final class ShadingInfo {
         tess.setBrightness(brightness);
     }
 
-    public static void applyFlatDiagonalShading(final Tessellator tess, final ShadingInfo clock, final ShadingInfo counter,
-        final ShadingInfo front, final ShadingInfo back) {
+    public static void applyFlatDiagonalShading(final Tessellator tess, final ShadingInfo clock,
+        final ShadingInfo counter, final ShadingInfo front, final ShadingInfo back) {
 
         final float avgAO = MathUtils.lerp(clock.ambientOcclusion, counter.ambientOcclusion, 0.5f);
 

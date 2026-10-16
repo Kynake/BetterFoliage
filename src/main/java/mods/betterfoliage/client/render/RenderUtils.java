@@ -5,8 +5,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
-import mods.betterfoliage.utils.MathUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -20,7 +18,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.resource.ResourceUtils;
+import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
 import mods.betterfoliage.utils.BlockUtils;
+import mods.betterfoliage.utils.MathUtils;
 
 public class RenderUtils {
 
@@ -188,14 +188,24 @@ public class RenderUtils {
         }
 
         // TODO use FlatShader when renderAO == false?
-        getAOShadingForCrossedSquareCorner(renderer, block, aoX, aoY, aoZ, aoFirst, aoSecond, aoThird, color, colorMult,
+        getAOShadingForCrossedSquareCorner(
+            renderer,
+            block,
+            aoX,
+            aoY,
+            aoZ,
+            aoFirst,
+            aoSecond,
+            aoThird,
+            color,
+            colorMult,
             shadingContainer);
     }
 
     // TODO: Remove this after crossed square AO refactor
     private static void getAOShadingForCrossedSquareCorner(RenderBlocks renderer, Block block, int x, int y, int z,
-        ForgeDirection firstAxis, ForgeDirection secondAxis, ForgeDirection thirdAxis, int color,
-        float colorMultiplier, ShadingInfo shadingContainer) {
+        ForgeDirection firstAxis, ForgeDirection secondAxis, ForgeDirection thirdAxis, int color, float colorMultiplier,
+        ShadingInfo shadingContainer) {
 
         x += firstAxis.offsetX;
         y += firstAxis.offsetY;
@@ -260,7 +270,8 @@ public class RenderUtils {
     }
 
     public static void getAOShadingInfoForBlockCorner(RenderBlocks renderer, Block block, int x, int y, int z,
-        ForgeDirection face, ForgeDirection hor, ForgeDirection vert, int color, float colorMultiplier, ShadingInfo container) {
+        ForgeDirection face, ForgeDirection hor, ForgeDirection vert, int color, float colorMultiplier,
+        ShadingInfo container) {
 
         final IBlockAccess world = renderer.blockAccess;
 
@@ -297,32 +308,38 @@ public class RenderUtils {
         final int horizontalBrightness = block.getMixedBrightnessForBlock(world, horX, horY, horZ);
         final int verticalBrightness = block.getMixedBrightnessForBlock(world, vertX, vertY, vertZ);
 
-        final float faceAO = world.getBlock(faceX, faceY, faceZ).getAmbientOcclusionLightValue();
-        final float horizontalAO = world.getBlock(horX, horY, horZ).getAmbientOcclusionLightValue();
-        final float verticalAO = world.getBlock(vertX, vertY, vertZ).getAmbientOcclusionLightValue();
+        final float faceAO = world.getBlock(faceX, faceY, faceZ)
+            .getAmbientOcclusionLightValue();
+        final float horizontalAO = world.getBlock(horX, horY, horZ)
+            .getAmbientOcclusionLightValue();
+        final float verticalAO = world.getBlock(vertX, vertY, vertZ)
+            .getAmbientOcclusionLightValue();
 
         /// Diag
         final float cornerAO;
         final int cornerBrightness;
 
         // Is diagonal completely clear of blocks
-        if (!(world.getBlock(horX + face.offsetX, horY + face.offsetY, horZ + face.offsetZ).getCanBlockGrass() ||
-            world.getBlock(vertX + face.offsetX, vertY + face.offsetY, vertZ + face.offsetZ).getCanBlockGrass())) {
+        if (!(world.getBlock(horX + face.offsetX, horY + face.offsetY, horZ + face.offsetZ)
+            .getCanBlockGrass()
+            || world.getBlock(vertX + face.offsetX, vertY + face.offsetY, vertZ + face.offsetZ)
+                .getCanBlockGrass())) {
 
             cornerAO = horizontalAO;
             cornerBrightness = horizontalBrightness;
-        }
-        else {
+        } else {
             final int diagX = horX + vert.offsetX;
             final int diagY = horY + vert.offsetY;
             final int diagZ = horZ + vert.offsetZ;
 
-            cornerAO = world.getBlock(diagX, diagY, diagZ).getAmbientOcclusionLightValue();
+            cornerAO = world.getBlock(diagX, diagY, diagZ)
+                .getAmbientOcclusionLightValue();
             cornerBrightness = block.getMixedBrightnessForBlock(world, diagX, diagY, diagZ);
         }
 
         float ao = colorMultiplier * (faceAO + horizontalAO + verticalAO + cornerAO) / 4.0F;
-        final int brightness = renderer.getAoBrightness(horizontalBrightness, cornerBrightness, verticalBrightness, faceBrightness);
+        final int brightness = renderer
+            .getAoBrightness(horizontalBrightness, cornerBrightness, verticalBrightness, faceBrightness);
 
         container.updateValues(brightness, color, ao);
     }
@@ -332,11 +349,8 @@ public class RenderUtils {
 
         final float colorMultiplier = getColorMultiplierBySide(face);
 
-        final int brightness = block.getMixedBrightnessForBlock(
-            renderer.blockAccess,
-            x + face.offsetX,
-            y + face.offsetY,
-            z + face.offsetZ);
+        final int brightness = block
+            .getMixedBrightnessForBlock(renderer.blockAccess, x + face.offsetX, y + face.offsetY, z + face.offsetZ);
 
         shadingContainer.updateValues(brightness, color, colorMultiplier);
     }

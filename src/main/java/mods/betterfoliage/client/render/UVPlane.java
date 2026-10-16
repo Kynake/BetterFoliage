@@ -13,6 +13,7 @@ public enum UVPlane {
 
     UNKNOWN(ForgeDirection.UNKNOWN, ForgeDirection.UNKNOWN);
 
+    // spotless:off
     public static final ForgeDirection[][] SIDES = {
         { ForgeDirection.SOUTH, ForgeDirection.EAST, ForgeDirection.NORTH, ForgeDirection.WEST },
         { ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST },
@@ -20,8 +21,8 @@ public enum UVPlane {
         { ForgeDirection.UP, ForgeDirection.EAST, ForgeDirection.DOWN, ForgeDirection.WEST },
         { ForgeDirection.NORTH, ForgeDirection.UP, ForgeDirection.SOUTH, ForgeDirection.DOWN },
         { ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.DOWN, ForgeDirection.SOUTH },
-        {}
-    };
+        {} };
+    // spotless:on
 
     public final ForgeDirection uAxis;
     public final ForgeDirection vAxis;
@@ -42,6 +43,7 @@ public enum UVPlane {
     public int getOffsetU(ForgeDirection dir) {
         return dir.offsetX * uAxis.offsetX + dir.offsetY * uAxis.offsetY + dir.offsetZ * uAxis.offsetZ;
     }
+
     public int getOffsetV(ForgeDirection dir) {
         return dir.offsetX * vAxis.offsetX + dir.offsetY * vAxis.offsetY + dir.offsetZ * vAxis.offsetZ;
     }

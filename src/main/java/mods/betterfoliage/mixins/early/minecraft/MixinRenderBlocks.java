@@ -1,6 +1,5 @@
 package mods.betterfoliage.mixins.early.minecraft;
 
-import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
@@ -14,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import com.llamalad7.mixinextras.sugar.Local;
 
 import mods.betterfoliage.client.Hooks;
+import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(RenderBlocks.class)

@@ -60,9 +60,7 @@ public class Hooks {
     // Why: Allows us to have light behave properly on non-solid log blocks without
     // messing with isOpaqueBlock(), which could have gameplay effects
     public static float getAmbientOcclusionLightValueOverride(Block block, float original) {
-        return LogRenderer.isRoundLog(block)
-            ? Config.roundLogs.INSTANCE.getDimming()
-            : original;
+        return LogRenderer.isRoundLog(block) ? Config.roundLogs.INSTANCE.getDimming() : original;
     }
 
     // What: Invoke BF code to override block.useNeighborBrightness

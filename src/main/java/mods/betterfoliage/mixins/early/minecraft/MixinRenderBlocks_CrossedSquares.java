@@ -1,6 +1,5 @@
 package mods.betterfoliage.mixins.early.minecraft;
 
-import mods.betterfoliage.client.render.ShadingInfo;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -19,8 +18,9 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
-import mods.betterfoliage.client.render.features.LeafRenderer;
 import mods.betterfoliage.client.render.RenderUtils;
+import mods.betterfoliage.client.render.ShadingInfo;
+import mods.betterfoliage.client.render.features.LeafRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 
 @SuppressWarnings("UnusedMixin")
@@ -533,7 +533,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     }
 
     @Unique
-    private void betterfoliage$applyAO(int vertIndex, ForgeDirection firstAxis, ForgeDirection secondAxis, ForgeDirection thirdAxis) {
+    private void betterfoliage$applyAO(int vertIndex, ForgeDirection firstAxis, ForgeDirection secondAxis,
+        ForgeDirection thirdAxis) {
         if (!betterfoliage$useAO) return;
 
         final ForgeDirection axis1;

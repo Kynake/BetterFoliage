@@ -1,5 +1,12 @@
 package mods.betterfoliage.client.render.features;
 
+import static net.minecraftforge.common.util.ForgeDirection.DOWN;
+import static net.minecraftforge.common.util.ForgeDirection.EAST;
+import static net.minecraftforge.common.util.ForgeDirection.NORTH;
+import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
+import static net.minecraftforge.common.util.ForgeDirection.UP;
+import static net.minecraftforge.common.util.ForgeDirection.WEST;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.util.IIcon;
@@ -16,13 +23,6 @@ import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
-
-import static net.minecraftforge.common.util.ForgeDirection.DOWN;
-import static net.minecraftforge.common.util.ForgeDirection.UP;
-import static net.minecraftforge.common.util.ForgeDirection.NORTH;
-import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
-import static net.minecraftforge.common.util.ForgeDirection.WEST;
-import static net.minecraftforge.common.util.ForgeDirection.EAST;
 
 public class LeafRenderer extends BlockRenderer {
 
@@ -208,8 +208,8 @@ public class LeafRenderer extends BlockRenderer {
             }
 
             default -> {
-                BetterFoliageMod.log.error("Attempted to get rotated dense leaves AO with invalid axis: {}",
-                    rotationAxis);
+                BetterFoliageMod.log
+                    .error("Attempted to get rotated dense leaves AO with invalid axis: {}", rotationAxis);
                 return null;
             }
         }

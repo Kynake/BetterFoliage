@@ -1,10 +1,12 @@
 package mods.betterfoliage.mixins.early.minecraft;
 
-import mods.betterfoliage.client.render.ShadingInfo;
-import mods.betterfoliage.mixins.interfaces.minecraft.IRoundLogRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+
+import mods.betterfoliage.client.render.ShadingInfo;
+import mods.betterfoliage.mixins.interfaces.minecraft.IRoundLogRenderer;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(RenderBlocks.class)
