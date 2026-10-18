@@ -8,6 +8,10 @@ public final class ShadingInfo {
 
     private static final int BRIGHTNESS_ALPHA_MASK = 0xFF00FF;
 
+    // TODO: Make configurable
+    private static final int DIAG_MIN_BRIGHTNESS = 0x5A0000;
+    private static final float DIAG_MIN_AO = 0.25f;
+
     private float r;
     private float g;
     private float b;
@@ -44,6 +48,30 @@ public final class ShadingInfo {
         tess.setBrightness(brightness);
     }
 
+    public static void updateDiagonalAOShading(ShadingInfo topClock, ShadingInfo botClock, ShadingInfo botCounter,
+        ShadingInfo topCounter) {
+
+        // Brightness
+        final int topBrightness = Math.max(Math.max(topClock.brightness, topCounter.brightness), DIAG_MIN_BRIGHTNESS);
+        final int botBrightness = Math.max(Math.max(botClock.brightness, botCounter.brightness), DIAG_MIN_BRIGHTNESS);
+
+        topClock.brightness = topCounter.brightness = topBrightness;
+        botClock.brightness = botCounter.brightness = botBrightness;
+
+        // AO
+        topClock.ambientOcclusion = Math.max(topClock.ambientOcclusion, DIAG_MIN_AO);
+        topClock.setRGB(topClock.pureColor);
+
+        botClock.ambientOcclusion = Math.max(botClock.ambientOcclusion, DIAG_MIN_AO);
+        botClock.setRGB(botClock.pureColor);
+
+        topCounter.ambientOcclusion = Math.max(topCounter.ambientOcclusion, DIAG_MIN_AO);
+        topCounter.setRGB(topCounter.pureColor);
+
+        botCounter.ambientOcclusion = Math.max(botCounter.ambientOcclusion, DIAG_MIN_AO);
+        botCounter.setRGB(botCounter.pureColor);
+    }
+
     public static void applyFlatDiagonalShading(final Tessellator tess, final ShadingInfo clock,
         final ShadingInfo counter, final ShadingInfo front, final ShadingInfo back) {
 
@@ -53,9 +81,11 @@ public final class ShadingInfo {
         if (counter.brightness > maxBrightness) {
             maxBrightness = counter.brightness;
         }
+
         if (front.brightness > maxBrightness) {
             maxBrightness = front.brightness;
         }
+
         if (back.brightness > maxBrightness) {
             maxBrightness = back.brightness;
         }

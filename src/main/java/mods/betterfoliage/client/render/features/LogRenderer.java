@@ -2118,9 +2118,6 @@ public class LogRenderer extends BlockRenderer {
         // Clock Side
         final boolean renderClock = shouldRenderFace(clockwise, world, x, y, z);
 
-//        float colorMultClock = 0f;
-//        float colorMultCounter = 0f;
-
         if (useAO) {
             final float colorMultClock = RenderUtils.getColorMultiplierBySide(clockwise);
             final float colorMultCounter = RenderUtils.getColorMultiplierBySide(counterclockwise);
@@ -2244,8 +2241,12 @@ public class LogRenderer extends BlockRenderer {
         {
             if (useAO) {
                 // Combined Corners: 3, 2, 5, 4
+                ShadingInfo.updateDiagonalAOShading(containers[3], containers[2], containers[5], containers[4]);
 
                 // Clock Diag
+
+                // Save for later
+                containers[0].updateAverageShadingInfo(containers[2], containers[5], 0.5f);
 
                 containers[3].applyShading(tess);
                 tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
@@ -2253,8 +2254,6 @@ public class LogRenderer extends BlockRenderer {
                 containers[2].applyShading(tess);
                 tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
 
-                // Save for later
-                containers[0].updateAverageShadingInfo(containers[2], containers[5], 0.5f);
                 containers[0].applyShading(tess);
                 tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, clockCornerU, clockBackV);
 
@@ -2265,7 +2264,7 @@ public class LogRenderer extends BlockRenderer {
                 // Skip, same as previous
                 tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, counterCornerU, counterFrontV);
 
-                // Use the one save before
+                // Use the one saved before
                 containers[0].applyShading(tess);
                 tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, counterCornerU, counterBackV);
 
