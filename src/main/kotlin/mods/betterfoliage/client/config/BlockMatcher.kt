@@ -1,6 +1,5 @@
 package mods.betterfoliage.client.config
 
-import cpw.mods.fml.common.eventhandler.EventPriority
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import mods.octarinecore.client.gui.NonVerboseArrayEntry
 import mods.octarinecore.client.resource.get
@@ -94,31 +93,6 @@ class BlockMatcher(val domain: String, val path: String) : ConfigPropertyBase() 
     }
 
     @SubscribeEvent
-    fun onWorldLoad(event: WorldEvent.Load) {
-        if (event.world is WorldClient) updateIDs()
-    }
-
-    init {
-        MinecraftForge.EVENT_BUS.register(this)
-    }
-}
-
-abstract class SimpleBlockMatcher {
-
-    val blockIDs = hashSetOf<Int>()
-
-    abstract fun matchesClass(block: Block): Boolean
-    fun matchesID(block: Block) = blockIDs.contains(Block.blockRegistry.getIDForObject(block))
-    fun matchesID(blockId: Int) = blockIDs.contains(blockId)
-
-    fun updateIDs() {
-        blockIDs.clear()
-        Block.blockRegistry.forEach {
-            if (matchesClass(it as Block)) blockIDs.add(Block.blockRegistry.getIDForObject(it))
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOW)
     fun onWorldLoad(event: WorldEvent.Load) {
         if (event.world is WorldClient) updateIDs()
     }

@@ -3,33 +3,6 @@
 
 package mods.octarinecore
 
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.reflect.KProperty
-
-/** Exchange the two elements of the list with the given indices */
-inline fun <T> MutableList<T>.exchange(idx1: Int, idx2: Int) {
-    val e = this[idx1]
-    this[idx1] = this[idx2]
-    this[idx2] = e
-}
-
-/** Cross product of this [Iterable] with the parameter. */
-fun <A, B> Iterable<A>.cross(other: Iterable<B>) = flatMap { a -> other.map { b -> a to b } }
-
-/**
- * Property-level delegate backed by a [ThreadLocal].
- *
- * @param[init] Lambda to get initial value
- */
-class ThreadLocalDelegate<T>(init: () -> T) {
-    var tlVal = ThreadLocal.withInitial(init)!!
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): T = tlVal.get()
-    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-        tlVal.set(value)
-    }
-}
-
 /**
  * Call the supplied lambda and return its result, or the given default value if an exception is
  * thrown.
@@ -39,9 +12,3 @@ fun <T> tryDefault(default: T, work: () -> T) = try {
 } catch (e: Throwable) {
     default
 }
-
-/**
- * Return this [Double] value if it lies between the two limits. If outside, return the
- * minimum/maximum value correspondingly.
- */
-fun Double.clamp(minVal: Double, maxVal: Double) = min(max(this, minVal), maxVal)

@@ -5,7 +5,7 @@
 // - Complete overhaul of block lists:
 //   - Configurable by prioritized property files in resource packs (Like natural textures in RPMCPatcher)
 //   - Config menu should show these as read-only options.
-//   - Allow adding / removing options on top (which then saves them to a user-custom resource pack)
+//   - Allow adding / removing options on top (which saves them to the user config list)
 package mods.octarinecore.common.config
 
 import com.google.common.collect.LinkedListMultimap

@@ -25,10 +25,6 @@ public final class ShadingInfo {
         updateValues(0xFF, 0xFF, 1f);
     }
 
-    public ShadingInfo(final int brightness, final int color, final float ao) {
-        updateValues(brightness, color, ao);
-    }
-
     /// Apply without updating
     private static void applyShading(final Tessellator tess, final int brightness, final int color, final float ao) {
         final float r = ao * (float) (color >> 16 & 0xFF) / 255.0f;

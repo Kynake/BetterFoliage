@@ -15,13 +15,6 @@ inline fun <reified T> Any.reflectField(field: String): T? = tryDefault(null) { 
         it.get(this) as T
     }
 
-/** Get the static field with the given name and type using reflection. */
-inline fun <reified T> Class<*>.reflectStaticField(field: String): T? = tryDefault(null) { this.getDeclaredField(field) }
-    ?.let {
-        it.isAccessible = true
-        it.get(null) as T
-    }
-
 /**
  * Get all nested _object_s of this _object_ with reflection.
  *

@@ -4,7 +4,6 @@ import java.util.Map;
 
 import net.minecraftforge.common.config.Configuration;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 import cpw.mods.fml.common.Mod;
@@ -13,7 +12,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.Side;
-import mods.betterfoliage.client.Client;
 import mods.betterfoliage.client.ClientRegistry;
 import mods.betterfoliage.client.config.Config;
 
@@ -65,11 +63,6 @@ public class BetterFoliageMod {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         if (event.getSide() == Side.CLIENT) {
-
-            // Load bearing log. without this the mod doesn't load!
-            // TODO stop disguising initialization in a message log
-            Client.INSTANCE.log(Level.INFO, "BetterFoliage initialized");
-
             ClientRegistry.postInit();
         }
     }

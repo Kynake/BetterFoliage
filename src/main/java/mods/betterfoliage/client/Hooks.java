@@ -11,9 +11,6 @@ import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.features.LogRenderer;
 import mods.betterfoliage.client.render.particles.LeafParticleRenderer;
 import mods.betterfoliage.client.render.particles.SoulParticleRenderer;
-import mods.octarinecore.client.render.AbstractBlockRenderingHandler;
-import mods.octarinecore.client.render.BlockContext;
-import mods.octarinecore.client.render.RendererHolder;
 
 @SideOnly(Side.CLIENT)
 public class Hooks {
@@ -37,7 +34,7 @@ public class Hooks {
         return isPartial || LogRenderer.isRoundLog(world, x, y, z);
     }
 
-    // What: Wrap external calls to isOpaqueCube to signal that a block is not a opaque cube
+    // What: Wrap external calls to isOpaqueCube to signal that a block is not an opaque cube
     // Why: Allows us to make other mods think that log blocks are non-solid without messing with the
     // isOpaqueBlock() method itself, which could affect gameplay (e.g. Can redstone be placed on top).
     public static boolean overrideIsOpaqueCube(Block block, boolean isOpaque) {
