@@ -16,11 +16,6 @@ import mods.betterfoliage.client.Hooks;
 @Mixin(value = Block.class, priority = 1500)
 public abstract class MixinBlock {
 
-    @ModifyReturnValue(method = "getAmbientOcclusionLightValue", at = @At("RETURN"))
-    private float betterfoliage$getAmbientOcclusionLightValueOverride(float original) {
-        return Hooks.getAmbientOcclusionLightValueOverride((Block) (Object) this, original);
-    }
-
     @ModifyReturnValue(method = "getUseNeighborBrightness", at = @At("RETURN"))
     private boolean betterfoliage$getUseNeighborBrightnessOverride(boolean original) {
         return Hooks.getUseNeighborBrightnessOverride((Block) (Object) this, original);

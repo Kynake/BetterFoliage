@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.SideOnly
 import mods.betterfoliage.BetterFoliageMod
 import mods.betterfoliage.client.integration.AbyssalCraftIntegration
 import mods.betterfoliage.client.integration.IC2Integration
-import mods.betterfoliage.client.render.RenderLog
 import org.apache.logging.log4j.Level
 
 /**
@@ -17,14 +16,6 @@ import org.apache.logging.log4j.Level
  */
 @SideOnly(Side.CLIENT)
 object Client {
-
-    @Suppress("unused")
-    val logRenderer = RenderLog()
-
-    val renderers =
-        listOf(
-            logRenderer,
-        )
 
     @Suppress("unused")
     val singletons =

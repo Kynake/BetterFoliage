@@ -24,20 +24,9 @@ public class Hooks {
     public static int getRenderTypeOverride(IBlockAccess world, int x, int y, int z, int original) {
         if (!Config.INSTANCE.getEnabled()) return original;
 
-        // Look for new renderers first
         BlockRenderer renderer = ClientRegistry.getEligibleBlockRenderer(world, x, y, z);
-        if (renderer != null) return renderer.getRenderId();
 
-        // TODO remove eventually
-        // Only then use legacy renderers
-        final BlockContext ctx = RendererHolder.getBlockContext();
-        ctx.set(world, x, y, z);
-
-        for (AbstractBlockRenderingHandler legacyRenderer : Client.INSTANCE.getRenderers()) {
-            if (legacyRenderer.isEligible(ctx)) return legacyRenderer.getRenderId();
-        }
-
-        return original;
+        return renderer != null ? renderer.getRenderId() : original;
     }
 
     // What: Invoke BF code to make block non-solid when the game otherwise considers it to be.
@@ -53,14 +42,6 @@ public class Hooks {
     // isOpaqueBlock() method itself, which could affect gameplay (e.g. Can redstone be placed on top).
     public static boolean overrideIsOpaqueCube(Block block, boolean isOpaque) {
         return isOpaque && !LogRenderer.isRoundLog(block);
-    }
-
-    // TODO Remove: Not needed anymore (probably, investigate)
-    // What: Invoke BF code to overrule AO transparency value
-    // Why: Allows us to have light behave properly on non-solid log blocks without
-    // messing with isOpaqueBlock(), which could have gameplay effects
-    public static float getAmbientOcclusionLightValueOverride(Block block, float original) {
-        return LogRenderer.isRoundLog(block) ? Config.roundLogs.INSTANCE.getDimming() : original;
     }
 
     // What: Invoke BF code to override block.useNeighborBrightness
