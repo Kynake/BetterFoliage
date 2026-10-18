@@ -1,15 +1,4 @@
-package mods.betterfoliage.client.integration
-
-import cpw.mods.fml.relauncher.Side
-import cpw.mods.fml.relauncher.SideOnly
-import ic2.core.block.BlockRubWood
-import mods.betterfoliage.client.Client
-import mods.betterfoliage.client.config.Config
-import mods.betterfoliage.client.config.SimpleBlockMatcher
-import mods.octarinecore.client.render.Axis
-import net.minecraft.block.Block
-import org.apache.logging.log4j.Level
-
+// TODO: Reimplement
 /** Integration for IC2 experimental */
 @SideOnly(Side.CLIENT)
 object IC2Integration {

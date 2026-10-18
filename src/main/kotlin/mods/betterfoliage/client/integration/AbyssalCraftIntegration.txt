@@ -1,16 +1,4 @@
-package mods.betterfoliage.client.integration
-
-import com.shinoow.abyssalcraft.common.blocks.BlockDLTLog
-import com.shinoow.abyssalcraft.common.blocks.BlockDreadLog
-import cpw.mods.fml.relauncher.Side
-import cpw.mods.fml.relauncher.SideOnly
-import mods.betterfoliage.client.Client
-import mods.betterfoliage.client.config.Config
-import mods.betterfoliage.client.config.SimpleBlockMatcher
-import mods.octarinecore.client.render.Axis
-import net.minecraft.block.Block
-import org.apache.logging.log4j.Level
-
+// TODO: Reimplement
 /** Integration for AbyssalCraft */
 @SideOnly(Side.CLIENT)
 object AbyssalCraftIntegration {
