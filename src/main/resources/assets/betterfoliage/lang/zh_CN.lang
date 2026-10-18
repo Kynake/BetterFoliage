@@ -223,7 +223,5 @@ betterfoliage.roundLogs.radiusSmall=倒角半径
 betterfoliage.roundLogs.radiusSmall.tooltip=从原木角落切掉多少
 betterfoliage.roundLogs.radiusLarge=连接倒角半径
 betterfoliage.roundLogs.radiusLarge.tooltip=从连接原木的外角切掉多少
-betterfoliage.roundLogs.dimming=变暗
-betterfoliage.roundLogs.dimming.tooltip=使被遮挡的原木面变暗的程度
 betterfoliage.roundLogs.zProtection=Z-保护
 betterfoliage.roundLogs.zProtection.tooltip=缩放平行原木连接部分以防止 Z-fighting（闪烁）的程度，尝试将其设置为尽可能高而不出现故障

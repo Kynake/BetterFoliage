@@ -221,7 +221,5 @@ betterfoliage.roundLogs.radiusSmall=Raio do chanfro
 betterfoliage.roundLogs.radiusSmall.tooltip=Quanto cortar do canto do tronco
 betterfoliage.roundLogs.radiusLarge=Raio do chanfro conectado
 betterfoliage.roundLogs.radiusLarge.tooltip=Quanto cortar do canto externo dos troncos conectados
-betterfoliage.roundLogs.dimming=Escurecimento
-betterfoliage.roundLogs.dimming.tooltip=Quantidade para escurecer faces obscurecidas do tronco
 betterfoliage.roundLogs.zProtection=Proteção contra Z-fighting
 betterfoliage.roundLogs.zProtection.tooltip=Fator de escala de peças conectoras de troncos paralelos para evitar Z-fighting (interferência entre texturas). Tente defini-lo o mais alto possível sem encontrar falhas.

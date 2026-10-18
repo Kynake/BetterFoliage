@@ -204,8 +204,6 @@ betterfoliage.roundLogs.radiusSmall=모서리 깎는 반지름
 betterfoliage.roundLogs.radiusSmall.tooltip=나무 모서리 깎는 정도
 betterfoliage.roundLogs.radiusLarge=모서리 깎는 부분 연결
 betterfoliage.roundLogs.radiusLarge.tooltip=나무 모서리 부분을 연결
-betterfoliage.roundLogs.dimming=조광
-betterfoliage.roundLogs.dimming.tooltip=나무 표면부분을 어둡게하는 양
 betterfoliage.roundLogs.zProtection=Z-Protection
 betterfoliage.roundLogs.zProtection.tooltip=Amount to scale parallel log connection bits to stop Z-fighting (flickering). Try to set it as high as possible without having glitches.
 

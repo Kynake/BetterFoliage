@@ -221,7 +221,5 @@ betterfoliage.roundLogs.radiusSmall=Chamfer radius
 betterfoliage.roundLogs.radiusSmall.tooltip=How much to chop off from the log corner
 betterfoliage.roundLogs.radiusLarge=Connected chamfer radius
 betterfoliage.roundLogs.radiusLarge.tooltip=How much to chop off from the outer corner of connected logs
-betterfoliage.roundLogs.dimming=Dimming
-betterfoliage.roundLogs.dimming.tooltip=Amount to darken obscured log faces
 betterfoliage.roundLogs.zProtection=Z-Protection
 betterfoliage.roundLogs.zProtection.tooltip=Amount to scale parallel log connection bits to stop Z-fighting (flickering). Try to set it as high as possible without having glitches.

@@ -188,8 +188,6 @@ betterfoliage.risingSoul.trailDensity.tooltip=Рендер каждой пред
 
 
 betterfoliage.connectedGrass=Соединенные текстуры травы
-betterfoliage.connectedGrass.enabled=Включить
-betterfoliage.connectedGrass.enabled.tooltip=Если блок травы находится над блоком земли: прорисовать верхнюю текстуру травы на всех сторонах блока травы.
 
 betterfoliage.roundLogs=Цилиндрические брёвна
 betterfoliage.roundLogs.tooltip=Соединить круглые блоки в сплошные, полные блоки?
@@ -205,7 +203,5 @@ betterfoliage.roundLogs.radiusSmall=Радиус фаски
 betterfoliage.roundLogs.radiusSmall.tooltip=Радиус обрезки углов от бревна.
 betterfoliage.roundLogs.radiusLarge=Радиус соединенной фаски
 betterfoliage.roundLogs.radiusLarge.tooltip=Радиус среза внешнего угла соединённых брёвен.
-betterfoliage.roundLogs.dimming=Затемнение
-betterfoliage.roundLogs.dimming.tooltip=Затемнить неясные длинные грани.
 betterfoliage.roundLogs.zProtection=Z-Защита
 betterfoliage.roundLogs.zProtection.tooltip=Для масштабирования параллельных битов соединения журнала, чтобы остановить Z-бой (мерцание). Попробуйте установить его как можно выше, для устранения мерцания.
