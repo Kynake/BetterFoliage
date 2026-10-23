@@ -46,11 +46,21 @@ public class BetterFoliageMod {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         log = event.getModLog();
-        Configuration config = new Configuration(event.getSuggestedConfigurationFile(), null, true);
-        Config.INSTANCE.attach(config);
-        if (event.getSide() == Side.CLIENT) {
-            ClientRegistry.preInit();
+
+        if (event.getSide() != Side.CLIENT) {
+            log.error("Trying to load {} in a non-client environment! This is a client-side only mod, so it will do nothing!", MOD_ID);
+            return;
         }
+
+        Configuration configs = new Configuration(Configs.getConfigFile(event.getModConfigurationDirectory()),
+            null, true);
+        Configs.initializeFileConfigs(configs);
+
+        // TODO: Remove once new configs are ready
+        Configuration oldConfigs = new Configuration(event.getSuggestedConfigurationFile(), null, true);
+        Config.INSTANCE.attach(oldConfigs);
+
+        ClientRegistry.preInit();
     }
 
     @Mod.EventHandler
