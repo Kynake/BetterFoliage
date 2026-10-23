@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.WindTracker;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.registries.LeafInfo;
@@ -89,7 +90,7 @@ public class LeafParticleRenderer extends ParticleRenderer {
 
     @Override
     protected void update() {
-        if (!(Config.INSTANCE.getEnabled() & Config.fallingLeaves.INSTANCE.getEnabled())) {
+        if (!(Configs.enabled & Config.fallingLeaves.INSTANCE.getEnabled())) {
             setDead();
             return;
         }

@@ -6,6 +6,7 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.features.LogRenderer;
@@ -19,7 +20,7 @@ public class Hooks {
     // Why: This allows us to use custom block renderers for any block,
     // without touching block code
     public static int getRenderTypeOverride(IBlockAccess world, int x, int y, int z, int original) {
-        if (!Config.INSTANCE.getEnabled()) return original;
+        if (!Configs.enabled) return original;
 
         BlockRenderer renderer = ClientRegistry.getEligibleBlockRenderer(world, x, y, z);
 
@@ -50,7 +51,7 @@ public class Hooks {
     // What: Invoke BF code for every random display tick
     // Why: Allows us to inject our own particles, without touching block code
     public static void onRandomDisplayTick(Block block, World world, int x, int y, int z) {
-        if (!Config.INSTANCE.getEnabled()) return;
+        if (!Configs.enabled) return;
 
         if (Config.risingSoul.INSTANCE.getEnabled() && SoulParticleRenderer.isValidSoulBlock(block)
             && Math.random() < Config.risingSoul.INSTANCE.getChance()

@@ -13,6 +13,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.utils.MathUtils;
 
@@ -46,7 +47,7 @@ public final class WindTracker {
 
     @SubscribeEvent
     public void handleWorldTick(TickEvent.ClientTickEvent event) {
-        if (!(Config.INSTANCE.getEnabled() & Config.fallingLeaves.INSTANCE.getEnabled())) return;
+        if (!(Configs.enabled & Config.fallingLeaves.INSTANCE.getEnabled())) return;
         if (event.phase != TickEvent.Phase.START) return;
 
         final World world = Minecraft.getMinecraft().theWorld;

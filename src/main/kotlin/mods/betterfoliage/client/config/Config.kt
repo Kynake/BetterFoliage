@@ -38,7 +38,7 @@ private fun BiomeGenBase.filterClass(vararg name: String) = name.any { it in thi
 @SideOnly(Side.CLIENT)
 object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAIN) {
 
-    var enabled by boolean(true)
+//    var enabled by boolean(true)
 
     object blocks {
         val dirt = BlockMatcher(BetterFoliageMod.DOMAIN, "DirtDefault.cfg")

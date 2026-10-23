@@ -7,6 +7,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.integration.EFRIntegration;
 import mods.betterfoliage.client.render.ISpriteProvider;
@@ -55,7 +56,7 @@ public class SoulParticleRenderer extends ParticleRenderer {
 
     @Override
     protected void update() {
-        if (!(Config.INSTANCE.getEnabled() & Config.risingSoul.INSTANCE.getEnabled())) {
+        if (!(Configs.enabled & Config.risingSoul.INSTANCE.getEnabled())) {
             setDead();
             return;
         }
@@ -102,7 +103,7 @@ public class SoulParticleRenderer extends ParticleRenderer {
 
         @Override
         protected void update() {
-            if (!(Config.INSTANCE.getEnabled() & Config.risingSoul.INSTANCE.getEnabled())) {
+            if (!(Configs.enabled & Config.risingSoul.INSTANCE.getEnabled())) {
                 setDead();
                 return;
             }

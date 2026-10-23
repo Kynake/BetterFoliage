@@ -8,6 +8,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.config.BlockMatcher;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
@@ -32,14 +33,14 @@ public class LogRenderer extends BlockRenderer {
     }
 
     public static boolean isRoundLog(IBlockAccess world, int x, int y, int z) {
-        if (!Config.INSTANCE.getEnabled() || !Config.roundLogs.INSTANCE.getEnabled()) return false;
+        if (!Configs.enabled || !Config.roundLogs.INSTANCE.getEnabled()) return false;
 
         return Config.blocks.INSTANCE.getLogs()
             .matchesID(world.getBlock(x, y, z));
     }
 
     public static boolean isRoundLog(Block block) {
-        if (!Config.INSTANCE.getEnabled() || !Config.roundLogs.INSTANCE.getEnabled()) return false;
+        if (!Configs.enabled || !Config.roundLogs.INSTANCE.getEnabled()) return false;
 
         return Config.blocks.INSTANCE.getLogs()
             .matchesID(block);
