@@ -48,13 +48,13 @@ public class BetterFoliageMod {
         log = event.getModLog();
 
         if (event.getSide() != Side.CLIENT) {
-            log.error("Trying to load {} in a non-client environment! This is a client-side only mod, so it will do nothing!", MOD_ID);
+            log.error(
+                "Trying to load {} in a non-client environment! This is a client-side only mod, so it will do nothing!",
+                MOD_ID);
             return;
         }
 
-        Configuration configs = new Configuration(Configs.getConfigFile(event.getModConfigurationDirectory()),
-            null, true);
-        Configs.initializeFileConfigs(configs);
+        Configs.init(event.getModConfigurationDirectory());
 
         // TODO: Remove once new configs are ready
         Configuration oldConfigs = new Configuration(event.getSuggestedConfigurationFile(), null, true);
