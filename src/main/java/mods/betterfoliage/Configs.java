@@ -10,6 +10,7 @@ import net.minecraftforge.common.config.Property;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.event.entity.player.UseHoeEvent;
 
 // TODO: Make configurable from in-game menu like the old configs
 public final class Configs {
@@ -40,6 +41,12 @@ public final class Configs {
 
     @SubscribeEvent
     public void onStitchEvent(TextureStitchEvent.Pre event) {
+        onConfigChange();
+    }
+
+    // TODO: Temporary, remove
+    @SubscribeEvent
+    public void onUseHoeDebugEvent(final UseHoeEvent event) {
         onConfigChange();
     }
 
