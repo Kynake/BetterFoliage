@@ -148,13 +148,13 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
         val biomes by biomeList { it.filterClass("river", "ocean", "beach") }
     }
 
-    object netherrack {
-        val enabled by featureEnable()
-        val hOffset by double(max = 0.4, default = 0.2).lang("hOffset")
-        val heightMin by double(min = 0.1, max = 1.5, default = 0.6).lang("heightMin")
-        val heightMax by double(min = 0.1, max = 1.5, default = 0.8).lang("heightMax")
-        val size by double(min = 0.5, max = 1.5, default = 1.0).lang("size")
-    }
+//    object netherrack {
+//        val enabled by featureEnable()
+//        val hOffset by double(max = 0.4, default = 0.2).lang("hOffset")
+//        val heightMin by double(min = 0.1, max = 1.5, default = 0.6).lang("heightMin")
+//        val heightMax by double(min = 0.1, max = 1.5, default = 0.8).lang("heightMax")
+//        val size by double(min = 0.5, max = 1.5, default = 1.0).lang("size")
+//    }
 
     object fallingLeaves {
         val enabled by featureEnable()

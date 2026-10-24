@@ -1,5 +1,6 @@
 package mods.betterfoliage.client.render.features;
 
+import mods.betterfoliage.Configs;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -8,7 +9,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.SpriteSet;
@@ -35,7 +35,7 @@ public class NetherrackRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        return Config.netherrack.INSTANCE.getEnabled() && world.getBlock(x, y, z) == Blocks.netherrack;
+        return Configs.Netherrack.enabled && world.getBlock(x, y, z) == Blocks.netherrack;
     }
 
     @Override
@@ -56,14 +56,14 @@ public class NetherrackRenderer extends BlockRenderer {
 
         // Render vines
         int coordHash = MathUtils.hashCoords(x, y - 1, z, 29);
-        double heightScale = MathUtils.hashToRange(
+        float heightScale = MathUtils.hashToRange(
             coordHash,
-            Config.netherrack.INSTANCE.getHeightMin(),
-            Config.netherrack.INSTANCE.getHeightMax());
+            Configs.Netherrack.heightMin,
+            Configs.Netherrack.heightMax);
 
-        double hOffset = Config.netherrack.INSTANCE.getHOffset();
-        double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
-        double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
+        float hOffset = Configs.Netherrack.hOffset;
+        float xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
+        float zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
         Tessellator tessellator = Tessellator.instance;
         tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y - 1, z));
@@ -74,13 +74,13 @@ public class NetherrackRenderer extends BlockRenderer {
 
         ICrossedSquaresRenderer vinesRenderer = (ICrossedSquaresRenderer) renderer;
 
-        vinesRenderer.betterfoliage$setVerticalScale((float) heightScale);
+        vinesRenderer.betterfoliage$setVerticalScale(heightScale);
         renderer.drawCrossedSquares(
             sprite,
             xOffset,
             y - heightScale,
             zOffset,
-            (float) Config.netherrack.INSTANCE.getSize());
+            Configs.Netherrack.size);
         vinesRenderer.betterfoliage$resetVerticalScale();
 
         return true;

@@ -39,6 +39,11 @@ public final class MathUtils {
         return lerp(min, max, invLerp);
     }
 
+    // TODO reimplement to not use double hashToRange()
+    public static float hashToRange(int hash, float min, float max) {
+        return (float) hashToRange(hash, (double) min, (double) max);
+    }
+
     public static double lerp(double min, double max, double lerpAmount) {
         return (max - min) * lerpAmount + min;
     }

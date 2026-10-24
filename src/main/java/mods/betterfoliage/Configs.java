@@ -17,7 +17,51 @@ public final class Configs {
 
     /// Configs
 
+    // GENERAL
     public static boolean enabled = true;
+    private static final String enabledGeneralDesc = "General on/off switch for all of the mod's functionalities";
+
+    private static final String hOffsetDesc = "The distance this element is shifted horizontally, in blocks";
+    private static final String vOffsetDesc = "The distance this element is shifted vertically, in blocks";
+    private static final String sizeDesc = "Size of this element";
+    private static final String heightMinDesc = "Minimum height of element";
+    private static final String heightMaxDesc = "Maximum height of element";
+
+
+
+    // NETHERRACK
+    public static class Netherrack {
+
+        public static boolean enabled = true;
+        private static final String enabledDesc = "Should place hanging vines under netherrack blocks";
+
+        public static float hOffset;
+        public static float heightMin;
+        public static float heightMax;
+        public static float size;
+
+        public static void initializeFileConfigs(final Configuration config, final String category) {
+            Property prop = config.get(category, "enabled", enabled, enabledDesc);
+            enabled = prop.getBoolean();
+
+            prop = config.get(category, "hOffset", 0.2, hOffsetDesc, 0, 0.4);
+            hOffset = (float) prop.getDouble();
+
+            prop = config.get(category, "heightMin", 0.6, heightMinDesc, 0.1, 1.5);
+            heightMin = (float) prop.getDouble();
+
+            prop = config.get(category, "heightMax", 0.8, heightMaxDesc, 0.1, 1.5);
+            heightMax = (float) prop.getDouble();
+
+            prop = config.get(category, "size", 1, sizeDesc, 0.5, 1.5);
+            size = (float) prop.getDouble();
+        }
+    }
+
+
+
+
+
 
     ///
 
@@ -40,7 +84,7 @@ public final class Configs {
     }
 
     @SubscribeEvent
-    public void onStitchEvent(TextureStitchEvent.Pre event) {
+    public void onStitchEvent(final TextureStitchEvent.Pre event) {
         onConfigChange();
     }
 
@@ -70,12 +114,10 @@ public final class Configs {
     public static void initializeFileConfigs(final Configuration config) {
         config.load();
 
-        Property propEnabled = config.get(
-            Configuration.CATEGORY_GENERAL,
-            "enabled",
-            true,
-            "General on/off switch for all of the mod's functionalities");
-        enabled = propEnabled.getBoolean();
+        Property prop = config.get(Configuration.CATEGORY_GENERAL, "enabled", enabled, enabledGeneralDesc);
+        enabled = prop.getBoolean();
+
+        Netherrack.initializeFileConfigs(config, "netherrack");
 
         if (config.hasChanged()) {
             config.save();
