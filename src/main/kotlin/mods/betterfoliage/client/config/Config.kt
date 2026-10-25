@@ -168,17 +168,17 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
         val opacityHack by boolean(true)
     }
 
-    object risingSoul {
-        val enabled by featureEnable()
-        val chance by double(min = 0.001, max = 1.0, default = 0.02)
-        val perturb by double(min = 0.01, max = 0.25, default = 0.05)
-        val headSize by double(min = 0.25, max = 1.5, default = 1.0)
-        val trailSize by double(min = 0.25, max = 1.5, default = 0.75)
-        val opacity by float(min = 0.05, max = 1.0, default = 0.5)
-        val sizeDecay by double(min = 0.5, max = 1.0, default = 0.97)
-        val lifetime by double(min = 1.0, max = 15.0, default = 4.0)
-        val trailDensity by int(min = 1, max = 16, default = 3)
-    }
+//    object risingSoul {
+//        val enabled by featureEnable()
+//        val chance by double(min = 0.001, max = 1.0, default = 0.02)
+//        val perturb by double(min = 0.01, max = 0.25, default = 0.05)
+//        val headSize by double(min = 0.25, max = 1.5, default = 1.0)
+//        val trailSize by double(min = 0.25, max = 1.5, default = 0.75)
+//        val opacity by float(min = 0.05, max = 1.0, default = 0.5)
+//        val sizeDecay by double(min = 0.5, max = 1.0, default = 0.97)
+//        val lifetime by double(min = 1.0, max = 15.0, default = 4.0)
+//        val trailDensity by int(min = 1, max = 16, default = 3)
+//    }
 
     override fun onChange(event: ConfigChangedEvent.OnConfigChangedEvent) {
         super.onChange(event)

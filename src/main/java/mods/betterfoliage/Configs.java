@@ -6,11 +6,11 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.event.entity.player.UseHoeEvent;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.event.entity.player.UseHoeEvent;
 
 // TODO: Make configurable from in-game menu like the old configs
 public final class Configs {
@@ -26,8 +26,6 @@ public final class Configs {
     private static final String sizeDesc = "Size of this element";
     private static final String heightMinDesc = "Minimum height of element";
     private static final String heightMaxDesc = "Maximum height of element";
-
-
 
     // NETHERRACK
     public static class Netherrack {
@@ -59,6 +57,7 @@ public final class Configs {
     }
 
     public static class RisingSouls {
+
         public static boolean enabled = true;
         private static final String enabledDesc = "Should emit rising soul particles from the top of soulsand blocks";
 
@@ -124,10 +123,6 @@ public final class Configs {
             trailDensity = prop.getInt();
         }
     }
-
-
-
-
 
     ///
 

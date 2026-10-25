@@ -8,7 +8,6 @@ import net.minecraft.world.World;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.Configs;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.integration.EFRIntegration;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.SpriteSetRandom;
@@ -31,6 +30,7 @@ public class SoulParticleRenderer extends ParticleRenderer {
 
     private final float initialRadians = MathUtils.PI2 * rand.nextFloat();
 
+    // TODO: Consider adding list of valid "soul" blocks to configs
     public static boolean isValidSoulBlock(Block block) {
         return block == Blocks.soul_sand || EFRIntegration.isEFRSoulSoil(block);
     }
@@ -40,41 +40,41 @@ public class SoulParticleRenderer extends ParticleRenderer {
     }
 
     public static void spawnSoulParticle(World world, int x, int y, int z) {
-        new SoulParticleRenderer(headSprites.getSpriteForCoord(x, y, z), world, x, y, z, false);
+        new SoulParticleRenderer(headSprites.getSpriteForCoord(x, y, z), world, x, y, z);
     }
 
-    protected SoulParticleRenderer(IIcon sprite, World world, int x, int y, int z, boolean isTail) {
+    protected SoulParticleRenderer(IIcon sprite, World world, int x, int y, int z) {
         super(sprite, world, x, y, z);
 
         particleGravity = 0f;
-        motionY = 0.1;
-        particleScale = (float) Config.risingSoul.INSTANCE.getHeadSize() * 0.25f;
-        particleAlpha = Config.risingSoul.INSTANCE.getOpacity();
-        particleMaxAge = (int) (MathUtils.randomBetween(rand, 0.6f, 1.0f) * Config.risingSoul.INSTANCE.getLifetime()
-            * 20);
+        motionY = Configs.RisingSouls.speed;
+        particleScale = Configs.RisingSouls.headSize * 0.25f;
+        particleAlpha = Configs.RisingSouls.opacity;
+        particleMaxAge = MathUtils
+            .randomBetween(rand, Configs.RisingSouls.minLifetimeTicks, Configs.RisingSouls.maxLifetimeTicks);
     }
 
     @Override
     protected void update() {
-        if (!(Configs.enabled & Config.risingSoul.INSTANCE.getEnabled())) {
+        if (!(Configs.enabled & Configs.RisingSouls.enabled)) {
             setDead();
             return;
         }
 
-        motionY = 0.1;
+        motionY = Configs.RisingSouls.speed;
 
         final float offsetRadians = initialRadians + particleAge * CORKSCREW_SPEED;
 
-        motionX = MathHelper.cos(offsetRadians) * Config.risingSoul.INSTANCE.getPerturb();
-        motionZ = MathHelper.sin(offsetRadians) * Config.risingSoul.INSTANCE.getPerturb();
+        motionX = MathHelper.cos(offsetRadians) * Configs.RisingSouls.perturb;
+        motionZ = MathHelper.sin(offsetRadians) * Configs.RisingSouls.perturb;
 
         final int fadeoutAge = particleMaxAge - FADEOUT_TICKS;
         if (particleAge >= fadeoutAge) {
             particleAlpha = MathUtils
-                .remapToRange(fadeoutAge, particleMaxAge, Config.risingSoul.INSTANCE.getOpacity(), 0, particleAge);
+                .remapToRange(fadeoutAge, particleMaxAge, Configs.RisingSouls.opacity, 0, particleAge);
         }
 
-        if (particleAge % Config.risingSoul.INSTANCE.getTrailDensity() == 0) {
+        if (particleAge % Configs.RisingSouls.trailDensity == 0) {
             new TailParticleRender(worldObj, posX, posY, posZ, particleAlpha);
         }
     }
@@ -97,13 +97,13 @@ public class SoulParticleRenderer extends ParticleRenderer {
             motionY = -0.01;
             motionZ = 0;
 
-            particleScale = (float) Config.risingSoul.INSTANCE.getTrailSize() * 0.25f;
+            particleScale = Configs.RisingSouls.trailSize * 0.25f;
             rotationRadians = MathUtils.PI2 * rand.nextFloat();
         }
 
         @Override
         protected void update() {
-            if (!(Configs.enabled & Config.risingSoul.INSTANCE.getEnabled())) {
+            if (!(Configs.enabled & Configs.RisingSouls.enabled)) {
                 setDead();
                 return;
             }
@@ -112,7 +112,7 @@ public class SoulParticleRenderer extends ParticleRenderer {
                 ? MathUtils.remapToRange(0, TAIL_APPEAR_TIME, 0, maxAlpha, particleAge)
                 : MathUtils.remapToRange(TAIL_APPEAR_TIME, particleMaxAge, maxAlpha, 0, particleAge);
 
-            particleScale *= (float) Config.risingSoul.INSTANCE.getSizeDecay();
+            particleScale *= Configs.RisingSouls.sizeDecay;
             rotationRadians += rotationSpeed;
         }
     }

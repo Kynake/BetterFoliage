@@ -1,6 +1,5 @@
 package mods.betterfoliage.client.render.features;
 
-import mods.betterfoliage.Configs;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -9,6 +8,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.SpriteSet;
@@ -56,10 +56,8 @@ public class NetherrackRenderer extends BlockRenderer {
 
         // Render vines
         int coordHash = MathUtils.hashCoords(x, y - 1, z, 29);
-        float heightScale = MathUtils.hashToRange(
-            coordHash,
-            Configs.Netherrack.heightMin,
-            Configs.Netherrack.heightMax);
+        float heightScale = MathUtils
+            .hashToRange(coordHash, Configs.Netherrack.heightMin, Configs.Netherrack.heightMax);
 
         float hOffset = Configs.Netherrack.hOffset;
         float xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
@@ -75,12 +73,7 @@ public class NetherrackRenderer extends BlockRenderer {
         ICrossedSquaresRenderer vinesRenderer = (ICrossedSquaresRenderer) renderer;
 
         vinesRenderer.betterfoliage$setVerticalScale(heightScale);
-        renderer.drawCrossedSquares(
-            sprite,
-            xOffset,
-            y - heightScale,
-            zOffset,
-            Configs.Netherrack.size);
+        renderer.drawCrossedSquares(sprite, xOffset, y - heightScale, zOffset, Configs.Netherrack.size);
         vinesRenderer.betterfoliage$resetVerticalScale();
 
         return true;
