@@ -156,17 +156,17 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
 //        val size by double(min = 0.5, max = 1.5, default = 1.0).lang("size")
 //    }
 
-    object fallingLeaves {
-        val enabled by featureEnable()
-        val speed by double(min = 0.01, max = 0.15, default = 0.05)
-        val windStrength by double(min = 0.1, max = 2.0, default = 0.5)
-        val stormStrength by double(min = 0.1, max = 2.0, default = 0.8)
-        val size by double(min = 0.25, max = 1.5, default = 0.75).lang("size")
-        val chance by double(min = 0.001, max = 1.0, default = 0.05)
-        val perturb by double(min = 0.01, max = 1.0, default = 0.25)
-        val lifetime by double(min = 1.0, max = 15.0, default = 5.0)
-        val opacityHack by boolean(true)
-    }
+//    object fallingLeaves {
+//        val enabled by featureEnable()
+//        val speed by double(min = 0.01, max = 0.15, default = 0.05)
+//        val windStrength by double(min = 0.1, max = 2.0, default = 0.5)
+//        val stormStrength by double(min = 0.1, max = 2.0, default = 0.8)
+//        val size by double(min = 0.25, max = 1.5, default = 0.75).lang("size")
+//        val chance by double(min = 0.001, max = 1.0, default = 0.05)
+//        val perturb by double(min = 0.01, max = 1.0, default = 0.25)
+//        val lifetime by double(min = 1.0, max = 15.0, default = 5.0)
+//        val opacityHack by boolean(true)
+//    }
 
 //    object risingSoul {
 //        val enabled by featureEnable()

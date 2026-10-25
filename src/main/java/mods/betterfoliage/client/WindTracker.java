@@ -14,11 +14,16 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.betterfoliage.Configs;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.utils.MathUtils;
 
 @SideOnly(Side.CLIENT)
 public final class WindTracker {
+
+    private static final float NORMAL_CHANGE_RATE = 0.005f;
+    private static final float STORM_CHANGE_RATE = 0.015f;
+
+    private static final int MIN_CHANGE_TICKS = 120;
+    private static final int MAX_CHANGE_TICKS = 200;
 
     private static WindTracker instance = null;
 
@@ -47,8 +52,8 @@ public final class WindTracker {
 
     @SubscribeEvent
     public void handleWorldTick(TickEvent.ClientTickEvent event) {
-        if (!(Configs.enabled & Config.fallingLeaves.INSTANCE.getEnabled())) return;
         if (event.phase != TickEvent.Phase.START) return;
+        if (!(Configs.enabled & Configs.FallingLeaves.enabled)) return;
 
         final World world = Minecraft.getMinecraft().theWorld;
         if (world == null) return;
@@ -57,7 +62,7 @@ public final class WindTracker {
             changeWindTargetDirection(world);
         }
 
-        final float changeRate = world.isRaining() ? 0.015f : 0.005f;
+        final float changeRate = world.isRaining() ? STORM_CHANGE_RATE : NORMAL_CHANGE_RATE;
 
         currentX += MathHelper.clamp_float(targetX - currentX, -changeRate, changeRate);
         currentZ += MathHelper.clamp_float(targetZ - currentZ, -changeRate, changeRate);
@@ -72,12 +77,12 @@ public final class WindTracker {
 
     private void changeWindTargetDirection(World world) {
         // Schedule next change to happen in the next 6 to 10 seconds;
-        nextChangeTime = world.getWorldTime() + MathUtils.randomBetween(rng, 120, 200);
+        nextChangeTime = world.getWorldTime() + MathUtils.randomBetween(rng, MIN_CHANGE_TICKS, MAX_CHANGE_TICKS);
 
         final float dirRadians = MathUtils.PI2 * rng.nextFloat();
-        float speed = Math.abs((float) (rng.nextGaussian() * Config.fallingLeaves.INSTANCE.getWindStrength()));
+        float speed = Math.abs((float) (rng.nextGaussian() * Configs.FallingLeaves.windStrength));
         if (world.isRaining()) {
-            speed += Math.abs((float) (rng.nextGaussian() * Config.fallingLeaves.INSTANCE.getStormStrength()));
+            speed += Math.abs((float) (rng.nextGaussian() * Configs.FallingLeaves.windStrength));
         }
 
         targetX = MathHelper.cos(dirRadians) * speed;

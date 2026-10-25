@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.WindTracker;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.registries.LeafInfo;
 import mods.betterfoliage.client.registries.LeafRegistry;
 import mods.betterfoliage.utils.BlockUtils;
@@ -19,18 +18,13 @@ import mods.betterfoliage.utils.MathUtils;
 public class LeafParticleRenderer extends ParticleRenderer {
 
     private static final float BLOCK_BRIGHTNESS_MULTIPLIER = 0.5f;
+    private static final float ROTATION_MULTIPLIER = MathUtils.PI2 / 64.0f;
+    private static final float KEEP_ROTATION_DIR_CHANCE = 0.95f;
 
-    // TODO: make all configurable
-    // 1 second fadeout
-    private static final int FADEOUT_TICKS = 20;
-    private static final float ROTATION_SPEED = MathUtils.PI2 / 64.0f;
-    private static final float GROUND_MOVE_DAMPENING = 0.5f;
-
-    private boolean firstGroundHit = false;
+    private boolean isFadingFromGroundHit = false;
     private float rotationPerTick;
 
     public static void spawnLeafParticle(World world, int x, int y, int z) {
-        // TODO consider using an object pool (only if better performance)
         final LeafInfo leafInfo = LeafRegistry.getInstance()
             .getLeafForBlock(world, x, y, z);
 
@@ -46,14 +40,15 @@ public class LeafParticleRenderer extends ParticleRenderer {
 
     protected LeafParticleRenderer(LeafInfo leafInfo, World world, int x, int y, int z) {
         super(leafInfo.particleSprites.getRandomSprite(), world, x, y, z);
-        particleMaxAge = (int) (MathUtils.randomBetween(rand, 0.6f, 1.0f) * Config.fallingLeaves.INSTANCE.getLifetime()
-            * 20.0);
 
-        motionY = -Config.fallingLeaves.INSTANCE.getSpeed();
-        particleScale = (float) Config.fallingLeaves.INSTANCE.getSize() * 0.1f;
+        particleMaxAge = MathUtils
+            .randomBetween(rand, Configs.FallingLeaves.minLifetimeTicks, Configs.FallingLeaves.maxLifetimeTicks);
+
+        motionY = -Configs.FallingLeaves.speed;
+        particleScale = Configs.FallingLeaves.size;
 
         quadMirrorHorizontally = rand.nextBoolean();
-        rotationPerTick = ROTATION_SPEED;
+        rotationPerTick = Configs.FallingLeaves.rotationSpeed * ROTATION_MULTIPLIER;
         changeRandomRotation();
 
         setParticleColor(leafInfo.averageColor, BlockUtils.getStandardColorMultiplier(world, x, y, z));
@@ -90,49 +85,47 @@ public class LeafParticleRenderer extends ParticleRenderer {
 
     @Override
     protected void update() {
-        if (!(Configs.enabled & Config.fallingLeaves.INSTANCE.getEnabled())) {
+        if (!(Configs.enabled & Configs.FallingLeaves.enabled)) {
             setDead();
             return;
         }
 
-        final int fadeoutAge = particleMaxAge - FADEOUT_TICKS;
+        final int fadeoutAge = particleMaxAge - Math.min(Configs.FallingLeaves.maxFadeoutTicks, particleMaxAge);
 
         if (particleAge > fadeoutAge) {
             particleAlpha = MathUtils.inverseLerp(particleMaxAge, fadeoutAge, particleAge);
         }
 
-        final float speed = (float) Config.fallingLeaves.INSTANCE.getSpeed();
-        motionY = -speed;
+        motionY = -Configs.FallingLeaves.speed;
 
         if (onGround) {
 
             // Dampen movement when hitting the ground, rather than a complete stop.
             // This adds a very small "settling" effect to the leaves.
-            motionX *= GROUND_MOVE_DAMPENING;
-            motionZ *= GROUND_MOVE_DAMPENING;
+            motionX *= Configs.FallingLeaves.groundDampening;
+            motionZ *= Configs.FallingLeaves.groundDampening;
 
-            if (!firstGroundHit) {
-                // TODO add configurable
-                // start fadeout when hitting ground
+            if (Configs.FallingLeaves.fadeoutOnGroundHit && !isFadingFromGroundHit) {
                 particleAge = Math.max(particleAge, fadeoutAge);
-                firstGroundHit = true;
+                isFadingFromGroundHit = true;
             }
+
             return;
         }
 
         changeRandomRotation();
         rotationRadians += rotationPerTick;
 
-        final float perturb = (float) Config.fallingLeaves.INSTANCE.getPerturb();
-
-        motionX = (MathHelper.cos(rotationRadians) * perturb + WindTracker.currentX) * speed;
-        motionZ = (MathHelper.sin(rotationRadians) * perturb + WindTracker.currentZ) * speed;
+        motionX = (MathHelper.cos(rotationRadians) * Configs.FallingLeaves.perturb + WindTracker.currentX)
+            * Configs.FallingLeaves.speed;
+        motionZ = (MathHelper.sin(rotationRadians) * Configs.FallingLeaves.perturb + WindTracker.currentZ)
+            * Configs.FallingLeaves.speed;
     }
 
     @Override
     protected void render() {
         // TODO retest properly (vanilla, angelica, swansong)
-        if (Config.fallingLeaves.INSTANCE.getOpacityHack()) {
+        if (Configs.FallingLeaves.opacityHack) {
             GL11.glDepthMask(true);
         }
 
@@ -141,7 +134,7 @@ public class LeafParticleRenderer extends ParticleRenderer {
     }
 
     private void changeRandomRotation() {
-        if (rand.nextFloat() > 0.95f) {
+        if (rand.nextFloat() > KEEP_ROTATION_DIR_CHANCE) {
             rotationPerTick = -rotationPerTick;
         }
     }

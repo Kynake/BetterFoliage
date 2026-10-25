@@ -59,7 +59,7 @@ public class Hooks {
             SoulParticleRenderer.spawnSoulParticle(world, x, y, z);
         }
 
-        if (Config.fallingLeaves.INSTANCE.getEnabled() && Math.random() < Config.fallingLeaves.INSTANCE.getChance()
+        if (Configs.FallingLeaves.enabled && Math.random() < Configs.FallingLeaves.chance
             && world.isAirBlock(x, y - 1, z)
             && Config.blocks.INSTANCE.getFallingLeaves()
                 .matchesID(block)) {
