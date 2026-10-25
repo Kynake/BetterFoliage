@@ -27,32 +27,90 @@ public final class Configs {
     private static final String heightMinDesc = "Minimum height of element";
     private static final String heightMaxDesc = "Maximum height of element";
 
-    // NETHERRACK
-    public static class Netherrack {
+    public static class FallingLeaves {
 
         public static boolean enabled = true;
-        private static final String enabledDesc = "Should place hanging vines under netherrack blocks";
+        private static final String enabledDesc = "Should emit falling leaf particles from the bottom of leaf blocks";
 
-        public static float hOffset;
-        public static float heightMin;
-        public static float heightMax;
+        public static float speed;
+        private static final String speedDesc = "Overall leaf particle speed";
+
+        public static float rotationSpeed;
+        private static final String rotationSpeedDesc = "Leaf particle rotation speed";
+
+        public static float groundDampening;
+        private static final String groundDampeningDesc = "dampening value of the \"settling\" effect to apply to the leaf when hitting the ground";
+
+        public static double windStrength;
+        private static final String windStrengthDesc = "Magnitude of wind effects in good weather (spread of normal distribution centered on 0)";
+
+        public static double stormStrength;
+        private static final String stormStrengthDesc = "Additional magnitude of wind effects in rainy weather (spread of normal distribution centered on 0)";
+
         public static float size;
 
-        public static void initializeFileConfigs(final Configuration config, final String category) {
+        public static double chance;
+        private static final String chanceDesc = "Chance that a random tick of a leaf block will spawn a particle";
+
+        public static float perturb;
+        private static final String perturbDesc = "Magnitude of perturbation effect. Adds a corkscrew-like motion to the particle synchronized to its rotation";
+
+        public static int maxLifetimeTicks;
+        public static int minLifetimeTicks;
+        private static final String maxLifetimeDesc = "Maximum lifetime of particle in seconds. Minimum lifetime is 60% of this value";
+
+        public static int maxFadeoutTicks;
+        private static final String maxFadeoutDesc = "How long the leaf fadeout should last, in seconds. Will be less than it's total lifetime when spawned";
+
+        public static boolean fadeoutOnGroundHit = false;
+        private static final String fadeoutOnGroundHitDesc = "Should the leaf immediately start to fade out when hitting the ground";
+
+        public static boolean opacityHack = true;
+        private static final String opacityHackDesc = "Stop transparent blocks obscuring particles even when particle is in front. WARNING: May cause glitches.";
+
+        public static void initializeFileConfigs(final Configuration config) {
+            final String category = "fallingLeaves";
+
             Property prop = config.get(category, "enabled", enabled, enabledDesc);
             enabled = prop.getBoolean();
 
-            prop = config.get(category, "hOffset", 0.2, hOffsetDesc, 0.0, 0.4);
-            hOffset = (float) prop.getDouble();
+            prop = config.get(category, "speed", 0.05, speedDesc, 0.01, 0.15);
+            speed = (float) prop.getDouble();
 
-            prop = config.get(category, "heightMin", 0.6, heightMinDesc, 0.1, 1.5);
-            heightMin = (float) prop.getDouble();
+            prop = config.get(category, "rotationSpeed", 1.0, rotationSpeedDesc, 0.0, 5.0);
+            rotationSpeed = (float) prop.getDouble();
 
-            prop = config.get(category, "heightMax", 0.8, heightMaxDesc, 0.1, 1.5);
-            heightMax = (float) prop.getDouble();
+            prop = config.get(category, "groundDampening", 0.7, groundDampeningDesc, 0.0, 1.0);
+            groundDampening = (float) prop.getDouble();
 
-            prop = config.get(category, "size", 1, sizeDesc, 0.5, 1.5);
+            prop = config.get(category, "windStrength", 0.5, windStrengthDesc, 0.1, 2.0);
+            windStrength = prop.getDouble();
+
+            prop = config.get(category, "stormStrength", 0.8, stormStrengthDesc, 0.1, 2.0);
+            stormStrength = prop.getDouble();
+
+            prop = config.get(category, "size", 0.075, sizeDesc, 0.025, 0.15);
             size = (float) prop.getDouble();
+
+            prop = config.get(category, "chance", 0.05, chanceDesc, 0.01, 1.0);
+            chance = prop.getDouble();
+
+            prop = config.get(category, "perturb", 0.25, perturbDesc, 0.01, 1.0);
+            perturb = (float) prop.getDouble();
+
+            prop = config.get(category, "lifetime", 5.0, maxLifetimeDesc, 1.0, 15.0);
+            double maxLifetime = prop.getDouble();
+            maxLifetimeTicks = (int) Math.round(maxLifetime * 20);
+            minLifetimeTicks = (int) Math.round(maxLifetime * 0.6 * 20);
+
+            prop = config.get(category, "fadeoutTime", 1.0, maxFadeoutDesc, 0.1, 10.0);
+            maxFadeoutTicks = (int) Math.round(prop.getDouble() * 20);
+
+            prop = config.get(category, "fadeoutOnGroundHit", fadeoutOnGroundHit, fadeoutOnGroundHitDesc);
+            fadeoutOnGroundHit = prop.getBoolean();
+
+            prop = config.get(category, "opacityHack", opacityHack, opacityHackDesc);
+            opacityHack = prop.getBoolean();
         }
     }
 
@@ -89,7 +147,9 @@ public final class Configs {
         public static int trailDensity;
         private static final String trailDensityDesc = "Every Nth tick, add a particle to the trail";
 
-        public static void initializeFileConfigs(final Configuration config, final String category) {
+        public static void initializeFileConfigs(final Configuration config) {
+            final String category = "risingSoul";
+
             Property prop = config.get(category, "enabled", enabled, enabledDesc);
             enabled = prop.getBoolean();
 
@@ -116,15 +176,43 @@ public final class Configs {
 
             prop = config.get(category, "lifetime", 4.0, maxLifetimeDesc, 1.0, 15.0);
             double maxLifetime = prop.getDouble();
-            maxLifetimeTicks = (int) (Math.round(maxLifetime * 20));
-            minLifetimeTicks = (int) (Math.round(maxLifetime * 0.6 * 20));
+            maxLifetimeTicks = (int) Math.round(maxLifetime * 20);
+            minLifetimeTicks = (int) Math.round(maxLifetime * 0.6 * 20);
 
             prop = config.get(category, "trailDensity", 3, trailDensityDesc, 1, 16);
             trailDensity = prop.getInt();
         }
     }
 
-    ///
+    public static class Netherrack {
+
+        public static boolean enabled = true;
+        private static final String enabledDesc = "Should place hanging vines under netherrack blocks";
+
+        public static float hOffset;
+        public static float heightMin;
+        public static float heightMax;
+        public static float size;
+
+        public static void initializeFileConfigs(final Configuration config) {
+            final String category = "netherrack";
+
+            Property prop = config.get(category, "enabled", enabled, enabledDesc);
+            enabled = prop.getBoolean();
+
+            prop = config.get(category, "hOffset", 0.2, hOffsetDesc, 0.0, 0.4);
+            hOffset = (float) prop.getDouble();
+
+            prop = config.get(category, "heightMin", 0.6, heightMinDesc, 0.1, 1.5);
+            heightMin = (float) prop.getDouble();
+
+            prop = config.get(category, "heightMax", 0.8, heightMaxDesc, 0.1, 1.5);
+            heightMax = (float) prop.getDouble();
+
+            prop = config.get(category, "size", 1, sizeDesc, 0.5, 1.5);
+            size = (float) prop.getDouble();
+        }
+    }
 
     private static final String CONFIG_FILE_NAME = BetterFoliageMod.MOD_ID + "_LegacyEdition";
 
@@ -178,8 +266,9 @@ public final class Configs {
         Property prop = config.get(Configuration.CATEGORY_GENERAL, "enabled", enabled, enabledGeneralDesc);
         enabled = prop.getBoolean();
 
-        Netherrack.initializeFileConfigs(config, "netherrack");
-        RisingSouls.initializeFileConfigs(config, "risingSoul");
+        FallingLeaves.initializeFileConfigs(config);
+        RisingSouls.initializeFileConfigs(config);
+        Netherrack.initializeFileConfigs(config);
 
         if (config.hasChanged()) {
             config.save();
