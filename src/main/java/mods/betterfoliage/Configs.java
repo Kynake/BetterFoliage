@@ -44,7 +44,7 @@ public final class Configs {
             Property prop = config.get(category, "enabled", enabled, enabledDesc);
             enabled = prop.getBoolean();
 
-            prop = config.get(category, "hOffset", 0.2, hOffsetDesc, 0, 0.4);
+            prop = config.get(category, "hOffset", 0.2, hOffsetDesc, 0.0, 0.4);
             hOffset = (float) prop.getDouble();
 
             prop = config.get(category, "heightMin", 0.6, heightMinDesc, 0.1, 1.5);
@@ -58,6 +58,72 @@ public final class Configs {
         }
     }
 
+    public static class RisingSouls {
+        public static boolean enabled = true;
+        private static final String enabledDesc = "Should emit rising soul particles from the top of soulsand blocks";
+
+        public static double chance;
+        private static final String chanceDesc = "Chance that a random tick of a soulsand block will spawn a particle";
+
+        public static float speed;
+        private static final String speedDesc = "Ascent speed of a soul particle, in blocks";
+
+        public static float perturb;
+        private static final String perturbDesc = "Magnitude of perturbation effect. Adds a corkscrew-like motion to the particle";
+
+        public static float headSize;
+        private static final String headSizeDesc = "Size of the soul particle";
+
+        public static float trailSize;
+        private static final String trailSizeDesc = "Initial size of the particle trail";
+
+        public static float opacity;
+        private static final String opacityDesc = "Opacity of the particle effect";
+
+        public static float sizeDecay;
+        private static final String sizeDecayDesc = "Trail particle size relative to its size in the previous tick";
+
+        public static int maxLifetimeTicks;
+        public static int minLifetimeTicks;
+        private static final String maxLifetimeDesc = "Maximum lifetime of a particle in seconds. Minimum lifetime is 60% of this value";
+
+        public static int trailDensity;
+        private static final String trailDensityDesc = "Every Nth tick, add a particle to the trail";
+
+        public static void initializeFileConfigs(final Configuration config, final String category) {
+            Property prop = config.get(category, "enabled", enabled, enabledDesc);
+            enabled = prop.getBoolean();
+
+            prop = config.get(category, "chance", 0.02, chanceDesc, 0.001, 1.0);
+            chance = prop.getDouble();
+
+            prop = config.get(category, "speed", 0.1, speedDesc, 0.001, 1.0);
+            speed = (float) prop.getDouble();
+
+            prop = config.get(category, "perturb", 0.05, perturbDesc, 0.01, 0.25);
+            perturb = (float) prop.getDouble();
+
+            prop = config.get(category, "headSize", 1.0, headSizeDesc, 0.25, 1.5);
+            headSize = (float) prop.getDouble();
+
+            prop = config.get(category, "trailSize", 0.75, trailSizeDesc, 0.25, 1.5);
+            trailSize = (float) prop.getDouble();
+
+            prop = config.get(category, "opacity", 0.5, opacityDesc, 0.05, 1.0);
+            opacity = (float) prop.getDouble();
+
+            prop = config.get(category, "sizeDecay", 0.97, sizeDecayDesc, 0.5, 1.0);
+            sizeDecay = (float) prop.getDouble();
+
+            prop = config.get(category, "lifetime", 4.0, maxLifetimeDesc, 1.0, 15.0);
+            double maxLifetime = prop.getDouble();
+            maxLifetimeTicks = (int) (Math.round(maxLifetime * 20));
+            minLifetimeTicks = (int) (Math.round(maxLifetime * 0.6 * 20));
+
+            prop = config.get(category, "trailDensity", 3, trailDensityDesc, 1, 16);
+            trailDensity = prop.getInt();
+        }
+    }
 
 
 
@@ -118,6 +184,7 @@ public final class Configs {
         enabled = prop.getBoolean();
 
         Netherrack.initializeFileConfigs(config, "netherrack");
+        RisingSouls.initializeFileConfigs(config, "risingSoul");
 
         if (config.hasChanged()) {
             config.save();
