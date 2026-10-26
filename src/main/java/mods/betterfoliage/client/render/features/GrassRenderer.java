@@ -9,6 +9,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.registries.GrassRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
@@ -65,7 +66,7 @@ public class GrassRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        return (Config.connectedGrass.INSTANCE.getEnabled() || Config.shortGrass.INSTANCE.getGrassEnabled())
+        return (Config.connectedGrass.INSTANCE.getEnabled() | Configs.ShortGrass.grassEnabled)
             && Config.blocks.INSTANCE.getGrass()
                 .matchesID(world.getBlock(x, y, z));
     }
@@ -121,35 +122,18 @@ public class GrassRenderer extends BlockRenderer {
         }
 
         // Render short grass
-        if (!Config.shortGrass.INSTANCE.getGrassEnabled()) return renderResult;
-        if (hasSnowAbove && !Config.shortGrass.INSTANCE.getSnowEnabled()) return renderResult;
+        if (!Configs.ShortGrass.grassEnabled) return renderResult;
+        if (hasSnowAbove && !Configs.ShortGrass.snowEnabled) return renderResult;
         if (blockAbove.isOpaqueCube() || blocksShortGrassRendering(world, blockAbove, x, y + 1, z)) return renderResult;
 
         int coordHash = MathUtils.hashCoords(x, y + 1, z);
-        double heightScale = MathUtils.hashToRange(
-            coordHash,
-            Config.shortGrass.INSTANCE.getHeightMin(),
-            Config.shortGrass.INSTANCE.getHeightMax());
-
-        if (!renderResult) {
-            // TODO: Revise this, calculations look wrong
-            // TODO: replicate on mycelium renderer after revised
-            float blockingHeight = (float) heightScale;
-
-            if (hasSnowAbove) {
-                blockingHeight += SNOW_HEIGHT_OFFSET;
-            }
-
-            // Block above completely covers short grass
-            if (blockAbove.getBlockBoundsMinY() <= 0 && blockAbove.getBlockBoundsMaxY() >= blockingHeight) {
-                return false;
-            }
-        }
+        float heightScale = MathUtils
+            .hashToRange(coordHash, Configs.ShortGrass.heightMin, Configs.ShortGrass.heightMax);
 
         double shortGrassHeight = y + 1;
 
         ISpriteProvider provider;
-        if (Config.shortGrass.INSTANCE.getUseGenerated()) {
+        if (Configs.ShortGrass.useGenerated) {
             if (hasSnowAbove) {
                 provider = genGrassSnow;
                 shortGrassHeight += SNOW_HEIGHT_OFFSET;
@@ -163,9 +147,7 @@ public class GrassRenderer extends BlockRenderer {
             } else {
                 provider = shortGrass;
             }
-
         }
-        IIcon sprite = provider.getSpriteForCoord(x, y, z);
 
         Tessellator tessellator = Tessellator.instance;
         tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y + 1, z));
@@ -175,20 +157,25 @@ public class GrassRenderer extends BlockRenderer {
             setGrassColor(world, tessellator, block, x, y, z);
         }
 
-        double hOffset = Config.shortGrass.INSTANCE.getHOffset();
-        double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
-        double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
+        float hOffset = Configs.ShortGrass.hOffset;
+        double xOffset = (double) x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
+        double zOffset = (double) z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
         ICrossedSquaresRenderer shortGrassRenderer = (ICrossedSquaresRenderer) renderer;
 
-        // TODO: Add config for mixing two sprites on the same crossed square
-        shortGrassRenderer.betterfoliage$setVerticalScale((float) heightScale);
-        renderer.drawCrossedSquares(
-            sprite,
-            xOffset,
-            shortGrassHeight,
-            zOffset,
-            (float) Config.shortGrass.INSTANCE.getSize());
+        shortGrassRenderer.betterfoliage$setVerticalScale(heightScale);
+
+        IIcon sprite = provider.getSpriteForCoord(x, y, z);
+        if (Configs.ShortGrass.mixTextures && !Configs.ShortGrass.useGenerated) {
+            IIcon secondSprite = provider.getSpriteForCoord(x, y, z, 6);
+
+            shortGrassRenderer.betterfoliage$setSecondSprite(secondSprite);
+            renderer.drawCrossedSquares(sprite, xOffset, shortGrassHeight, zOffset, Configs.ShortGrass.size);
+            shortGrassRenderer.betterfoliage$setSecondSprite(null);
+        } else {
+            renderer.drawCrossedSquares(sprite, xOffset, shortGrassHeight, zOffset, Configs.ShortGrass.size);
+        }
+
         shortGrassRenderer.betterfoliage$resetVerticalScale();
 
         return true;

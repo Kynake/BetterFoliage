@@ -8,11 +8,13 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
+import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
 import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
 
@@ -39,7 +41,7 @@ public class MyceliumRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        return Config.shortGrass.INSTANCE.getMyceliumEnabled() && world.getBlock(x, y, z) == Blocks.mycelium;
+        return Configs.ShortGrass.myceliumEnabled && world.getBlock(x, y, z) == Blocks.mycelium;
     }
 
     @Override
@@ -52,7 +54,8 @@ public class MyceliumRenderer extends BlockRenderer {
             return renderer.renderStandardBlock(block, x, y, z);
         }
 
-        boolean renderResult = renderer.renderStandardBlock(block, x, y, z);
+        final IRendererByType baseRenderer = (IRendererByType) renderer;
+        boolean renderResult = baseRenderer.betterfoliage$renderBaseBlock(block, x, y, z);
 
         Block blockAbove = world.getBlock(x, y + 1, z);
         boolean hasSnowAbove = BlockUtils.isSnow(blockAbove);
@@ -67,27 +70,30 @@ public class MyceliumRenderer extends BlockRenderer {
         }
 
         int coordHash = MathUtils.hashCoords(x, y + 1, z);
-        double heightScale = MathUtils.hashToRange(
-            coordHash,
-            Config.shortGrass.INSTANCE.getHeightMin(),
-            Config.shortGrass.INSTANCE.getHeightMax());
+        float heightScale = MathUtils
+            .hashToRange(coordHash, Configs.ShortGrass.heightMin, Configs.ShortGrass.heightMax);
 
-        double hOffset = Config.shortGrass.INSTANCE.getHOffset();
-        double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
-        double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
-
-        // TODO: Add config for mixing two sprites on the same crossed square
-        IIcon sprite = myceliumGrass.getSpriteForCoord(x, y + 1, z);
+        float hOffset = Configs.ShortGrass.hOffset;
+        double xOffset = (double) x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
+        double zOffset = (double) z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
         Tessellator tessellator = Tessellator.instance;
         tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y + 1, z));
         tessellator.setColorOpaque(0xFF, 0xFF, 0xFF);
 
-        ICrossedSquaresRenderer myceliumRenderer = (ICrossedSquaresRenderer) renderer;
-        myceliumRenderer.betterfoliage$setVerticalScale((float) heightScale);
+        final ICrossedSquaresRenderer myceliumRenderer = (ICrossedSquaresRenderer) renderer;
+        myceliumRenderer.betterfoliage$setVerticalScale(heightScale);
 
-        renderer
-            .drawCrossedSquares(sprite, xOffset, myceliumHeight, zOffset, (float) Config.shortGrass.INSTANCE.getSize());
+        IIcon sprite = myceliumGrass.getSpriteForCoord(x, y + 1, z);
+        if (Configs.ShortGrass.mixTextures) {
+            IIcon secondSprite = myceliumGrass.getSpriteForCoord(x, y + 1, z, 6);
+
+            myceliumRenderer.betterfoliage$setSecondSprite(secondSprite);
+            renderer.drawCrossedSquares(sprite, xOffset, myceliumHeight, zOffset, Configs.ShortGrass.size);
+            myceliumRenderer.betterfoliage$setSecondSprite(null);
+        } else {
+            renderer.drawCrossedSquares(sprite, xOffset, myceliumHeight, zOffset, Configs.ShortGrass.size);
+        }
 
         myceliumRenderer.betterfoliage$resetVerticalScale();
 
