@@ -40,6 +40,7 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
 
 //    var enabled by boolean(true)
 
+    // TODO: SPECIAL CASE Block
     object blocks {
         val dirt = BlockMatcher(BetterFoliageMod.DOMAIN, "DirtDefault.cfg")
         val grass = BlockMatcher(BetterFoliageMod.DOMAIN, "GrassDefault.cfg")
@@ -114,6 +115,7 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
         val flowerChance by int(max = 64, default = 16, min = 0)
     }
 
+    // TODO: SPECIAL CASE Biomes
     object reed {
         val enabled by featureEnable()
         val hOffset by double(max = 0.4, default = 0.2).lang("hOffset")
@@ -124,6 +126,7 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
         // val shaderWind by boolean(true).lang("shaderWind")
     }
 
+    // TODO: SPECIAL CASE Biomes
     object algae {
         val enabled by featureEnable()
         val hOffset by double(max = 0.25, default = 0.1).lang("hOffset")
@@ -136,6 +139,7 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
         // val shaderWind by boolean(true).lang("shaderWind")
     }
 
+    // TODO: SPECIAL CASE Biomes
     object coral {
         val enabled by featureEnable()
         val shallowWater by boolean(false)

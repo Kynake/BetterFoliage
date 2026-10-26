@@ -34,7 +34,7 @@ public abstract class SingleTextureGenerator extends TextureGenerator implements
     }
 
     // TODO: support for Normal (_n) and Specular (_s)?
-    // Maybe add to base class instead
+    // Maybe add to base class instead (TextureGenerator)
     @Override
     public boolean resourceExists(ResourceLocation location) {
         if (ResourceUtils.isMcMeta(location)) {

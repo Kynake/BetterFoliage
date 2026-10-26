@@ -57,6 +57,8 @@ public abstract class TextureGenerator extends StitchListener implements IResour
             return getGeneratedMcMeta(location);
         }
 
+        // TODO: support for Normal (_n) and Specular (_s)?
+
         BufferedImage image = getGeneratedTexture(location);
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         ImageIO.write(image, "PNG", outStream);
