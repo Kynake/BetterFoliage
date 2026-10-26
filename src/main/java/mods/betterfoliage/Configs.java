@@ -27,6 +27,63 @@ public final class Configs {
     private static final String heightMinDesc = "Minimum height of element";
     private static final String heightMaxDesc = "Maximum height of element";
 
+    public static class ShortGrass {
+
+        public static boolean grassEnabled = true;
+        private static final String grassEnabledDesc = "Render tufts of grass on top of appropriate blocks";
+
+        public static boolean myceliumEnabled = true;
+        private static final String myceliumEnabledDesc = "Render tufts of mycelium on top of mycelium blocks";
+
+        public static boolean snowEnabled = true;
+        private static final String snowEnabledDesc = "Render snow tinted short grass if the block is covered in snow";
+
+        public static float hOffset;
+
+        public static float heightMin;
+
+        public static float heightMax;
+
+        public static float size;
+
+        public static boolean mixTextures = true;
+        private static final String mixTexturesDesc = "Allow mixing of two different textures for each tuft of grass/mycelium in each block";
+
+        public static boolean useGenerated = false;
+        private static final String useGeneratedDesc = "Generate Short Grass textures from existing grass foliage textures";
+
+        public static void initializeFileConfigs(final Configuration config) {
+            final String category = "shortGrass";
+
+            Property prop = config.get(category, "grassEnabled", grassEnabled, grassEnabledDesc);
+            grassEnabled = prop.getBoolean();
+
+            prop = config.get(category, "myceliumEnabled", myceliumEnabled, myceliumEnabledDesc);
+            myceliumEnabled = prop.getBoolean();
+
+            prop = config.get(category, "snowEnabled", snowEnabled, snowEnabledDesc);
+            snowEnabled = prop.getBoolean();
+
+            prop = config.get(category, "hOffset", 0.2, hOffsetDesc, 0.0, 0.4);
+            hOffset = (float) prop.getDouble();
+
+            prop = config.get(category, "heightMin", 0.6, heightMinDesc, 0.1, 2.5);
+            heightMin = (float) prop.getDouble();
+
+            prop = config.get(category, "heightMax", 0.6, heightMaxDesc, 0.1, 2.5);
+            heightMax = (float) prop.getDouble();
+
+            prop = config.get(category, "size", 1.0, sizeDesc, 0.5, 1.5);
+            size = (float) prop.getDouble();
+
+            prop = config.get(category, "mixTextures", mixTextures, mixTexturesDesc);
+            mixTextures = prop.getBoolean();
+
+            prop = config.get(category, "useGenerated", useGenerated, useGeneratedDesc);
+            useGenerated = prop.getBoolean();
+        }
+    }
+
     public static class ExtraLeaves {
 
         public static boolean enabled = true;
@@ -316,6 +373,7 @@ public final class Configs {
         Property prop = config.get(Configuration.CATEGORY_GENERAL, "enabled", enabled, enabledGeneralDesc);
         enabled = prop.getBoolean();
 
+        ShortGrass.initializeFileConfigs(config);
         ExtraLeaves.initializeFileConfigs(config);
         FallingLeaves.initializeFileConfigs(config);
         RisingSouls.initializeFileConfigs(config);
