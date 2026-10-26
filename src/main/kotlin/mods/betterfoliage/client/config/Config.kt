@@ -53,15 +53,15 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
         val cactus = BlockMatcher(BetterFoliageMod.DOMAIN, "CactusDefault.cfg")
     }
 
-    object leaves {
-        val enabled by featureEnable()
-        val snowEnabled by boolean(true)
-        val surfaceOnly by boolean(true)
-        val hOffset by double(max = 0.4, default = 0.2).lang("hOffset")
-        val vOffset by double(max = 0.4, default = 0.1).lang("vOffset")
-        val size by double(min = 0.75, max = 2.5, default = 1.4).lang("size")
-        val dense by boolean(false)
-    }
+//    object leaves {
+//        val enabled by featureEnable()
+//        val snowEnabled by boolean(true)
+//        val surfaceOnly by boolean(true)
+//        val hOffset by double(max = 0.4, default = 0.2).lang("hOffset")
+//        val vOffset by double(max = 0.4, default = 0.1).lang("vOffset")
+//        val size by double(min = 0.75, max = 2.5, default = 1.4).lang("size")
+//        val dense by boolean(false)
+//    }
 
     object shortGrass {
         val grassEnabled by boolean(true)

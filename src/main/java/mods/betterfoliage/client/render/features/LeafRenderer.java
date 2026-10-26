@@ -14,6 +14,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.registries.LeafInfo;
 import mods.betterfoliage.client.registries.LeafRegistry;
@@ -21,6 +22,7 @@ import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
+import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
 import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
 
@@ -107,8 +109,8 @@ public class LeafRenderer extends BlockRenderer {
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
         final Block block = world.getBlock(x, y, z);
 
-        return Config.leaves.INSTANCE.getEnabled() && Config.blocks.INSTANCE.getLeaves()
-            .matchesID(block) && (!Config.leaves.INSTANCE.getSurfaceOnly() || isExposed(world, block, x, y, z));
+        return Configs.ExtraLeaves.enabled && Config.blocks.INSTANCE.getLeaves()
+            .matchesID(block) && (!Configs.ExtraLeaves.surfaceOnly || isExposed(world, block, x, y, z));
     }
 
     @Override
@@ -120,40 +122,41 @@ public class LeafRenderer extends BlockRenderer {
             return renderer.renderStandardBlock(block, x, y, z);
         }
 
-        // TODO add option to skip rendering this when density is high enough
-        final boolean renderResult = renderer.renderStandardBlock(block, x, y, z);
-        if (!renderResult) return false;
+        boolean didBaseRender = false;
+
+        if (Configs.ExtraLeaves.renderBaseBlock) {
+            final IRendererByType baseRenderer = (IRendererByType) renderer;
+            didBaseRender = baseRenderer.betterfoliage$renderBaseBlock(block, x, y, z);
+            if (!didBaseRender) return false;
+        }
 
         final IIcon keySprite = block.getIcon(world, x, y, z, DOWN.ordinal());
         final LeafInfo leaf = leafRegistry.getLeafForSprite(keySprite);
 
-        if (leaf == null) return true;
-
-        // Render Round Leaves
-        final float scale = (float) Config.leaves.INSTANCE.getSize();
+        if (leaf == null) return didBaseRender;
 
         // Original renderer scaled the vertical axis so that the diagonal pixels look square instead of rectangular.
-        final float verticalScale = scale * MathUtils.ROOT2;
+        final float verticalScale = Configs.ExtraLeaves.size * MathUtils.ROOT2;
 
         final int coordHash = MathUtils.hashCoords(x, y, z, SALT);
 
-        final double vOffset = Config.leaves.INSTANCE.getVOffset();
+        final double vOffset = Configs.ExtraLeaves.vOffset;
         final double yOffset = y + MathUtils.hashToRange(coordHash, -vOffset, vOffset) + (1f - verticalScale) / 2f;
 
-        final double hOffset = Config.leaves.INSTANCE.getHOffset();
+        final double hOffset = Configs.ExtraLeaves.hOffset;
         final double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
         final double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
         ICrossedSquaresRenderer leafRenderer = (ICrossedSquaresRenderer) renderer;
 
         IIcon sprite = leaf.getSpriteForCoord(x, y, z, UP.ordinal());
-        float horizontalScale = scale * HORIZONTAL_SCALE_FACTOR;
+        float horizontalScale = Configs.ExtraLeaves.size * HORIZONTAL_SCALE_FACTOR;
 
         leafRenderer.betterfoliage$setVerticalScale(verticalScale);
         leafRenderer.betterfoliage$setAORender(block, x, y, z, true);
         renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, horizontalScale);
 
-        if (Config.leaves.INSTANCE.getDense()) {
+        if (Configs.ExtraLeaves.dense) {
             final double rotX = x + 0.5;
             final double rotY = y + 0.5;
             final double rotZ = z + 0.5;
@@ -169,7 +172,7 @@ public class LeafRenderer extends BlockRenderer {
             leafRenderer.betterfoliage$resetRotation();
         }
 
-        if (Config.leaves.INSTANCE.getSnowEnabled() && BlockUtils.isSnow(world.getBlock(x, y + 1, z))) {
+        if (Configs.ExtraLeaves.snowEnabled && BlockUtils.isSnow(world.getBlock(x, y + 1, z))) {
             sprite = snowCovering.getSpriteForCoord(x, y, z, UP.ordinal());
             leafRenderer.betterfoliage$setAORender(block, x, y, z, false);
             renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, horizontalScale);
