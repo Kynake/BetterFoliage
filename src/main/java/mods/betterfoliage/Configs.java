@@ -38,8 +38,8 @@ public final class Configs {
         public static boolean surfaceOnly = true;
         private static final String surfaceOnlyDesc = "Extra leaves will only be rendered on blocks with at least one exposed side";
 
-        public static double hOffset;
-        public static double vOffset;
+        public static float hOffset;
+        public static float vOffset;
         public static float size;
 
         public static boolean dense = false;
@@ -61,10 +61,10 @@ public final class Configs {
             surfaceOnly = prop.getBoolean();
 
             prop = config.get(category, "hOffset", 0.2, hOffsetDesc, 0.0, 0.4);
-            hOffset = prop.getDouble();
+            hOffset = (float) prop.getDouble();
 
             prop = config.get(category, "vOffset", 0.1, vOffsetDesc, 0.0, 0.4);
-            vOffset = prop.getDouble();
+            vOffset = (float) prop.getDouble();
 
             prop = config.get(category, "size", 1.4, sizeDesc, 0.75, 2.5);
             size = (float) prop.getDouble();

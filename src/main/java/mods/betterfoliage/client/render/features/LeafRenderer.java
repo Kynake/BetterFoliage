@@ -140,12 +140,13 @@ public class LeafRenderer extends BlockRenderer {
 
         final int coordHash = MathUtils.hashCoords(x, y, z, SALT);
 
-        final double vOffset = Configs.ExtraLeaves.vOffset;
-        final double yOffset = y + MathUtils.hashToRange(coordHash, -vOffset, vOffset) + (1f - verticalScale) / 2f;
+        final float vOffset = Configs.ExtraLeaves.vOffset;
+        final double yOffset = (double) y
+            + (MathUtils.hashToRange(coordHash, -vOffset, vOffset) + (1f - verticalScale) / 2f);
 
-        final double hOffset = Configs.ExtraLeaves.hOffset;
-        final double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
-        final double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
+        final float hOffset = Configs.ExtraLeaves.hOffset;
+        final double xOffset = (double) x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
+        final double zOffset = (double) z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
         ICrossedSquaresRenderer leafRenderer = (ICrossedSquaresRenderer) renderer;
 
@@ -193,8 +194,8 @@ public class LeafRenderer extends BlockRenderer {
         return false;
     }
 
-    private static boolean blocksLeafRendering(Block visonBlocker, Block leaf) {
-        return visonBlocker.isOpaqueCube() || visonBlocker == leaf;
+    private static boolean blocksLeafRendering(Block visionBlocker, Block leaf) {
+        return visionBlocker.isOpaqueCube() || visionBlocker == leaf;
     }
 
     /// Redefines AO directions when extra leaves are rotated
