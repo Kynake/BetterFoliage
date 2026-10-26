@@ -27,6 +27,56 @@ public final class Configs {
     private static final String heightMinDesc = "Minimum height of element";
     private static final String heightMaxDesc = "Maximum height of element";
 
+    public static class ExtraLeaves {
+
+        public static boolean enabled = true;
+        private static final String enabledDesc = "Render extra round leaves on leaf blocks";
+
+        public static boolean snowEnabled = true;
+        private static final String snowEnabledDesc = "render snow overlay on extra leaves with snow layer on top";
+
+        public static boolean surfaceOnly = true;
+        private static final String surfaceOnlyDesc = "Extra leaves will only be rendered on blocks with at least one exposed side";
+
+        public static double hOffset;
+        public static double vOffset;
+        public static float size;
+
+        public static boolean dense = false;
+        private static final String denseDesc = "Render extra leaves for all three axes of a leaf block, not just the vertical axis";
+
+        public static boolean renderBaseBlock = true;
+        private static final String renderBaseBlockDesc = "Should the base leaf block be rendered too. Works best with Dense mode enabled";
+
+        public static void initializeFileConfigs(final Configuration config) {
+            final String category = "extraLeaves";
+
+            Property prop = config.get(category, "enabled", enabled, enabledDesc);
+            enabled = prop.getBoolean();
+
+            prop = config.get(category, "snowEnabled", snowEnabled, snowEnabledDesc);
+            snowEnabled = prop.getBoolean();
+
+            prop = config.get(category, "surfaceOnly", surfaceOnly, surfaceOnlyDesc);
+            surfaceOnly = prop.getBoolean();
+
+            prop = config.get(category, "hOffset", 0.2, hOffsetDesc, 0.0, 0.4);
+            hOffset = prop.getDouble();
+
+            prop = config.get(category, "vOffset", 0.1, vOffsetDesc, 0.0, 0.4);
+            vOffset = prop.getDouble();
+
+            prop = config.get(category, "size", 1.4, sizeDesc, 0.75, 2.5);
+            size = (float) prop.getDouble();
+
+            prop = config.get(category, "dense", dense, denseDesc);
+            dense = prop.getBoolean();
+
+            prop = config.get(category, "renderBaseBlock", renderBaseBlock, renderBaseBlockDesc);
+            renderBaseBlock = prop.getBoolean();
+        }
+    }
+
     public static class FallingLeaves {
 
         public static boolean enabled = true;
@@ -266,6 +316,7 @@ public final class Configs {
         Property prop = config.get(Configuration.CATEGORY_GENERAL, "enabled", enabled, enabledGeneralDesc);
         enabled = prop.getBoolean();
 
+        ExtraLeaves.initializeFileConfigs(config);
         FallingLeaves.initializeFileConfigs(config);
         RisingSouls.initializeFileConfigs(config);
         Netherrack.initializeFileConfigs(config);
