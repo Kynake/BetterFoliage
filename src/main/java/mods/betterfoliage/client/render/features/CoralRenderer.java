@@ -144,7 +144,7 @@ public class CoralRenderer extends BlockRenderer {
             final IIcon spriteOne = spriteProvider.getFirstCoralForCoord(x, y, z, ordinal);
             final IIcon spriteTwo = spriteProvider.getSecondCoralForCoord(x, y, z, ordinal);
 
-            final double hOffset = Config.shortGrass.INSTANCE.getHOffset();
+            final double hOffset = Config.coral.INSTANCE.getHOffset();
             final double xOffset = xSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
             final double zOffset = zSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
