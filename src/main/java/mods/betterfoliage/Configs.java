@@ -21,6 +21,15 @@ public final class Configs {
     public static boolean enabled = true;
     private static final String enabledGeneralDesc = "General on/off switch for all of the mod's functionalities";
 
+    // Mod uses a set number as random seed because the world seed can't be accessed Client-side in a server.
+    public static int seed = 402653189;
+    private static final String seedDesc = """
+        Primary mod seed used as the base for pseudo-random placement of features.
+        Allows features to be consistent across different players.
+        Change it to a secret number to make it harder for someone to brute force your coordinates from a screenshot, if you care about that.
+        Default:\s"""
+        + seed;
+
     private static final String hOffsetDesc = "The distance this element is shifted horizontally, in blocks";
     private static final String vOffsetDesc = "The distance this element is shifted vertically, in blocks";
     private static final String sizeDesc = "Size of this element";
@@ -421,6 +430,9 @@ public final class Configs {
 
         Property prop = config.get(Configuration.CATEGORY_GENERAL, "enabled", enabled, enabledGeneralDesc);
         enabled = prop.getBoolean();
+
+        prop = config.get(Configuration.CATEGORY_GENERAL, "seed", seed, seedDesc);
+        seed = prop.getInt();
 
         ConnectedGrass.initializeFileConfigs(config);
         ShortGrass.initializeFileConfigs(config);

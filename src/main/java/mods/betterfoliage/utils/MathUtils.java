@@ -2,14 +2,12 @@ package mods.betterfoliage.utils;
 
 import java.util.Random;
 
+import mods.betterfoliage.Configs;
+
 public final class MathUtils {
 
     public static final float PI2 = (float) (Math.PI * 2.0);
     public static final float ROOT2 = (float) (Math.sqrt(2.0));
-
-    // TODO: Make configurable
-    // Mods uses a set number as random seed because the world seed can't be accessed Client-side in a server.
-    private static final int SEED = 402653189;
 
     public static int hash(int x) {
         x ^= x >>> 16;
@@ -25,7 +23,7 @@ public final class MathUtils {
     }
 
     public static int hashCoords(int x, int y, int z, int salt) {
-        int hash = hash(salt + SEED);
+        int hash = hash(salt + Configs.seed);
         hash = hash(x + hash);
         hash = hash(y + hash);
         hash = hash(z + hash);
