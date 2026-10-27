@@ -109,11 +109,11 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
         val armChance by int(min = 0, max = 64, default = 16)
     }
 
-    object lilypad {
-        val enabled by featureEnable()
-        val hOffset by double(max = 0.25, default = 0.1).lang("hOffset")
-        val flowerChance by int(max = 64, default = 16, min = 0)
-    }
+//    object lilypad {
+//        val enabled by featureEnable()
+//        val hOffset by double(max = 0.25, default = 0.1).lang("hOffset")
+//        val flowerChance by int(max = 64, default = 16, min = 0)
+//    }
 
     // TODO: SPECIAL CASE Biomes
     object reed {

@@ -8,6 +8,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.integration.GT5UIntegration;
 import mods.betterfoliage.client.render.BlockRenderer;
@@ -19,9 +20,6 @@ import mods.betterfoliage.utils.MathUtils;
 public class LilypadRenderer extends BlockRenderer {
 
     private static final float LILYPAD_HEIGHT = 0.015625f;
-
-    // TODO: make configurable
-    private static final float LILYPAD_FLOWER_SCALE = 0.5f;
 
     private static LilypadRenderer instance;
 
@@ -46,7 +44,7 @@ public class LilypadRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        return Config.lilypad.INSTANCE.getEnabled() && Config.blocks.INSTANCE.getLilypad()
+        return Configs.Lilypad.enabled && Config.blocks.INSTANCE.getLilypad()
             .matchesID(world.getBlock(x, y, z));
     }
 
@@ -58,11 +56,11 @@ public class LilypadRenderer extends BlockRenderer {
         if (!renderResult) return false;
 
         // Render Roots
-        double hOffset = Config.lilypad.INSTANCE.getHOffset();
+        final float hOffset = Configs.Lilypad.hOffset;
 
         int coordHash = MathUtils.hashCoords(x, y - 1, z, 375);
-        double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
-        double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
+        double xOffset = (double) x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
+        double zOffset = (double) z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
         IIcon sprite = roots.getSpriteForCoord(x, y - 1, z);
 
@@ -75,8 +73,8 @@ public class LilypadRenderer extends BlockRenderer {
         // Render Flower
         coordHash = MathUtils.hashCoords(x, y, z, 375);
 
-        // TODO convert to [0, 1] range RNG
-        if (MathUtils.hashToRange(coordHash, 0, 64) > Config.lilypad.INSTANCE.getFlowerChance()) {
+        // TODO: Use inv lerp directly
+        if (MathUtils.hashInverseLerp(coordHash) > Configs.Lilypad.flowerChance) {
             return true;
         }
 
@@ -89,7 +87,7 @@ public class LilypadRenderer extends BlockRenderer {
         sprite = flowers.getSpriteForCoord(x, y, z);
 
         tessellator.setBrightness(Blocks.red_flower.getMixedBrightnessForBlock(world, x, y, z));
-        renderer.drawCrossedSquares(sprite, xOffset, y + LILYPAD_HEIGHT, zOffset, LILYPAD_FLOWER_SCALE);
+        renderer.drawCrossedSquares(sprite, xOffset, y + LILYPAD_HEIGHT, zOffset, Configs.Lilypad.flowerSize);
 
         return true;
     }
