@@ -128,7 +128,7 @@ betterfoliage.cactus.armChance.tooltip=Chance (N in 64) that each side of a cact
 betterfoliage.lilypad=Better Lilypad
 betterfoliage.lilypad.tooltip=Enhance lilypad with roots and occasional flowers
 betterfoliage.lilypad.flowerChance=Flower chance
-betterfoliage.lilypad.flowerChance.tooltip=Chance (N in 64) of a lilypad having a flower on it
+betterfoliage.lilypad.flowerChance.tooltip=Chance of a lilypad having a flower on it
 
 betterfoliage.reed=Reeds
 betterfoliage.reed.tooltip=Reeds on dirt blocks in shallow water

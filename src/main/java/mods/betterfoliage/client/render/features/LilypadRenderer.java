@@ -15,6 +15,7 @@ import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.SpriteSet;
+import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
 import mods.betterfoliage.utils.MathUtils;
 
 public class LilypadRenderer extends BlockRenderer {
@@ -51,7 +52,8 @@ public class LilypadRenderer extends BlockRenderer {
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
         RenderBlocks renderer) {
-        boolean renderResult = renderer.renderBlockLilyPad(block, x, y, z);
+        final IRendererByType baseRenderer = (IRendererByType) renderer;
+        boolean renderResult = baseRenderer.betterfoliage$renderBaseBlock(block, x, y, z);
 
         if (!renderResult) return false;
 
@@ -73,7 +75,6 @@ public class LilypadRenderer extends BlockRenderer {
         // Render Flower
         coordHash = MathUtils.hashCoords(x, y, z, 375);
 
-        // TODO: Use inv lerp directly
         if (MathUtils.hashInverseLerp(coordHash) > Configs.Lilypad.flowerChance) {
             return true;
         }
