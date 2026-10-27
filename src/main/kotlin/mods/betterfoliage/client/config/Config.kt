@@ -89,16 +89,16 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
 //        val snowEnabled by boolean(false)
 //    }
 
-    object roundLogs {
-        val enabled by featureEnable(false)
-        val radiusSmall by double(max = 0.5, default = 0.292893218813)
-        val radiusLarge by double(max = 0.5, default = 0.5)
-        val connectSolids by boolean(false)
-        val lenientConnect by boolean(true)
-        val connectPerpendicular by boolean(true)
-        val connectGrass by boolean(true)
-        val zProtection by double(min = 0.9, default = 0.99)
-    }
+//    object roundLogs {
+//        val enabled by featureEnable(false)
+//        val radiusSmall by double(max = 0.5, default = 0.292893218813)
+//        val radiusLarge by double(max = 0.5, default = 0.5)
+//        val connectSolids by boolean(false)
+//        val lenientConnect by boolean(true)
+//        val connectPerpendicular by boolean(true)
+//        val connectGrass by boolean(true)
+//        val zProtection by double(min = 0.9, default = 0.99)
+//    }
 
 //    object cactus {
 //        val stem by boolean(true)

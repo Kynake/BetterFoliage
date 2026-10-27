@@ -33,14 +33,14 @@ public class LogRenderer extends BlockRenderer {
     }
 
     public static boolean isRoundLog(IBlockAccess world, int x, int y, int z) {
-        if (!Configs.enabled || !Config.roundLogs.INSTANCE.getEnabled()) return false;
+        if (!(Configs.enabled & Configs.RoundLogs.enabled)) return false;
 
         return Config.blocks.INSTANCE.getLogs()
             .matchesID(world.getBlock(x, y, z));
     }
 
     public static boolean isRoundLog(Block block) {
-        if (!Configs.enabled || !Config.roundLogs.INSTANCE.getEnabled()) return false;
+        if (!(Configs.enabled & Configs.RoundLogs.enabled)) return false;
 
         return Config.blocks.INSTANCE.getLogs()
             .matchesID(block);
@@ -196,7 +196,7 @@ public class LogRenderer extends BlockRenderer {
         final boolean isSideLog = logs.matchesID(sideBlock);
 
         if (!isSideLog) {
-            return Config.roundLogs.INSTANCE.getConnectSolids() && sideBlock.isOpaqueCube();
+            return Configs.RoundLogs.connectToSolids && sideBlock.isOpaqueCube();
         }
 
         final ForgeDirection sideAxis = determineLogAxis(world, sideX, sideY, sideZ, sideBlock);
@@ -223,7 +223,7 @@ public class LogRenderer extends BlockRenderer {
         ForgeDirection diagAxis = determineLogAxis(world, diagX, diagY, diagZ, diagBlock);
         boolean isDiagLog = diagAxis == axis && logs.matchesID(diagBlock);
 
-        if (Config.roundLogs.INSTANCE.getLenientConnect()) {
+        if (Configs.RoundLogs.connectLenient) {
             if (isLatLog || isDiagLog) {
                 return true;
             }
@@ -252,7 +252,7 @@ public class LogRenderer extends BlockRenderer {
         diagAxis = determineLogAxis(world, diagX, diagY, diagZ, diagBlock);
         isDiagLog = diagAxis == axis && logs.matchesID(diagBlock);
 
-        return Config.roundLogs.INSTANCE.getLenientConnect() ? isLatLog || isDiagLog : isLatLog && isDiagLog;
+        return Configs.RoundLogs.connectLenient ? isLatLog || isDiagLog : isLatLog && isDiagLog;
     }
 
     /// Least aggressive render checking function, may render non-visible faces when next to other log blocks.
@@ -358,7 +358,7 @@ public class LogRenderer extends BlockRenderer {
         boolean renderBack = renderFront;
 
         // Render connectors
-        if (Config.roundLogs.INSTANCE.getConnectPerpendicular() && !isConnector) {
+        if (Configs.RoundLogs.connectPerpendicular && !isConnector) {
 
             final BlockMatcher logs = Config.blocks.INSTANCE.getLogs();
 
@@ -512,15 +512,13 @@ public class LogRenderer extends BlockRenderer {
         final double backCornerClockZ;
 
         if (isConnector) {
-            final double zProtection = Config.roundLogs.INSTANCE.getZProtection();
+            final double zCounterX = counterX * Configs.RoundLogs.zProtection;
+            final double zCounterY = counterY * Configs.RoundLogs.zProtection;
+            final double zCounterZ = counterZ * Configs.RoundLogs.zProtection;
 
-            final double zCounterX = counterX * zProtection;
-            final double zCounterY = counterY * zProtection;
-            final double zCounterZ = counterZ * zProtection;
-
-            final double zSideX = sideX * zProtection;
-            final double zSideY = sideY * zProtection;
-            final double zSideZ = sideZ * zProtection;
+            final double zSideX = sideX * Configs.RoundLogs.zProtection;
+            final double zSideY = sideY * Configs.RoundLogs.zProtection;
+            final double zSideZ = sideZ * Configs.RoundLogs.zProtection;
 
             backCenterX = midX;
             backCenterY = midY;
@@ -961,7 +959,7 @@ public class LogRenderer extends BlockRenderer {
         boolean renderBack = renderFront;
 
         // Use connectors?
-        if (Config.roundLogs.INSTANCE.getConnectPerpendicular() && !isConnector && didRender) {
+        if (Configs.RoundLogs.connectPerpendicular & didRender && !isConnector) {
 
             final BlockMatcher logs = Config.blocks.INSTANCE.getLogs();
 
@@ -1438,15 +1436,13 @@ public class LogRenderer extends BlockRenderer {
         final double backCornerSideZ;
 
         if (isConnector) {
-            final double zProtection = Config.roundLogs.INSTANCE.getZProtection();
+            final double zCounterX = counterX * Configs.RoundLogs.zProtection;
+            final double zCounterY = counterY * Configs.RoundLogs.zProtection;
+            final double zCounterZ = counterZ * Configs.RoundLogs.zProtection;
 
-            final double zCounterX = counterX * zProtection;
-            final double zCounterY = counterY * zProtection;
-            final double zCounterZ = counterZ * zProtection;
-
-            final double zSideX = sideX * zProtection;
-            final double zSideY = sideY * zProtection;
-            final double zSideZ = sideZ * zProtection;
+            final double zSideX = sideX * Configs.RoundLogs.zProtection;
+            final double zSideY = sideY * Configs.RoundLogs.zProtection;
+            final double zSideZ = sideZ * Configs.RoundLogs.zProtection;
 
             backCenterX = midX;
             backCenterY = midY;
@@ -2023,7 +2019,7 @@ public class LogRenderer extends BlockRenderer {
         boolean renderBack = renderFront;
 
         // Use connectors?
-        if (Config.roundLogs.INSTANCE.getConnectPerpendicular() && !isConnector && didRender) {
+        if (Configs.RoundLogs.connectPerpendicular & didRender && !isConnector) {
 
             final BlockMatcher logs = Config.blocks.INSTANCE.getLogs();
 
@@ -2520,11 +2516,8 @@ public class LogRenderer extends BlockRenderer {
             useLargeRadiusBack = useLargeRadiusBase;
         }
 
-        final double frontRadius = useLargeRadiusFront ? Config.roundLogs.INSTANCE.getRadiusLarge()
-            : Config.roundLogs.INSTANCE.getRadiusSmall();
-
-        final double backRadius = useLargeRadiusBack ? Config.roundLogs.INSTANCE.getRadiusLarge()
-            : Config.roundLogs.INSTANCE.getRadiusSmall();
+        final double frontRadius = useLargeRadiusFront ? Configs.RoundLogs.radiusLarge : Configs.RoundLogs.radiusSmall;
+        final double backRadius = useLargeRadiusBack ? Configs.RoundLogs.radiusLarge : Configs.RoundLogs.radiusSmall;
 
         final double frontEdgeToCenter = 0.5 - frontRadius;
         final double frontDiagToCenter = (frontRadius / 2.0) + frontEdgeToCenter;
@@ -2581,8 +2574,7 @@ public class LogRenderer extends BlockRenderer {
         final double backDiagZ;
 
         if (isConnector) {
-            final double zProtection = Config.roundLogs.INSTANCE.getZProtection();
-            final double backConnector = (backRadius * zProtection / 2.0) + backEdgeToCenter;
+            final double backConnector = (backRadius * Configs.RoundLogs.zProtection / 2.0) + backEdgeToCenter;
 
             backDiagRatio = (float) backConnector * 2f * MathUtils.ROOT2;
 
@@ -2590,13 +2582,13 @@ public class LogRenderer extends BlockRenderer {
             backCenterY = midY;
             backCenterZ = midZ;
 
-            backClockCenterX = backCenterX + clockX * zProtection;
-            backClockCenterY = backCenterY + clockY * zProtection;
-            backClockCenterZ = backCenterZ + clockZ * zProtection;
+            backClockCenterX = backCenterX + clockX * Configs.RoundLogs.zProtection;
+            backClockCenterY = backCenterY + clockY * Configs.RoundLogs.zProtection;
+            backClockCenterZ = backCenterZ + clockZ * Configs.RoundLogs.zProtection;
 
-            backCounterCenterX = backCenterX + counterX * zProtection;
-            backCounterCenterY = backCenterY + counterY * zProtection;
-            backCounterCenterZ = backCenterZ + counterZ * zProtection;
+            backCounterCenterX = backCenterX + counterX * Configs.RoundLogs.zProtection;
+            backCounterCenterY = backCenterY + counterY * Configs.RoundLogs.zProtection;
+            backCounterCenterZ = backCenterZ + counterZ * Configs.RoundLogs.zProtection;
 
             backDiagX = backCenterX + backConnector * (clockwise.offsetX + counterclockwise.offsetX);
             backDiagY = backCenterY + backConnector * (clockwise.offsetY + counterclockwise.offsetY);
