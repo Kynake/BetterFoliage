@@ -340,6 +340,36 @@ public final class Configs {
         }
     }
 
+    public static class Lilypad {
+
+        public static boolean enabled = true;
+        private static final String enabledDesc = "Should draw flowers and roots above and bellow lilypads";
+
+        public static float hOffset;
+
+        public static double flowerChance;
+        private static final String flowerChanceDesc = "Chance that a lilypad will have a flower on top";
+
+        public static float flowerSize;
+        private static final String flowerSizeDesc = "Size of the lilypad flowers";
+
+        public static void initializeFileConfigs(final Configuration config) {
+            final String category = "lilypad";
+
+            Property prop = config.get(category, "enabled", enabled, enabledDesc);
+            enabled = prop.getBoolean();
+
+            prop = config.get(category, "hOffset", 0.1, hOffsetDesc, 0.0, 0.25);
+            hOffset = (float) prop.getDouble();
+
+            prop = config.get(category, "flowerChance", 0.25, flowerChanceDesc, 0.0, 1.0);
+            flowerChance = prop.getDouble();
+
+            prop = config.get(category, "flowerSize", 0.5, flowerSizeDesc, 0.1, 1.0);
+            flowerSize = (float) prop.getDouble();
+        }
+    }
+
     private static final String CONFIG_FILE_NAME = BetterFoliageMod.MOD_ID + "_LegacyEdition";
 
     private Configuration attachedConfig = null;
@@ -398,6 +428,7 @@ public final class Configs {
         FallingLeaves.initializeFileConfigs(config);
         RisingSouls.initializeFileConfigs(config);
         Netherrack.initializeFileConfigs(config);
+        Lilypad.initializeFileConfigs(config);
 
         if (config.hasChanged()) {
             config.save();
