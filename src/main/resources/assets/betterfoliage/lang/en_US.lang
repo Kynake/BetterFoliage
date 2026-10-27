@@ -121,9 +121,9 @@ betterfoliage.cactus.stem.tooltip=Render extra textures in the main body of cact
 betterfoliage.cactus.arms=Arms
 betterfoliage.cactus.arms.tooltip=Render occasional arms in the sides of cactus blocks
 betterfoliage.cactus.sizeVariation=Size variation
-betterfoliage.cactus.sizeVariation.tooltip=Amount of random variation on cactus size
+betterfoliage.cactus.sizeVariation.tooltip=Amount of random variation on cactus stem size
 betterfoliage.cactus.armChance=Arm chance
-betterfoliage.cactus.armChance.tooltip=Chance (N in 64) that each side of a cactus block will have an arm
+betterfoliage.cactus.armChance.tooltip=Chance that each side of a cactus block will have an arm
 
 betterfoliage.lilypad=Better Lilypad
 betterfoliage.lilypad.tooltip=Enhance lilypad with roots and occasional flowers

@@ -9,6 +9,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
@@ -16,6 +17,7 @@ import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.client.resource.SpriteSingle;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
+import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
 import mods.betterfoliage.utils.MathUtils;
 
 public class CactusRenderer extends BlockRenderer {
@@ -67,9 +69,8 @@ public class CactusRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        return (Config.cactus.INSTANCE.getStem() || Config.cactus.INSTANCE.getArms())
-            && Config.blocks.INSTANCE.getCactus()
-                .matchesID(world.getBlock(x, y, z));
+        return Configs.Cactus.enabled && Config.blocks.INSTANCE.getCactus()
+            .matchesID(world.getBlock(x, y, z));
     }
 
     @Override
@@ -81,7 +82,8 @@ public class CactusRenderer extends BlockRenderer {
             return renderer.renderStandardBlock(block, x, y, z);
         }
 
-        boolean renderResult = renderer.renderBlockCactus(block, x, y, z);
+        final IRendererByType baseRenderer = (IRendererByType) renderer;
+        boolean renderResult = baseRenderer.betterfoliage$renderBaseBlock(block, x, y, z);
 
         if (!renderResult) return false;
 
@@ -89,11 +91,10 @@ public class CactusRenderer extends BlockRenderer {
         Tessellator tessellator = Tessellator.instance;
 
         // Render Stem
-        if (Config.cactus.INSTANCE.getStem()) {
+        if (Configs.Cactus.renderStem) {
             int hash = MathUtils.hashCoords(x, y, z);
 
-            double sizeOffset = Config.cactus.INSTANCE.getSizeVariation();
-            float scale = (float) (STEM_SCALE + MathUtils.hashToRange(hash, 0, sizeOffset));
+            final float scale = STEM_SCALE + MathUtils.hashToRange(hash, 0, Configs.Cactus.stemSizeVariation);
 
             double xOffset = x;
             double zOffset = z;
@@ -129,14 +130,13 @@ public class CactusRenderer extends BlockRenderer {
         }
 
         // Render Arms
-        if (Config.cactus.INSTANCE.getArms()) {
+        if (Configs.Cactus.renderArms) {
             for (int i = 0; i < SIDES.length; i++) {
                 int ordinal = SIDES[i].ordinal();
 
                 int sideHash = MathUtils.hashCoords(x, y, z, ordinal);
 
-                // TODO convert to [0, 1] range RNG
-                if (MathUtils.hashToRange(sideHash, 0, 64) > Config.cactus.INSTANCE.getArmChance()) {
+                if (MathUtils.hashInverseLerp(sideHash) > Configs.Cactus.armChance) {
                     continue;
                 }
 
@@ -146,20 +146,15 @@ public class CactusRenderer extends BlockRenderer {
 
                 IIcon armSprite = arms.getSpriteForCoord(x, y, z, ordinal);
 
-                double hOffset = Config.cactus.INSTANCE.getHOffset();
-                double xOffset = xSide + MathUtils.hashToRange(MathUtils.hash(sideHash + 1), -hOffset, hOffset);
-                double zOffset = zSide + MathUtils.hashToRange(MathUtils.hash(sideHash + 2), -hOffset, hOffset);
+                final float offset = Configs.Cactus.armOffset;
+                double xOffset = (double) xSide + MathUtils.hashToRange(MathUtils.hash(sideHash + 1), -offset, offset);
+                double zOffset = (double) zSide + MathUtils.hashToRange(MathUtils.hash(sideHash + 2), -offset, offset);
 
                 tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, xSide, ySide, zSide));
                 RenderUtils.setColorMultiplierBySide(tessellator, ordinal);
 
                 cactusRenderer.betterfoliage$setRotation(xSide + 0.5, ySide + 0.5, zSide + 0.5, ROTATIONS[i]);
-                renderer.drawCrossedSquares(
-                    armSprite,
-                    xOffset,
-                    ySide - ARM_PUSHBACK,
-                    zOffset,
-                    (float) Config.cactus.INSTANCE.getSize());
+                renderer.drawCrossedSquares(armSprite, xOffset, ySide - ARM_PUSHBACK, zOffset, Configs.Cactus.armSize);
                 cactusRenderer.betterfoliage$resetRotation();
             }
         }

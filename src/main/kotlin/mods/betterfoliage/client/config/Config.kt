@@ -100,14 +100,14 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
         val zProtection by double(min = 0.9, default = 0.99)
     }
 
-    object cactus {
-        val stem by boolean(true)
-        val arms by boolean(true)
-        val size by double(min = 0.5, max = 1.5, default = 0.8).lang("size")
-        val sizeVariation by double(max = 0.5, default = 0.1)
-        val hOffset by double(max = 0.5, default = 0.1).lang("hOffset")
-        val armChance by int(min = 0, max = 64, default = 16)
-    }
+//    object cactus {
+//        val stem by boolean(true)
+//        val arms by boolean(true)
+//        val size by double(min = 0.5, max = 1.5, default = 0.8).lang("size")
+//        val sizeVariation by double(max = 0.5, default = 0.1)
+//        val hOffset by double(max = 0.5, default = 0.1).lang("hOffset")
+//        val armChance by int(min = 0, max = 64, default = 16)
+//    }
 
 //    object lilypad {
 //        val enabled by featureEnable()
