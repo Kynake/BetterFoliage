@@ -27,6 +27,25 @@ public final class Configs {
     private static final String heightMinDesc = "Minimum height of element";
     private static final String heightMaxDesc = "Maximum height of element";
 
+    public static class ConnectedGrass {
+
+        public static boolean enabled = true;
+        private static final String enabledDesc = "Use grass top texture on all sides if a dirt block is beneath it";
+
+        public static boolean snowEnabled = false;
+        private static final String snowEnabledDesc = "If a connected grass block is covered by snow, use the snow's texture for the grass sides instead of the grass top texture";
+
+        public static void initializeFileConfigs(final Configuration config) {
+            final String category = "connectedGrass";
+
+            Property prop = config.get(category, "enabled", enabled, enabledDesc);
+            enabled = prop.getBoolean();
+
+            prop = config.get(category, "snowEnabled", snowEnabled, snowEnabledDesc);
+            snowEnabled = prop.getBoolean();
+        }
+    }
+
     public static class ShortGrass {
 
         public static boolean grassEnabled = true;
@@ -373,6 +392,7 @@ public final class Configs {
         Property prop = config.get(Configuration.CATEGORY_GENERAL, "enabled", enabled, enabledGeneralDesc);
         enabled = prop.getBoolean();
 
+        ConnectedGrass.initializeFileConfigs(config);
         ShortGrass.initializeFileConfigs(config);
         ExtraLeaves.initializeFileConfigs(config);
         FallingLeaves.initializeFileConfigs(config);
