@@ -32,16 +32,18 @@ public final class MathUtils {
         return hash;
     }
 
-    // TODO: convert to floats, use float lerp instead
     // The hash is assumed to be in the range [Integer.MIN_VALUE, Integer.MAX_VALUE]
-    public static double hashToRange(int hash, double min, double max) {
-        double invLerp = (double) ((long) hash - 0xFFFFFFFF80000000L) / (double) 0xFFFFFFFFL;
-        return lerp(min, max, invLerp);
+    public static double hashInverseLerp(int hash) {
+        return (double) ((long) hash - 0xFFFFFFFF80000000L) / (double) 0xFFFFFFFFL;
     }
 
-    // TODO reimplement to not use double hashToRange()
+    // TODO: convert to floats, use float lerp instead
+    public static double hashToRange(int hash, double min, double max) {
+        return lerp(min, max, hashInverseLerp(hash));
+    }
+
     public static float hashToRange(int hash, float min, float max) {
-        return (float) hashToRange(hash, (double) min, (double) max);
+        return lerp(min, max, (float) hashInverseLerp(hash));
     }
 
     public static double lerp(double min, double max, double lerpAmount) {
