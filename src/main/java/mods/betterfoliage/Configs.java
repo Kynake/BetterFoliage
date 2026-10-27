@@ -379,6 +379,53 @@ public final class Configs {
         }
     }
 
+    public static class Cactus {
+
+        public static boolean enabled = true;
+
+        public static boolean renderStem = true;
+        private static final String renderStemDesc = "Render extra textures in the main body of cacti";
+
+        public static boolean renderArms = true;
+        private static final String renderArmsDesc = "Render occasional arms in the sides of cactus blocks";
+
+        public static float armOffset;
+        private static final String armOffsetDesc = "Offset of the cactus arms along each axis of the cactus's side plane";
+
+        public static float armSize;
+        private static final String armSizeDesc = "Size of the cactus arms";
+
+        public static float armChance;
+        private static final String armChanceDesc = "Chance that each side of a cactus block will have an arm";
+
+        public static float stemSizeVariation;
+        private static final String stemSizeVariationDesc = "Amount of random variation on cactus stem size";
+
+        public static void initializeFileConfigs(final Configuration config) {
+            final String category = "cactus";
+
+            Property prop = config.get(category, "renderStem", renderStem, renderStemDesc);
+            renderStem = prop.getBoolean();
+
+            prop = config.get(category, "renderArms", renderArms, renderArmsDesc);
+            renderArms = prop.getBoolean();
+
+            enabled = renderStem | renderArms;
+
+            prop = config.get(category, "armOffset", 0.1, armOffsetDesc, 0.0, 0.5);
+            armOffset = (float) prop.getDouble();
+
+            prop = config.get(category, "armSize", 0.8, armSizeDesc, 0.5, 1.5);
+            armSize = (float) prop.getDouble();
+
+            prop = config.get(category, "armChance", 0.25, armChanceDesc, 0.0, 1.0);
+            armChance = (float) prop.getDouble();
+
+            prop = config.get(category, "stemSizeVariation", 0.1, stemSizeVariationDesc, 0.0, 0.5);
+            stemSizeVariation = (float) prop.getDouble();
+        }
+    }
+
     private static final String CONFIG_FILE_NAME = BetterFoliageMod.MOD_ID + "_LegacyEdition";
 
     private Configuration attachedConfig = null;
@@ -441,6 +488,7 @@ public final class Configs {
         RisingSouls.initializeFileConfigs(config);
         Netherrack.initializeFileConfigs(config);
         Lilypad.initializeFileConfigs(config);
+        Cactus.initializeFileConfigs(config);
 
         if (config.hasChanged()) {
             config.save();
