@@ -112,6 +112,68 @@ public final class Configs {
         }
     }
 
+    public static class RoundLogs {
+
+        public static boolean enabled = false;
+        private static final String enabledDesc = "Render logs with rounded corners";
+
+        public static double radiusSmall;
+        private static final String radiusSmallDesc = """
+            Chamfer radius for non connected logs. Some interesting values include:
+            Default: 0.25
+            Equally sided octagon: 0.292893218813 (This value won't line up with the default texture's pixel grid)
+            Closest value that lines up with the pixel grid: 0.3125""";
+
+        public static double radiusLarge;
+        private static final String radiusLargeDesc = "Chamfer radius for logs connected to other blocks";
+
+        public static boolean connectToSolids = false;
+        private static final String connectToSolidsDesc = "Should round logs connect to other non-log solid blocks";
+
+        public static boolean connectLenient = true;
+        private static final String connectLenientDesc = "Allow logs to connect in an L shape, not requiring a full 2x2 grid";
+
+        public static boolean connectPerpendicular = true;
+        private static final String connectPerpendicularDesc = "Connect perpendicular logs by rendering an end cap from one round log at the same coordinates as the other";
+
+        public static boolean connectGrass = true;
+        private static final String connectGrassDesc = "Render a grass block under round logs instead of dirt if there another grass block nearby";
+
+        public static double zProtection;
+        private static final String zProtectionDesc = """
+            How much to shrink the radius of perpendicular end cap connectors to prevent z-fighting.
+            Higher values will mean that the end cap connectors will have less visible distortion from up close, but may flicker (z-fight) when viewed from afar.
+            This value should be kept as high as possible without noticing any visual glitches.""";
+
+        public static void initializeFileConfigs(final Configuration config) {
+            final String category = "roundLogs";
+
+            Property prop = config.get(category, "enabled", enabled, enabledDesc);
+            enabled = prop.getBoolean();
+
+            prop = config.get(category, "radiusSmall", 0.25, radiusSmallDesc, 0.0, 0.5);
+            radiusSmall = prop.getDouble();
+
+            prop = config.get(category, "radiusLarge", 0.5, radiusLargeDesc, 0.0, 0.5);
+            radiusLarge = prop.getDouble();
+
+            prop = config.get(category, "connectToSolids", connectToSolids, connectToSolidsDesc);
+            connectToSolids = prop.getBoolean();
+
+            prop = config.get(category, "connectLenient", connectLenient, connectLenientDesc);
+            connectLenient = prop.getBoolean();
+
+            prop = config.get(category, "connectPerpendicular", connectPerpendicular, connectPerpendicularDesc);
+            connectPerpendicular = prop.getBoolean();
+
+            prop = config.get(category, "connectGrass", connectGrass, connectGrassDesc);
+            connectGrass = prop.getBoolean();
+
+            prop = config.get(category, "zProtection", 0.99, zProtectionDesc, 0.9, 1.0);
+            zProtection = prop.getDouble();
+        }
+    }
+
     public static class ExtraLeaves {
 
         public static boolean enabled = true;
@@ -483,6 +545,7 @@ public final class Configs {
 
         ConnectedGrass.initializeFileConfigs(config);
         ShortGrass.initializeFileConfigs(config);
+        RoundLogs.initializeFileConfigs(config);
         ExtraLeaves.initializeFileConfigs(config);
         FallingLeaves.initializeFileConfigs(config);
         RisingSouls.initializeFileConfigs(config);
