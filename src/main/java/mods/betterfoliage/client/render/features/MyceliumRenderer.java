@@ -9,7 +9,6 @@ import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.Configs;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.SpriteSet;
@@ -60,7 +59,7 @@ public class MyceliumRenderer extends BlockRenderer {
         Block blockAbove = world.getBlock(x, y + 1, z);
         boolean hasSnowAbove = BlockUtils.isSnow(blockAbove);
 
-        if (hasSnowAbove && !Config.connectedGrass.INSTANCE.getSnowEnabled()) return renderResult;
+        if (hasSnowAbove && !Configs.ConnectedGrass.snowEnabled) return renderResult;
         if (blockAbove.isOpaqueCube()) return renderResult;
 
         // Render short mycelium

@@ -66,9 +66,8 @@ public class GrassRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        return (Config.connectedGrass.INSTANCE.getEnabled() | Configs.ShortGrass.grassEnabled)
-            && Config.blocks.INSTANCE.getGrass()
-                .matchesID(world.getBlock(x, y, z));
+        return (Configs.ConnectedGrass.enabled | Configs.ShortGrass.grassEnabled) && Config.blocks.INSTANCE.getGrass()
+            .matchesID(world.getBlock(x, y, z));
     }
 
     @Override
@@ -85,9 +84,9 @@ public class GrassRenderer extends BlockRenderer {
         final Block blockAbove = world.getBlock(x, y + 1, z);
         boolean hasSnowAbove = BlockUtils.isSnow(blockAbove);
 
-        boolean isConnected = Config.connectedGrass.INSTANCE.getEnabled();
+        boolean isConnected = Configs.ConnectedGrass.enabled;
         if (isConnected) {
-            isConnected = Config.connectedGrass.INSTANCE.getSnowEnabled() || !hasSnowAbove;
+            isConnected = Configs.ConnectedGrass.snowEnabled || !hasSnowAbove;
 
             if (isConnected) {
                 Block blockBelow = world.getBlock(x, y - 1, z);
@@ -100,7 +99,7 @@ public class GrassRenderer extends BlockRenderer {
 
         boolean renderResult;
         if (isConnected) {
-            if (hasSnowAbove && Config.connectedGrass.INSTANCE.getSnowEnabled()) {
+            if (hasSnowAbove & Configs.ConnectedGrass.snowEnabled) {
                 IIcon snowTop = blockAbove.getIcon(world, x, y + 1, z, ForgeDirection.UP.ordinal());
                 renderer.setOverrideBlockTexture(snowTop);
                 renderResult = renderer.renderStandardBlock(block, x, y, z);

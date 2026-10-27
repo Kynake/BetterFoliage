@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.IOffsetSpriteRenderer;
@@ -25,7 +26,7 @@ public class DirtGrassRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        if (!Config.connectedGrass.INSTANCE.getEnabled()) {
+        if (!Configs.ConnectedGrass.enabled) {
             return false;
         }
 
@@ -40,7 +41,7 @@ public class DirtGrassRenderer extends BlockRenderer {
         }
 
         // If snow grass is disabled, don't render if the grass block above is rendering normally
-        if (!Config.connectedGrass.INSTANCE.getSnowEnabled()) {
+        if (!Configs.ConnectedGrass.snowEnabled) {
             return !BlockUtils.isSnow(world.getBlock(x, y + 2, z));
         }
 

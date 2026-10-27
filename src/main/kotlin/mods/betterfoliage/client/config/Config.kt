@@ -84,10 +84,10 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
     //        var separation by double(max=0.5, default=0.25)
     //    }
 
-    object connectedGrass {
-        val enabled by featureEnable()
-        val snowEnabled by boolean(false)
-    }
+//    object connectedGrass {
+//        val enabled by featureEnable()
+//        val snowEnabled by boolean(false)
+//    }
 
     object roundLogs {
         val enabled by featureEnable(false)
