@@ -17,6 +17,7 @@ import mods.betterfoliage.utils.MathUtils;
 public class SoulParticleRenderer extends ParticleRenderer {
 
     private static final float CORKSCREW_SPEED = MathUtils.PI2 / 64f;
+    private static final float ROTATION_SPEED = MathUtils.PI2 / 32f;
     private static final int FADEOUT_TICKS = 20;
 
     private static final ISpriteProvider headSprites = new SpriteSetRandom(
@@ -84,7 +85,7 @@ public class SoulParticleRenderer extends ParticleRenderer {
         private static final int TAIL_MAX_AGE = 40;
         private static final int TAIL_APPEAR_TIME = TAIL_MAX_AGE / 4;
 
-        private final float rotationSpeed = MathUtils.randomBetween(rand, 0.2f, 1f) * MathUtils.PI2 / 32.0f;
+        private final float rotationSpeed = MathUtils.randomBetween(rand, 0.2f, 1f) * ROTATION_SPEED;
         private final float maxAlpha;
 
         private TailParticleRender(World world, double x, double y, double z, float initialAlpha) {
