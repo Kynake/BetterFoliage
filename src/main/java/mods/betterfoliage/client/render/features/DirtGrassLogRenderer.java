@@ -5,10 +5,10 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.config.BlockMatcher;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.config.Configs;
 
 public class DirtGrassLogRenderer extends BlockRenderer {
 

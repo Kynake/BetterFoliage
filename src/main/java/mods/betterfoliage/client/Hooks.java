@@ -6,12 +6,12 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.features.LogRenderer;
 import mods.betterfoliage.client.render.particles.LeafParticleRenderer;
 import mods.betterfoliage.client.render.particles.SoulParticleRenderer;
+import mods.betterfoliage.config.Configs;
 
 @SideOnly(Side.CLIENT)
 public class Hooks {

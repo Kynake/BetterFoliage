@@ -8,10 +8,10 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.WindTracker;
 import mods.betterfoliage.client.registries.LeafInfo;
 import mods.betterfoliage.client.registries.LeafRegistry;
+import mods.betterfoliage.config.Configs;
 import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
 

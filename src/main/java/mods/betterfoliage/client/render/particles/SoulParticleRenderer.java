@@ -7,11 +7,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.integration.EFRIntegration;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.SpriteSetRandom;
 import mods.betterfoliage.client.resource.SpriteSingle;
+import mods.betterfoliage.config.Configs;
 import mods.betterfoliage.utils.MathUtils;
 
 public class SoulParticleRenderer extends ParticleRenderer {

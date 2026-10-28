@@ -14,6 +14,7 @@ import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.Side;
 import mods.betterfoliage.client.ClientRegistry;
 import mods.betterfoliage.client.config.Config;
+import mods.betterfoliage.config.Configs;
 
 @Mod(
     modid = BetterFoliageMod.MOD_ID,

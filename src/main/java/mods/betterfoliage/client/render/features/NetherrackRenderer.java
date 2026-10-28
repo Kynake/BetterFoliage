@@ -8,10 +8,10 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.SpriteSet;
+import mods.betterfoliage.config.Configs;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.utils.MathUtils;
 

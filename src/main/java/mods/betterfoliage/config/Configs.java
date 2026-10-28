@@ -1,4 +1,4 @@
-package mods.betterfoliage;
+package mods.betterfoliage.config;
 
 import java.io.File;
 
@@ -11,6 +11,7 @@ import net.minecraftforge.event.entity.player.UseHoeEvent;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import mods.betterfoliage.BetterFoliageMod;
 
 // TODO: Make configurable from in-game menu like the old configs
 public final class Configs {

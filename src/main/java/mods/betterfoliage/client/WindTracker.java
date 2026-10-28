@@ -13,7 +13,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import mods.betterfoliage.Configs;
+import mods.betterfoliage.config.Configs;
 import mods.betterfoliage.utils.MathUtils;
 
 @SideOnly(Side.CLIENT)

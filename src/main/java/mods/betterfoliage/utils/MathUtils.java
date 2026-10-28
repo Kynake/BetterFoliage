@@ -2,7 +2,7 @@ package mods.betterfoliage.utils;
 
 import java.util.Random;
 
-import mods.betterfoliage.Configs;
+import mods.betterfoliage.config.Configs;
 
 public final class MathUtils {
 

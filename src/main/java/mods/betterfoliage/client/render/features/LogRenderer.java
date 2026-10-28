@@ -8,13 +8,13 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.Configs;
 import mods.betterfoliage.client.config.BlockMatcher;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.render.ShadingInfo;
 import mods.betterfoliage.client.render.UVPlane;
+import mods.betterfoliage.config.Configs;
 import mods.betterfoliage.mixins.interfaces.minecraft.IRoundLogRenderer;
 import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
