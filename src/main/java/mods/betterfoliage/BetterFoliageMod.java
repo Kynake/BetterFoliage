@@ -55,7 +55,7 @@ public class BetterFoliageMod {
             return;
         }
 
-        Configs.init(event.getModConfigurationDirectory());
+        Configs.preInit(event.getModConfigurationDirectory());
 
         // TODO: Remove once new configs are ready
         Configuration oldConfigs = new Configuration(event.getSuggestedConfigurationFile(), null, true);
@@ -74,6 +74,7 @@ public class BetterFoliageMod {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         if (event.getSide() == Side.CLIENT) {
+            Configs.postInit();
             ClientRegistry.postInit();
         }
     }

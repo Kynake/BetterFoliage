@@ -2,11 +2,11 @@ package mods.betterfoliage.config;
 
 import java.io.File;
 
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import net.minecraftforge.event.entity.player.UseHoeEvent;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -21,6 +21,8 @@ public final class Configs {
     // GENERAL
     public static boolean enabled = true;
     private static final String enabledGeneralDesc = "General on/off switch for all of the mod's functionalities";
+
+    public static String[] biomesTest;
 
     // Mod uses a set number as random seed because the world seed can't be accessed Client-side in a server.
     public static int seed = 402653189;
@@ -512,19 +514,8 @@ public final class Configs {
         onConfigChange();
     }
 
-    // TODO: Temporary, remove
-    @SubscribeEvent
-    public void onUseHoeDebugEvent(final UseHoeEvent event) {
-        onConfigChange();
-    }
-
-    private void onConfigChange() {
-        if (attachedConfig != null) {
-            initializeFileConfigs(attachedConfig);
-        }
-    }
-
-    public static void init(final File configDir) {
+    /// Fist time initializer. Only runs once when opening the game
+    public static void preInit(final File configDir) {
         final File configFile = new File(configDir, CONFIG_FILE_NAME + ".cfg");
         Configuration configs = new Configuration(configFile, null, true);
 
@@ -532,6 +523,28 @@ public final class Configs {
         instance.attachedConfig = configs;
 
         initializeFileConfigs(configs);
+        initializeResourceConfigs();
+    }
+
+    public static void postInit() {
+        int[] validBiomes = BiomeConfigParser.parseValidBiomeIDs(biomesTest, null);
+
+        for (int i = 0; i < validBiomes.length; i++) {
+            BiomeGenBase biome = BiomeGenBase.getBiomeGenArray()[validBiomes[i]];
+            BetterFoliageMod.log.info("Biome {} (id: {}) is valid", biome.biomeName, biome.biomeID);
+        }
+    }
+
+    /// Reinitialize configs after a change or reload while the game is already running
+    private void onConfigChange() {
+        if (attachedConfig == null) {
+            return;
+        }
+
+        initializeFileConfigs(attachedConfig);
+        initializeResourceConfigs();
+
+        postInit();
     }
 
     /// Initializes all static configs that should be read from a config file.
@@ -543,6 +556,11 @@ public final class Configs {
 
         prop = config.get(Configuration.CATEGORY_GENERAL, "seed", seed, seedDesc);
         seed = prop.getInt();
+
+        String[] biomes = { "net.minecraft.world.biome.BiomeGenForest" };
+        prop = config.get(Configuration.CATEGORY_GENERAL, "biomesTest", biomes, "Test biomes config");
+
+        biomesTest = prop.getStringList();
 
         ConnectedGrass.initializeFileConfigs(config);
         ShortGrass.initializeFileConfigs(config);
@@ -561,7 +579,8 @@ public final class Configs {
 
     // TODO: Implement
     /// Initializes all static configs that are read from resource packs
-    public static void InitializeResourceConfigs() {
+    public static void initializeResourceConfigs() {
 
     }
+
 }
