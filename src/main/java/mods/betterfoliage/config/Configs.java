@@ -2,6 +2,7 @@ package mods.betterfoliage.config;
 
 import java.io.File;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,8 +23,6 @@ public final class Configs {
     public static boolean enabled = true;
     private static final String enabledGeneralDesc = "General on/off switch for all of the mod's functionalities";
 
-    public static String[] biomesTest;
-
     // Mod uses a set number as random seed because the world seed can't be accessed Client-side in a server.
     public static int seed = 402653189;
     private static final String seedDesc = """
@@ -38,6 +37,9 @@ public final class Configs {
     private static final String sizeDesc = "Size of this element";
     private static final String heightMinDesc = "Minimum height of element";
     private static final String heightMaxDesc = "Maximum height of element";
+    private static final String thresholdDesc = "Chance that an eligible block will have this feature. Used as a cutoff value in a 3D noise generator";
+    private static final String biomesDesc = "A list of biomes filters that determine if this feature is allowed to appear in this biome or not."
+        + "\nCheck the wiki for more details on how these filters work";
 
     public static class ConnectedGrass {
 
@@ -491,7 +493,59 @@ public final class Configs {
         }
     }
 
+    public static class Reeds {
+
+        private static final String category = "reeds";
+
+        public static boolean enabled = true;
+        private static final String enabledDesc = "Should render reeds on dirt blocks in shallow water";
+
+        public static float hOffset;
+
+        public static float heightMin;
+        public static float heightMax;
+
+        public static float threshold;
+
+        public static boolean[] biomes;
+
+        public static void initializeFileConfigs(final Configuration config) {
+            Property prop = config.get(category, "enabled", enabled, enabledDesc);
+            enabled = prop.getBoolean();
+
+            prop = config.get(category, "hOffset", 0.2, hOffsetDesc, 0.0, 0.4);
+            hOffset = (float) prop.getDouble();
+
+            prop = config.get(category, "heightMin", 1.7, heightMinDesc, 1.5, 3.5);
+            heightMin = (float) prop.getDouble();
+
+            prop = config.get(category, "heightMax", 2.2, heightMaxDesc, 1.5, 3.5);
+            heightMax = (float) prop.getDouble();
+
+            prop = config.get(category, "threshold", 0.5, thresholdDesc, 0.0, 1.0);
+            threshold = (float) prop.getDouble();
+        }
+
+        public static void postInit(final Configuration config) {
+            String[] biomeFilters = config.get(category, "biomes", new String[] {}, biomesDesc)
+                .getStringList();
+
+            biomes = BiomeConfigParser
+                .parseValidBiomeIDs(biomeFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "biomesReeds.cfg"));
+
+            final BiomeGenBase[] gameBiomes = BiomeGenBase.getBiomeGenArray();
+            for (int i = 0; i < biomes.length; i++) {
+                if (biomes[i]) {
+                    BiomeGenBase biome = gameBiomes[i];
+                    BetterFoliageMod.log.info("Valid biome for {}: [{}]\t{}", category, i, biome.biomeName);
+                }
+            }
+        }
+    }
+
     private static final String CONFIG_FILE_NAME = BetterFoliageMod.MOD_ID + "_LegacyEdition";
+
+    private static Configs instance = null;
 
     private Configuration attachedConfig = null;
 
@@ -519,19 +573,24 @@ public final class Configs {
         final File configFile = new File(configDir, CONFIG_FILE_NAME + ".cfg");
         Configuration configs = new Configuration(configFile, null, true);
 
-        Configs instance = new Configs();
+        if (instance == null) {
+            instance = new Configs();
+        }
+
         instance.attachedConfig = configs;
 
         initializeFileConfigs(configs);
-        initializeResourceConfigs();
     }
 
     public static void postInit() {
-        int[] validBiomes = BiomeConfigParser.parseValidBiomeIDs(biomesTest, null);
+        if (instance.attachedConfig == null) {
+            return;
+        }
 
-        for (int i = 0; i < validBiomes.length; i++) {
-            BiomeGenBase biome = BiomeGenBase.getBiomeGenArray()[validBiomes[i]];
-            BetterFoliageMod.log.info("Biome {} (id: {}) is valid", biome.biomeName, biome.biomeID);
+        Reeds.postInit(instance.attachedConfig);
+
+        if (instance.attachedConfig.hasChanged()) {
+            instance.attachedConfig.save();
         }
     }
 
@@ -542,7 +601,6 @@ public final class Configs {
         }
 
         initializeFileConfigs(attachedConfig);
-        initializeResourceConfigs();
 
         postInit();
     }
@@ -557,11 +615,6 @@ public final class Configs {
         prop = config.get(Configuration.CATEGORY_GENERAL, "seed", seed, seedDesc);
         seed = prop.getInt();
 
-        String[] biomes = { "net.minecraft.world.biome.BiomeGenForest" };
-        prop = config.get(Configuration.CATEGORY_GENERAL, "biomesTest", biomes, "Test biomes config");
-
-        biomesTest = prop.getStringList();
-
         ConnectedGrass.initializeFileConfigs(config);
         ShortGrass.initializeFileConfigs(config);
         RoundLogs.initializeFileConfigs(config);
@@ -571,16 +624,6 @@ public final class Configs {
         Netherrack.initializeFileConfigs(config);
         Lilypad.initializeFileConfigs(config);
         Cactus.initializeFileConfigs(config);
-
-        if (config.hasChanged()) {
-            config.save();
-        }
+        Reeds.initializeFileConfigs(config);
     }
-
-    // TODO: Implement
-    /// Initializes all static configs that are read from resource packs
-    public static void initializeResourceConfigs() {
-
-    }
-
 }

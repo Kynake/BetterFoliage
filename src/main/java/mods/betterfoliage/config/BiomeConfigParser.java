@@ -3,57 +3,82 @@ package mods.betterfoliage.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.BiomeGenBase;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.client.resource.ResourceUtils;
 
 public class BiomeConfigParser {
 
-    public static int[] parseValidBiomeIDs(final String[] userConfigs, final String resourceConfigsPath) {
+    public static boolean[] parseValidBiomeIDs(final String[] userConfigs, final ResourceLocation location) {
         List<BiomeFilterRule> rules = new ArrayList<>();
 
-        // Get filter from config file
+        // Get filters from player's config file (highest priority)
+        List<String> blockingFilters = new ArrayList<>();
+        List<String> standardFilters = new ArrayList<>();
+
         for (final String config : userConfigs) {
-            BiomeFilterRule rule = BiomeFilterRule.parseFilter(config);
+            if (config == null) {
+                continue;
+            }
+
+            String trim = config.trim();
+            if (trim.startsWith("-")) {
+                blockingFilters.add(trim);
+            } else {
+                standardFilters.add(trim);
+            }
+        }
+
+        for (final String blockingFilter : blockingFilters) {
+            BiomeFilterRule rule = BiomeFilterRule.parseFilter(blockingFilter);
             if (rule != null) {
                 rules.add(rule);
             }
         }
 
-        rules.sort(null);
+        for (final String standardFilter : standardFilters) {
+            BiomeFilterRule rule = BiomeFilterRule.parseFilter(standardFilter);
+            if (rule != null) {
+                rules.add(rule);
+            }
+        }
 
-        // TODO: open all resource files with path and add them to rules list in order
+        // Get filters from resourcepacks (in order of priority)
+        final List<String> combinedResourceFilters = ResourceUtils.assembleFiltersByResource(location);
+        for (final String filter : combinedResourceFilters) {
+            BiomeFilterRule rule = BiomeFilterRule.parseFilter(filter);
+            if (rule != null) {
+                rules.add(rule);
+            }
+        }
 
-        List<Integer> validBiomes = new ArrayList<>();
-
+        // Run all biomes through the filters
         final BiomeGenBase[] biomes = BiomeGenBase.getBiomeGenArray();
-        for (final BiomeGenBase biome : biomes) {
+        boolean[] res = new boolean[biomes.length];
+        for (int i = 0; i < biomes.length; i++) {
+            res[i] = false;
+
+            final BiomeGenBase biome = biomes[i];
             if (biome == null) {
                 continue;
             }
 
             for (final BiomeFilterRule rule : rules) {
                 if (rule.matchesBiome(biome)) {
-                    if (!rule.isBlockingRule) {
-                        validBiomes.add(biome.biomeID);
-                    }
+                    res[i] = !rule.isBlockingRule;
                     break;
                 }
             }
         }
 
-        int[] res = new int[validBiomes.size()];
-        for (int i = 0; i < validBiomes.size(); i++) {
-            res[i] = validBiomes.get(i);
-        }
-
         return res;
     }
 
-    private static class BiomeFilterRule implements Comparable<BiomeFilterRule> {
+    private static class BiomeFilterRule {
 
         public final boolean isBlockingRule;
 
@@ -82,12 +107,6 @@ public class BiomeConfigParser {
         public final float maxHumidity;
 
         public static BiomeFilterRule parseFilter(String filter) {
-            if (filter == null) {
-                return null;
-            }
-
-            filter = filter.trim();
-
             if (filter.isEmpty() || StringUtils.startsWithAny(filter, "#", "//", "!")) {
                 return null;
             }
@@ -376,16 +395,6 @@ public class BiomeConfigParser {
             }
 
             return true;
-        }
-
-        @Override
-        /// For sorting, blocking rules have priority over non-blocking ones.
-        public int compareTo(@NotNull BiomeFilterRule other) {
-            if (isBlockingRule == other.isBlockingRule) {
-                return 0;
-            }
-
-            return isBlockingRule ? -1 : 1;
         }
     }
 }

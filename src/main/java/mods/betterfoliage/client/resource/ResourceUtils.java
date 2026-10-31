@@ -210,6 +210,54 @@ public class ResourceUtils {
         return new ResourceLocation(domain, path);
     }
 
+    /// Given a set of multiple properties.cfg files at a location, assemble a list of non-comment, non-empty unique
+    /// filters from all files, ordered by resourcepack priority.
+    /// Each resource file's lines will be sorted such that blocking filters will have priority over non-blocking ones
+    public static List<String> assembleFiltersByResource(ResourceLocation location) {
+        if (!isPropertiesFile(location)) {
+            BetterFoliageMod.log.error("Failed to read properties: {} is not a properties file.", location);
+            return Collections.emptyList();
+        }
+
+        List<InputStream> files = findAllResourcesAtLocation(location);
+        if (files.isEmpty()) return Collections.emptyList();
+
+        HashSet<String> found = new HashSet<>();
+        List<String> lines = new ArrayList<>();
+
+        List<String> blockingFileFilters = new ArrayList<>();
+        List<String> standardFileFilters = new ArrayList<>();
+
+        for (InputStream is : files) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    line = line.trim();
+                    if (!line.isEmpty() && !StringUtils.startsWithAny(line, "#", "//", "!") && !found.contains(line)) {
+                        found.add(line);
+                        if (line.startsWith("-")) {
+                            blockingFileFilters.add(line);
+                        } else {
+                            standardFileFilters.add(line);
+                        }
+                    }
+                }
+
+                lines.addAll(blockingFileFilters);
+                blockingFileFilters.clear();
+
+                lines.addAll(standardFileFilters);
+                standardFileFilters.clear();
+            } catch (IOException e) {
+                BetterFoliageMod.log
+                    .error("Failed to read InputStream for ResourceLocation {}. {}", location, e.getMessage());
+            }
+        }
+
+        return lines;
+    }
+
+    /// Given a set of multiple properties.cfg files at a location, assemble a list of unique "key=value" properties.
     public static Map<String, String> assemblePropertiesByResource(ResourceLocation location) {
         if (!isPropertiesFile(location)) {
             BetterFoliageMod.log.error("Failed to read properties: {} is not a properties file.", location);
