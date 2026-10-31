@@ -15,6 +15,7 @@ import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.client.resource.SpriteSingle;
+import mods.betterfoliage.config.Configs;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICustomSidePositionRenderer;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICustomSideSpritesRenderer;
@@ -35,7 +36,6 @@ public class CoralRenderer extends BlockRenderer {
         ForgeDirection.EAST
     };
 
-    // TODO: fix rotation
     private static final ForgeDirection[] ROTATIONS = {
         ForgeDirection.UNKNOWN,
         ForgeDirection.WEST,
@@ -62,27 +62,23 @@ public class CoralRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        if (!Config.coral.INSTANCE.getEnabled()) return false;
+        if (!Configs.Coral.enabled) return false;
 
-        if (!Config.coral.INSTANCE.getShallowWater()) {
+        if (!BlockUtils.isWater(world.getBlock(x, y + 1, z))) return false;
+
+        if (!Configs.Coral.shallowWater) {
             if (!BlockUtils.isWater(world.getBlock(x, y + 2, z))) return false;
         }
 
-        if (!BlockUtils.isWater(world.getBlock(x, y + 1, z))) return false;
+        final int biomeID = world.getBiomeGenForCoords(x, z).biomeID;
+        if (!Configs.Coral.biomes[biomeID]) {
+            return false;
+        }
 
         if (!Config.blocks.INSTANCE.getSand()
             .matchesID(world.getBlock(x, y, z))) return false;
 
-        // TODO: Use [0, 1] based range
-        final float threshold = Config.coral.INSTANCE.getPopulation() / 64.0f;
-        if (!noise.isBelowThreshold(x, z, threshold)) return false;
-
-        final int currentBiomeId = world.getBiomeGenForCoords(x, z).biomeID;
-        for (int biomeId : Config.coral.INSTANCE.getBiomes()) {
-            if (currentBiomeId == biomeId) return true;
-        }
-
-        return false;
+        return noise.isBelowThreshold(x, z, Configs.Coral.threshold);
     }
 
     @Override
@@ -98,64 +94,72 @@ public class CoralRenderer extends BlockRenderer {
 
         if (!renderResult) return false;
 
-        // TODO Add configurable
-        // Render Crust
         final int coordHash = MathUtils.hashCoords(x, y, z, SALT);
 
-        final ICustomSideSpritesRenderer customSpriteRenderer = (ICustomSideSpritesRenderer) renderer;
-        customSpriteRenderer.betterfoliage$setSpriteProvider(spriteProvider);
+        // Render Crust
+        if (Configs.Coral.renderCrust) {
+            final ICustomSideSpritesRenderer customSpriteRenderer = (ICustomSideSpritesRenderer) renderer;
+            customSpriteRenderer.betterfoliage$setSpriteProvider(spriteProvider);
 
-        final ICustomSidePositionRenderer customSizeRenderer = (ICustomSidePositionRenderer) renderer;
-        customSizeRenderer.betterfoliage$setSidesWithCustomProperties(
-            MathUtils.hashToRange(coordHash, 0.01, Config.coral.INSTANCE.getVOffset()),
-            Config.coral.INSTANCE.getCrustSize() - 1.0,
-            true,
-            true,
-            true);
+            final ICustomSidePositionRenderer customSizeRenderer = (ICustomSidePositionRenderer) renderer;
+            customSizeRenderer.betterfoliage$setSidesWithCustomProperties(
+                MathUtils.hashToRange(coordHash, 0.01f, Configs.Coral.vOffset),
+                Configs.Coral.crustSize - 1f,
+                true,
+                true,
+                true);
 
-        renderer.renderStandardBlock(block, x, y, z);
+            renderer.renderStandardBlock(block, x, y, z);
 
-        customSpriteRenderer.betterfoliage$resetSpriteProvider();
-        customSizeRenderer.betterfoliage$resetCustomProperties();
+            customSpriteRenderer.betterfoliage$resetSpriteProvider();
+            customSizeRenderer.betterfoliage$resetCustomProperties();
+        }
 
-        // TODO Add configurable
         // Render Coral
-        final ICrossedSquaresRenderer coralRenderer = (ICrossedSquaresRenderer) renderer;
+        if (Configs.Coral.renderCoral) {
+            final ICrossedSquaresRenderer coralRenderer = (ICrossedSquaresRenderer) renderer;
 
-        Tessellator tessellator = Tessellator.instance;
+            Tessellator tessellator = Tessellator.instance;
 
-        for (int i = 0; i < SIDES.length; i++) {
-            final int ordinal = SIDES[i].ordinal();
+            for (int i = 0; i < SIDES.length; i++) {
+                final int ordinal = SIDES[i].ordinal();
 
-            if (!CoralSpriteProvider.shouldRenderSide(x, y, z, ordinal)) {
-                continue;
+                if (CoralSpriteProvider.shouldSkipSide(x, y, z, ordinal)) {
+                    continue;
+                }
+
+                final int xSide = x + SIDES[i].offsetX;
+                final int ySide = y + SIDES[i].offsetY;
+                final int zSide = z + SIDES[i].offsetZ;
+
+                if (world.getBlock(xSide, ySide, zSide)
+                    .isOpaqueCube()) {
+                    continue;
+                }
+
+                final float hOffset = Configs.Coral.hOffset;
+                final double xOffset = (double) xSide
+                    + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
+                final double zOffset = (double) zSide
+                    + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
+
+                tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, xSide, ySide, zSide));
+                RenderUtils.setColorMultiplierBySide(tessellator, ordinal);
+
+                coralRenderer.betterfoliage$setRotation(xSide + 0.5, ySide + 0.5, zSide + 0.5, ROTATIONS[i]);
+
+                final IIcon sprite = spriteProvider.getFirstCoralForCoord(x, y, z, ordinal);
+                if (Configs.Coral.mixCoral) {
+                    final IIcon spriteTwo = spriteProvider.getSecondCoralForCoord(x, y, z, ordinal);
+                    coralRenderer.betterfoliage$setSecondSprite(spriteTwo);
+                    renderer.drawCrossedSquares(sprite, xOffset, ySide, zOffset, Configs.Coral.coralSize);
+                    coralRenderer.betterfoliage$setSecondSprite(null);
+                } else {
+                    renderer.drawCrossedSquares(sprite, xOffset, ySide, zOffset, Configs.Coral.coralSize);
+                }
+
+                coralRenderer.betterfoliage$resetRotation();
             }
-
-            final int xSide = x + SIDES[i].offsetX;
-            final int ySide = y + SIDES[i].offsetY;
-            final int zSide = z + SIDES[i].offsetZ;
-
-            if (world.getBlock(xSide, ySide, zSide)
-                .isOpaqueCube()) {
-                continue;
-            }
-
-            // TODO: Add config using only one sprite on the same crossed square
-            final IIcon spriteOne = spriteProvider.getFirstCoralForCoord(x, y, z, ordinal);
-            final IIcon spriteTwo = spriteProvider.getSecondCoralForCoord(x, y, z, ordinal);
-
-            final double hOffset = Config.coral.INSTANCE.getHOffset();
-            final double xOffset = xSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
-            final double zOffset = zSide + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
-
-            tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, xSide, ySide, zSide));
-            RenderUtils.setColorMultiplierBySide(tessellator, ordinal);
-
-            coralRenderer.betterfoliage$setSecondSprite(spriteTwo);
-            coralRenderer.betterfoliage$setRotation(xSide + 0.5, ySide + 0.5, zSide + 0.5, ROTATIONS[i]);
-            renderer.drawCrossedSquares(spriteOne, xOffset, ySide, zOffset, (float) Config.coral.INSTANCE.getSize());
-            coralRenderer.betterfoliage$resetRotation();
-            coralRenderer.betterfoliage$setSecondSprite(null);
         }
 
         return true;
@@ -179,9 +183,13 @@ public class CoralRenderer extends BlockRenderer {
 
         @Override
         public IIcon getSpriteForCoord(int x, int y, int z, int side) {
-            // TODO: Add option for rendering the same crust sprite on all sides (legacy behaviour)
-            return shouldRenderSide(x, y, z, side) ? crust.getSpriteForCoord(x, y, z, side)
-                : empty.getSpriteForCoord(x, y, z, side);
+            if (shouldSkipSide(x, y, z, side)) {
+                return empty.getSpriteForCoord(x, y, z, side);
+            }
+
+            // Copy UP direction if mix is disabled
+            final int crustSide = Configs.Coral.mixCrust ? side : 1;
+            return crust.getSpriteForCoord(x, y, z, crustSide);
         }
 
         public IIcon getFirstCoralForCoord(int x, int y, int z, int side) {
@@ -192,11 +200,10 @@ public class CoralRenderer extends BlockRenderer {
             return coral.getSpriteForCoord(x, y, z, side + 6);
         }
 
-        public static boolean shouldRenderSide(int x, int y, int z, int side) {
+        public static boolean shouldSkipSide(int x, int y, int z, int side) {
             int hash = MathUtils.hashCoords(x, y, z, side);
 
-            // TODO convert to [0, 1] range RNG
-            return MathUtils.hashToRange(hash, 0, 64) < Config.coral.INSTANCE.getChance();
+            return (MathUtils.hashInverseLerp(hash) > Configs.Coral.chance);
         }
     }
 }

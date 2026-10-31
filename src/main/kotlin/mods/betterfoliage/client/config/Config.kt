@@ -140,17 +140,17 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
 //    }
 
     // TODO: SPECIAL CASE Biomes
-    object coral {
-        val enabled by featureEnable()
-        val shallowWater by boolean(false)
-        val hOffset by double(max = 0.4, default = 0.2).lang("hOffset")
-        val vOffset by double(max = 0.4, default = 0.1).lang("vOffset")
-        val size by double(min = 0.5, max = 1.5, default = 0.7).lang("size")
-        val crustSize by double(min = 0.5, max = 1.5, default = 1.4)
-        val chance by int(max = 64, default = 32)
-        val population by int(max = 64, default = 48).lang("population")
-        val biomes by biomeList { it.filterClass("river", "ocean", "beach") }
-    }
+//    object coral {
+//        val enabled by featureEnable()
+//        val shallowWater by boolean(false)
+//        val hOffset by double(max = 0.4, default = 0.2).lang("hOffset")
+//        val vOffset by double(max = 0.4, default = 0.1).lang("vOffset")
+//        val size by double(min = 0.5, max = 1.5, default = 0.7).lang("size")
+//        val crustSize by double(min = 0.5, max = 1.5, default = 1.4)
+//        val chance by int(max = 64, default = 32)
+//        val population by int(max = 64, default = 48).lang("population")
+//        val biomes by biomeList { it.filterClass("river", "ocean", "beach") }
+//    }
 
 //    object netherrack {
 //        val enabled by featureEnable()
