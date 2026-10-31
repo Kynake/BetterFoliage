@@ -74,8 +74,8 @@ public class CoralRenderer extends BlockRenderer {
             .matchesID(world.getBlock(x, y, z))) return false;
 
         // TODO: Use [0, 1] based range
-        final float threshold = Config.coral.INSTANCE.getPopulation() / 32.0f;
-        if (noise.isAboveThreshold(x, z, threshold)) return false;
+        final float threshold = Config.coral.INSTANCE.getPopulation() / 64.0f;
+        if (!noise.isBelowThreshold(x, z, threshold)) return false;
 
         final int currentBiomeId = world.getBiomeGenForCoords(x, z).biomeID;
         for (int biomeId : Config.coral.INSTANCE.getBiomes()) {

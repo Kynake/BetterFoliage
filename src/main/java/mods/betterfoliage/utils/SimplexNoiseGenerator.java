@@ -15,9 +15,8 @@ public class SimplexNoiseGenerator {
         noise = new NoiseGeneratorSimplex(new Random((long) Configs.seed + (long) salt));
     }
 
-    // TODO: Actually check distribution of what is calculated here, instead of just copying the old mod
-    // Good enough for now
-    public boolean isAboveThreshold(int x, int y, float threshold) {
-        return noise.func_151605_a(x, y) + 1.0 > threshold;
+    public boolean isBelowThreshold(int x, int y, float threshold) {
+        // Converts threshold from [0, 1] range to [1, 1]
+        return noise.func_151605_a(x, y) < 2f * threshold - 1f;
     }
 }
