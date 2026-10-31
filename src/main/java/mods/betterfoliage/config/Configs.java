@@ -85,6 +85,9 @@ public final class Configs {
         public static boolean useGenerated = false;
         private static final String useGeneratedDesc = "Generate Short Grass textures from existing grass foliage textures";
 
+        // TODO: Add shader wind support
+        //public static boolean shaderWind = true;
+
         public static void initializeFileConfigs(final Configuration config) {
             final String category = "shortGrass";
 
@@ -512,6 +515,9 @@ public final class Configs {
         public static boolean mixTextures = true;
         private static final String mixTexturesDesc = "Allow mixing of two different textures for rendered reed";
 
+        // TODO: Add shader wind support
+        //public static boolean shaderWind = true;
+
         public static boolean[] biomes;
 
         public static void initializeFileConfigs(final Configuration config) {
@@ -556,7 +562,7 @@ public final class Configs {
 
     public static class Algae {
 
-        private static final String category = "reeds";
+        private static final String category = "algae";
 
         public static boolean enabled = true;
         private static final String enabledDesc = "Should render algae on dirt blocks in deep water";
@@ -569,6 +575,9 @@ public final class Configs {
 
         public static boolean mixTextures = true;
         private static final String mixTexturesDesc = "Allow mixing of two different textures for each rendered algae";
+
+        // TODO: Add shader wind support
+        //public static boolean shaderWind = true;
 
         public static boolean[] biomes;
 
