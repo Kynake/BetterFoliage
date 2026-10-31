@@ -86,7 +86,7 @@ public final class Configs {
         private static final String useGeneratedDesc = "Generate Short Grass textures from existing grass foliage textures";
 
         // TODO: Add shader wind support
-        //public static boolean shaderWind = true;
+        // public static boolean shaderWind = true;
 
         public static void initializeFileConfigs(final Configuration config) {
             final String category = "shortGrass";
@@ -516,7 +516,7 @@ public final class Configs {
         private static final String mixTexturesDesc = "Allow mixing of two different textures for rendered reed";
 
         // TODO: Add shader wind support
-        //public static boolean shaderWind = true;
+        // public static boolean shaderWind = true;
 
         public static boolean[] biomes;
 
@@ -577,7 +577,7 @@ public final class Configs {
         private static final String mixTexturesDesc = "Allow mixing of two different textures for each rendered algae";
 
         // TODO: Add shader wind support
-        //public static boolean shaderWind = true;
+        // public static boolean shaderWind = true;
 
         public static boolean[] biomes;
 
@@ -604,6 +604,97 @@ public final class Configs {
 
             biomes = BiomeConfigParser
                 .parseValidBiomeIDs(biomeFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "biomesAlgae.cfg"));
+
+            final BiomeGenBase[] gameBiomes = BiomeGenBase.getBiomeGenArray();
+            for (int i = 0; i < biomes.length; i++) {
+                if (biomes[i]) {
+                    BiomeGenBase biome = gameBiomes[i];
+                    BetterFoliageMod.log.info("Valid biome for {}: [{}] {}", category, i, biome.biomeName);
+                }
+            }
+        }
+    }
+
+    public static class Coral {
+
+        private static final String category = "coral";
+
+        public static boolean enabled;
+
+        public static boolean renderCoral = true;
+        private static final String renderCoralDesc = "Should render coral branches on underwater sand blocks";
+
+        public static boolean renderCrust = true;
+        private static final String renderCrustDesc = "Should render flat coral overlays on underwater sand blocks";
+
+        public static boolean shallowWater = false;
+        private static final String shallowWaterDesc = "Should coral also show up on shallow (1 block deep) water";
+
+        public static float hOffset;
+        public static float vOffset;
+
+        public static float coralSize;
+        private static final String coralSizeDesc = "Size of the coral branches that stick out";
+
+        public static float crustSize;
+        private static final String crustSizeDesc = "Size of the flat coral that covers the block";
+
+        public static double chance;
+        private static final String chanceDesc = "Chance that each face of a block will render coral";
+
+        public static float threshold;
+
+        public static boolean mixCoral = true;
+        private static final String mixCoralDesc = "Allow mixing of two different textures for each rendered coral branch";
+
+        public static boolean mixCrust = true;
+        private static final String mixCrustDesc = "Allow use of different coral crust textures for each side of the host block";
+
+        public static boolean[] biomes;
+
+        public static void initializeFileConfigs(final Configuration config) {
+            Property prop = config.get(category, "renderCoral", renderCoral, renderCoralDesc);
+            renderCoral = prop.getBoolean();
+
+            prop = config.get(category, "renderCrust", renderCrust, renderCrustDesc);
+            renderCrust = prop.getBoolean();
+
+            enabled = renderCoral | renderCrust;
+
+            prop = config.get(category, "shallowWater", shallowWater, shallowWaterDesc);
+            shallowWater = prop.getBoolean();
+
+            prop = config.get(category, "hOffset", 0.2, hOffsetDesc, 0.0, 0.4);
+            hOffset = (float) prop.getDouble();
+
+            prop = config.get(category, "vOffset", 0.1, vOffsetDesc, 0.0, 0.4);
+            vOffset = (float) prop.getDouble();
+
+            prop = config.get(category, "coralSize", 0.7, coralSizeDesc, 0.5, 1.5);
+            coralSize = (float) prop.getDouble();
+
+            prop = config.get(category, "crustSize", 1.4, crustSizeDesc, 0.5, 1.5);
+            crustSize = (float) prop.getDouble();
+
+            prop = config.get(category, "chance", 0.5, chanceDesc, 0.0, 1.0);
+            chance = prop.getDouble();
+
+            prop = config.get(category, "threshold", 0.75, thresholdDesc, 0.0, 1.0);
+            threshold = (float) prop.getDouble();
+
+            prop = config.get(category, "mixCoral", mixCoral, mixCoralDesc);
+            mixCoral = prop.getBoolean();
+
+            prop = config.get(category, "mixCrust", mixCrust, mixCrustDesc);
+            mixCrust = prop.getBoolean();
+        }
+
+        public static void postInit(final Configuration config) {
+            String[] biomeFilters = config.get(category, "biomes", new String[] {}, biomesDesc)
+                .getStringList();
+
+            biomes = BiomeConfigParser
+                .parseValidBiomeIDs(biomeFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "biomesCoral.cfg"));
 
             final BiomeGenBase[] gameBiomes = BiomeGenBase.getBiomeGenArray();
             for (int i = 0; i < biomes.length; i++) {
@@ -663,6 +754,7 @@ public final class Configs {
 
         Reeds.postInit(config);
         Algae.postInit(config);
+        Coral.postInit(config);
 
         if (config.hasChanged()) {
             config.save();
@@ -701,5 +793,6 @@ public final class Configs {
         Cactus.initializeFileConfigs(config);
         Reeds.initializeFileConfigs(config);
         Algae.initializeFileConfigs(config);
+        Coral.initializeFileConfigs(config);
     }
 }
