@@ -76,27 +76,34 @@ public class ReedsRenderer extends BlockRenderer {
         if (!renderResult) return false;
 
         // Render Algae
-        int coordHash = MathUtils.hashCoords(x, y + 1, z, SALT);
+        final int yOffset = y + 1;
+
+        int coordHash = MathUtils.hashCoords(x, yOffset, z, SALT);
+
         final float hOffset = Configs.Reeds.hOffset;
         double xOffset = (double) x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
         double zOffset = (double) z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
+        final float scale = Configs.Reeds.size * ReedsGenerator.HORIZONTAL_SCALING;
         float verticalScale = MathUtils.hashToRange(coordHash, Configs.Reeds.heightMin, Configs.Reeds.heightMax);
 
         Tessellator tessellator = Tessellator.instance;
         tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y + 2, z));
         tessellator.setColorOpaque(0xFF, 0xFF, 0xFF);
 
-        IIcon sprite = reeds.getSpriteForCoord(x, y + 1, z);
-
         ICrossedSquaresRenderer reedsRenderer = (ICrossedSquaresRenderer) renderer;
         reedsRenderer.betterfoliage$setVerticalScale(verticalScale);
-        renderer.drawCrossedSquares(
-            sprite,
-            xOffset,
-            y + 1,
-            zOffset,
-            (float) Config.algae.INSTANCE.getSize() * ReedsGenerator.HORIZONTAL_SCALING);
+
+        IIcon sprite = reeds.getSpriteForCoord(x, yOffset, z);
+        if (Configs.Reeds.mixTextures) {
+            IIcon secondSprite = reeds.getSpriteForCoord(x, yOffset, z, 6);
+
+            reedsRenderer.betterfoliage$setSecondSprite(secondSprite);
+            renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, scale);
+            reedsRenderer.betterfoliage$setSecondSprite(null);
+        } else {
+            renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, scale);
+        }
         reedsRenderer.betterfoliage$resetVerticalScale();
 
         return true;

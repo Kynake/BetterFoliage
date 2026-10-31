@@ -505,7 +505,12 @@ public final class Configs {
         public static float heightMin;
         public static float heightMax;
 
+        public static float size;
+
         public static float threshold;
+
+        public static boolean mixTextures = true;
+        private static final String mixTexturesDesc = "Allow mixing of two different textures for rendered reed";
 
         public static boolean[] biomes;
 
@@ -522,8 +527,14 @@ public final class Configs {
             prop = config.get(category, "heightMax", 2.2, heightMaxDesc, 1.5, 3.5);
             heightMax = (float) prop.getDouble();
 
+            prop = config.get(category, "size", 1.0, sizeDesc, 0.5, 1.5);
+            size = (float) prop.getDouble();
+
             prop = config.get(category, "threshold", 0.5, thresholdDesc, 0.0, 1.0);
             threshold = (float) prop.getDouble();
+
+            prop = config.get(category, "mixTextures", mixTextures, mixTexturesDesc);
+            mixTextures = prop.getBoolean();
         }
 
         public static void postInit(final Configuration config) {
@@ -537,7 +548,7 @@ public final class Configs {
             for (int i = 0; i < biomes.length; i++) {
                 if (biomes[i]) {
                     BiomeGenBase biome = gameBiomes[i];
-                    BetterFoliageMod.log.info("Valid biome for {}: [{}]\t{}", category, i, biome.biomeName);
+                    BetterFoliageMod.log.info("Valid biome for {}: [{}] {}", category, i, biome.biomeName);
                 }
             }
         }
