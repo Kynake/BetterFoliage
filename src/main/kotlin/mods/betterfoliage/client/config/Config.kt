@@ -116,15 +116,15 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
 //    }
 
     // TODO: SPECIAL CASE Biomes
-    object reed {
-        val enabled by featureEnable()
-        val hOffset by double(max = 0.4, default = 0.2).lang("hOffset")
-        val heightMin by double(min = 1.5, max = 3.5, default = 1.7).lang("heightMin")
-        val heightMax by double(min = 1.5, max = 3.5, default = 2.2).lang("heightMax")
-        val population by int(max = 64, default = 32).lang("population")
-        val biomes by biomeList { it.filterTemp(0.4f, null) && it.filterRain(0.4f, null) }
-        // val shaderWind by boolean(true).lang("shaderWind")
-    }
+//    object reed {
+//        val enabled by featureEnable()
+//        val hOffset by double(max = 0.4, default = 0.2).lang("hOffset")
+//        val heightMin by double(min = 1.5, max = 3.5, default = 1.7).lang("heightMin")
+//        val heightMax by double(min = 1.5, max = 3.5, default = 2.2).lang("heightMax")
+//        val population by int(max = 64, default = 32).lang("population")
+//        val biomes by biomeList { it.filterTemp(0.4f, null) && it.filterRain(0.4f, null) }
+//        // val shaderWind by boolean(true).lang("shaderWind")
+//    }
 
     // TODO: SPECIAL CASE Biomes
     object algae {

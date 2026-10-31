@@ -13,6 +13,7 @@ import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.generators.ReedsGenerator;
+import mods.betterfoliage.config.Configs;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
@@ -42,26 +43,22 @@ public class ReedsRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        if (!Config.reed.INSTANCE.getEnabled()) return false;
+        if (!Configs.Reeds.enabled) return false;
 
         if (!BlockUtils.isWater(world.getBlock(x, y + 1, z))) return false;
 
         if (world.getBlock(x, y + 2, z)
             .getMaterial() != Material.air) return false;
 
+        final int biomeID = world.getBiomeGenForCoords(x, z).biomeID;
+        if (!Configs.Reeds.biomes[biomeID]) {
+            return false;
+        }
+
         if (!Config.blocks.INSTANCE.getDirt()
             .matchesID(world.getBlock(x, y, z))) return false;
 
-        // TODO: Use [0, 1] based range
-        final float threshold = Config.reed.INSTANCE.getPopulation() / 32.0f;
-        if (noise.isAboveThreshold(x, z, threshold)) return false;
-
-        final int currentBiomeId = world.getBiomeGenForCoords(x, z).biomeID;
-        for (int biomeId : Config.reed.INSTANCE.getBiomes()) {
-            if (currentBiomeId == biomeId) return true;
-        }
-
-        return false;
+        return noise.isBelowThreshold(x, z, Configs.Reeds.threshold);
     }
 
     @Override
@@ -80,12 +77,11 @@ public class ReedsRenderer extends BlockRenderer {
 
         // Render Algae
         int coordHash = MathUtils.hashCoords(x, y + 1, z, SALT);
-        double hOffset = Config.reed.INSTANCE.getHOffset();
-        double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
-        double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
+        final float hOffset = Configs.Reeds.hOffset;
+        double xOffset = (double) x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
+        double zOffset = (double) z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
-        float verticalScale = (float) MathUtils
-            .hashToRange(coordHash, Config.reed.INSTANCE.getHeightMin(), Config.reed.INSTANCE.getHeightMax());
+        float verticalScale = MathUtils.hashToRange(coordHash, Configs.Reeds.heightMin, Configs.Reeds.heightMax);
 
         Tessellator tessellator = Tessellator.instance;
         tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y + 2, z));
