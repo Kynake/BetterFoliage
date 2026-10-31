@@ -14,6 +14,8 @@ import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.SpriteSet;
+import mods.betterfoliage.config.Configs;
+import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
 import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
 import mods.betterfoliage.utils.SimplexNoiseGenerator;
@@ -41,24 +43,20 @@ public class AlgaeRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        if (!Config.algae.INSTANCE.getEnabled()) return false;
+        if (!Configs.Algae.enabled) return false;
         if (!(BlockUtils.isWater(world.getBlock(x, y + 1, z)) && BlockUtils.isWater(world.getBlock(x, y + 2, z)))) {
+            return false;
+        }
+
+        final int biomeID = world.getBiomeGenForCoords(x, z).biomeID;
+        if (!Configs.Algae.biomes[biomeID]) {
             return false;
         }
 
         if (!Config.blocks.INSTANCE.getDirt()
             .matchesID(world.getBlock(x, y, z))) return false;
 
-        // TODO: Use [0, 1] based range
-        final float threshold = Config.algae.INSTANCE.getPopulation() / 64.0f;
-        if (!noise.isBelowThreshold(x, z, threshold)) return false;
-
-        final int currentBiomeId = world.getBiomeGenForCoords(x, z).biomeID;
-        for (int biomeId : Config.algae.INSTANCE.getBiomes()) {
-            if (currentBiomeId == biomeId) return true;
-        }
-
-        return false;
+        return noise.isBelowThreshold(x, z, Configs.Algae.threshold);
     }
 
     @Override
@@ -75,21 +73,32 @@ public class AlgaeRenderer extends BlockRenderer {
         if (!renderResult) return false;
 
         // Render Algae
-        int coordHash = MathUtils.hashCoords(x, y + 1, z, SALT);
-        double hOffset = Config.algae.INSTANCE.getHOffset();
-        double xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
-        double zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
+        final int yOffset = y + 1;
+
+        int coordHash = MathUtils.hashCoords(x, yOffset, z, SALT);
+
+        final float hOffset = Configs.Algae.hOffset;
+        double xOffset = (double) x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
+        double zOffset = (double) z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
         Tessellator tessellator = Tessellator.instance;
-        tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y + 1, z));
+        tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, yOffset, z));
 
         final int color = GT5UIntegration.applyLeafPollutionTint(RenderUtils.DEFAULT_COLOR_MULTIPLIER, x, z);
         tessellator.setColorOpaque_I(color);
 
-        IIcon sprite = algae.getSpriteForCoord(x, y + 1, z);
+        IIcon sprite = algae.getSpriteForCoord(x, yOffset, z);
 
-        // TODO: Add config for mixing two sprites on the same crossed square
-        renderer.drawCrossedSquares(sprite, xOffset, y + 1, zOffset, (float) Config.algae.INSTANCE.getSize());
+        if (Configs.Algae.mixTextures) {
+            ICrossedSquaresRenderer algaeRenderer = (ICrossedSquaresRenderer) renderer;
+
+            IIcon secondSprite = algae.getSpriteForCoord(x, yOffset, z, 6);
+            algaeRenderer.betterfoliage$setSecondSprite(secondSprite);
+            renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, Configs.Algae.size);
+            algaeRenderer.betterfoliage$setSecondSprite(null);
+        } else {
+            renderer.drawCrossedSquares(sprite, xOffset, yOffset, zOffset, Configs.Algae.size);
+        }
 
         return true;
     }
