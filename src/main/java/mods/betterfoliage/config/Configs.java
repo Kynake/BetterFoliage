@@ -554,6 +554,58 @@ public final class Configs {
         }
     }
 
+    public static class Algae {
+
+        private static final String category = "reeds";
+
+        public static boolean enabled = true;
+        private static final String enabledDesc = "Should render algae on dirt blocks in deep water";
+
+        public static float hOffset;
+
+        public static float size;
+
+        public static float threshold;
+
+        public static boolean mixTextures = true;
+        private static final String mixTexturesDesc = "Allow mixing of two different textures for each rendered algae";
+
+        public static boolean[] biomes;
+
+        public static void initializeFileConfigs(final Configuration config) {
+            Property prop = config.get(category, "enabled", enabled, enabledDesc);
+            enabled = prop.getBoolean();
+
+            prop = config.get(category, "hOffset", 0.1, hOffsetDesc, 0.0, 0.5);
+            hOffset = (float) prop.getDouble();
+
+            prop = config.get(category, "size", 1.0, sizeDesc, 0.5, 1.5);
+            size = (float) prop.getDouble();
+
+            prop = config.get(category, "threshold", 0.5, thresholdDesc, 0.0, 1.0);
+            threshold = (float) prop.getDouble();
+
+            prop = config.get(category, "mixTextures", mixTextures, mixTexturesDesc);
+            mixTextures = prop.getBoolean();
+        }
+
+        public static void postInit(final Configuration config) {
+            String[] biomeFilters = config.get(category, "biomes", new String[] {}, biomesDesc)
+                .getStringList();
+
+            biomes = BiomeConfigParser
+                .parseValidBiomeIDs(biomeFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "biomesAlgae.cfg"));
+
+            final BiomeGenBase[] gameBiomes = BiomeGenBase.getBiomeGenArray();
+            for (int i = 0; i < biomes.length; i++) {
+                if (biomes[i]) {
+                    BiomeGenBase biome = gameBiomes[i];
+                    BetterFoliageMod.log.info("Valid biome for {}: [{}] {}", category, i, biome.biomeName);
+                }
+            }
+        }
+    }
+
     private static final String CONFIG_FILE_NAME = BetterFoliageMod.MOD_ID + "_LegacyEdition";
 
     private static Configs instance = null;
@@ -594,14 +646,17 @@ public final class Configs {
     }
 
     public static void postInit() {
-        if (instance.attachedConfig == null) {
+        final Configuration config = instance.attachedConfig;
+
+        if (config == null) {
             return;
         }
 
-        Reeds.postInit(instance.attachedConfig);
+        Reeds.postInit(config);
+        Algae.postInit(config);
 
-        if (instance.attachedConfig.hasChanged()) {
-            instance.attachedConfig.save();
+        if (config.hasChanged()) {
+            config.save();
         }
     }
 
@@ -636,5 +691,6 @@ public final class Configs {
         Lilypad.initializeFileConfigs(config);
         Cactus.initializeFileConfigs(config);
         Reeds.initializeFileConfigs(config);
+        Algae.initializeFileConfigs(config);
     }
 }
