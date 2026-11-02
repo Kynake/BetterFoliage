@@ -233,7 +233,7 @@ public class ResourceUtils {
                 String line;
                 while ((line = br.readLine()) != null) {
                     line = line.trim();
-                    if (!line.isEmpty() && !StringUtils.startsWithAny(line, "#", "//", "!") && !found.contains(line)) {
+                    if (!isCommentOrEmpty(line) && !found.contains(line)) {
                         found.add(line);
                         if (line.startsWith("-")) {
                             blockingFileFilters.add(line);
@@ -286,8 +286,9 @@ public class ResourceUtils {
     }
 
     private static void parsePropertyLine(String line, Map<String, String> outputMap) {
+        if (isCommentOrEmpty(line)) return;
+
         line = line.trim();
-        if (line.isEmpty() || StringUtils.startsWithAny(line, "#", "//", "!")) return;
 
         String[] parts = StringUtils.split(line, "=");
         if (parts == null || parts.length != 2) {
@@ -315,6 +316,26 @@ public class ResourceUtils {
         }
 
         outputMap.put(key, value);
+    }
+
+    public static boolean isCommentOrEmpty(final String line) {
+        if (line == null) {
+            return true;
+        }
+
+        final int length = line.length();
+        for (int i = 0; i < length; i++) {
+            final char lineChar = line.charAt(i);
+            if (lineChar <= ' ') continue;
+
+            return switch (lineChar) {
+                case '#', '!' -> true;
+                case '/' -> i < length - 1 && line.charAt(i + 1) == '/';
+                default -> false;
+            };
+        }
+
+        return true;
     }
 
     private static void addFromFolderIfPossible(File dir, String domain, String prefix, String suffix,
