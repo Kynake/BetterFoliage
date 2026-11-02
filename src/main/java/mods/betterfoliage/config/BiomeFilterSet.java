@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.resource.ResourceUtils;
 
-public class BiomeConfigParser {
+public class BiomeFilterSet {
 
     public static boolean[] parseValidBiomeIDs(final String[] userConfigs, final ResourceLocation location) {
         List<BiomeFilterRule> rules = new ArrayList<>();
@@ -20,16 +20,18 @@ public class BiomeConfigParser {
         List<String> blockingFilters = new ArrayList<>();
         List<String> standardFilters = new ArrayList<>();
 
-        for (final String config : userConfigs) {
-            if (config == null) {
-                continue;
-            }
+        if (userConfigs != null) {
+            for (final String config : userConfigs) {
+                if (config == null) {
+                    continue;
+                }
 
-            String trim = config.trim();
-            if (trim.startsWith("-")) {
-                blockingFilters.add(trim);
-            } else {
-                standardFilters.add(trim);
+                String trim = config.trim();
+                if (trim.startsWith("-")) {
+                    blockingFilters.add(trim);
+                } else {
+                    standardFilters.add(trim);
+                }
             }
         }
 
@@ -107,7 +109,7 @@ public class BiomeConfigParser {
         public final float maxHumidity;
 
         public static BiomeFilterRule parseFilter(String filter) {
-            if (filter.isEmpty() || StringUtils.startsWithAny(filter, "#", "//", "!")) {
+            if (ResourceUtils.isCommentOrEmpty(filter)) {
                 return null;
             }
 

@@ -547,7 +547,7 @@ public final class Configs {
             String[] biomeFilters = config.get(category, "biomes", new String[] {}, biomesDesc)
                 .getStringList();
 
-            biomes = BiomeConfigParser
+            biomes = BiomeFilterSet
                 .parseValidBiomeIDs(biomeFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "biomesReeds.cfg"));
 
             final BiomeGenBase[] gameBiomes = BiomeGenBase.getBiomeGenArray();
@@ -602,7 +602,7 @@ public final class Configs {
             String[] biomeFilters = config.get(category, "biomes", new String[] {}, biomesDesc)
                 .getStringList();
 
-            biomes = BiomeConfigParser
+            biomes = BiomeFilterSet
                 .parseValidBiomeIDs(biomeFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "biomesAlgae.cfg"));
 
             final BiomeGenBase[] gameBiomes = BiomeGenBase.getBiomeGenArray();
@@ -693,7 +693,7 @@ public final class Configs {
             String[] biomeFilters = config.get(category, "biomes", new String[] {}, biomesDesc)
                 .getStringList();
 
-            biomes = BiomeConfigParser
+            biomes = BiomeFilterSet
                 .parseValidBiomeIDs(biomeFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "biomesCoral.cfg"));
 
             final BiomeGenBase[] gameBiomes = BiomeGenBase.getBiomeGenArray();
