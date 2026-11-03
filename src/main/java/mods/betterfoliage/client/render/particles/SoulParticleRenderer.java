@@ -1,13 +1,10 @@
 package mods.betterfoliage.client.render.particles;
 
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.integration.EFRIntegration;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.SpriteSetRandom;
 import mods.betterfoliage.client.resource.SpriteSingle;
@@ -30,11 +27,6 @@ public class SoulParticleRenderer extends ParticleRenderer {
         "textures/blocks/soul_track.png");
 
     private final float initialRadians = MathUtils.PI2 * rand.nextFloat();
-
-    // TODO: Consider adding list of valid "soul" blocks to configs
-    public static boolean isValidSoulBlock(Block block) {
-        return block == Blocks.soul_sand || EFRIntegration.isEFRSoulSoil(block);
-    }
 
     public static void initSprites() {
         BetterFoliageMod.log.info("Soul particle sprites initialized");

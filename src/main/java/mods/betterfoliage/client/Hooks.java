@@ -52,9 +52,9 @@ public class Hooks {
     public static void onRandomDisplayTick(Block block, World world, int x, int y, int z) {
         if (!Configs.enabled) return;
 
-        if (Configs.RisingSouls.enabled && SoulParticleRenderer.isValidSoulBlock(block)
-            && Math.random() < Configs.RisingSouls.chance
-            && world.isAirBlock(x, y + 1, z)) {
+        if (Configs.RisingSouls.enabled && Math.random() < Configs.RisingSouls.chance
+            && world.isAirBlock(x, y + 1, z)
+            && Configs.Blocks.soulsand.matches(block, world, x, y, z)) {
             SoulParticleRenderer.spawnSoulParticle(world, x, y, z);
         }
 
