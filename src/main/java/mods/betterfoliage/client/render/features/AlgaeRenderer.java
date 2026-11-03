@@ -8,7 +8,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.integration.GT5UIntegration;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
@@ -53,8 +52,7 @@ public class AlgaeRenderer extends BlockRenderer {
             return false;
         }
 
-        if (!Config.blocks.INSTANCE.getDirt()
-            .matchesID(world.getBlock(x, y, z))) return false;
+        if (!Configs.Blocks.dirt.matches(world, x, y, z)) return false;
 
         return noise.isBelowThreshold(x, z, Configs.Algae.threshold);
     }

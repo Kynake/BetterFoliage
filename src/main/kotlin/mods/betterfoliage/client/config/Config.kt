@@ -14,9 +14,9 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
 
     // TODO: SPECIAL CASE Block
     object blocks {
-        val dirt = BlockMatcher(BetterFoliageMod.DOMAIN, "DirtDefault.cfg")
-        val grass = BlockMatcher(BetterFoliageMod.DOMAIN, "GrassDefault.cfg")
-        // val leaves = BlockMatcher(BetterFoliageMod.DOMAIN, "LeavesDefault.cfg")
+//        val dirt = BlockMatcher(BetterFoliageMod.DOMAIN, "DirtDefault.cfg")
+//        val grass = BlockMatcher(BetterFoliageMod.DOMAIN, "GrassDefault.cfg")
+//         val leaves = BlockMatcher(BetterFoliageMod.DOMAIN, "LeavesDefault.cfg")
         // val fallingLeaves = BlockMatcher(BetterFoliageMod.DOMAIN, "FallingLeavesDefault.cfg")
 
         // val crops = BlockMatcher(BetterFoliageMod.DOMAIN, "CropDefault.cfg")

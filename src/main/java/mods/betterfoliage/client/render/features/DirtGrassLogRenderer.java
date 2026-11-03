@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.config.BlockMatcher;
 import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.config.Configs;
@@ -29,8 +28,7 @@ public class DirtGrassLogRenderer extends BlockRenderer {
             return false;
         }
 
-        if (!Config.blocks.INSTANCE.getDirt()
-            .matchesID(world.getBlock(x, y, z))) {
+        if (!Configs.Blocks.dirt.matches(world, x, y, z)) {
             return false;
         }
 
@@ -43,26 +41,24 @@ public class DirtGrassLogRenderer extends BlockRenderer {
         RenderBlocks renderer) {
         Block renderBlock = block;
 
-        BlockMatcher grass = Config.blocks.INSTANCE.getGrass();
-
         // East
         Block sideBlock = world.getBlock(x + 1, y, z);
-        if (grass.matchesID(sideBlock)) {
+        if (Configs.Blocks.grass.matches(sideBlock, world, x + 1, y, z)) {
             renderBlock = sideBlock;
         } else {
             // West
             sideBlock = world.getBlock(x - 1, y, z);
-            if (grass.matchesID(sideBlock)) {
+            if (Configs.Blocks.grass.matches(sideBlock, world, x + 1, y, z)) {
                 renderBlock = sideBlock;
             } else {
                 // North
                 sideBlock = world.getBlock(x, y, z - 1);
-                if (grass.matchesID(sideBlock)) {
+                if (Configs.Blocks.grass.matches(sideBlock, world, x, y, z - 1)) {
                     renderBlock = sideBlock;
                 } else {
                     // South
                     sideBlock = world.getBlock(x, y, z + 1);
-                    if (grass.matchesID(sideBlock)) {
+                    if (Configs.Blocks.grass.matches(sideBlock, world, x, y, z + 1)) {
                         renderBlock = sideBlock;
                     }
                 }

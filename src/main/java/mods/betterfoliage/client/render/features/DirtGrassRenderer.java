@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.config.Configs;
 import mods.betterfoliage.mixins.interfaces.minecraft.IOffsetSpriteRenderer;
@@ -30,13 +29,7 @@ public class DirtGrassRenderer extends BlockRenderer {
             return false;
         }
 
-        if (!Config.blocks.INSTANCE.getDirt()
-            .matchesID(world.getBlock(x, y, z))) {
-            return false;
-        }
-
-        if (!Config.blocks.INSTANCE.getGrass()
-            .matchesID(world.getBlock(x, y + 1, z))) {
+        if (!(Configs.Blocks.dirt.matches(world, x, y, z) && Configs.Blocks.grass.matches(world, x, y + 1, z))) {
             return false;
         }
 

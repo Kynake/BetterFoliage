@@ -73,9 +73,12 @@ public class BlockFilterSet {
         blockCache = new HashMap<>();
     }
 
+    public boolean matches(final IBlockAccess world, final int x, final int y, final int z) {
+        return matches(world.getBlock(x, y, z), world.getBlockMetadata(x, y, z));
+    }
+
     public boolean matches(final Block block, final IBlockAccess world, final int x, final int y, final int z) {
-        final int metadata = world.getBlockMetadata(x, y, z);
-        return matches(block, metadata);
+        return matches(block, world.getBlockMetadata(x, y, z));
     }
 
     public boolean matches(final Block block, final int metadata) {

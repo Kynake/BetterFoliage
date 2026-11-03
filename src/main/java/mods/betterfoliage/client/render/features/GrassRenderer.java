@@ -9,7 +9,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.registries.GrassRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
@@ -53,8 +52,6 @@ public class GrassRenderer extends BlockRenderer {
         "textures/blocks/tallgrass.png");
     // spotless:on
 
-    // private PartialSprite genGrass = null;
-
     public static GrassRenderer getInstance() {
         if (instance == null) {
             BetterFoliageMod.log.info("Registering NEW! GrassRenderer");
@@ -66,8 +63,8 @@ public class GrassRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        return (Configs.ConnectedGrass.enabled | Configs.ShortGrass.grassEnabled) && Config.blocks.INSTANCE.getGrass()
-            .matchesID(world.getBlock(x, y, z));
+        return (Configs.ConnectedGrass.enabled | Configs.ShortGrass.grassEnabled)
+            && Configs.Blocks.grass.matches(world, x, y, z);
     }
 
     @Override
@@ -89,11 +86,10 @@ public class GrassRenderer extends BlockRenderer {
             isConnected = Configs.ConnectedGrass.snowEnabled || !hasSnowAbove;
 
             if (isConnected) {
-                Block blockBelow = world.getBlock(x, y - 1, z);
-                isConnected = Config.blocks.INSTANCE.getDirt()
-                    .matchesID(blockBelow)
-                    || Config.blocks.INSTANCE.getGrass()
-                        .matchesID(blockBelow);
+                final Block blockBelow = world.getBlock(x, y - 1, z);
+                final int blockBelowMeta = world.getBlockMetadata(x, y - 1, z);
+                isConnected = Configs.Blocks.dirt.matches(blockBelow, blockBelowMeta)
+                    || Configs.Blocks.grass.matches(blockBelow, blockBelowMeta);
             }
         }
 

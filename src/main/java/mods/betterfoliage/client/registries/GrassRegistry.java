@@ -8,9 +8,9 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.StitchListener;
+import mods.betterfoliage.config.Configs;
 
 public class GrassRegistry extends StitchListener {
 
@@ -49,8 +49,7 @@ public class GrassRegistry extends StitchListener {
         for (Object obj : Block.blockRegistry) {
             if (!(obj instanceof Block block)) continue;
 
-            if (!Config.blocks.INSTANCE.getGrass()
-                .matchesClass(block)) continue;
+            if (!Configs.Blocks.grass.matchesNoMeta(block)) continue;
 
             block.registerBlockIcons(location -> {
                 IIcon original = atlas.getTextureExtry(location);
