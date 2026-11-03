@@ -9,7 +9,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.render.RenderUtils;
@@ -75,8 +74,7 @@ public class CoralRenderer extends BlockRenderer {
             return false;
         }
 
-        if (!Config.blocks.INSTANCE.getSand()
-            .matchesID(world.getBlock(x, y, z))) return false;
+        if (!Configs.Blocks.sand.matches(world, x, y, z)) return false;
 
         return noise.isBelowThreshold(x, z, Configs.Coral.threshold);
     }
