@@ -11,7 +11,6 @@ import net.minecraft.world.IBlockAccess;
 
 import org.apache.commons.lang3.StringUtils;
 
-import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.resource.ResourceUtils;
 
 public class BlockFilterSet {
@@ -104,12 +103,6 @@ public class BlockFilterSet {
                     blockCache.put(metaKey, matches);
                     isAlteringCache = false;
                 }
-
-                BetterFoliageMod.log.info(
-                    "Added new block to filter cache: <{}{}> = {}",
-                    Block.blockRegistry.getNameForObject(block),
-                    (metadata != -1 ? ":" + metadata : ""),
-                    matches);
 
                 return matches;
             }
