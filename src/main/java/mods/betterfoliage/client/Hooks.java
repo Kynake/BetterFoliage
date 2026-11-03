@@ -26,25 +26,17 @@ public class Hooks {
         return renderer != null ? renderer.getRenderId() : original;
     }
 
-    // What: Invoke BF code to make block non-solid when the game otherwise considers it to be.
-    // Why: Allows us to make log blocks non-solid without messing with isOpaqueBlock(),
-    // which would result in side effects for gameplay (e.g. Can redstone be placed on top).
-    // Used by rounded logs to prevent the adjacent blocks' side from being invisible
     public static boolean overrideIsPartialBlock(IBlockAccess world, int x, int y, int z, boolean isPartial) {
-        return isPartial || LogRenderer.isRoundLog(world, x, y, z);
+        return !overrideIsOpaqueCube(world, x, y, z, !isPartial);
     }
 
     // What: Wrap external calls to isOpaqueCube to signal that a block is not an opaque cube
     // Why: Allows us to make other mods think that log blocks are non-solid without messing with the
     // isOpaqueBlock() method itself, which could affect gameplay (e.g. Can redstone be placed on top).
-    public static boolean overrideIsOpaqueCube(Block block, boolean isOpaque) {
-        return isOpaque && !LogRenderer.isRoundLog(block);
-    }
-
-    // What: Invoke BF code to override block.useNeighborBrightness
-    // Why: Allows us to have light behave properly on non-solid log blocks
-    public static boolean getUseNeighborBrightnessOverride(Block block, boolean original) {
-        return original || LogRenderer.isRoundLog(block);
+    // Used by rounded logs to prevent the adjacent blocks' side from being invisible,
+    // and to fix lighting glitches when using Angelica.
+    public static boolean overrideIsOpaqueCube(IBlockAccess world, int x, int y, int z, boolean isOpaque) {
+        return isOpaque && !LogRenderer.isRoundLog(world, x, y, z);
     }
 
     // What: Invoke BF code for every random display tick

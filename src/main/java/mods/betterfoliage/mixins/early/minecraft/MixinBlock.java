@@ -16,11 +16,6 @@ import mods.betterfoliage.client.Hooks;
 @Mixin(value = Block.class, priority = 1500)
 public abstract class MixinBlock {
 
-    @ModifyReturnValue(method = "getUseNeighborBrightness", at = @At("RETURN"))
-    private boolean betterfoliage$getUseNeighborBrightnessOverride(boolean original) {
-        return Hooks.getUseNeighborBrightnessOverride((Block) (Object) this, original);
-    }
-
     @ModifyReturnValue(method = "shouldSideBeRendered", at = @At("RETURN"))
     private boolean betterfoliage$shouldRenderBlockSideOverride(boolean original, IBlockAccess world, int x, int y,
         int z, int side) {

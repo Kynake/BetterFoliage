@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.config.Configs;
 
@@ -24,16 +23,11 @@ public class DirtGrassLogRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        if (!(Configs.RoundLogs.enabled & Configs.RoundLogs.connectGrass)) {
+        if (!(Configs.RoundLogs.connectGrass & LogRenderer.isRoundLog(world, x, y + 1, z))) {
             return false;
         }
 
-        if (!Configs.Blocks.dirt.matches(world, x, y, z)) {
-            return false;
-        }
-
-        return Config.blocks.INSTANCE.getLogs()
-            .matchesID(world.getBlock(x, y + 1, z));
+        return Configs.Blocks.dirt.matches(world, x, y, z);
     }
 
     @Override

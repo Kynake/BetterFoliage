@@ -8,8 +8,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.config.BlockMatcher;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.render.ShadingInfo;
@@ -34,16 +32,7 @@ public class LogRenderer extends BlockRenderer {
 
     public static boolean isRoundLog(IBlockAccess world, int x, int y, int z) {
         if (!(Configs.enabled & Configs.RoundLogs.enabled)) return false;
-
-        return Config.blocks.INSTANCE.getLogs()
-            .matchesID(world.getBlock(x, y, z));
-    }
-
-    public static boolean isRoundLog(Block block) {
-        if (!(Configs.enabled & Configs.RoundLogs.enabled)) return false;
-
-        return Config.blocks.INSTANCE.getLogs()
-            .matchesID(block);
+        return Configs.Blocks.logs.matches(world, x, y, z);
     }
 
     @Override
@@ -186,14 +175,12 @@ public class LogRenderer extends BlockRenderer {
     private static boolean shouldConnectToSide(ForgeDirection side, IBlockAccess world, int x, int y, int z,
         ForgeDirection axis) {
 
-        final BlockMatcher logs = Config.blocks.INSTANCE.getLogs();
-
         final int sideX = x + side.offsetX;
         final int sideY = y + side.offsetY;
         final int sideZ = z + side.offsetZ;
 
         final Block sideBlock = world.getBlock(sideX, sideY, sideZ);
-        final boolean isSideLog = logs.matchesID(sideBlock);
+        final boolean isSideLog = Configs.Blocks.logs.matches(sideBlock, world, sideX, sideY, sideZ);
 
         if (!isSideLog) {
             return Configs.RoundLogs.connectToSolids && sideBlock.isOpaqueCube();
@@ -217,11 +204,11 @@ public class LogRenderer extends BlockRenderer {
 
         Block latBlock = world.getBlock(latX, latY, latZ);
         ForgeDirection latAxis = determineLogAxis(world, latX, latY, latZ, latBlock);
-        boolean isLatLog = latAxis == axis && logs.matchesID(latBlock);
+        boolean isLatLog = latAxis == axis && Configs.Blocks.logs.matches(latBlock, world, latX, latY, latZ);
 
         Block diagBlock = world.getBlock(diagX, diagY, diagZ);
         ForgeDirection diagAxis = determineLogAxis(world, diagX, diagY, diagZ, diagBlock);
-        boolean isDiagLog = diagAxis == axis && logs.matchesID(diagBlock);
+        boolean isDiagLog = diagAxis == axis && Configs.Blocks.logs.matches(diagBlock, world, diagX, diagY, diagZ);
 
         if (Configs.RoundLogs.connectLenient) {
             if (isLatLog || isDiagLog) {
@@ -246,11 +233,11 @@ public class LogRenderer extends BlockRenderer {
 
         latBlock = world.getBlock(latX, latY, latZ);
         latAxis = determineLogAxis(world, latX, latY, latZ, latBlock);
-        isLatLog = latAxis == axis && logs.matchesID(latBlock);
+        isLatLog = latAxis == axis && Configs.Blocks.logs.matches(latBlock, world, latX, latY, latZ);
 
         diagBlock = world.getBlock(diagX, diagY, diagZ);
         diagAxis = determineLogAxis(world, diagX, diagY, diagZ, diagBlock);
-        isDiagLog = diagAxis == axis && logs.matchesID(diagBlock);
+        isDiagLog = diagAxis == axis && Configs.Blocks.logs.matches(diagBlock, world, diagX, diagY, diagZ);
 
         return Configs.RoundLogs.connectLenient ? isLatLog || isDiagLog : isLatLog && isDiagLog;
     }
@@ -263,8 +250,7 @@ public class LogRenderer extends BlockRenderer {
 
         final Block sideBlock = world.getBlock(sideX, sideY, sideZ);
 
-        return !sideBlock.isOpaqueCube() || Config.blocks.INSTANCE.getLogs()
-            .matchesID(sideBlock);
+        return !sideBlock.isOpaqueCube() || Configs.Blocks.logs.matches(sideBlock, world, sideX, sideY, sideZ);
     }
 
     /// Medium aggression render check, for faces of connecting log blocks.
@@ -279,8 +265,7 @@ public class LogRenderer extends BlockRenderer {
             return true;
         }
 
-        if (!Config.blocks.INSTANCE.getLogs()
-            .matchesID(sideBlock)) {
+        if (!Configs.Blocks.logs.matches(sideBlock, world, sideX, sideY, sideZ)) {
             return false;
         }
 
@@ -301,8 +286,7 @@ public class LogRenderer extends BlockRenderer {
             return true;
         }
 
-        if (!Config.blocks.INSTANCE.getLogs()
-            .matchesID(sideBlock)) {
+        if (!Configs.Blocks.logs.matches(sideBlock, world, sideX, sideY, sideZ)) {
             return false;
         }
 
@@ -313,14 +297,12 @@ public class LogRenderer extends BlockRenderer {
     private static boolean shouldUseLargeAdjacentRadius(ForgeDirection side, ForgeDirection clock,
         ForgeDirection counter, IBlockAccess world, int x, int y, int z) {
 
-        final BlockMatcher logs = Config.blocks.INSTANCE.getLogs();
-
         final int sideX = x + side.offsetX;
         final int sideY = y + side.offsetY;
         final int sideZ = z + side.offsetZ;
 
         final Block sideBlock = world.getBlock(sideX, sideY, sideZ);
-        final boolean isSideLog = logs.matchesID(sideBlock);
+        final boolean isSideLog = Configs.Blocks.logs.matches(sideBlock, world, sideX, sideY, sideZ);
 
         if (!isSideLog) {
             return true;
@@ -359,16 +341,13 @@ public class LogRenderer extends BlockRenderer {
 
         // Render connectors
         if (Configs.RoundLogs.connectPerpendicular && !isConnector) {
-
-            final BlockMatcher logs = Config.blocks.INSTANCE.getLogs();
-
             int connectorX = x + axis.offsetX;
             int connectorY = y + axis.offsetY;
             int connectorZ = z + axis.offsetZ;
 
             Block connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
 
-            renderFront = !(logs.matchesID(connectorBlock)
+            renderFront = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
                 && determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderFront) {
                 renderRoundLog(
@@ -392,7 +371,7 @@ public class LogRenderer extends BlockRenderer {
             connectorZ = z - axis.offsetZ;
 
             connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
-            renderBack = !(logs.matchesID(connectorBlock)
+            renderBack = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
                 && determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderBack) {
                 renderRoundLog(
@@ -960,15 +939,12 @@ public class LogRenderer extends BlockRenderer {
 
         // Use connectors?
         if (Configs.RoundLogs.connectPerpendicular & didRender && !isConnector) {
-
-            final BlockMatcher logs = Config.blocks.INSTANCE.getLogs();
-
             int connectorX = x + axis.offsetX;
             int connectorY = y + axis.offsetY;
             int connectorZ = z + axis.offsetZ;
 
             Block connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
-            renderFront = !(logs.matchesID(connectorBlock)
+            renderFront = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
                 && determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderFront) {
                 renderRoundHalfLog(
@@ -993,7 +969,7 @@ public class LogRenderer extends BlockRenderer {
             connectorZ = z - axis.offsetZ;
 
             connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
-            renderBack = !(logs.matchesID(connectorBlock)
+            renderBack = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
                 && determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderBack) {
                 renderRoundHalfLog(
@@ -2020,16 +1996,13 @@ public class LogRenderer extends BlockRenderer {
 
         // Use connectors?
         if (Configs.RoundLogs.connectPerpendicular & didRender && !isConnector) {
-
-            final BlockMatcher logs = Config.blocks.INSTANCE.getLogs();
-
             int connectorX = x + axis.offsetX;
             int connectorY = y + axis.offsetY;
             int connectorZ = z + axis.offsetZ;
 
             Block connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
 
-            renderFront = !(logs.matchesID(connectorBlock)
+            renderFront = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
                 && determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderFront) {
                 renderRoundQuarterLog(
@@ -2055,7 +2028,7 @@ public class LogRenderer extends BlockRenderer {
 
             connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
 
-            renderBack = !(logs.matchesID(connectorBlock)
+            renderBack = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
                 && determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
             if (!renderBack) {
                 renderRoundQuarterLog(

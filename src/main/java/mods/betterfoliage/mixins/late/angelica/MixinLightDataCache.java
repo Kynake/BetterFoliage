@@ -1,6 +1,7 @@
 package mods.betterfoliage.mixins.late.angelica;
 
 import net.minecraft.block.Block;
+import net.minecraft.world.IBlockAccess;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,7 +22,9 @@ public abstract class MixinLightDataCache {
     @Definition(id = "getLightOpacity", method = "Lnet/minecraft/block/Block;getLightOpacity()I")
     @Expression("block.getLightOpacity() > 0")
     @ModifyExpressionValue(method = "compute", remap = false, at = @At("MIXINEXTRAS:EXPRESSION"))
-    private boolean betterfoliage$overrideIsOpaqueCube(boolean isOpaque, @Local(name = "block") Block block) {
-        return Hooks.overrideIsOpaqueCube(block, isOpaque);
+    private boolean betterfoliage$overrideIsOpaqueCube(boolean isOpaque, @Local(argsOnly = true, name = "x") int x,
+        @Local(argsOnly = true, name = "y") int y, @Local(argsOnly = true, name = "z") int z,
+        @Local(name = "world") IBlockAccess world) {
+        return Hooks.overrideIsOpaqueCube(world, x, y, z, isOpaque);
     }
 }

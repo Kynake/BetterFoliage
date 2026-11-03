@@ -20,7 +20,7 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
         // val fallingLeaves = BlockMatcher(BetterFoliageMod.DOMAIN, "FallingLeavesDefault.cfg")
 
         // val crops = BlockMatcher(BetterFoliageMod.DOMAIN, "CropDefault.cfg")
-        val logs = BlockMatcher(BetterFoliageMod.DOMAIN, "LogDefault.cfg")
+//        val logs = BlockMatcher(BetterFoliageMod.DOMAIN, "LogDefault.cfg")
 //        val sand = BlockMatcher(BetterFoliageMod.DOMAIN, "SandDefault.cfg")
 //        val lilypad = BlockMatcher(BetterFoliageMod.DOMAIN, "LilypadDefault.cfg")
 //        val cactus = BlockMatcher(BetterFoliageMod.DOMAIN, "CactusDefault.cfg")
