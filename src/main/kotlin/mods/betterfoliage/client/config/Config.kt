@@ -4,15 +4,8 @@ import cpw.mods.fml.client.event.ConfigChangedEvent
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import mods.betterfoliage.BetterFoliageMod
-import mods.betterfoliage.client.gui.BiomeListConfigEntry
 import mods.octarinecore.common.config.DelegatingConfig
-import mods.octarinecore.common.config.boolean
-import mods.octarinecore.common.config.double
-import mods.octarinecore.common.config.float
-import mods.octarinecore.common.config.int
-import mods.octarinecore.common.config.intList
 import net.minecraft.client.Minecraft
-import net.minecraft.world.biome.BiomeGenBase
 
 // Config singleton
 @Suppress("ClassName") // Ignored here because the class names are used as categories in the mod's configs
@@ -23,8 +16,8 @@ object Config : DelegatingConfig(BetterFoliageMod.MOD_ID, BetterFoliageMod.DOMAI
     object blocks {
         val dirt = BlockMatcher(BetterFoliageMod.DOMAIN, "DirtDefault.cfg")
         val grass = BlockMatcher(BetterFoliageMod.DOMAIN, "GrassDefault.cfg")
-        val leaves = BlockMatcher(BetterFoliageMod.DOMAIN, "LeavesDefault.cfg")
-        val fallingLeaves = BlockMatcher(BetterFoliageMod.DOMAIN, "FallingLeavesDefault.cfg")
+        // val leaves = BlockMatcher(BetterFoliageMod.DOMAIN, "LeavesDefault.cfg")
+        // val fallingLeaves = BlockMatcher(BetterFoliageMod.DOMAIN, "FallingLeavesDefault.cfg")
 
         // val crops = BlockMatcher(BetterFoliageMod.DOMAIN, "CropDefault.cfg")
         val logs = BlockMatcher(BetterFoliageMod.DOMAIN, "LogDefault.cfg")

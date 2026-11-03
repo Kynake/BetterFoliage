@@ -21,10 +21,10 @@ import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.ResourceUtils;
 import mods.betterfoliage.client.resource.generators.TextureGenerator;
+import mods.betterfoliage.config.Configs;
 
 @SideOnly(Side.CLIENT)
 public final class LeafRegistry extends TextureGenerator {
@@ -81,8 +81,8 @@ public final class LeafRegistry extends TextureGenerator {
 
         for (Object obj : Block.blockRegistry) {
             if (!(obj instanceof Block block)) continue;
-            if (!Config.blocks.INSTANCE.getLeaves()
-                .matchesClass(block)) continue;
+            if (!(Configs.Blocks.extraLeaves.matchesNoMeta(block) || Configs.Blocks.fallingLeaves.matchesNoMeta(block)))
+                continue;
 
             block.registerBlockIcons(location -> {
                 IIcon original = atlas.getTextureExtry(location);

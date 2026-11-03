@@ -6,7 +6,6 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.features.LogRenderer;
 import mods.betterfoliage.client.render.particles.LeafParticleRenderer;
@@ -61,8 +60,7 @@ public class Hooks {
 
         if (Configs.FallingLeaves.enabled && Math.random() < Configs.FallingLeaves.chance
             && world.isAirBlock(x, y - 1, z)
-            && Config.blocks.INSTANCE.getFallingLeaves()
-                .matchesID(block)) {
+            && Configs.Blocks.fallingLeaves.matches(block, world, x, y, z)) {
             LeafParticleRenderer.spawnLeafParticle(world, x, y, z);
         }
     }

@@ -14,7 +14,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.registries.LeafInfo;
 import mods.betterfoliage.client.registries.LeafRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
@@ -109,8 +108,8 @@ public class LeafRenderer extends BlockRenderer {
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
         final Block block = world.getBlock(x, y, z);
 
-        return Configs.ExtraLeaves.enabled && Config.blocks.INSTANCE.getLeaves()
-            .matchesID(block) && (!Configs.ExtraLeaves.surfaceOnly || isExposed(world, block, x, y, z));
+        return Configs.ExtraLeaves.enabled && Configs.Blocks.extraLeaves.matches(block, world, x, y, z)
+            && (!Configs.ExtraLeaves.surfaceOnly || isExposed(world, block, x, y, z));
     }
 
     @Override
