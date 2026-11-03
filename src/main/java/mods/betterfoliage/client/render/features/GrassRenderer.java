@@ -119,7 +119,9 @@ public class GrassRenderer extends BlockRenderer {
         // Render short grass
         if (!Configs.ShortGrass.grassEnabled) return renderResult;
         if (hasSnowAbove && !Configs.ShortGrass.snowEnabled) return renderResult;
-        if (blockAbove.isOpaqueCube() || blocksShortGrassRendering(world, blockAbove, x, y + 1, z)) return renderResult;
+        if (blockAbove.isOpaqueCube() || Configs.Blocks.obstructShortGrass.matches(blockAbove, world, x, y + 1, z)) {
+            return renderResult;
+        }
 
         int coordHash = MathUtils.hashCoords(x, y + 1, z);
         float heightScale = MathUtils
@@ -177,7 +179,6 @@ public class GrassRenderer extends BlockRenderer {
     }
 
     private void setGrassColor(IBlockAccess world, Tessellator tessellator, Block grassBlock, int x, int y, int z) {
-
         final IIcon grassTopTexture = grassBlock.getIcon(world, x, y, z, 1);
 
         final int blockMultiplier = BlockUtils.getStandardColorMultiplier(world, grassBlock, x, y, z);
@@ -186,13 +187,5 @@ public class GrassRenderer extends BlockRenderer {
             .getColorForSprite(grassTopTexture) : blockMultiplier;
 
         tessellator.setColorOpaque_I(color);
-    }
-
-    private boolean blocksShortGrassRendering(IBlockAccess world, Block blockAbove, int x, int y, int z) {
-        return false;
-
-        // TODO Enable after configurable list is implemented
-        // int meta = world.getBlockMetadata(x, y, z);
-        // return (blockAbove == Blocks.tallgrass && meta == 1) || (blockAbove == Blocks.double_plant && meta == 2);
     }
 }

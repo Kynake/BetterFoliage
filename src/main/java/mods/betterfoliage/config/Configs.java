@@ -64,6 +64,7 @@ public final class Configs {
 
         public static BlockFilterSet dirt;
         public static BlockFilterSet grass;
+        public static BlockFilterSet obstructShortGrass;
         public static BlockFilterSet extraLeaves;
         public static BlockFilterSet fallingLeaves;
         public static BlockFilterSet logs;
@@ -86,6 +87,12 @@ public final class Configs {
                 .getStringList();
             grass = BlockFilterSet
                 .parseBlockFilterSet(grassFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksGrass.cfg"));
+
+            final String[] obstructShortGrassFilters = config.get(category, "grass", emptyList)
+                .getStringList();
+            obstructShortGrass = BlockFilterSet.parseBlockFilterSet(
+                obstructShortGrassFilters,
+                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksObstructShortGrass.cfg"));
 
             final String[] extraLeavesFilters = config.get(category, "extraLeaves", emptyList)
                 .getStringList();
