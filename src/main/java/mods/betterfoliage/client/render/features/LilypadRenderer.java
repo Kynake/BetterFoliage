@@ -8,7 +8,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.client.integration.GT5UIntegration;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
@@ -45,8 +44,7 @@ public class LilypadRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        return Configs.Lilypad.enabled && Config.blocks.INSTANCE.getLilypad()
-            .matchesID(world.getBlock(x, y, z));
+        return Configs.Lilypad.enabled && Configs.Blocks.lilypad.matches(world, x, y, z);
     }
 
     @Override
