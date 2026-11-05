@@ -805,14 +805,14 @@ public final class Configs {
 
     @SubscribeEvent
     public void onStitchEvent(final TextureStitchEvent.Pre event) {
-        onConfigChange();
+        // Only reload configs via F3 + T if the player is in-game (aka not the Main Menu)
+        if (Minecraft.getMinecraft().theWorld != null) {
+            onConfigChange();
+        }
     }
 
     /// Reinitialize configs after a change or reload while the game is already running
     private void onConfigChange() {
-        if (attachedConfig.hasChanged()) {
-            attachedConfig.save();
-        }
         postInit();
     }
 
@@ -835,7 +835,9 @@ public final class Configs {
             return;
         }
 
-        config.load();
+        if (!config.hasChanged()) {
+            config.load();
+        }
 
         Property prop = config.get(Configuration.CATEGORY_GENERAL, "enabled", enabled, enabledGeneralDesc);
         enabled = prop.getBoolean();
