@@ -73,6 +73,10 @@ public class ConfigCategoryBuilder {
         fileCategory.setComment(parseFinalizedText(comment));
     }
 
+    public void setRecentDescription(String langKey) {
+        setDescription(langKey, recentProp);
+    }
+
     private String getCategoryLangKey() {
         return BetterFoliageMod.DOMAIN + "." + category;
     }
@@ -83,20 +87,24 @@ public class ConfigCategoryBuilder {
 
     private void setGeneralProps(Property prop) {
         final String name = prop.getName();
-        final String langKey = getPropLangKey(prop.getName());
+        final String langKey = getPropLangKey(name);
 
+        setDescription(langKey, prop);
+
+        propertyOrder.add(name);
+        recentProp = prop;
+    }
+
+    private void setDescription(String langKey, Property prop) {
         prop.setLanguageKey(langKey);
-
         String description = I18n.format(langKey + ".tooltip");
 
         final String defaults = getDefaultsText(prop);
         if (defaults != null) {
-            description += "\n" + defaults;
+            description += Configuration.NEW_LINE + defaults;
         }
 
         prop.comment = parseFinalizedText(description);
-        propertyOrder.add(name);
-        recentProp = prop;
     }
 
     /// Convert problematic characters in lang text to a format more friendly to config files
@@ -167,7 +175,7 @@ public class ConfigCategoryBuilder {
             }
         } catch (NumberFormatException ignored) {}
 
-        String res = hasMinMax ? I18n.format("fml.configgui.tooltip.defaultNumeric", min, max, defaultValue)
+        String res = hasMinMax ? I18n.format("fml.configgui.tooltip.defaultNumeric", defaultValue, min, max)
             : I18n.format("fml.configgui.tooltip.default", defaultValue);
 
         return res.replace("\\", "");

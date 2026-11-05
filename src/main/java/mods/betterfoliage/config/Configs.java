@@ -99,80 +99,54 @@ public final class Configs {
 
     public static class ConnectedGrass {
 
-        public static boolean enabled = true;
-        private static final String enabledDesc = "Use grass top texture on all sides if a dirt block is beneath it";
-
-        public static boolean snowEnabled = false;
-        private static final String snowEnabledDesc = "If a connected grass block is covered by snow, use the snow's texture for the grass sides instead of the grass top texture";
+        public static boolean enabled;
+        public static boolean snowEnabled;
 
         public static void init(final Configuration config) {
-            final String category = "connectedGrass";
-
-            Property prop = config.get(category, "enabled", enabled, enabledDesc);
-            enabled = prop.getBoolean();
-
-            prop = config.get(category, "snowEnabled", snowEnabled, snowEnabledDesc);
-            snowEnabled = prop.getBoolean();
+            final ConfigCategoryBuilder connectedGrass = new ConfigCategoryBuilder("connectedGrass", config);
+            enabled = connectedGrass.addProp("enabled", true);
+            connectedGrass.setRecentDescription("betterfoliage.enabled");
+            snowEnabled = connectedGrass.addProp("snowEnabled", true);
+            connectedGrass.finalizeCategory();
         }
     }
 
     public static class ShortGrass {
 
-        public static boolean grassEnabled = true;
-        private static final String grassEnabledDesc = "Render tufts of grass on top of appropriate blocks";
-
-        public static boolean myceliumEnabled = true;
-        private static final String myceliumEnabledDesc = "Render tufts of mycelium on top of mycelium blocks";
-
-        public static boolean snowEnabled = true;
-        private static final String snowEnabledDesc = "Render snow tinted short grass if the block is covered in snow";
-
+        public static boolean grassEnabled;
+        public static boolean myceliumEnabled;
+        public static boolean snowEnabled;
         public static float hOffset;
-
         public static float heightMin;
-
         public static float heightMax;
-
         public static float size;
-
-        public static boolean mixTextures = true;
-        private static final String mixTexturesDesc = "Allow mixing of two different textures for each tuft of grass/mycelium in each block";
-
-        public static boolean useGenerated = false;
-        private static final String useGeneratedDesc = "Generate Short Grass textures from existing grass foliage textures";
+        public static boolean mixTextures;
+        public static boolean useGenerated;
 
         // TODO: Add shader wind support
         // public static boolean shaderWind = true;
 
         public static void init(final Configuration config) {
-            final String category = "shortGrass";
+            final ConfigCategoryBuilder shortGrass = new ConfigCategoryBuilder("shortGrass", config);
+            grassEnabled = shortGrass.addProp("grassEnabled", true);
+            myceliumEnabled = shortGrass.addProp("myceliumEnabled", true);
+            snowEnabled = shortGrass.addProp("snowEnabled", true);
 
-            Property prop = config.get(category, "grassEnabled", grassEnabled, grassEnabledDesc);
-            grassEnabled = prop.getBoolean();
+            hOffset = (float) shortGrass.addProp("hOffset", 0.2, 0.0, 0.4);
+            shortGrass.setRecentDescription("betterfoliage.hOffset");
 
-            prop = config.get(category, "myceliumEnabled", myceliumEnabled, myceliumEnabledDesc);
-            myceliumEnabled = prop.getBoolean();
+            heightMin = (float) shortGrass.addProp("heightMin", 0.6, 0.1, 2.5);
+            shortGrass.setRecentDescription("betterfoliage.heightMin");
 
-            prop = config.get(category, "snowEnabled", snowEnabled, snowEnabledDesc);
-            snowEnabled = prop.getBoolean();
+            heightMax = (float) shortGrass.addProp("heightMax", 0.8, 0.1, 2.5);
+            shortGrass.setRecentDescription("betterfoliage.heightMax");
 
-            prop = config.get(category, "hOffset", 0.2, hOffsetDesc, 0.0, 0.4);
-            hOffset = (float) prop.getDouble();
+            size = (float) shortGrass.addProp("size", 1.0, 0.5, 1.5);
+            shortGrass.setRecentDescription("betterfoliage.size");
 
-            prop = config.get(category, "heightMin", 0.6, heightMinDesc, 0.1, 2.5);
-            heightMin = (float) prop.getDouble();
-
-            prop = config.get(category, "heightMax", 0.6, heightMaxDesc, 0.1, 2.5);
-            heightMax = (float) prop.getDouble();
-
-            prop = config.get(category, "size", 1.0, sizeDesc, 0.5, 1.5);
-            size = (float) prop.getDouble();
-
-            prop = config.get(category, "mixTextures", mixTextures, mixTexturesDesc);
-            mixTextures = prop.getBoolean();
-
-            prop = config.get(category, "useGenerated", useGenerated, useGeneratedDesc);
-            useGenerated = prop.getBoolean();
+            mixTextures = shortGrass.addProp("mixTextures", true);
+            useGenerated = shortGrass.addProp("useGenerated", false);
+            shortGrass.finalizeCategory();
         }
     }
 

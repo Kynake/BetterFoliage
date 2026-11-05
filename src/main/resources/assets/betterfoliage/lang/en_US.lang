@@ -11,7 +11,7 @@ betterfoliage.general.seed=Seed
 betterfoliage.general.seed.tooltip=Primary mod seed used as the base for pseudo-random placement of features.\nAllows features to be consistent across different players.\nChange it to a secret number to make it harder for someone to brute force your coordinates from a screenshot, if you care about that.\nFor this reason, this config is deliberately not shown in-game.
 
 ## Generics
-betterfoliage.enabled=Enable
+betterfoliage.enabled=Enabled
 betterfoliage.enabled.tooltip=Is this feature enabled?
 betterfoliage.hOffset=Horizontal offset
 betterfoliage.hOffset.tooltip=The distance this element is shifted horizontally, in blocks.
@@ -52,10 +52,27 @@ betterfoliage.blocks.cactus.tooltip=A list of block filters that determine which
 betterfoliage.blocks.soulsand=Filters: Soul Sand
 betterfoliage.blocks.soulsand.tooltip=A list of block filters that determine which blocks are recognized as Soul Sand.\nHas an impact on Soul Particles.
 
+# Connected Grass
+betterfoliage.connectedGrass=Connected Grass
+betterfoliage.connectedGrass.tooltip=Use grass top texture on all sides of the Grass block if a dirt block is beneath it.
+betterfoliage.connectedGrass.snowEnabled=Connected Snow
+betterfoliage.connectedGrass.snowEnabled.tooltip=If a connected grass block is covered by snow, use the snow's texture for the grass sides instead of the grass texture.
+
+# Short Grass
+betterfoliage.shortGrass=Short Grass & Mycelium
+betterfoliage.shortGrass.tooltip=Tufts of grass/mycelium on top of appropriate blocks
+betterfoliage.shortGrass.grassEnabled=Enable Grass
+betterfoliage.shortGrass.grassEnabled.tooltip=Is this feature enabled for Grass blocks?
+betterfoliage.shortGrass.myceliumEnabled=Enable Mycelium
+betterfoliage.shortGrass.myceliumEnabled.tooltip=Is this feature enabled for Mycelium blocks?
+betterfoliage.shortGrass.snowEnabled=Enable Snow
+betterfoliage.shortGrass.snowEnabled.tooltip=Render snow tinted short grass if the block is covered by snow.
+betterfoliage.shortGrass.mixTextures=Mix textures
+betterfoliage.shortGrass.mixTextures.tooltip=Allow mixing of two different textures for each tuft of grass/mycelium in each block.\nDoes not work if using generated textures.
+betterfoliage.shortGrass.useGenerated=Use Generated Grass texture
+betterfoliage.shortGrass.useGenerated.tooltip=Dynamically generate a texture for the short grass by copying the top half of the tallgrass texture from the current resource pack.
 
 #################################### OLD #############################
-
-
 
 betterfoliage.shaderWind=Shader wind effects
 betterfoliage.shaderWind.tooltip=Apply wind effects from ShaderMod shaders to this element?
@@ -68,24 +85,6 @@ betterfoliage.leaves.snowEnabled=Enable snow
 betterfoliage.leaves.snowEnabled.tooltip=Enable snow on extra leaves?
 betterfoliage.leaves.surfaceOnly=Surface only
 betterfoliage.leaves.surfaceOnly.tooltip=Extra Leaves will only be rendered on blocks with at least one exposed side. Disabling this may increase the likelihood of completely black leaves appearing between the corners of other leaf blocks
-
-betterfoliage.shortGrass=Short Grass & Mycelium
-betterfoliage.shortGrass.tooltip=Tufts of grass/mycelium on top of appropriate blocks
-betterfoliage.shortGrass.useGenerated=Use generated texture for grass
-betterfoliage.shortGrass.useGenerated.tooltip=Generated texture is made by slicing the tallgrass texture from the active resource pack in half
-betterfoliage.shortGrass.myceliumEnabled=Enable Mycelium
-betterfoliage.shortGrass.myceliumEnabled.tooltip=Is this feature enabled for mycelium blocks?
-betterfoliage.shortGrass.grassEnabled=Enable Grass
-betterfoliage.shortGrass.grassEnabled.tooltip=Is this feature enabled for grass blocks?
-betterfoliage.shortGrass.snowEnabled=Enable under snow
-betterfoliage.shortGrass.snowEnabled.tooltip=Enable on snowed grass blocks?
-betterfoliage.shortGrass.saturationThreshold=Saturation threshold
-betterfoliage.shortGrass.saturationThreshold.tooltip=Color saturation cutoff between "colorless" blocks (using biome color) and "colorful" blocks (using their own specific color)
-
-betterfoliage.hangingGrass=Hanging Grass
-betterfoliage.hangingGrass.tooltip=Grass tufts hanging down from the top edges of grass blocks
-betterfoliage.hangingGrass.separation=Separation
-betterfoliage.hangingGrass.separation.tooltip=How much the hanging grass stands out from the block
 
 betterfoliage.cactus=Better Cactus
 betterfoliage.cactus.tooltip=Enhance cactus with extra bits and smooth shading
@@ -172,11 +171,6 @@ betterfoliage.risingSoul.lifetime=Maximum lifetime
 betterfoliage.risingSoul.lifetime.tooltip=Maximum lifetime of particle effect in seconds. Minimum lifetime is 60% of this value
 betterfoliage.risingSoul.trailDensity=Trail density
 betterfoliage.risingSoul.trailDensity.tooltip=Every Nth tick, add a particle to the trail
-
-betterfoliage.connectedGrass=Connected grass textures
-betterfoliage.connectedGrass.tooltip=If there is a grass block on top of a dirt block: draw grass top texture on all grass block sides
-betterfoliage.connectedGrass.snowEnabled=Snow enabled
-betterfoliage.connectedGrass.snowEnabled.tooltip=Allow the sides of snow covered grass blocks to use the snow's texture 
 
 betterfoliage.roundLogs=Round Logs
 betterfoliage.roundLogs.tooltip=Connect round blocks to solid full blocks?
