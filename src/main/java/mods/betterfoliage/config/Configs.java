@@ -49,7 +49,7 @@ public final class Configs {
         public static boolean snowEnabled = false;
         private static final String snowEnabledDesc = "If a connected grass block is covered by snow, use the snow's texture for the grass sides instead of the grass top texture";
 
-        public static void initializeFileConfigs(final Configuration config) {
+        public static void init(final Configuration config) {
             final String category = "connectedGrass";
 
             Property prop = config.get(category, "enabled", enabled, enabledDesc);
@@ -73,7 +73,7 @@ public final class Configs {
         public static BlockFilterSet cactus;
         public static BlockFilterSet soulsand;
 
-        public static void postInit(final Configuration config) {
+        public static void init(final Configuration config) {
             final String category = "blocks";
 
             final String[] emptyList = {};
@@ -163,7 +163,7 @@ public final class Configs {
         // TODO: Add shader wind support
         // public static boolean shaderWind = true;
 
-        public static void initializeFileConfigs(final Configuration config) {
+        public static void init(final Configuration config) {
             final String category = "shortGrass";
 
             Property prop = config.get(category, "grassEnabled", grassEnabled, grassEnabledDesc);
@@ -228,7 +228,7 @@ public final class Configs {
             Higher values will mean that the end cap connectors will have less visible distortion from up close, but may flicker (z-fight) when viewed from afar.
             This value should be kept as high as possible without noticing any visual glitches.""";
 
-        public static void initializeFileConfigs(final Configuration config) {
+        public static void init(final Configuration config) {
             final String category = "roundLogs";
 
             Property prop = config.get(category, "enabled", enabled, enabledDesc);
@@ -278,7 +278,7 @@ public final class Configs {
         public static boolean renderBaseBlock = true;
         private static final String renderBaseBlockDesc = "Should the base leaf block be rendered too. Works best with Dense mode enabled";
 
-        public static void initializeFileConfigs(final Configuration config) {
+        public static void init(final Configuration config) {
             final String category = "extraLeaves";
 
             Property prop = config.get(category, "enabled", enabled, enabledDesc);
@@ -348,7 +348,7 @@ public final class Configs {
         public static boolean opacityHack = true;
         private static final String opacityHackDesc = "Stop transparent blocks obscuring particles even when particle is in front. WARNING: May cause glitches.";
 
-        public static void initializeFileConfigs(final Configuration config) {
+        public static void init(final Configuration config) {
             final String category = "fallingLeaves";
 
             Property prop = config.get(category, "enabled", enabled, enabledDesc);
@@ -427,7 +427,7 @@ public final class Configs {
         public static int trailDensity;
         private static final String trailDensityDesc = "Every Nth tick, add a particle to the trail";
 
-        public static void initializeFileConfigs(final Configuration config) {
+        public static void init(final Configuration config) {
             final String category = "risingSoul";
 
             Property prop = config.get(category, "enabled", enabled, enabledDesc);
@@ -474,7 +474,7 @@ public final class Configs {
         public static float heightMax;
         public static float size;
 
-        public static void initializeFileConfigs(final Configuration config) {
+        public static void init(final Configuration config) {
             final String category = "netherrack";
 
             Property prop = config.get(category, "enabled", enabled, enabledDesc);
@@ -507,7 +507,7 @@ public final class Configs {
         public static float flowerSize;
         private static final String flowerSizeDesc = "Size of the lilypad flowers";
 
-        public static void initializeFileConfigs(final Configuration config) {
+        public static void init(final Configuration config) {
             final String category = "lilypad";
 
             Property prop = config.get(category, "enabled", enabled, enabledDesc);
@@ -546,7 +546,7 @@ public final class Configs {
         public static float stemSizeVariation;
         private static final String stemSizeVariationDesc = "Amount of random variation on cactus stem size";
 
-        public static void initializeFileConfigs(final Configuration config) {
+        public static void init(final Configuration config) {
             final String category = "cactus";
 
             Property prop = config.get(category, "renderStem", renderStem, renderStemDesc);
@@ -595,7 +595,7 @@ public final class Configs {
 
         public static boolean[] biomes;
 
-        public static void initializeFileConfigs(final Configuration config) {
+        public static void init(final Configuration config) {
             Property prop = config.get(category, "enabled", enabled, enabledDesc);
             enabled = prop.getBoolean();
 
@@ -616,9 +616,8 @@ public final class Configs {
 
             prop = config.get(category, "mixTextures", mixTextures, mixTexturesDesc);
             mixTextures = prop.getBoolean();
-        }
 
-        public static void postInit(final Configuration config) {
+            // Biomes
             String[] biomeFilters = config.get(category, "biomes", new String[] {}, biomesDesc)
                 .getStringList();
 
@@ -656,7 +655,7 @@ public final class Configs {
 
         public static boolean[] biomes;
 
-        public static void initializeFileConfigs(final Configuration config) {
+        public static void init(final Configuration config) {
             Property prop = config.get(category, "enabled", enabled, enabledDesc);
             enabled = prop.getBoolean();
 
@@ -671,9 +670,8 @@ public final class Configs {
 
             prop = config.get(category, "mixTextures", mixTextures, mixTexturesDesc);
             mixTextures = prop.getBoolean();
-        }
 
-        public static void postInit(final Configuration config) {
+            // Biomes
             String[] biomeFilters = config.get(category, "biomes", new String[] {}, biomesDesc)
                 .getStringList();
 
@@ -727,7 +725,7 @@ public final class Configs {
 
         public static boolean[] biomes;
 
-        public static void initializeFileConfigs(final Configuration config) {
+        public static void init(final Configuration config) {
             Property prop = config.get(category, "renderCoral", renderCoral, renderCoralDesc);
             renderCoral = prop.getBoolean();
 
@@ -762,9 +760,8 @@ public final class Configs {
 
             prop = config.get(category, "mixCrust", mixCrust, mixCrustDesc);
             mixCrust = prop.getBoolean();
-        }
 
-        public static void postInit(final Configuration config) {
+            // Biomes
             String[] biomeFilters = config.get(category, "biomes", new String[] {}, biomesDesc)
                 .getStringList();
 
@@ -831,6 +828,7 @@ public final class Configs {
         instance.attachedConfig = configs;
     }
 
+    /// Runs on post init startup and whenever configs are reloaded while the game is open
     public static void postInit() {
         final Configuration config = instance.attachedConfig;
         if (config == null) {
@@ -845,23 +843,19 @@ public final class Configs {
         prop = config.get(Configuration.CATEGORY_GENERAL, "seed", seed, seedDesc);
         seed = prop.getInt();
 
-        ConnectedGrass.initializeFileConfigs(config);
-        ShortGrass.initializeFileConfigs(config);
-        RoundLogs.initializeFileConfigs(config);
-        ExtraLeaves.initializeFileConfigs(config);
-        FallingLeaves.initializeFileConfigs(config);
-        RisingSouls.initializeFileConfigs(config);
-        Netherrack.initializeFileConfigs(config);
-        Lilypad.initializeFileConfigs(config);
-        Cactus.initializeFileConfigs(config);
-        Reeds.initializeFileConfigs(config);
-        Algae.initializeFileConfigs(config);
-        Coral.initializeFileConfigs(config);
-
-        Blocks.postInit(config);
-        Reeds.postInit(config);
-        Algae.postInit(config);
-        Coral.postInit(config);
+        Blocks.init(config);
+        ConnectedGrass.init(config);
+        ShortGrass.init(config);
+        RoundLogs.init(config);
+        ExtraLeaves.init(config);
+        FallingLeaves.init(config);
+        RisingSouls.init(config);
+        Netherrack.init(config);
+        Lilypad.init(config);
+        Cactus.init(config);
+        Reeds.init(config);
+        Algae.init(config);
+        Coral.init(config);
 
         if (config.hasChanged()) {
             config.save();
