@@ -16,7 +16,7 @@ import mods.betterfoliage.config.Configs;
 public class ConfigsGui extends GuiConfig {
 
     public ConfigsGui(GuiScreen parent) {
-        super(parent, getConfigCategories(), BetterFoliageMod.MOD_ID, false, false, Configs.CONFIG_FILE_NAME);
+        super(parent, getConfigCategories(), BetterFoliageMod.MOD_ID, false, false, BetterFoliageMod.MOD_NAME);
     }
 
     @SuppressWarnings("rawtypes")

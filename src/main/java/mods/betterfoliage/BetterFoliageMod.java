@@ -24,7 +24,7 @@ import mods.betterfoliage.config.Configs;
 public class BetterFoliageMod {
 
     public static final String MOD_ID = "BetterFoliage";
-    public static final String MOD_NAME = "Better Foliage";
+    public static final String MOD_NAME = "Better Foliage - Legacy Edition";
     public static final String DOMAIN = "betterfoliage";
     public static final String LEGACY_DOMAIN = "bettergrassandleaves";
 
