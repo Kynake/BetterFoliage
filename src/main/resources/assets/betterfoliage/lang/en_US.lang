@@ -1,97 +1,64 @@
+# General Settings
 key.betterfoliage.gui=Open Settings
 
 betterfoliage.general=General Mod Configs
-betterfoliage.general.tooltip=These are configs that will affect all of the mod's features.
+betterfoliage.general.tooltip=Configs that affect all aspects of the mod.
 
 betterfoliage.general.enabled=Enable Mod
-betterfoliage.general.enabled.tooltip=If set to false, all changes made by Better Foliage - Legacy Edition will be disabled
+betterfoliage.general.enabled.tooltip=If set to false, all changes made by Better Foliage - Legacy Edition will be disabled.
 
 betterfoliage.general.seed=Seed
 betterfoliage.general.seed.tooltip=Primary mod seed used as the base for pseudo-random placement of features.\nAllows features to be consistent across different players.\nChange it to a secret number to make it harder for someone to brute force your coordinates from a screenshot, if you care about that.\nFor this reason, this config is deliberately not shown in-game.
 
+## Generics
 betterfoliage.enabled=Enable
 betterfoliage.enabled.tooltip=Is this feature enabled?
 betterfoliage.hOffset=Horizontal offset
-betterfoliage.hOffset.tooltip=The distance this element is shifted horizontally, in blocks
+betterfoliage.hOffset.tooltip=The distance this element is shifted horizontally, in blocks.
 betterfoliage.vOffset=Vertical offset
-betterfoliage.vOffset.tooltip=The distance this element is shifted vertically, in blocks
+betterfoliage.vOffset.tooltip=The distance this element is shifted vertically, in blocks.
 betterfoliage.size=Size
-betterfoliage.size.tooltip=Size of this element
+betterfoliage.size.tooltip=Size of this element.
 betterfoliage.heightMin=Minimum height
-betterfoliage.heightMin.tooltip=Minimum height of element
+betterfoliage.heightMin.tooltip=Minimum height of element.
 betterfoliage.heightMax=Maximum height
-betterfoliage.heightMax.tooltip=Maximum height of element
-betterfoliage.population=Population
-betterfoliage.population.tooltip=Chance (N in 64) that an eligible block will have this feature
+betterfoliage.heightMax.tooltip=Maximum height of element.
+betterfoliage.threshold=Threshold
+betterfoliage.threshold.tooltip=Chance that an eligible block will have this feature.\nUsed as a cutoff value in a 3D noise generator.
+betterfoliage.biomes=Biome Filters
+betterfoliage.biomes.tooltip=A list of biomes filters that determine if this feature is allowed to appear in a specific biome.\nCheck the wiki for more details on how biome filters work.
+
+# Blocks
+betterfoliage.blocks=Block Filter Lists
+betterfoliage.blocks.tooltip=Configure the lists of block filters that determine which blocks are considered valid for each of the mod's features.\nCheck the wiki for more details on how block filters work.
+betterfoliage.blocks.dirt=Filters: Dirt
+betterfoliage.blocks.dirt.tooltip=A list of block filters that determine which blocks are recognized as Dirt.\nHas an impact on Reeds, Algae, Connected Grass.
+betterfoliage.blocks.grass=Filters: Grass
+betterfoliage.blocks.grass.tooltip=A list of block filters that determine which blocks are recognized as Grass.\nHas an impact on Short Grass, Connected Grass.
+betterfoliage.blocks.obstructShortGrass=Filters: Obstructs Short Grass
+betterfoliage.blocks.obstructShortGrass.tooltip=A list of block filters that determine which blocks will prevent Short Grass from rendering if placed on top of a Grass block.\nNote that a non-transparent full block will ALWAYS block rendering, even if it's not listed. 
+betterfoliage.blocks.extraLeaves=Filters: Extra Leaves
+betterfoliage.blocks.extraLeaves.tooltip=A list of Block filters that determine which blocks can render Extra Leaves.\nThis is separate from the blocks that can render Falling Leaf particles.
+betterfoliage.blocks.fallingLeaves=Filters: Falling Leaves
+betterfoliage.blocks.fallingLeaves.tooltip=A list of Block filters that determine which blocks can render Falling Leaf particles.\nThis is separate from the blocks that can render Extra Leaves.
+betterfoliage.blocks.logs=Filters: Logs
+betterfoliage.blocks.logs.tooltip=A list of block filters that determine which blocks are recognized as Logs.\nHas an impact on Rounded Logs.
+betterfoliage.blocks.sand=Filters: Sand
+betterfoliage.blocks.sand.tooltip=A list of block filters that determine which blocks are recognized as Sand.\nHas an impact on Coral.
+betterfoliage.blocks.lilypad=Filters: Lilypads
+betterfoliage.blocks.lilypad.tooltip=A list of block filters that determine which blocks are recognized as Lilypads.
+betterfoliage.blocks.cactus=Filters: Cactus
+betterfoliage.blocks.cactus.tooltip=A list of block filters that determine which blocks are recognized as Cactus.
+betterfoliage.blocks.soulsand=Filters: Soul Sand
+betterfoliage.blocks.soulsand.tooltip=A list of block filters that determine which blocks are recognized as Soul Sand.\nHas an impact on Soul Particles.
+
+
+#################################### OLD #############################
+
+
+
 betterfoliage.shaderWind=Shader wind effects
 betterfoliage.shaderWind.tooltip=Apply wind effects from ShaderMod shaders to this element?
-
-betterfoliage.blocks=Block Types
-betterfoliage.blocks.tooltip=Configure lists of block classes that will have specific features applied to them
-
-betterfoliage.blocks.dirtWhitelist=Dirt Whitelist
-betterfoliage.blocks.dirtBlacklist=Dirt Blacklist
-betterfoliage.blocks.dirtWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.dirtBlacklist.arrayEntry=%d entries
-
-betterfoliage.blocks.grassWhitelist=Grass Whitelist
-betterfoliage.blocks.grassBlacklist=Grass Blacklist
-betterfoliage.blocks.grassWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.grassBlacklist.arrayEntry=%d entries
-
-betterfoliage.blocks.leavesWhitelist=Extra Leaves Whitelist
-betterfoliage.blocks.leavesBlacklist=Extra Leaves Blacklist
-betterfoliage.blocks.leavesWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.leavesBlacklist.arrayEntry=%d entries
-
-betterfoliage.blocks.fallingLeavesWhitelist=Falling Leaves Whitelist
-betterfoliage.blocks.fallingLeavesBlacklist=Falling Leaves Blacklist
-betterfoliage.blocks.fallingLeavesWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.fallingLeavesBlacklist.arrayEntry=%d entries
-
-betterfoliage.blocks.cropsWhitelist=Crop Whitelist
-betterfoliage.blocks.cropsBlacklist=Crop Blacklist
-betterfoliage.blocks.cropsWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.cropsBlacklist.arrayEntry=%d entries
-
-betterfoliage.blocks.logsWhitelist=Wood Log Whitelist
-betterfoliage.blocks.logsBlacklist=Wood Log Blacklist
-betterfoliage.blocks.logsWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.logsBlacklist.arrayEntry=%d entries
-
-betterfoliage.blocks.sandWhitelist=Sand Whitelist
-betterfoliage.blocks.sandBlacklist=Sand Blacklist
-betterfoliage.blocks.sandWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.sandBlacklist.arrayEntry=%d entries
-
-betterfoliage.blocks.lilypadWhitelist=Lilypad Whitelist
-betterfoliage.blocks.lilypadBlacklist=Lilypad Blacklist
-betterfoliage.blocks.lilypadWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.lilypadBlacklist.arrayEntry=%d entries
-
-betterfoliage.blocks.cactusWhitelist=Cactus Whitelist
-betterfoliage.blocks.cactusBlacklist=Cactus Blacklist
-betterfoliage.blocks.cactusWhitelist.arrayEntry=%d entries
-betterfoliage.blocks.cactusBlacklist.arrayEntry=%d entries
-
-betterfoliage.blocks.dirtWhitelist.tooltip=Blocks recognized as Dirt. Has an impact on Reeds, Algae, Connected Grass
-betterfoliage.blocks.dirtBlacklist.tooltip=Blocks never accepted as Dirt. Has an impact on Reeds, Algae, Connected Grass
-betterfoliage.blocks.grassWhitelist.tooltip=Blocks recognized as Grass. Has an impact on Short Grass, Connected Grass
-betterfoliage.blocks.grassBlacklist.tooltip=Blocks never accepted as Grass. Has an impact on Short Grass, Connected Grass
-betterfoliage.blocks.leavesWhitelist.tooltip=Blocks recognized as Leaves when enabling Extra Leaves. Leaves will render with leaves block ID in shader programs
-betterfoliage.blocks.leavesBlacklist.tooltip=Blocks never accepted as Leaves when enabling Extra Leaves. Leaves will render with leaves block ID in shader programs
-betterfoliage.blocks.fallingLeavesWhitelist.tooltip=Blocks recognized as Leaves when enabling Falling Leaves. Leaves will render with leaves block ID in shader programs
-betterfoliage.blocks.fallingLeavesBlacklist.tooltip=Blocks never accepted as Leaves when enabling Falling Leaves. Leaves will render with leaves block ID in shader programs
-betterfoliage.blocks.cropsWhitelist.tooltip=Blocks recognized as crops. Crops will render with tallgrass block ID in shader programs
-betterfoliage.blocks.cropsBlacklist.tooltip=Blocks never accepted as crops. Crops will render with tallgrass block ID in shader programs
-betterfoliage.blocks.logsWhitelist.tooltip=Blocks recognized as wooden logs. Has an impact on Rounded Logs
-betterfoliage.blocks.logsBlacklist.tooltip=Blocks never accepted as wooden logs. Has an impact on Rounded Logs
-betterfoliage.blocks.sandWhitelist.tooltip=Blocks recognized as Sand. Has an impact on Coral
-betterfoliage.blocks.sandBlacklist.tooltip=Blocks never accepted Sand. Has an impact on Coral
-betterfoliage.blocks.lilypadWhitelist.tooltip=Blocks recognized as Lilypad. Has an impact on Better Lilypad
-betterfoliage.blocks.lilypadBlacklist.tooltip=Blocks never accepted Lilypad. Has an impact on Better Lilypad
-betterfoliage.blocks.cactusWhitelist.tooltip=Blocks recognized as Cactus. Has an impact on Better Cactus
-betterfoliage.blocks.cactusBlacklist.tooltip=Blocks never accepted Cactus. Has an impact on Better Cactus
 
 betterfoliage.leaves=Extra Leaves
 betterfoliage.leaves.tooltip=Extra round leaves on leaf blocks

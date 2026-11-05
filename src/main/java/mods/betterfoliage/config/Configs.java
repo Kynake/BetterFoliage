@@ -17,20 +17,10 @@ import mods.betterfoliage.BetterFoliageMod;
 
 public final class Configs {
 
-    /// Configs
-
-    // GENERAL
     public static boolean enabled;
-    private static final String enabledGeneralDesc = "General on/off switch for all of the mod's functionalities";
 
     // Mod uses a set number as random seed because the world seed can't be accessed Client-side in a server.
     public static int seed;
-    private static final String seedDesc = """
-        Primary mod seed used as the base for pseudo-random placement of features.
-        Allows features to be consistent across different players.
-        Change it to a secret number to make it harder for someone to brute force your coordinates from a screenshot, if you care about that.
-        Default:\s"""
-        + seed;
 
     private static final String hOffsetDesc = "The distance this element is shifted horizontally, in blocks";
     private static final String vOffsetDesc = "The distance this element is shifted vertically, in blocks";
@@ -40,6 +30,72 @@ public final class Configs {
     private static final String thresholdDesc = "Chance that an eligible block will have this feature. Used as a cutoff value in a 3D noise generator";
     private static final String biomesDesc = "A list of biomes filters that determine if this feature is allowed to appear in this biome or not."
         + "\nCheck the wiki for more details on how these filters work";
+
+    public static class Blocks {
+
+        public static BlockFilterSet dirt;
+        public static BlockFilterSet grass;
+        public static BlockFilterSet obstructShortGrass;
+        public static BlockFilterSet extraLeaves;
+        public static BlockFilterSet fallingLeaves;
+        public static BlockFilterSet logs;
+        public static BlockFilterSet sand;
+        public static BlockFilterSet lilypad;
+        public static BlockFilterSet cactus;
+        public static BlockFilterSet soulsand;
+
+        public static void init(final Configuration config) {
+            // Build category
+            final ConfigCategoryBuilder blocks = new ConfigCategoryBuilder("blocks", config);
+            final String[] dirtFilters = blocks.addProp("dirt");
+            final String[] grassFilters = blocks.addProp("grass");
+            final String[] obstructShortGrassFilters = blocks.addProp("obstructShortGrass");
+            final String[] extraLeavesFilters = blocks.addProp("extraLeaves");
+            final String[] fallingLeavesFilters = blocks.addProp("fallingLeaves");
+            final String[] logsFilters = blocks.addProp("logs");
+            final String[] sandFilters = blocks.addProp("sand");
+            final String[] lilypadFilters = blocks.addProp("lilypad");
+            final String[] cactusFilters = blocks.addProp("cactus");
+            final String[] soulsandFilters = blocks.addProp("soulsand");
+            blocks.finalizeCategory();
+
+            // Parse each String[] into a BlockFilterSet
+            dirt = BlockFilterSet
+                .parseBlockFilterSet(dirtFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksDirt.cfg"));
+
+            grass = BlockFilterSet
+                .parseBlockFilterSet(grassFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksGrass.cfg"));
+
+            obstructShortGrass = BlockFilterSet.parseBlockFilterSet(
+                obstructShortGrassFilters,
+                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksObstructShortGrass.cfg"));
+
+            extraLeaves = BlockFilterSet.parseBlockFilterSet(
+                extraLeavesFilters,
+                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksExtraLeaves.cfg"));
+
+            fallingLeaves = BlockFilterSet.parseBlockFilterSet(
+                fallingLeavesFilters,
+                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksFallingLeaves.cfg"));
+
+            logs = BlockFilterSet
+                .parseBlockFilterSet(logsFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksLogs.cfg"));
+
+            sand = BlockFilterSet
+                .parseBlockFilterSet(sandFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksSand.cfg"));
+
+            lilypad = BlockFilterSet.parseBlockFilterSet(
+                lilypadFilters,
+                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksLilypad.cfg"));
+
+            cactus = BlockFilterSet
+                .parseBlockFilterSet(cactusFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksCactus.cfg"));
+
+            soulsand = BlockFilterSet.parseBlockFilterSet(
+                soulsandFilters,
+                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksSoulSand.cfg"));
+        }
+    }
 
     public static class ConnectedGrass {
 
@@ -57,81 +113,6 @@ public final class Configs {
 
             prop = config.get(category, "snowEnabled", snowEnabled, snowEnabledDesc);
             snowEnabled = prop.getBoolean();
-        }
-    }
-
-    public static class Blocks {
-
-        public static BlockFilterSet dirt;
-        public static BlockFilterSet grass;
-        public static BlockFilterSet obstructShortGrass;
-        public static BlockFilterSet extraLeaves;
-        public static BlockFilterSet fallingLeaves;
-        public static BlockFilterSet logs;
-        public static BlockFilterSet sand;
-        public static BlockFilterSet lilypad;
-        public static BlockFilterSet cactus;
-        public static BlockFilterSet soulsand;
-
-        public static void init(final Configuration config) {
-            final String category = "blocks";
-
-            final String[] emptyList = {};
-
-            final String[] dirtFilters = config.get(category, "dirt", emptyList)
-                .getStringList();
-            dirt = BlockFilterSet
-                .parseBlockFilterSet(dirtFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksDirt.cfg"));
-
-            final String[] grassFilters = config.get(category, "grass", emptyList)
-                .getStringList();
-            grass = BlockFilterSet
-                .parseBlockFilterSet(grassFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksGrass.cfg"));
-
-            final String[] obstructShortGrassFilters = config.get(category, "obstructShortGrass", emptyList)
-                .getStringList();
-            obstructShortGrass = BlockFilterSet.parseBlockFilterSet(
-                obstructShortGrassFilters,
-                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksObstructShortGrass.cfg"));
-
-            final String[] extraLeavesFilters = config.get(category, "extraLeaves", emptyList)
-                .getStringList();
-            extraLeaves = BlockFilterSet.parseBlockFilterSet(
-                extraLeavesFilters,
-                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksExtraLeaves.cfg"));
-
-            final String[] fallingLeavesFilters = config.get(category, "fallingLeaves", emptyList)
-                .getStringList();
-            fallingLeaves = BlockFilterSet.parseBlockFilterSet(
-                fallingLeavesFilters,
-                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksFallingLeaves.cfg"));
-
-            final String[] logsFilters = config.get(category, "logs", emptyList)
-                .getStringList();
-            logs = BlockFilterSet
-                .parseBlockFilterSet(logsFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksLogs.cfg"));
-
-            final String[] sandFilters = config.get(category, "sand", emptyList)
-                .getStringList();
-            sand = BlockFilterSet
-                .parseBlockFilterSet(sandFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksSand.cfg"));
-
-            final String[] lilypadFilters = config.get(category, "lilypad", emptyList)
-                .getStringList();
-            lilypad = BlockFilterSet.parseBlockFilterSet(
-                lilypadFilters,
-                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksLilypad.cfg"));
-
-            final String[] cactusFilters = config.get(category, "cactus", emptyList)
-                .getStringList();
-            cactus = BlockFilterSet
-                .parseBlockFilterSet(cactusFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksCactus.cfg"));
-
-            final String[] soulsandFilters = config.get(category, "soulsand", emptyList)
-                .getStringList();
-            soulsand = BlockFilterSet.parseBlockFilterSet(
-                soulsandFilters,
-                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksSoulSand.cfg"));
         }
     }
 

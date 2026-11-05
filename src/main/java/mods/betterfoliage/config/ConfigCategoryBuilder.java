@@ -107,6 +107,9 @@ public class ConfigCategoryBuilder {
         // Strip color / formatting codes
         res = res.replaceAll("§[0-9a-fklmnor]", "");
 
+        // Remove extra '\'
+        res = res.replace("\\", "");
+
         // Limit description size just in case
         if (res.length() > MAX_DESC_LENGTH) {
             res = res.substring(0, MAX_DESC_LENGTH);
