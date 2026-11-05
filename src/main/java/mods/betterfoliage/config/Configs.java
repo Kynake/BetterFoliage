@@ -15,7 +15,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import mods.betterfoliage.BetterFoliageMod;
 
-// TODO: Make configurable from in-game menu like the old configs
 public final class Configs {
 
     /// Configs
@@ -793,6 +792,10 @@ public final class Configs {
         FMLCommonHandler.instance()
             .bus()
             .register(this);
+    }
+
+    public static Configuration getAttachedConfigFile() {
+        return instance.attachedConfig;
     }
 
     @SubscribeEvent

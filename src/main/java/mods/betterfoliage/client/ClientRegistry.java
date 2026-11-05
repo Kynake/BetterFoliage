@@ -1,8 +1,10 @@
 package mods.betterfoliage.client;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.world.IBlockAccess;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
@@ -26,6 +28,7 @@ import mods.betterfoliage.client.render.features.NetherrackRenderer;
 import mods.betterfoliage.client.render.features.ReedsRenderer;
 import mods.betterfoliage.client.render.particles.LeafParticleRenderer;
 import mods.betterfoliage.client.render.particles.SoulParticleRenderer;
+import mods.betterfoliage.config.gui.ConfigsGui;
 
 @SideOnly(Side.CLIENT)
 public class ClientRegistry {
@@ -117,9 +120,8 @@ public class ClientRegistry {
         // - Config menu should show these as read-only options.
         // - Allow adding / removing options on top (which saves them to the user config list)
         if (openConfigMenu.isPressed()) {
-            BetterFoliageMod.log.info("Open Config Menu PLACEHOLDER");
-            // FMLClientHandler.instance()
-            // .showGuiScreen(new ConfigGuiFactory.ConfigGuiBetterFoliage(Minecraft.getMinecraft().currentScreen));
+            FMLClientHandler.instance()
+                .showGuiScreen(new ConfigsGui(Minecraft.getMinecraft().currentScreen));
         }
     }
 }

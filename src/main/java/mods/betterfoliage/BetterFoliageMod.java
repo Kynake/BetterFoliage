@@ -19,7 +19,7 @@ import mods.betterfoliage.config.Configs;
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
     acceptableRemoteVersions = "*",
-    guiFactory = "mods.betterfoliage.client.gui.ConfigGuiFactory",
+    guiFactory = "mods.betterfoliage.config.gui.ConfigsGuiFactory",
     dependencies = "after:angelica;after:notfine;")
 public class BetterFoliageMod {
 
