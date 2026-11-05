@@ -20,11 +20,11 @@ public final class Configs {
     /// Configs
 
     // GENERAL
-    public static boolean enabled = true;
+    public static boolean enabled;
     private static final String enabledGeneralDesc = "General on/off switch for all of the mod's functionalities";
 
     // Mod uses a set number as random seed because the world seed can't be accessed Client-side in a server.
-    public static int seed = 402653189;
+    public static int seed;
     private static final String seedDesc = """
         Primary mod seed used as the base for pseudo-random placement of features.
         Allows features to be consistent across different players.
@@ -839,11 +839,12 @@ public final class Configs {
             config.load();
         }
 
-        Property prop = config.get(Configuration.CATEGORY_GENERAL, "enabled", enabled, enabledGeneralDesc);
-        enabled = prop.getBoolean();
-
-        prop = config.get(Configuration.CATEGORY_GENERAL, "seed", seed, seedDesc);
-        seed = prop.getInt();
+        ConfigCategoryBuilder general = new ConfigCategoryBuilder(Configuration.CATEGORY_GENERAL, config);
+        enabled = general.addProp("enabled", true);
+        seed = general.addProp("seed", 402653189);
+        general.getRecentProperty()
+            .setShowInGui(false);
+        general.finalizeCategory();
 
         Blocks.init(config);
         ConnectedGrass.init(config);

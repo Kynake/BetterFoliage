@@ -1,7 +1,13 @@
 key.betterfoliage.gui=Open Settings
 
-betterfoliage.global.enabled=Enable Mod
-betterfoliage.global.enabled.tooltip=If set to false, Better Foliage - Legacy Edition will not render anything
+betterfoliage.general=General Mod Configs
+betterfoliage.general.tooltip=These are configs that will affect all of the mod's features.
+
+betterfoliage.general.enabled=Enable Mod
+betterfoliage.general.enabled.tooltip=If set to false, all changes made by Better Foliage - Legacy Edition will be disabled
+
+betterfoliage.general.seed=Seed
+betterfoliage.general.seed.tooltip=Primary mod seed used as the base for pseudo-random placement of features.\nAllows features to be consistent across different players.\nChange it to a secret number to make it harder for someone to brute force your coordinates from a screenshot, if you care about that.\nFor this reason, this config is deliberately not shown in-game.
 
 betterfoliage.enabled=Enable
 betterfoliage.enabled.tooltip=Is this feature enabled?
