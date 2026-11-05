@@ -3,12 +3,13 @@ package mods.betterfoliage.mixins;
 import java.util.List;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import com.gtnewhorizon.gtnhmixins.ILateMixinLoader;
 import com.gtnewhorizon.gtnhmixins.LateMixin;
 import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 
+@SuppressWarnings("unused")
 @LateMixin
 public class LateMixinsLoader implements ILateMixinLoader {
 
@@ -18,7 +19,7 @@ public class LateMixinsLoader implements ILateMixinLoader {
     }
 
     @Override
-    public @NotNull List<String> getMixins(Set<String> loadedMods) {
+    public @Nonnull List<String> getMixins(Set<String> loadedMods) {
         return IMixins.getLateMixins(Mixins.class, loadedMods);
     }
 }

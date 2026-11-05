@@ -34,10 +34,10 @@
  * For more details, see https://docs.gradle.org/8.0.1/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
-    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.54.229:dev") { transitive = false }
-    compileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.119-GTNH:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.55.0:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:TinkersConstruct:1.15.0-GTNH:dev") { transitive = false }
     compileOnly("com.github.jss2a98aj:NotFine:0.3.0:dev") { transitive = false }
-    compileOnly("com.github.GTNewHorizons:Angelica:2.2.33:dev") { transitive = false }
+    compileOnly("com.github.GTNewHorizons:Angelica:2.2.44:dev") { transitive = false }
     compileOnly("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev") { transitive = false }
     compileOnly("ganymedes01.etfuturum:Et-Futurum-Requiem:2.6.2.25-GTNH:dev") { transitive = false }
     compileOnly(rfg.deobf("curse.maven:abyssalcraft-53686:2311135")) { transitive = false }
@@ -46,16 +46,11 @@ dependencies {
     compileOnly(rfg.deobf("curse.maven:the-lord-of-the-rings-mod-legacy-423748:4091561")) { transitive = false }
     compileOnly(jarUrl("https://gregtech.overminddl1.com/com/gregoriust/gregtech/gregtech_1.7.10/6.17.06/gregtech_1.7.10-6.17.06-dev.jar"))
 
-    api("com.falsepattern:forgelin-mc1.7.10:2.4.0-2.2.21:dev")
-
-    // GTNH's Forgelin for testing (comment LMMC's Forgelin when uncommenting this)
-    //api("com.github.GTNewHorizons:Forgelin:2.0.3-GTNH")
-
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.8.160-GTNH:dev")
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.9.0-GTNH:dev")
 
     // Test with rendering mods
 
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:2.2.33:dev")
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:Angelica:2.2.44:dev")
 
     //runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:swansong:1.3.1"))
     //runtimeOnlyNonPublishable(rfg.deobf("maven.modrinth:falsetweaks:4.4.0"))
@@ -82,14 +77,14 @@ dependencies {
     //runtimeOnlyNonPublishable(rfg.deobf("curse.maven:natura-74120:2257670"))
     //runtimeOnlyNonPublishable(rfg.deobf("curse.maven:mantle-74924:2264244"))
     // Natura (GTNH)
-    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Natura:2.8.24:dev")
-    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Mantle:0.5.4:dev")
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Natura:2.9.0:dev")
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Mantle:0.6.0:dev")
 
     // Twilight Forest
-    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:twilightforest:2.7.45:dev")
+    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:twilightforest:2.8.0:dev")
 
     // Forestry
-    runtimeOnlyNonPublishable("com.github.GTNewHorizons:ForestryMC:4.11.39:dev")
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:ForestryMC:4.12.0:dev")
 
     // AbyssalCraft
     //runtimeOnlyNonPublishable(rfg.deobf("curse.maven:abyssalcraft-53686:2311135"))

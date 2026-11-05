@@ -1,6 +1,6 @@
 package mods.betterfoliage.client.integration;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import com.gtnewhorizon.gtnhmixins.builders.ITargetMod;
 import com.gtnewhorizon.gtnhmixins.builders.TargetModBuilder;
@@ -77,7 +77,7 @@ public enum Mod implements ITargetMod {
     }
 
     @Override
-    public @NotNull TargetModBuilder getBuilder() {
+    public @Nonnull TargetModBuilder getBuilder() {
         if (builder == null) {
             builder = new TargetModBuilder().setCoreModClass(coreModClass)
                 .setTargetClass(targetClass)
