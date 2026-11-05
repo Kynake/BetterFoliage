@@ -88,7 +88,7 @@ public final class Configs {
             grass = BlockFilterSet
                 .parseBlockFilterSet(grassFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksGrass.cfg"));
 
-            final String[] obstructShortGrassFilters = config.get(category, "grass", emptyList)
+            final String[] obstructShortGrassFilters = config.get(category, "obstructShortGrass", emptyList)
                 .getStringList();
             obstructShortGrass = BlockFilterSet.parseBlockFilterSet(
                 obstructShortGrassFilters,
