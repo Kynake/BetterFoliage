@@ -4,7 +4,7 @@ key.betterfoliage.gui=Open Settings
 betterfoliage.general=General Mod Configs
 betterfoliage.general.tooltip=Configs that affect all aspects of the mod.
 
-betterfoliage.general.enabled=Enable Mod
+betterfoliage.general.enabled=Enable mod
 betterfoliage.general.enabled.tooltip=If set to false, all changes made by Better Foliage - Legacy Edition will be disabled.
 
 betterfoliage.general.seed=Seed
@@ -69,8 +69,26 @@ betterfoliage.shortGrass.snowEnabled=Enable Snow
 betterfoliage.shortGrass.snowEnabled.tooltip=Render snow tinted short grass if the block is covered by snow.
 betterfoliage.shortGrass.mixTextures=Mix textures
 betterfoliage.shortGrass.mixTextures.tooltip=Allow mixing of two different textures for each tuft of grass/mycelium in each block.\nDoes not work if using generated textures.
-betterfoliage.shortGrass.useGenerated=Use Generated Grass texture
+betterfoliage.shortGrass.useGenerated=Use generated grass texture
 betterfoliage.shortGrass.useGenerated.tooltip=Dynamically generate a texture for the short grass by copying the top half of the tallgrass texture from the current resource pack.
+
+# Round Logs
+betterfoliage.roundLogs=Round Logs
+betterfoliage.roundLogs.tooltip=Should render log blocks with beveled corners, giving them a rounded look?
+betterfoliage.roundLogs.radiusSmall=Small chamfer radius
+betterfoliage.roundLogs.radiusSmall.tooltip=How much to chop off from the logs corners.\nUse 0.292893218813 for an equally sided octagon.
+betterfoliage.roundLogs.radiusLarge=Large chamfer radius
+betterfoliage.roundLogs.radiusLarge.tooltip=How much to chop off from the logs corner, when it is connected to other blocks on two of it's sides.
+betterfoliage.roundLogs.connectToSolids=Connect to other solids
+betterfoliage.roundLogs.connectToSolids.tooltip=Should round logs connect to other non-log solid blocks?
+betterfoliage.roundLogs.connectLenient=Lenient connections
+betterfoliage.roundLogs.connectLenient.tooltip=Allow logs to connect to each other when forming an L shape, not requiring a full 2x2 grid.
+betterfoliage.roundLogs.connectPerpendicular=Connect to perpendicular logs
+betterfoliage.roundLogs.connectPerpendicular.tooltip=Link perpendicular logs by rendering an end cap from one round log at the same coordinates as the adjacent log.
+betterfoliage.roundLogs.connectGrass=Connect Grass
+betterfoliage.roundLogs.connectGrass.tooltip=Render a grass block under round logs instead of dirt if there another grass block adjacent to it.
+betterfoliage.roundLogs.zProtection=Z-Protection
+betterfoliage.roundLogs.zProtection.tooltip=How much to shrink the radius of perpendicular end caps to prevent z-fighting.\nHigher values prevent the end caps from having visible distortion from up close, but may flicker (z-fight) when viewed from afar.\nThis value should be kept as high as possible without noticing any visual glitches.
 
 #################################### OLD #############################
 
@@ -171,20 +189,3 @@ betterfoliage.risingSoul.lifetime=Maximum lifetime
 betterfoliage.risingSoul.lifetime.tooltip=Maximum lifetime of particle effect in seconds. Minimum lifetime is 60% of this value
 betterfoliage.risingSoul.trailDensity=Trail density
 betterfoliage.risingSoul.trailDensity.tooltip=Every Nth tick, add a particle to the trail
-
-betterfoliage.roundLogs=Round Logs
-betterfoliage.roundLogs.tooltip=Connect round blocks to solid full blocks?
-betterfoliage.roundLogs.connectSolids=Connect to solid
-betterfoliage.roundLogs.connectSolids.tooltip=Connect round blocks to solid full blocks?
-betterfoliage.roundLogs.connectPerpendicular=Connect to perpendicular logs
-betterfoliage.roundLogs.connectPerpendicular.tooltip=Connect round logs to perpendicular logs along its axis?
-betterfoliage.roundLogs.lenientConnect=Lenient rounding
-betterfoliage.roundLogs.lenientConnect.tooltip=Connect parallel round logs in an L-shape too, not just 2x2
-betterfoliage.roundLogs.connectGrass=Connect Grass
-betterfoliage.roundLogs.connectGrass.tooltip=Render grass block under trees instead of dirt if there is grass nearby
-betterfoliage.roundLogs.radiusSmall=Chamfer radius
-betterfoliage.roundLogs.radiusSmall.tooltip=How much to chop off from the log corner
-betterfoliage.roundLogs.radiusLarge=Connected chamfer radius
-betterfoliage.roundLogs.radiusLarge.tooltip=How much to chop off from the outer corner of connected logs
-betterfoliage.roundLogs.zProtection=Z-Protection
-betterfoliage.roundLogs.zProtection.tooltip=Amount to scale parallel log connection bits to stop Z-fighting (flickering). Try to set it as high as possible without having glitches.
