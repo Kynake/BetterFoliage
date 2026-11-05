@@ -2,6 +2,7 @@ package mods.betterfoliage.config;
 
 import java.io.File;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -781,7 +782,7 @@ public final class Configs {
         }
     }
 
-    private static final String CONFIG_FILE_NAME = BetterFoliageMod.MOD_ID + "_LegacyEdition";
+    public static final String CONFIG_FILE_NAME = BetterFoliageMod.MOD_ID + "_LegacyEdition";
 
     private static Configs instance = null;
 
@@ -798,12 +799,18 @@ public final class Configs {
     public void onConfigChange(final ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.modID.equals(BetterFoliageMod.MOD_ID)) {
             onConfigChange();
+            Minecraft.getMinecraft().renderGlobal.loadRenderers();
         }
     }
 
     @SubscribeEvent
     public void onStitchEvent(final TextureStitchEvent.Pre event) {
         onConfigChange();
+    }
+
+    /// Reinitialize configs after a change or reload while the game is already running
+    private void onConfigChange() {
+        postInit();
     }
 
     /// Fist time initializer. Only runs once when opening the game
@@ -816,40 +823,14 @@ public final class Configs {
         }
 
         instance.attachedConfig = configs;
-
-        initializeFileConfigs(configs);
     }
 
     public static void postInit() {
         final Configuration config = instance.attachedConfig;
-
         if (config == null) {
             return;
         }
 
-        Blocks.postInit(config);
-        Reeds.postInit(config);
-        Algae.postInit(config);
-        Coral.postInit(config);
-
-        if (config.hasChanged()) {
-            config.save();
-        }
-    }
-
-    /// Reinitialize configs after a change or reload while the game is already running
-    private void onConfigChange() {
-        if (attachedConfig == null) {
-            return;
-        }
-
-        initializeFileConfigs(attachedConfig);
-
-        postInit();
-    }
-
-    /// Initializes all static configs that should be read from a config file.
-    public static void initializeFileConfigs(final Configuration config) {
         config.load();
 
         Property prop = config.get(Configuration.CATEGORY_GENERAL, "enabled", enabled, enabledGeneralDesc);
@@ -870,5 +851,14 @@ public final class Configs {
         Reeds.initializeFileConfigs(config);
         Algae.initializeFileConfigs(config);
         Coral.initializeFileConfigs(config);
+
+        Blocks.postInit(config);
+        Reeds.postInit(config);
+        Algae.postInit(config);
+        Coral.postInit(config);
+
+        if (config.hasChanged()) {
+            config.save();
+        }
     }
 }

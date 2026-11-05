@@ -1,17 +1,14 @@
 package mods.betterfoliage.client;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.world.IBlockAccess;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.client.gui.ConfigGuiFactory;
 import mods.betterfoliage.client.registries.GrassRegistry;
 import mods.betterfoliage.client.registries.LeafRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
@@ -110,9 +107,19 @@ public class ClientRegistry {
 
     @SubscribeEvent
     public void onKeyPressed(InputEvent.KeyInputEvent event) {
+
+        // TODO Refactor the entire config system
+        // - Allow for config class to use static variables
+        // - Prevent unused-but-present configs from appearing in the menu. See Issue #23
+        // (possibly clear them from the config file too)
+        // - Complete overhaul of block lists:
+        // - Configurable by prioritized property files in resource packs (Like natural textures in RPMCPatcher)
+        // - Config menu should show these as read-only options.
+        // - Allow adding / removing options on top (which saves them to the user config list)
         if (openConfigMenu.isPressed()) {
-            FMLClientHandler.instance()
-                .showGuiScreen(new ConfigGuiFactory.ConfigGuiBetterFoliage(Minecraft.getMinecraft().currentScreen));
+            BetterFoliageMod.log.info("Open Config Menu PLACEHOLDER");
+            // FMLClientHandler.instance()
+            // .showGuiScreen(new ConfigGuiFactory.ConfigGuiBetterFoliage(Minecraft.getMinecraft().currentScreen));
         }
     }
 }

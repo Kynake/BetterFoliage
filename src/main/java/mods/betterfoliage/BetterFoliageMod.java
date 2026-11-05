@@ -2,8 +2,6 @@ package mods.betterfoliage;
 
 import java.util.Map;
 
-import net.minecraftforge.common.config.Configuration;
-
 import org.apache.logging.log4j.Logger;
 
 import cpw.mods.fml.common.Mod;
@@ -13,7 +11,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.Side;
 import mods.betterfoliage.client.ClientRegistry;
-import mods.betterfoliage.client.config.Config;
 import mods.betterfoliage.config.Configs;
 
 @Mod(
@@ -56,10 +53,6 @@ public class BetterFoliageMod {
         }
 
         Configs.preInit(event.getModConfigurationDirectory());
-
-        // TODO: Remove once new configs are ready
-        Configuration oldConfigs = new Configuration(event.getSuggestedConfigurationFile(), null, true);
-        Config.INSTANCE.attach(oldConfigs);
 
         ClientRegistry.preInit();
     }
