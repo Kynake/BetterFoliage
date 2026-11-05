@@ -90,19 +90,57 @@ betterfoliage.roundLogs.connectGrass.tooltip=Render a grass block under round lo
 betterfoliage.roundLogs.zProtection=Z-Protection
 betterfoliage.roundLogs.zProtection.tooltip=How much to shrink the radius of perpendicular end caps to prevent z-fighting.\nHigher values prevent the end caps from having visible distortion from up close, but may flicker (z-fight) when viewed from afar.\nThis value should be kept as high as possible without noticing any visual glitches.
 
+# Extra Leaves
+betterfoliage.extraLeaves=Extra Leaves
+betterfoliage.extraLeaves.tooltip=Extra round leaves on leaf blocks
+betterfoliage.extraLeaves.snowEnabled=Enable snow
+betterfoliage.extraLeaves.snowEnabled.tooltip=Render an extra snow overlay on top of a leaf block if it is covered by a layer of snow.
+betterfoliage.extraLeaves.surfaceOnly=Surface only
+betterfoliage.extraLeaves.surfaceOnly.tooltip=Extra Leaves will only be rendered on blocks with at least one exposed side.\nA side is marked as exposed if it's neighbor is not a full opaque block nor another leaf block.
+betterfoliage.extraLeaves.dense=Dense mode
+betterfoliage.extraLeaves.dense.tooltip=Render a cross square of extra leaves on all three axes of a leaf block, not just the vertical axis.
+betterfoliage.extraLeaves.renderBaseBlock=Render base block
+betterfoliage.extraLeaves.renderBaseBlock.tooltip=Should the base leaf block be rendered alongside the extra leaves?\nWorks best with Dense mode enabled, otherwise the leaves will look a little lackluster when not viewed from the side.
+
+# Falling Leaves
+betterfoliage.fallingLeaves=Falling Leaves
+betterfoliage.fallingLeaves.tooltip=Should emit falling leaf particles from the bottom of leaf blocks.
+betterfoliage.fallingLeaves.speed=Particle Speed
+betterfoliage.fallingLeaves.speed.tooltip=Speed of the particle when falling.
+betterfoliage.fallingLeaves.rotationSpeed=Rotation Speed
+betterfoliage.fallingLeaves.rotationSpeed.tooltip=Leaf particle rotation speed.
+betterfoliage.fallingLeaves.groundDampening=Ground Dampening
+betterfoliage.fallingLeaves.groundDampening.tooltip=Dampening value of the "settling" effect to apply to the leaf when hitting the ground.\nThe smaller this value, the quicker the particle stops moving once it hits the ground.
+betterfoliage.fallingLeaves.windStrength=Wind Strength
+betterfoliage.fallingLeaves.windStrength.tooltip=Magnitude of wind effects in good weather (spread of normal distribution centered on 0).
+betterfoliage.fallingLeaves.stormStrength=Storm strength
+betterfoliage.fallingLeaves.stormStrength.tooltip=Additional magnitude of wind effects in rainy weather (spread of normal distribution centered on 0).\nThis magnitude is additional to the normal wind strength.
+betterfoliage.fallingLeaves.chance=Particle Chance
+betterfoliage.fallingLeaves.chance.tooltip=Chance that a random tick of a leaf block will spawn a particle.
+betterfoliage.fallingLeaves.perturb=Perturbation
+betterfoliage.fallingLeaves.perturb.tooltip=Magnitude of perturbation effect. Adds a corkscrew-like motion to the particle synchronized to its rotation.
+betterfoliage.fallingLeaves.maxLifetime=Maximum Particle Lifetime
+betterfoliage.fallingLeaves.maxLifetime.tooltip=Maximum lifetime of particle, in seconds. Minimum lifetime is 60 percent of this value.
+betterfoliage.fallingLeaves.fadeoutTime=Particle Fadeout Time
+betterfoliage.fallingLeaves.fadeoutTime.tooltip=How long the leaf fadeout should last, in seconds. Will be less than it's total lifetime when spawned.
+betterfoliage.fallingLeaves.fadeoutOnGroundHit=Fadeout on ground hit
+betterfoliage.fallingLeaves.fadeoutOnGroundHit.tooltip=Should the leaf immediately start to fade out when hitting the ground?
+betterfoliage.fallingLeaves.opacityHack=Opaque particles
+betterfoliage.fallingLeaves.opacityHack.tooltip=Stop transparent blocks obscuring particles even when particle is in front.\n§cWARNING: May cause glitches.
+
 #################################### OLD #############################
+
+
+
+
+
+
+
+
+
 
 betterfoliage.shaderWind=Shader wind effects
 betterfoliage.shaderWind.tooltip=Apply wind effects from ShaderMod shaders to this element?
-
-betterfoliage.leaves=Extra Leaves
-betterfoliage.leaves.tooltip=Extra round leaves on leaf blocks
-betterfoliage.leaves.dense=Dense mode
-betterfoliage.leaves.dense.tooltip=Dense mode has more round leaves
-betterfoliage.leaves.snowEnabled=Enable snow
-betterfoliage.leaves.snowEnabled.tooltip=Enable snow on extra leaves?
-betterfoliage.leaves.surfaceOnly=Surface only
-betterfoliage.leaves.surfaceOnly.tooltip=Extra Leaves will only be rendered on blocks with at least one exposed side. Disabling this may increase the likelihood of completely black leaves appearing between the corners of other leaf blocks
 
 betterfoliage.cactus=Better Cactus
 betterfoliage.cactus.tooltip=Enhance cactus with extra bits and smooth shading
@@ -148,24 +186,6 @@ betterfoliage.coral.shallowWater.tooltip=Should coral appear in 1 block deep wat
 
 betterfoliage.netherrack=Netherrack Vines
 betterfoliage.netherrack.tooltip=Hanging Vines under netherrack
-
-betterfoliage.fallingLeaves=Falling leaves
-betterfoliage.fallingLeaves.tooltip=Falling leaf particle FX emitted from the bottom of leaf blocks
-betterfoliage.fallingLeaves.speed=Particle speed
-betterfoliage.fallingLeaves.speed.tooltip=Overall particle speed
-betterfoliage.fallingLeaves.windStrength=Wind strength
-betterfoliage.fallingLeaves.windStrength.tooltip=Magnitude of wind effects in good weather (spread of normal distribution centered on 0)
-betterfoliage.fallingLeaves.stormStrength=Storm strength
-betterfoliage.fallingLeaves.stormStrength.tooltip=Additional magnitude of wind effects in rainy weather (spread of normal distribution centered on 0)
-betterfoliage.fallingLeaves.size=Particle size
-betterfoliage.fallingLeaves.chance=Particle chance
-betterfoliage.fallingLeaves.chance.tooltip=Chance that a random tick of a leaf block will spawn a particle
-betterfoliage.fallingLeaves.perturb=Perturbation
-betterfoliage.fallingLeaves.perturb.tooltip=Magnitude of perturbation effect. Adds a corkscrew-like motion to the particle synchronized to its rotation
-betterfoliage.fallingLeaves.lifetime=Maximum lifetime
-betterfoliage.fallingLeaves.lifetime.tooltip=Maximum lifetime of particle in seconds. Minimum lifetime is 60%% of this value
-betterfoliage.fallingLeaves.opacityHack=Opaque particles
-betterfoliage.fallingLeaves.opacityHack.tooltip=Stop transparent blocks obscuring particles even when particle is in front. WARNING: May cause glitches.
 
 betterfoliage.risingSoul=Rising souls
 betterfoliage.risingSoul.tooltip=Rising soul particle FX emitted from the top of soulsand blocks

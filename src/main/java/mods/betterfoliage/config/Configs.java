@@ -185,138 +185,86 @@ public final class Configs {
 
     public static class ExtraLeaves {
 
-        public static boolean enabled = true;
-        private static final String enabledDesc = "Render extra round leaves on leaf blocks";
-
-        public static boolean snowEnabled = true;
-        private static final String snowEnabledDesc = "render snow overlay on extra leaves with snow layer on top";
-
-        public static boolean surfaceOnly = true;
-        private static final String surfaceOnlyDesc = "Extra leaves will only be rendered on blocks with at least one exposed side";
-
+        public static boolean enabled;
+        public static boolean snowEnabled;
+        public static boolean surfaceOnly;
         public static float hOffset;
         public static float vOffset;
         public static float size;
-
-        public static boolean dense = false;
-        private static final String denseDesc = "Render extra leaves for all three axes of a leaf block, not just the vertical axis";
-
-        public static boolean renderBaseBlock = true;
-        private static final String renderBaseBlockDesc = "Should the base leaf block be rendered too. Works best with Dense mode enabled";
+        public static boolean dense;
+        public static boolean renderBaseBlock;
 
         public static void init(final Configuration config) {
-            final String category = "extraLeaves";
+            final ConfigCategoryBuilder extraLeaves = new ConfigCategoryBuilder("extraLeaves", config);
 
-            Property prop = config.get(category, "enabled", enabled, enabledDesc);
-            enabled = prop.getBoolean();
+            enabled = extraLeaves.addProp("enabled", true);
+            extraLeaves.setRecentDescription("betterfoliage.enabled");
 
-            prop = config.get(category, "snowEnabled", snowEnabled, snowEnabledDesc);
-            snowEnabled = prop.getBoolean();
+            snowEnabled = extraLeaves.addProp("snowEnabled", true);
+            surfaceOnly = extraLeaves.addProp("surfaceOnly", true);
 
-            prop = config.get(category, "surfaceOnly", surfaceOnly, surfaceOnlyDesc);
-            surfaceOnly = prop.getBoolean();
+            hOffset = (float) extraLeaves.addProp("hOffset", 0.2, 0.0, 0.4);
+            extraLeaves.setRecentDescription("betterfoliage.hOffset");
 
-            prop = config.get(category, "hOffset", 0.2, hOffsetDesc, 0.0, 0.4);
-            hOffset = (float) prop.getDouble();
+            vOffset = (float) extraLeaves.addProp("vOffset", 0.1, 0.0, 0.4);
+            extraLeaves.setRecentDescription("betterfoliage.vOffset");
 
-            prop = config.get(category, "vOffset", 0.1, vOffsetDesc, 0.0, 0.4);
-            vOffset = (float) prop.getDouble();
+            size = (float) extraLeaves.addProp("size", 1.4, 0.75, 2.5);
+            extraLeaves.setRecentDescription("betterfoliage.size");
 
-            prop = config.get(category, "size", 1.4, sizeDesc, 0.75, 2.5);
-            size = (float) prop.getDouble();
+            dense = extraLeaves.addProp("dense", false);
+            renderBaseBlock = extraLeaves.addProp("renderBaseBlock", true);
 
-            prop = config.get(category, "dense", dense, denseDesc);
-            dense = prop.getBoolean();
-
-            prop = config.get(category, "renderBaseBlock", renderBaseBlock, renderBaseBlockDesc);
-            renderBaseBlock = prop.getBoolean();
+            extraLeaves.finalizeCategory();
         }
     }
 
     public static class FallingLeaves {
 
-        public static boolean enabled = true;
-        private static final String enabledDesc = "Should emit falling leaf particles from the bottom of leaf blocks";
-
+        public static boolean enabled;
         public static float speed;
-        private static final String speedDesc = "Overall leaf particle speed";
-
         public static float rotationSpeed;
-        private static final String rotationSpeedDesc = "Leaf particle rotation speed";
-
         public static float groundDampening;
-        private static final String groundDampeningDesc = "dampening value of the \"settling\" effect to apply to the leaf when hitting the ground";
-
         public static double windStrength;
-        private static final String windStrengthDesc = "Magnitude of wind effects in good weather (spread of normal distribution centered on 0)";
-
         public static double stormStrength;
-        private static final String stormStrengthDesc = "Additional magnitude of wind effects in rainy weather (spread of normal distribution centered on 0)";
-
         public static float size;
-
         public static double chance;
-        private static final String chanceDesc = "Chance that a random tick of a leaf block will spawn a particle";
-
         public static float perturb;
-        private static final String perturbDesc = "Magnitude of perturbation effect. Adds a corkscrew-like motion to the particle synchronized to its rotation";
-
         public static int maxLifetimeTicks;
         public static int minLifetimeTicks;
-        private static final String maxLifetimeDesc = "Maximum lifetime of particle in seconds. Minimum lifetime is 60% of this value";
-
         public static int maxFadeoutTicks;
-        private static final String maxFadeoutDesc = "How long the leaf fadeout should last, in seconds. Will be less than it's total lifetime when spawned";
-
-        public static boolean fadeoutOnGroundHit = false;
-        private static final String fadeoutOnGroundHitDesc = "Should the leaf immediately start to fade out when hitting the ground";
-
-        public static boolean opacityHack = true;
-        private static final String opacityHackDesc = "Stop transparent blocks obscuring particles even when particle is in front. WARNING: May cause glitches.";
+        public static boolean fadeoutOnGroundHit;
+        public static boolean opacityHack;
 
         public static void init(final Configuration config) {
-            final String category = "fallingLeaves";
+            final ConfigCategoryBuilder fallingLeaves = new ConfigCategoryBuilder("fallingLeaves", config);
 
-            Property prop = config.get(category, "enabled", enabled, enabledDesc);
-            enabled = prop.getBoolean();
+            enabled = fallingLeaves.addProp("enabled", true);
+            fallingLeaves.setRecentDescription("betterfoliage.enabled");
 
-            prop = config.get(category, "speed", 0.05, speedDesc, 0.01, 0.15);
-            speed = (float) prop.getDouble();
+            speed = (float) fallingLeaves.addProp("speed", 0.05, 0.01, 0.15);
+            rotationSpeed = (float) fallingLeaves.addProp("rotationSpeed", 1.0, 0.0, 5.0);
+            groundDampening = (float) fallingLeaves.addProp("groundDampening", 0.7, 0.0, 1.0);
+            windStrength = fallingLeaves.addProp("windStrength", 0.5, 0.1, 2.0);
+            stormStrength = fallingLeaves.addProp("stormStrength", 0.8, 0.1, 2.0);
 
-            prop = config.get(category, "rotationSpeed", 1.0, rotationSpeedDesc, 0.0, 5.0);
-            rotationSpeed = (float) prop.getDouble();
+            size = (float) fallingLeaves.addProp("size", 0.7, 0.0, 1.0);
+            fallingLeaves.setRecentDescription("betterfoliage.size");
 
-            prop = config.get(category, "groundDampening", 0.7, groundDampeningDesc, 0.0, 1.0);
-            groundDampening = (float) prop.getDouble();
+            chance = (float) fallingLeaves.addProp("chance", 0.05, 0.001, 1.0);
+            perturb = (float) fallingLeaves.addProp("perturb", 0.25, 0.01, 1.0);
 
-            prop = config.get(category, "windStrength", 0.5, windStrengthDesc, 0.1, 2.0);
-            windStrength = prop.getDouble();
-
-            prop = config.get(category, "stormStrength", 0.8, stormStrengthDesc, 0.1, 2.0);
-            stormStrength = prop.getDouble();
-
-            prop = config.get(category, "size", 0.075, sizeDesc, 0.025, 0.15);
-            size = (float) prop.getDouble();
-
-            prop = config.get(category, "chance", 0.05, chanceDesc, 0.01, 1.0);
-            chance = prop.getDouble();
-
-            prop = config.get(category, "perturb", 0.25, perturbDesc, 0.01, 1.0);
-            perturb = (float) prop.getDouble();
-
-            prop = config.get(category, "lifetime", 5.0, maxLifetimeDesc, 1.0, 15.0);
-            double maxLifetime = prop.getDouble();
+            final double maxLifetime = fallingLeaves.addProp("maxLifetime", 5.0, 1.0, 60.0);
             maxLifetimeTicks = (int) Math.round(maxLifetime * 20);
             minLifetimeTicks = (int) Math.round(maxLifetime * 0.6 * 20);
 
-            prop = config.get(category, "fadeoutTime", 1.0, maxFadeoutDesc, 0.1, 10.0);
-            maxFadeoutTicks = (int) Math.round(prop.getDouble() * 20);
+            final double maxFadeout =  fallingLeaves.addProp("fadeoutTime", 1.0, 0.1, 10.0);
+            maxFadeoutTicks = (int) Math.round(maxFadeout * 20);
 
-            prop = config.get(category, "fadeoutOnGroundHit", fadeoutOnGroundHit, fadeoutOnGroundHitDesc);
-            fadeoutOnGroundHit = prop.getBoolean();
+            fadeoutOnGroundHit = fallingLeaves.addProp("fadeoutOnGroundHit", false);
+            opacityHack = fallingLeaves.addProp("opacityHack", true);
 
-            prop = config.get(category, "opacityHack", opacityHack, opacityHackDesc);
-            opacityHack = prop.getBoolean();
+            fallingLeaves.finalizeCategory();
         }
     }
 
