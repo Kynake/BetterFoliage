@@ -813,6 +813,9 @@ public final class Configs {
 
     /// Reinitialize configs after a change or reload while the game is already running
     private void onConfigChange() {
+        if (attachedConfig.hasChanged()) {
+            attachedConfig.save();
+        }
         postInit();
     }
 
