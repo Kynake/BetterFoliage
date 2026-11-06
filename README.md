@@ -9,11 +9,18 @@ This mod alters the appearance of leaves, logs, grass and other natural features
 
 Requires [UniMixins](https://github.com/LegacyModdingMC/UniMixins/releases).
 
-**Important:**
-If you had any custom configs from versions 1.2.4 or earlier (or from the original Better Foliage mod) you will have to replicate them manually.<br>
-As of version 2.0.0 much of the mod's configurations have changed. The old config file in the located at `config/BetterFoliage.cfg` is no longer used, and instead the mod now uses a new file located at `config/BetterFoliage_LegacyEdition.cfg`.<br>
-Your old file will not be deleted, but not all configs are compatible with the new file. You can use it as a reference when replicating your custom configs or delete it.<br>
+---
+
+**Important:**<br>
+If you had any custom configs from versions 1.2.4 or earlier (or from the original Better Foliage mod) you will have to replicate them manually.
+
+As of version 2.0.0 much of the mod's configurations have changed. The old config file in the located at `config/BetterFoliage.cfg` is no longer used, and instead the mod now uses a new file located at `config/BetterFoliage_LegacyEdition.cfg`.
+
+Your old file will not be deleted, but not all configs are compatible with the new file. You can use it as a reference when replicating your custom configs or delete it.
+
 This should be the last time a config change is ever required, as the mod now keeps its own up-to-date configs in a resourcepack, separate from the player's custom configs.
+
+---
 
 This mod aims to enhance the visuals of your world by adding more detail to nature related blocks.
 

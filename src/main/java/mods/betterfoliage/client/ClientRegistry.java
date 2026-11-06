@@ -44,7 +44,7 @@ public class ClientRegistry {
     private ClientRegistry() {}
 
     public static void preInit() {
-        BetterFoliageMod.log.info("New ClientRegistry preInit()");
+        BetterFoliageMod.log.info("ClientRegistry preInit()");
 
         if (eventListenerInstance == null) {
             eventListenerInstance = new ClientRegistry();
@@ -52,7 +52,7 @@ public class ClientRegistry {
     }
 
     public static void postInit() {
-        BetterFoliageMod.log.info("New ClientRegistry postInit()");
+        BetterFoliageMod.log.info("ClientRegistry postInit()");
 
         LeafRegistry.getInstance();
         GrassRegistry.getInstance();
