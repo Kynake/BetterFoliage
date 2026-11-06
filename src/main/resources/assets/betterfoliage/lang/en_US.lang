@@ -3,28 +3,28 @@ key.betterfoliage.gui=Open Settings
 
 betterfoliage.general=General Mod Configs
 betterfoliage.general.tooltip=Configs that affect all aspects of the mod.
-
 betterfoliage.general.enabled=Enable mod
 betterfoliage.general.enabled.tooltip=If set to false, all changes made by Better Foliage - Legacy Edition will be disabled.
-
 betterfoliage.general.seed=Seed
 betterfoliage.general.seed.tooltip=Primary mod seed used as the base for pseudo-random placement of features.\nAllows features to be consistent across different players.\nChange it to a secret number to make it harder for someone to brute force your coordinates from a screenshot, if you care about that.\nFor this reason, this config is deliberately not shown in-game.
 
 ## Generics
 betterfoliage.enabled=Enabled
 betterfoliage.enabled.tooltip=Is this feature enabled?
-betterfoliage.hOffset=Horizontal offset
+betterfoliage.hOffset=Horizontal Offset
 betterfoliage.hOffset.tooltip=The distance this element is shifted horizontally, in blocks.
-betterfoliage.vOffset=Vertical offset
+betterfoliage.vOffset=Vertical Offset
 betterfoliage.vOffset.tooltip=The distance this element is shifted vertically, in blocks.
 betterfoliage.size=Size
 betterfoliage.size.tooltip=Size of this element.
-betterfoliage.heightMin=Minimum height
+betterfoliage.heightMin=Minimum Height
 betterfoliage.heightMin.tooltip=Minimum height of element.
-betterfoliage.heightMax=Maximum height
+betterfoliage.heightMax=Maximum Height
 betterfoliage.heightMax.tooltip=Maximum height of element.
 betterfoliage.threshold=Threshold
 betterfoliage.threshold.tooltip=Chance that an eligible block will have this feature.\nUsed as a cutoff value in a 3D noise generator.
+betterfoliage.maxLifetime=Maximum Particle Lifetime
+betterfoliage.maxLifetime.tooltip=Maximum lifetime of particle, in seconds. Minimum lifetime is 60 percent of this value.
 betterfoliage.biomes=Biome Filters
 betterfoliage.biomes.tooltip=A list of biomes filters that determine if this feature is allowed to appear in a specific biome.\nCheck the wiki for more details on how biome filters work.
 
@@ -116,11 +116,9 @@ betterfoliage.fallingLeaves.windStrength.tooltip=Magnitude of wind effects in go
 betterfoliage.fallingLeaves.stormStrength=Storm strength
 betterfoliage.fallingLeaves.stormStrength.tooltip=Additional magnitude of wind effects in rainy weather (spread of normal distribution centered on 0).\nThis magnitude is additional to the normal wind strength.
 betterfoliage.fallingLeaves.chance=Particle Chance
-betterfoliage.fallingLeaves.chance.tooltip=Chance that a random tick of a leaf block will spawn a particle.
+betterfoliage.fallingLeaves.chance.tooltip=Chance that a random tick on a leaf block will spawn a particle.
 betterfoliage.fallingLeaves.perturb=Perturbation
 betterfoliage.fallingLeaves.perturb.tooltip=Magnitude of perturbation effect. Adds a corkscrew-like motion to the particle synchronized to its rotation.
-betterfoliage.fallingLeaves.maxLifetime=Maximum Particle Lifetime
-betterfoliage.fallingLeaves.maxLifetime.tooltip=Maximum lifetime of particle, in seconds. Minimum lifetime is 60 percent of this value.
 betterfoliage.fallingLeaves.fadeoutTime=Particle Fadeout Time
 betterfoliage.fallingLeaves.fadeoutTime.tooltip=How long the leaf fadeout should last, in seconds. Will be less than it's total lifetime when spawned.
 betterfoliage.fallingLeaves.fadeoutOnGroundHit=Fadeout on ground hit
@@ -128,13 +126,41 @@ betterfoliage.fallingLeaves.fadeoutOnGroundHit.tooltip=Should the leaf immediate
 betterfoliage.fallingLeaves.opacityHack=Opaque particles
 betterfoliage.fallingLeaves.opacityHack.tooltip=Stop transparent blocks obscuring particles even when particle is in front.\n§cWARNING: May cause glitches.
 
+# Rising Souls
+betterfoliage.risingSouls=Rising Souls
+betterfoliage.risingSouls.tooltip=Should emit rising soul particles from the top of Soul Sand blocks?
+betterfoliage.risingSouls.speed=Particle Speed
+betterfoliage.risingSouls.speed.tooltip=Ascent speed of a soul particle, in blocks per second.
+betterfoliage.risingSouls.chance=Particle Chance
+betterfoliage.risingSouls.chance.tooltip=Chance that a random tick on a Soul Sand block will spawn a particle.
+betterfoliage.risingSouls.perturb=Perturbation
+betterfoliage.risingSouls.perturb.tooltip=Magnitude of perturbation effect. Adds a corkscrew-like motion to the particle.
+betterfoliage.risingSouls.headSize=Head Size
+betterfoliage.risingSouls.headSize.tooltip=Size of the soul head particle.
+betterfoliage.risingSouls.trailSize=Trail Size
+betterfoliage.risingSouls.trailSize.tooltip=Initial size of the trail particles that follow the head particle.
+betterfoliage.risingSouls.opacity=Opacity
+betterfoliage.risingSouls.opacity.tooltip=Opacity of the particle effect. The closer this value is to 0, the fainter the soul particles will appear.
+betterfoliage.risingSouls.sizeDecay=Size Decay
+betterfoliage.risingSouls.sizeDecay.tooltip=Trail particle size relative to its size in the previous tick.\nThe smaller this number is, the quicker the trail reduces in size.
+betterfoliage.risingSouls.opacityDecay=Opacity Decay
+betterfoliage.risingSouls.opacityDecay.tooltip=Trail particle opacity relative to its opacity in the previous tick.\nThe smaller this number is, the quicker the particle disappears.
+betterfoliage.risingSouls.trailDensity=Trail Density
+betterfoliage.risingSouls.trailDensity.tooltip=Every Nth tick, add a particle to the trail.
+
+# Netherrack Vines
+betterfoliage.netherrack=Netherrack Vines
+betterfoliage.netherrack.tooltip=Should place hanging vines under Netherrack blocks?
+
+# Lilypad
+betterfoliage.lilypad=Better Lilypads
+betterfoliage.lilypad.tooltip=Enhance lilypad visuals with roots and occasional flowers.
+betterfoliage.lilypad.flowerChance=Flower Chance
+betterfoliage.lilypad.flowerChance.tooltip=Chance of a lilypad having a flower on top.
+betterfoliage.lilypad.flowerSize=Flower Size
+betterfoliage.lilypad.flowerSize.tooltip=Size of the lilypad flowers.
+
 #################################### OLD #############################
-
-
-
-
-
-
 
 
 
@@ -153,10 +179,7 @@ betterfoliage.cactus.sizeVariation.tooltip=Amount of random variation on cactus 
 betterfoliage.cactus.armChance=Arm chance
 betterfoliage.cactus.armChance.tooltip=Chance that each side of a cactus block will have an arm
 
-betterfoliage.lilypad=Better Lilypad
-betterfoliage.lilypad.tooltip=Enhance lilypad with roots and occasional flowers
-betterfoliage.lilypad.flowerChance=Flower chance
-betterfoliage.lilypad.flowerChance.tooltip=Chance of a lilypad having a flower on it
+
 
 betterfoliage.reed=Reeds
 betterfoliage.reed.tooltip=Reeds on dirt blocks in shallow water
@@ -183,29 +206,3 @@ betterfoliage.coral.biomes.tooltip=Configure which biomes coral is allowed to ap
 betterfoliage.coral.biomes.tooltip.element=Should coral appear in the %s biome?
 betterfoliage.coral.shallowWater=Shallow water coral
 betterfoliage.coral.shallowWater.tooltip=Should coral appear in 1 block deep water?
-
-betterfoliage.netherrack=Netherrack Vines
-betterfoliage.netherrack.tooltip=Hanging Vines under netherrack
-
-betterfoliage.risingSoul=Rising souls
-betterfoliage.risingSoul.tooltip=Rising soul particle FX emitted from the top of soulsand blocks
-betterfoliage.risingSoul.chance=Particle chance
-betterfoliage.risingSoul.chance.tooltip=Chance that a random tick of a soulsand block will spawn a particle
-betterfoliage.risingSoul.speed=Particle speed
-betterfoliage.risingSoul.speed.tooltip=Ascent speed of a soul particle, in blocks
-betterfoliage.risingSoul.perturb=Perturbation
-betterfoliage.risingSoul.perturb.tooltip=Magnitude of perturbation effect. Adds a corkscrew-like motion to the particle
-betterfoliage.risingSoul.headSize=Soul size
-betterfoliage.risingSoul.headSize.tooltip=Size of the soul particle
-betterfoliage.risingSoul.trailSize=Trail size
-betterfoliage.risingSoul.trailSize.tooltip=Initial size of the particle trail
-betterfoliage.risingSoul.opacity=Opacity
-betterfoliage.risingSoul.opacity.tooltip=Opacity of the particle effect
-betterfoliage.risingSoul.sizeDecay=Size decay
-betterfoliage.risingSoul.sizeDecay.tooltip=Trail particle size relative to its size in the previous tick
-betterfoliage.risingSoul.opacityDecay=Opacity decay
-betterfoliage.risingSoul.opacityDecay.tooltip=Trail particle opacity relative to its opacity in the previous tick
-betterfoliage.risingSoul.lifetime=Maximum lifetime
-betterfoliage.risingSoul.lifetime.tooltip=Maximum lifetime of particle effect in seconds. Minimum lifetime is 60% of this value
-betterfoliage.risingSoul.trailDensity=Trail density
-betterfoliage.risingSoul.trailDensity.tooltip=Every Nth tick, add a particle to the trail

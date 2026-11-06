@@ -255,6 +255,7 @@ public final class Configs {
             perturb = (float) fallingLeaves.addProp("perturb", 0.25, 0.01, 1.0);
 
             final double maxLifetime = fallingLeaves.addProp("maxLifetime", 5.0, 1.0, 60.0);
+            fallingLeaves.setRecentDescription("betterfoliage.maxLifetime");
             maxLifetimeTicks = (int) Math.round(maxLifetime * 20);
             minLifetimeTicks = (int) Math.round(maxLifetime * 0.6 * 20);
 
@@ -270,131 +271,93 @@ public final class Configs {
 
     public static class RisingSouls {
 
-        public static boolean enabled = true;
-        private static final String enabledDesc = "Should emit rising soul particles from the top of soulsand blocks";
-
-        public static double chance;
-        private static final String chanceDesc = "Chance that a random tick of a soulsand block will spawn a particle";
-
+        public static boolean enabled;
         public static float speed;
-        private static final String speedDesc = "Ascent speed of a soul particle, in blocks";
-
+        public static double chance;
         public static float perturb;
-        private static final String perturbDesc = "Magnitude of perturbation effect. Adds a corkscrew-like motion to the particle";
-
         public static float headSize;
-        private static final String headSizeDesc = "Size of the soul particle";
-
         public static float trailSize;
-        private static final String trailSizeDesc = "Initial size of the particle trail";
-
-        public static float opacity;
-        private static final String opacityDesc = "Opacity of the particle effect";
-
+        public static int trailDensity;
         public static float sizeDecay;
-        private static final String sizeDecayDesc = "Trail particle size relative to its size in the previous tick";
-
+        public static float opacity;
         public static int maxLifetimeTicks;
         public static int minLifetimeTicks;
-        private static final String maxLifetimeDesc = "Maximum lifetime of a particle in seconds. Minimum lifetime is 60% of this value";
-
-        public static int trailDensity;
-        private static final String trailDensityDesc = "Every Nth tick, add a particle to the trail";
 
         public static void init(final Configuration config) {
-            final String category = "risingSoul";
+            final ConfigCategoryBuilder risingSouls = new ConfigCategoryBuilder("risingSouls", config);
 
-            Property prop = config.get(category, "enabled", enabled, enabledDesc);
-            enabled = prop.getBoolean();
+            enabled = risingSouls.addProp("enabled", true);
+            risingSouls.setRecentDescription("betterfoliage.enabled");
 
-            prop = config.get(category, "chance", 0.02, chanceDesc, 0.001, 1.0);
-            chance = prop.getDouble();
+            speed = (float) risingSouls.addProp("speed", 0.1, 0.001, 1.0);
+            chance = risingSouls.addProp("chance", 0.02, 0.001, 1.0);
 
-            prop = config.get(category, "speed", 0.1, speedDesc, 0.001, 1.0);
-            speed = (float) prop.getDouble();
+            perturb = (float) risingSouls.addProp("perturb", 0.05, 0.01, 0.25);
+            headSize = (float) risingSouls.addProp("headSize", 1.0, 0.25, 1.5);
+            trailSize = (float) risingSouls.addProp("trailSize", 0.75, 0.25, 1.5);
+            trailDensity = risingSouls.addProp("trailDensity", 3, 1, 16);
+            sizeDecay = (float) risingSouls.addProp("sizeDecay", 0.97, 0.5, 1.0);
+            opacity = (float) risingSouls.addProp("opacity", 0.5, 0.01, 1.0);
 
-            prop = config.get(category, "perturb", 0.05, perturbDesc, 0.01, 0.25);
-            perturb = (float) prop.getDouble();
-
-            prop = config.get(category, "headSize", 1.0, headSizeDesc, 0.25, 1.5);
-            headSize = (float) prop.getDouble();
-
-            prop = config.get(category, "trailSize", 0.75, trailSizeDesc, 0.25, 1.5);
-            trailSize = (float) prop.getDouble();
-
-            prop = config.get(category, "opacity", 0.5, opacityDesc, 0.05, 1.0);
-            opacity = (float) prop.getDouble();
-
-            prop = config.get(category, "sizeDecay", 0.97, sizeDecayDesc, 0.5, 1.0);
-            sizeDecay = (float) prop.getDouble();
-
-            prop = config.get(category, "lifetime", 4.0, maxLifetimeDesc, 1.0, 15.0);
-            double maxLifetime = prop.getDouble();
+            double maxLifetime = risingSouls.addProp("maxLifetime", 4.0, 1.0, 15.0);
+            risingSouls.setRecentDescription("betterfoliage.maxLifetime");
             maxLifetimeTicks = (int) Math.round(maxLifetime * 20);
             minLifetimeTicks = (int) Math.round(maxLifetime * 0.6 * 20);
 
-            prop = config.get(category, "trailDensity", 3, trailDensityDesc, 1, 16);
-            trailDensity = prop.getInt();
+            risingSouls.finalizeCategory();
         }
     }
 
     public static class Netherrack {
 
-        public static boolean enabled = true;
-        private static final String enabledDesc = "Should place hanging vines under netherrack blocks";
-
+        public static boolean enabled;
         public static float hOffset;
         public static float heightMin;
         public static float heightMax;
         public static float size;
 
         public static void init(final Configuration config) {
-            final String category = "netherrack";
+            final ConfigCategoryBuilder netherrack = new ConfigCategoryBuilder("netherrack", config);
 
-            Property prop = config.get(category, "enabled", enabled, enabledDesc);
-            enabled = prop.getBoolean();
+            enabled = netherrack.addProp("enabled", true);
+            netherrack.setRecentDescription("betterfoliage.enabled");
 
-            prop = config.get(category, "hOffset", 0.2, hOffsetDesc, 0.0, 0.4);
-            hOffset = (float) prop.getDouble();
+            hOffset = (float) netherrack.addProp("hOffset", 0.2, 0.0, 0.4);
+            netherrack.setRecentDescription("betterfoliage.hOffset");
 
-            prop = config.get(category, "heightMin", 0.6, heightMinDesc, 0.1, 1.5);
-            heightMin = (float) prop.getDouble();
+            heightMin = (float) netherrack.addProp("heightMin", 0.6, 0.1, 1.5);
+            netherrack.setRecentDescription("betterfoliage.heightMin");
 
-            prop = config.get(category, "heightMax", 0.8, heightMaxDesc, 0.1, 1.5);
-            heightMax = (float) prop.getDouble();
+            heightMax = (float) netherrack.addProp("heightMax", 0.8, 0.1, 1.5);
+            netherrack.setRecentDescription("betterfoliage.heightMax");
 
-            prop = config.get(category, "size", 1, sizeDesc, 0.5, 1.5);
-            size = (float) prop.getDouble();
+            size = (float) netherrack.addProp("size", 1.0, 0.5, 1.5);
+            netherrack.setRecentDescription("betterfoliage.size");
+
+            netherrack.finalizeCategory();
         }
     }
 
     public static class Lilypad {
 
-        public static boolean enabled = true;
-        private static final String enabledDesc = "Should draw flowers and roots above and bellow lilypads";
-
+        public static boolean enabled;
         public static float hOffset;
-
         public static double flowerChance;
-        private static final String flowerChanceDesc = "Chance that a lilypad will have a flower on top";
-
         public static float flowerSize;
-        private static final String flowerSizeDesc = "Size of the lilypad flowers";
 
         public static void init(final Configuration config) {
-            final String category = "lilypad";
+            final ConfigCategoryBuilder lilypad = new ConfigCategoryBuilder("lilypad", config);
 
-            Property prop = config.get(category, "enabled", enabled, enabledDesc);
-            enabled = prop.getBoolean();
+            enabled = lilypad.addProp("enabled", true);
+            lilypad.setRecentDescription("betterfoliage.enabled");
 
-            prop = config.get(category, "hOffset", 0.1, hOffsetDesc, 0.0, 0.25);
-            hOffset = (float) prop.getDouble();
+            hOffset = (float) lilypad.addProp("hOffset", 0.1, 0.0, 0.25);
+            lilypad.setRecentDescription("betterfoliage.hOffset");
 
-            prop = config.get(category, "flowerChance", 0.25, flowerChanceDesc, 0.0, 1.0);
-            flowerChance = prop.getDouble();
+            flowerChance = lilypad.addProp("flowerChance", 0.25, 0.0, 1.0);
+            flowerSize = (float) lilypad.addProp("flowerSize", 0.5, 0.1, 1.0);
 
-            prop = config.get(category, "flowerSize", 0.5, flowerSizeDesc, 0.1, 1.0);
-            flowerSize = (float) prop.getDouble();
+            lilypad.finalizeCategory();
         }
     }
 
