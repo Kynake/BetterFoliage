@@ -186,15 +186,21 @@ public class LeafRenderer extends BlockRenderer {
 
     private static boolean isExposed(IBlockAccess world, Block block, int x, int y, int z) {
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-            final Block blockSide = world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
-            if (!blocksLeafRendering(blockSide, block)) return true;
+            final int xSide = x + dir.offsetX;
+            final int ySide = y + dir.offsetY;
+            final int zSide = z + dir.offsetZ;
+
+            final Block blockSide = world.getBlock(xSide, ySide, zSide);
+            final int metaSide = world.getBlockMetadata(xSide, ySide, zSide);
+            if (!blocksLeafRendering(blockSide, metaSide, block)) return true;
         }
 
         return false;
     }
 
-    private static boolean blocksLeafRendering(Block visionBlocker, Block leaf) {
-        return visionBlocker.isOpaqueCube() || visionBlocker == leaf;
+    private static boolean blocksLeafRendering(Block visionBlocker, int visionBlockerMetadata, Block leaf) {
+        return visionBlocker == leaf || (visionBlocker.isOpaqueCube()
+            && !(Configs.RoundLogs.enabled && Configs.Blocks.logs.matches(visionBlocker, visionBlockerMetadata)));
     }
 
     /// Redefines AO directions when extra leaves are rotated
