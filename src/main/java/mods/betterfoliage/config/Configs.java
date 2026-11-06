@@ -302,6 +302,7 @@ public final class Configs {
         public static float heightMin;
         public static float heightMax;
         public static float size;
+        public static boolean mixTextures;
 
         public static void init(final Configuration config) {
             final ConfigCategoryBuilder netherrack = new ConfigCategoryBuilder("netherrack", config);
@@ -320,6 +321,8 @@ public final class Configs {
 
             size = (float) netherrack.addProp("size", 1.0, 0.5, 1.5);
             netherrack.setRecentDescription("betterfoliage.size");
+
+            mixTextures = netherrack.addProp("mixTextures", true);
 
             netherrack.finalizeCategory();
         }

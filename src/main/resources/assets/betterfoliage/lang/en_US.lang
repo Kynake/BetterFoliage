@@ -73,8 +73,8 @@ betterfoliage.shortGrass.myceliumEnabled=Enable Mycelium
 betterfoliage.shortGrass.myceliumEnabled.tooltip=Is this feature enabled for Mycelium blocks?
 betterfoliage.shortGrass.snowEnabled=Enable Snow
 betterfoliage.shortGrass.snowEnabled.tooltip=Render snow tinted short grass if the block is covered by snow.
-betterfoliage.shortGrass.mixTextures=Mix textures
-betterfoliage.shortGrass.mixTextures.tooltip=Allow mixing of two different textures for each tuft of grass/mycelium in each block.\nDoes not work if using generated textures.
+betterfoliage.shortGrass.mixTextures=Mix Textures
+betterfoliage.shortGrass.mixTextures.tooltip=Allow mixing two different textures for each tuft of grass/mycelium in each block.\nDoes not work if using generated textures.
 betterfoliage.shortGrass.useGenerated=Use generated grass texture
 betterfoliage.shortGrass.useGenerated.tooltip=Dynamically generate a texture for the short grass by copying the top half of the tallgrass texture from the current resource pack.
 
@@ -157,6 +157,8 @@ betterfoliage.risingSouls.trailDensity.tooltip=Every Nth tick, add a particle to
 # Netherrack Vines
 betterfoliage.netherrack=Netherrack Vines
 betterfoliage.netherrack.tooltip=Should place hanging vines under Netherrack blocks?
+betterfoliage.netherrack.mixTextures=Mix Textures
+betterfoliage.netherrack.mixTextures.tooltip=Allow mixing two different textures for each rendered vine.
 
 # Lilypad
 betterfoliage.lilypad=Better Lilypads

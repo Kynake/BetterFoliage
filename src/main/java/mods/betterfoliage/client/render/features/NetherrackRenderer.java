@@ -54,11 +54,14 @@ public class NetherrackRenderer extends BlockRenderer {
         boolean renderResult = renderer.renderStandardBlock(block, x, y, z);
 
         if (!renderResult) return false;
-        if (world.getBlock(x, y - 1, z)
+
+        final int yOffset = y - 1;
+
+        if (world.getBlock(x, yOffset, z)
             .isOpaqueCube()) return false;
 
         // Render vines
-        int coordHash = MathUtils.hashCoords(x, y - 1, z, 29);
+        int coordHash = MathUtils.hashCoords(x, yOffset, z, 29);
         float heightScale = MathUtils
             .hashToRange(coordHash, Configs.Netherrack.heightMin, Configs.Netherrack.heightMax);
 
@@ -67,16 +70,22 @@ public class NetherrackRenderer extends BlockRenderer {
         float zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
         Tessellator tessellator = Tessellator.instance;
-        tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y - 1, z));
+        tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, yOffset, z));
         tessellator.setColorOpaque(0xFF, 0xFF, 0xFF);
 
-        // TODO: Add config for mixing two sprites on the same crossed square
-        IIcon sprite = netherrackVines.getSpriteForCoord(x, y - 1, z);
-
         ICrossedSquaresRenderer vinesRenderer = (ICrossedSquaresRenderer) renderer;
-
         vinesRenderer.betterfoliage$setVerticalScale(heightScale);
-        renderer.drawCrossedSquares(sprite, xOffset, y - heightScale, zOffset, Configs.Netherrack.size);
+
+        IIcon sprite = netherrackVines.getSpriteForCoord(x, yOffset, z);
+        if (Configs.Netherrack.mixTextures) {
+            IIcon secondSprite = netherrackVines.getSpriteForCoord(x, yOffset, z, 6);
+            vinesRenderer.betterfoliage$setSecondSprite(secondSprite);
+            renderer.drawCrossedSquares(sprite, xOffset, y - heightScale, zOffset, Configs.Netherrack.size);
+            vinesRenderer.betterfoliage$setSecondSprite(null);
+        } else {
+            renderer.drawCrossedSquares(sprite, xOffset, y - heightScale, zOffset, Configs.Netherrack.size);
+        }
+
         vinesRenderer.betterfoliage$resetVerticalScale();
 
         return true;

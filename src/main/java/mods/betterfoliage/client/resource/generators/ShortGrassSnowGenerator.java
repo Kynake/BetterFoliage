@@ -9,7 +9,6 @@ import mods.betterfoliage.client.render.RenderUtils;
 
 public class ShortGrassSnowGenerator extends ShortGrassGenerator {
 
-    // TODO make both configurable?
     private static final int BLEND_COLOR = 0xFF_FF_FF; // White
     private static final float BLEND_RATIO = 2f / 3f;
 
