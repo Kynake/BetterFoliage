@@ -72,18 +72,18 @@ public class ClientRegistry {
     private static void initBlockRenderers() {
         blockRenderers = new BlockRenderer[] {
             // spotless:off
-            GrassRenderer.getInstance(),
-            LogRenderer.getInstance(),
-            MyceliumRenderer.getInstance(),
-            LeafRenderer.getInstance(),
-            CactusRenderer.getInstance(),
-            LilypadRenderer.getInstance(),
-            NetherrackRenderer.getInstance(),
-            CoralRenderer.getInstance(),
-            ReedsRenderer.getInstance(),
-            AlgaeRenderer.getInstance(),
             DirtGrassRenderer.getInstance(),
             DirtGrassLogRenderer.getInstance(),
+            GrassRenderer.getInstance(),
+            CoralRenderer.getInstance(),
+            AlgaeRenderer.getInstance(),
+            LeafRenderer.getInstance(),
+            LogRenderer.getInstance(),
+            ReedsRenderer.getInstance(),
+            NetherrackRenderer.getInstance(),
+            MyceliumRenderer.getInstance(),
+            CactusRenderer.getInstance(),
+            LilypadRenderer.getInstance(),
             // spotless:on
         };
     }
