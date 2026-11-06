@@ -18,6 +18,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.resource.ResourceUtils;
+import mods.betterfoliage.config.Configs;
 import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
 import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
@@ -140,133 +141,92 @@ public class RenderUtils {
 
     // TODO: Rework offset selection
     public static void getShadingInfoForCrossedSquareVertex(RenderBlocks renderer, int x, int y, int z,
-        ForgeDirection firstAxis, ForgeDirection secondAxis, ForgeDirection thirdAxis, boolean useBlockColor,
+        ForgeDirection face, ForgeDirection hor, ForgeDirection vert, boolean useBlockColor,
         ShadingInfo shadingContainer) {
 
-        Block block = renderer.blockAccess.getBlock(x, y, z);
+        final IBlockAccess world = renderer.blockAccess;
+        final Block block = world.getBlock(x, y, z);
 
         int aoX = x;
         int aoY = y;
         int aoZ = z;
 
-        ForgeDirection aoFirst = firstAxis;
-        ForgeDirection aoSecond = secondAxis;
-        ForgeDirection aoThird = thirdAxis;
-
         // We use standard block multiplier here because our only use of AO with block color is extra leaves,
         // which would need the same multiplier as the standard leaf block.
         // (If this ever changes then this method has to be refactored)
-        int color = useBlockColor ? BlockUtils.getStandardColorMultiplier(renderer.blockAccess, block, x, y, z)
+        int color = useBlockColor ? BlockUtils.getStandardColorMultiplier(world, block, x, y, z)
             : DEFAULT_COLOR_MULTIPLIER;
 
-        float colorMult = getColorMultiplierBySide(firstAxis);
+        /// Corner Selection
+        final ForgeDirection aoFace;
+        final ForgeDirection aoHor;
+        final ForgeDirection aoVert;
 
-        if (!isFaceOccluded(renderer.blockAccess, x, y, z, thirdAxis)) {
-            colorMult = getColorMultiplierBySide(thirdAxis);
-            aoFirst = thirdAxis;
-            aoThird = firstAxis;
-        } else if (isFaceOccluded(renderer.blockAccess, x, y, z, firstAxis)) {
-            colorMult = getColorMultiplierBySide(secondAxis);
+        // Prioritize AO from the vertical axis, if not occluded
+        if (isFaceExposed(world, block, x, y, z, vert)) {
+            aoFace = vert;
+            aoHor = hor;
+            aoVert = face;
+        }
 
-            if (isFaceOccluded(
-                renderer.blockAccess,
-                x + secondAxis.offsetX,
-                y + secondAxis.offsetY,
-                z + secondAxis.offsetZ,
-                firstAxis)) {
-                aoX = x + secondAxis.offsetX + thirdAxis.offsetX;
-                aoY = y + secondAxis.offsetY + thirdAxis.offsetY;
-                aoZ = z + secondAxis.offsetZ + thirdAxis.offsetZ;
-                aoSecond = secondAxis.getOpposite();
-                aoThird = secondAxis.getOpposite();
-            } else {
-                aoX = x + secondAxis.offsetX;
-                aoY = y + secondAxis.offsetY;
-                aoZ = z + secondAxis.offsetZ;
-                aoSecond = secondAxis.getOpposite();
+        // Otherwise, try main face AO
+        else if (isFaceExposed(world, block, x, y, z, face)) {
+            aoFace = face;
+            aoHor = hor;
+            aoVert = vert;
+        }
+
+        // If occluded try the horizontal side face AO
+        else if (isFaceExposed(world, block, x, y, z, hor)) {
+            aoFace = hor;
+            aoHor = face;
+            aoVert = vert;
+        }
+
+        // All faces are blocked, try stepping one block towards hor
+        else {
+            aoX += hor.offsetX;
+            aoY += hor.offsetY;
+            aoZ += hor.offsetZ;
+
+            final Block horBlock = world.getBlock(x, y, z);
+
+            // Try using the face AO from the block on the horizontal side
+            if (isFaceExposed(world, horBlock, aoX, aoY, aoZ, face)) {
+                aoFace = face;
+                aoHor = hor.getOpposite(); // We've already shifted to the side, so invert horizontal axis
+                aoVert = vert;
+            }
+
+            // All faces + horizontal diagonal are blocked, use vertical diagonal as last resort
+            else {
+                aoX += face.offsetX;
+                aoY += face.offsetY;
+                aoZ += face.offsetZ;
+
+                aoFace = vert;
+
+                // Apply direction shifts
+                aoHor = hor.getOpposite();
+                aoVert = face.getOpposite();
             }
         }
 
+        float colorMult = getColorMultiplierBySide(aoFace);
+
         // TODO use FlatShader when renderAO == false?
-        getAOShadingForCrossedSquareCorner(
+        getAOShadingInfoForBlockCorner(
             renderer,
             block,
             aoX,
             aoY,
             aoZ,
-            aoFirst,
-            aoSecond,
-            aoThird,
+            aoFace,
+            aoHor,
+            aoVert,
             color,
             colorMult,
             shadingContainer);
-    }
-
-    // TODO: Remove this after crossed square AO refactor
-    private static void getAOShadingForCrossedSquareCorner(RenderBlocks renderer, Block block, int x, int y, int z,
-        ForgeDirection firstAxis, ForgeDirection secondAxis, ForgeDirection thirdAxis, int color, float colorMultiplier,
-        ShadingInfo shadingContainer) {
-
-        x += firstAxis.offsetX;
-        y += firstAxis.offsetY;
-        z += firstAxis.offsetZ;
-
-        Block secondNeighbor = renderer.blockAccess
-            .getBlock(x + secondAxis.offsetX, y + secondAxis.offsetY, z + secondAxis.offsetZ);
-        Block thirdNeighbor = renderer.blockAccess
-            .getBlock(x + thirdAxis.offsetX, y + thirdAxis.offsetY, z + thirdAxis.offsetZ);
-
-        float secondAO = secondNeighbor.getAmbientOcclusionLightValue();
-        int secondBrightness = block.getMixedBrightnessForBlock(
-            renderer.blockAccess,
-            x + secondAxis.offsetX,
-            y + secondAxis.offsetY,
-            z + secondAxis.offsetZ);
-
-        float thirdAO = thirdNeighbor.getAmbientOcclusionLightValue();
-        int thirdBrightness = block.getMixedBrightnessForBlock(
-            renderer.blockAccess,
-            x + thirdAxis.offsetX,
-            y + thirdAxis.offsetY,
-            z + thirdAxis.offsetZ);
-
-        float diagonalAO;
-        int diagonalBrightness;
-
-        if (secondNeighbor.getCanBlockGrass() && thirdNeighbor.getCanBlockGrass()) {
-            diagonalAO = secondAO;
-            diagonalBrightness = secondBrightness;
-        } else {
-            int diagX = x + firstAxis.offsetX + secondAxis.offsetX + thirdAxis.offsetX;
-            int diagY = y + firstAxis.offsetY + secondAxis.offsetY + thirdAxis.offsetY;
-            int diagZ = z + firstAxis.offsetZ + secondAxis.offsetZ + thirdAxis.offsetZ;
-
-            Block diagonalNeighbor = renderer.blockAccess.getBlock(diagX, diagY, diagZ);
-
-            diagonalAO = diagonalNeighbor.getAmbientOcclusionLightValue();
-            diagonalBrightness = block.getMixedBrightnessForBlock(renderer.blockAccess, diagX, diagY, diagZ);
-        }
-
-        x -= firstAxis.offsetX;
-        y -= firstAxis.offsetY;
-        z -= firstAxis.offsetZ;
-
-        Block neighbor = renderer.blockAccess
-            .getBlock(x + firstAxis.offsetX, y + firstAxis.offsetY, z + firstAxis.offsetZ);
-
-        float neighborAO = neighbor.getAmbientOcclusionLightValue();
-        int blockBrightness = neighbor.isOpaqueCube() ? block.getMixedBrightnessForBlock(renderer.blockAccess, x, y, z)
-            : block.getMixedBrightnessForBlock(
-                renderer.blockAccess,
-                x + firstAxis.offsetX,
-                y + firstAxis.offsetY,
-                z + firstAxis.offsetZ);
-
-        float ao = colorMultiplier * (neighborAO + secondAO + thirdAO + diagonalAO) / 4f;
-        int brightness = renderer
-            .getAoBrightness(secondBrightness, thirdBrightness, diagonalBrightness, blockBrightness);
-
-        shadingContainer.updateValues(brightness, color, ao);
     }
 
     public static void getAOShadingInfoForBlockCorner(RenderBlocks renderer, Block block, int x, int y, int z,
@@ -355,10 +315,28 @@ public class RenderUtils {
         shadingContainer.updateValues(brightness, color, colorMultiplier);
     }
 
-    public static boolean isFaceOccluded(IBlockAccess world, int x, int y, int z, ForgeDirection face) {
-        Block neighbor = world.getBlock(x + face.offsetX, y + face.offsetY, z + face.offsetZ);
+    public static boolean isFaceExposed(IBlockAccess world, Block block, int x, int y, int z, ForgeDirection face) {
+        final int meta = world.getBlockMetadata(x, y, z);
 
-        return neighbor.isOpaqueCube() || neighbor == world.getBlock(x, y, z);
+        final int sideX = x + face.offsetX;
+        final int sideY = x + face.offsetY;
+        final int sideZ = x + face.offsetZ;
+
+        final Block side = world.getBlock(sideX, sideY, sideZ);
+        final int sideMeta = world.getBlockMetadata(sideX, sideY, sideZ);
+
+        // Round logs don't block side faces
+        if (Configs.RoundLogs.enabled && Configs.Blocks.logs.matches(side, sideMeta)) {
+            return false;
+        }
+
+        // Both are leaf blocks
+        if (Configs.ExtraLeaves.enabled && (Configs.Blocks.extraLeaves.matches(block, meta)
+            && Configs.Blocks.extraLeaves.matches(side, sideMeta))) {
+            return false;
+        }
+
+        return !side.isOpaqueCube();
     }
 
     /// Rotates a point in 3D space 90 degrees counter-clockwise along an axis
