@@ -50,11 +50,6 @@ public class ClientRegistry {
         }
     }
 
-    // TODO: consider removing if no needs found
-    public static void init() {
-        BetterFoliageMod.log.info("New ClientRegistry init()");
-    }
-
     public static void postInit() {
         BetterFoliageMod.log.info("New ClientRegistry postInit()");
 
