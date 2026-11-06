@@ -9,6 +9,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Tags;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.render.RenderUtils;
@@ -166,16 +167,16 @@ public class CoralRenderer extends BlockRenderer {
     private static class CoralSpriteProvider implements ISpriteProvider {
 
         private final ISpriteProvider coral = new SpriteSet(
-            BetterFoliageMod.LEGACY_DOMAIN,
+            Tags.MOD_LEGACY_DOMAIN,
             "textures/blocks/better_coral_",
             ".png");
 
         private final ISpriteProvider crust = new SpriteSet(
-            BetterFoliageMod.LEGACY_DOMAIN,
+            Tags.MOD_LEGACY_DOMAIN,
             "textures/blocks/better_crust_",
             ".png");
 
-        private final ISpriteProvider empty = new SpriteSingle(BetterFoliageMod.DOMAIN, "textures/blocks/empty.png");
+        private final ISpriteProvider empty = new SpriteSingle(Tags.MOD_DOMAIN, "textures/blocks/empty.png");
 
         CoralSpriteProvider() {}
 

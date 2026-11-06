@@ -11,6 +11,7 @@ import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Tags;
 import mods.betterfoliage.client.registries.GrassRegistry;
 import mods.betterfoliage.client.registries.LeafRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
@@ -60,7 +61,7 @@ public class ClientRegistry {
         initBlockRenderers();
         initParticleRenderers();
 
-        openConfigMenu = new KeyBinding("key.betterfoliage.gui", F8_KEYCODE, BetterFoliageMod.MOD_NAME);
+        openConfigMenu = new KeyBinding("key.betterfoliage.gui", F8_KEYCODE, Tags.MOD_NAME);
         cpw.mods.fml.client.registry.ClientRegistry.registerKeyBinding(openConfigMenu);
         FMLCommonHandler.instance()
             .bus()

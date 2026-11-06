@@ -22,7 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import com.google.common.collect.ImmutableSet;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Tags;
 import mods.betterfoliage.client.resource.ResourceUtils;
 import mods.betterfoliage.client.resource.StitchListener;
 
@@ -41,7 +41,7 @@ public abstract class TextureGenerator extends StitchListener implements IResour
         super(selfRegister);
         this.name = name;
         this.description = description;
-        this.domain = BetterFoliageMod.DOMAIN + "_" + domain;
+        this.domain = Tags.MOD_DOMAIN + "_" + domain;
 
         // Add self to the list of default resource packs
         FMLClientHandler.instance().resourcePackList.add(this);
@@ -76,7 +76,7 @@ public abstract class TextureGenerator extends StitchListener implements IResour
             return null;
         }
 
-        return new PackMetadataSection(new ChatComponentText("[" + BetterFoliageMod.MOD_NAME + "] " + description), 1);
+        return new PackMetadataSection(new ChatComponentText("[" + Tags.MOD_NAME + "] " + description), 1);
     }
 
     @Override
@@ -86,7 +86,7 @@ public abstract class TextureGenerator extends StitchListener implements IResour
 
     @Override
     public final String getPackName() {
-        return "[" + BetterFoliageMod.MOD_NAME + "] " + name;
+        return "[" + Tags.MOD_NAME + "] " + name;
     }
 
     protected final BufferedImage createEmptyFrom(BufferedImage original) {

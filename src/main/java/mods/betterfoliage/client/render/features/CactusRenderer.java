@@ -9,6 +9,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Tags;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.render.RenderUtils;
@@ -48,12 +49,10 @@ public class CactusRenderer extends BlockRenderer {
 
     private static CactusRenderer instance;
 
-    private final ISpriteProvider stem = new SpriteSingle(
-        BetterFoliageMod.LEGACY_DOMAIN,
-        "textures/blocks/better_cactus.png");
+    private final ISpriteProvider stem = new SpriteSingle(Tags.MOD_LEGACY_DOMAIN, "textures/blocks/better_cactus.png");
 
     private final ISpriteProvider arms = new SpriteSet(
-        BetterFoliageMod.LEGACY_DOMAIN,
+        Tags.MOD_LEGACY_DOMAIN,
         "textures/blocks/better_cactus_arm_",
         ".png");
 

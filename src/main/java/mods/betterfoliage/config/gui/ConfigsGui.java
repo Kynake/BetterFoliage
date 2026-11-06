@@ -11,14 +11,14 @@ import net.minecraftforge.common.config.Property;
 
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.IConfigElement;
-import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Tags;
 import mods.betterfoliage.config.ConfigCategoryBuilder;
 import mods.betterfoliage.config.Configs;
 
 public class ConfigsGui extends GuiConfig {
 
     public ConfigsGui(GuiScreen parent) {
-        super(parent, getConfigCategories(), BetterFoliageMod.MOD_ID, false, false, BetterFoliageMod.MOD_NAME);
+        super(parent, getConfigCategories(), Tags.MOD_ID, false, false, Tags.MOD_NAME);
     }
 
     @SuppressWarnings("rawtypes")

@@ -5,6 +5,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Tags;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.SpriteSetRandom;
 import mods.betterfoliage.client.resource.SpriteSingle;
@@ -18,12 +19,12 @@ public class SoulParticleRenderer extends ParticleRenderer {
     private static final int FADEOUT_TICKS = 20;
 
     private static final ISpriteProvider headSprites = new SpriteSetRandom(
-        BetterFoliageMod.LEGACY_DOMAIN,
+        Tags.MOD_LEGACY_DOMAIN,
         "textures/blocks/rising_soul_",
         ".png");
 
     private static final ISpriteProvider tailSprites = new SpriteSingle(
-        BetterFoliageMod.LEGACY_DOMAIN,
+        Tags.MOD_LEGACY_DOMAIN,
         "textures/blocks/soul_track.png");
 
     private final float initialRadians = MathUtils.PI2 * rand.nextFloat();

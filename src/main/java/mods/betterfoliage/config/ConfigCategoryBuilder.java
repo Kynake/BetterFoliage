@@ -9,6 +9,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Tags;
 
 public class ConfigCategoryBuilder {
 
@@ -93,7 +94,7 @@ public class ConfigCategoryBuilder {
     }
 
     private String getCategoryLangKey() {
-        return BetterFoliageMod.DOMAIN + "." + category;
+        return Tags.MOD_DOMAIN + "." + category;
     }
 
     private String getPropLangKey(String propName) {

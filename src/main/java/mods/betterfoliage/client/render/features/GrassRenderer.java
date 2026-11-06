@@ -9,6 +9,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Tags;
 import mods.betterfoliage.client.registries.GrassRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
@@ -35,11 +36,11 @@ public class GrassRenderer extends BlockRenderer {
 
     // spotless:off
     private final ISpriteProvider shortGrass = new SpriteSet(
-        BetterFoliageMod.LEGACY_DOMAIN,
+        Tags.MOD_LEGACY_DOMAIN,
         "textures/blocks/better_grass_long_", ".png");
 
     private final ISpriteProvider shortGrassSnow = new SpriteSet(
-        BetterFoliageMod.LEGACY_DOMAIN,
+        Tags.MOD_LEGACY_DOMAIN,
         "textures/blocks/better_grass_snowed_", ".png");
 
     private final ISpriteProvider genGrass = new ShortGrassGenerator(

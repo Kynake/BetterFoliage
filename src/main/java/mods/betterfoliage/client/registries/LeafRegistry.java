@@ -21,6 +21,7 @@ import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Tags;
 import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.ResourceUtils;
 import mods.betterfoliage.client.resource.generators.TextureGenerator;
@@ -30,11 +31,11 @@ import mods.betterfoliage.config.Configs;
 public final class LeafRegistry extends TextureGenerator {
 
     private static final ResourceLocation maskMappings = new ResourceLocation(
-        BetterFoliageMod.DOMAIN,
+        Tags.MOD_DOMAIN,
         "leafMaskTextureMappings.cfg");
 
     private static final ResourceLocation particleMappings = new ResourceLocation(
-        BetterFoliageMod.DOMAIN,
+        Tags.MOD_DOMAIN,
         "leafParticleTextureMappings.cfg");
 
     private static LeafRegistry instance = null;
@@ -168,7 +169,7 @@ public final class LeafRegistry extends TextureGenerator {
         int maxMaskSize = MathHelper.roundUpToPowerOfTwo(baseSize);
         while (maxMaskSize > 0) {
             ResourceLocation maskLocation = new ResourceLocation(
-                BetterFoliageMod.DOMAIN,
+                Tags.MOD_DOMAIN,
                 "textures/blocks/leafmask_" + maxMaskSize + "_" + maskType + ".png");
 
             if (ResourceUtils.resourceExists(maskLocation)) {

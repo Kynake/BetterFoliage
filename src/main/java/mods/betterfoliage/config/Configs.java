@@ -11,7 +11,7 @@ import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Tags;
 
 public final class Configs {
 
@@ -19,13 +19,6 @@ public final class Configs {
 
     // Mod uses a set number as random seed because the world seed can't be accessed Client-side in a server.
     public static int seed;
-
-    private static final String hOffsetDesc = "The distance this element is shifted horizontally, in blocks";
-    private static final String vOffsetDesc = "The distance this element is shifted vertically, in blocks";
-    private static final String sizeDesc = "Size of this element";
-    private static final String thresholdDesc = "Chance that an eligible block will have this feature. Used as a cutoff value in a 3D noise generator";
-    private static final String biomesDesc = "A list of biomes filters that determine if this feature is allowed to appear in this biome or not."
-        + "\nCheck the wiki for more details on how these filters work";
 
     public static class Blocks {
 
@@ -57,39 +50,37 @@ public final class Configs {
 
             // Parse each String[] into a BlockFilterSet
             dirt = BlockFilterSet
-                .parseBlockFilterSet(dirtFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksDirt.cfg"));
+                .parseBlockFilterSet(dirtFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksDirt.cfg"));
 
             grass = BlockFilterSet
-                .parseBlockFilterSet(grassFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksGrass.cfg"));
+                .parseBlockFilterSet(grassFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksGrass.cfg"));
 
             obstructShortGrass = BlockFilterSet.parseBlockFilterSet(
                 obstructShortGrassFilters,
-                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksObstructShortGrass.cfg"));
+                new ResourceLocation(Tags.MOD_DOMAIN, "blocksObstructShortGrass.cfg"));
 
             extraLeaves = BlockFilterSet.parseBlockFilterSet(
                 extraLeavesFilters,
-                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksExtraLeaves.cfg"));
+                new ResourceLocation(Tags.MOD_DOMAIN, "blocksExtraLeaves.cfg"));
 
             fallingLeaves = BlockFilterSet.parseBlockFilterSet(
                 fallingLeavesFilters,
-                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksFallingLeaves.cfg"));
+                new ResourceLocation(Tags.MOD_DOMAIN, "blocksFallingLeaves.cfg"));
 
             logs = BlockFilterSet
-                .parseBlockFilterSet(logsFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksLogs.cfg"));
+                .parseBlockFilterSet(logsFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksLogs.cfg"));
 
             sand = BlockFilterSet
-                .parseBlockFilterSet(sandFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksSand.cfg"));
+                .parseBlockFilterSet(sandFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksSand.cfg"));
 
-            lilypad = BlockFilterSet.parseBlockFilterSet(
-                lilypadFilters,
-                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksLilypad.cfg"));
+            lilypad = BlockFilterSet
+                .parseBlockFilterSet(lilypadFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksLilypad.cfg"));
 
             cactus = BlockFilterSet
-                .parseBlockFilterSet(cactusFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksCactus.cfg"));
+                .parseBlockFilterSet(cactusFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksCactus.cfg"));
 
-            soulsand = BlockFilterSet.parseBlockFilterSet(
-                soulsandFilters,
-                new ResourceLocation(BetterFoliageMod.DOMAIN, "blocksSoulSand.cfg"));
+            soulsand = BlockFilterSet
+                .parseBlockFilterSet(soulsandFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksSoulSand.cfg"));
         }
     }
 
@@ -425,7 +416,7 @@ public final class Configs {
             final String[] biomeFilters = reeds.addProp("biomes");
             reeds.setRecentDescription("betterfoliage.biomes");
             biomes = BiomeFilterSet
-                .parseValidBiomeIDs(biomeFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "biomesReeds.cfg"));
+                .parseValidBiomeIDs(biomeFilters, new ResourceLocation(Tags.MOD_DOMAIN, "biomesReeds.cfg"));
 
             reeds.finalizeCategory();
         }
@@ -464,7 +455,7 @@ public final class Configs {
             final String[] biomeFilters = algae.addProp("biomes");
             algae.setRecentDescription("betterfoliage.biomes");
             biomes = BiomeFilterSet
-                .parseValidBiomeIDs(biomeFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "biomesAlgae.cfg"));
+                .parseValidBiomeIDs(biomeFilters, new ResourceLocation(Tags.MOD_DOMAIN, "biomesAlgae.cfg"));
 
             algae.finalizeCategory();
         }
@@ -516,13 +507,13 @@ public final class Configs {
             final String[] biomeFilters = coral.addProp("biomes");
             coral.setRecentDescription("betterfoliage.biomes");
             biomes = BiomeFilterSet
-                .parseValidBiomeIDs(biomeFilters, new ResourceLocation(BetterFoliageMod.DOMAIN, "biomesCoral.cfg"));
+                .parseValidBiomeIDs(biomeFilters, new ResourceLocation(Tags.MOD_DOMAIN, "biomesCoral.cfg"));
 
             coral.finalizeCategory();
         }
     }
 
-    public static final String CONFIG_FILE_NAME = BetterFoliageMod.MOD_ID + "_LegacyEdition";
+    public static final String CONFIG_FILE_NAME = Tags.MOD_ID + "_LegacyEdition.cfg";
 
     private static Configs instance = null;
 
@@ -541,7 +532,7 @@ public final class Configs {
 
     @SubscribeEvent
     public void onConfigChange(final ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.modID.equals(BetterFoliageMod.MOD_ID)) {
+        if (event.modID.equals(Tags.MOD_ID)) {
             onConfigChange();
             Minecraft.getMinecraft().renderGlobal.loadRenderers();
         }
@@ -562,7 +553,7 @@ public final class Configs {
 
     /// Fist time initializer. Only runs once when opening the game
     public static void preInit(final File configDir) {
-        final File configFile = new File(configDir, CONFIG_FILE_NAME + ".cfg");
+        final File configFile = new File(configDir, CONFIG_FILE_NAME);
         Configuration configs = new Configuration(configFile, null, true);
 
         if (instance == null) {

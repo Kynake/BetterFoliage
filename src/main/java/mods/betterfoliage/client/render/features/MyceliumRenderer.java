@@ -8,6 +8,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Tags;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.resource.SpriteSet;
@@ -25,7 +26,7 @@ public class MyceliumRenderer extends BlockRenderer {
     private static MyceliumRenderer instance;
 
     private final ISpriteProvider myceliumGrass = new SpriteSet(
-        BetterFoliageMod.LEGACY_DOMAIN,
+        Tags.MOD_LEGACY_DOMAIN,
         "textures/blocks/better_mycel_",
         ".png");
 

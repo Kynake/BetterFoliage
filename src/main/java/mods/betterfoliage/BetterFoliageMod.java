@@ -13,19 +13,14 @@ import mods.betterfoliage.client.ClientRegistry;
 import mods.betterfoliage.config.Configs;
 
 @Mod(
-    modid = BetterFoliageMod.MOD_ID,
-    name = BetterFoliageMod.MOD_NAME,
+    modid = Tags.MOD_ID,
+    name = Tags.MOD_NAME,
     version = Tags.VERSION,
     acceptedMinecraftVersions = "[1.7.10]",
     acceptableRemoteVersions = "*",
     guiFactory = "mods.betterfoliage.config.gui.ConfigsGuiFactory",
     dependencies = "after:angelica;after:notfine;")
 public class BetterFoliageMod {
-
-    public static final String MOD_ID = "BetterFoliage";
-    public static final String MOD_NAME = "Better Foliage - Legacy Edition";
-    public static final String DOMAIN = "betterfoliage";
-    public static final String LEGACY_DOMAIN = "bettergrassandleaves";
 
     public static Logger log = null;
 
@@ -47,7 +42,7 @@ public class BetterFoliageMod {
         if (event.getSide() != Side.CLIENT) {
             log.error(
                 "Trying to load {} in a non-client environment! This is a client-side only mod, so it will do nothing!",
-                MOD_ID);
+                Tags.MOD_ID);
             return;
         }
 

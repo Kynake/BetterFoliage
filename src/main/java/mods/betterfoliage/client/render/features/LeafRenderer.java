@@ -14,6 +14,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Tags;
 import mods.betterfoliage.client.registries.LeafInfo;
 import mods.betterfoliage.client.registries.LeafRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
@@ -91,7 +92,7 @@ public class LeafRenderer extends BlockRenderer {
     private static LeafRenderer instance;
 
     private final ISpriteProvider snowCovering = new SpriteSet(
-        BetterFoliageMod.LEGACY_DOMAIN,
+        Tags.MOD_LEGACY_DOMAIN,
         "textures/blocks/better_leaves_snowed_",
         ".png");
 
