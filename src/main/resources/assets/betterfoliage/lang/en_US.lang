@@ -6,7 +6,7 @@ betterfoliage.general.tooltip=Configs that affect all aspects of the mod.
 betterfoliage.general.enabled=Enable mod
 betterfoliage.general.enabled.tooltip=If set to false, all changes made by Better Foliage - Legacy Edition will be disabled.
 betterfoliage.general.seed=Seed
-betterfoliage.general.seed.tooltip=Primary mod seed used as the base for pseudo-random placement of features.\nAllows features to be consistent across different players.\nChange it to a secret number to make it harder for someone to brute force your coordinates from a screenshot, if you care about that.\nFor this reason, this config is deliberately not shown in-game.
+betterfoliage.general.seed.tooltip=Primary mod seed used as the base for pseudo-random placement of features.\nAllows features to be consistent across different players without relying on the world seed.
 
 # Generics
 betterfoliage.enabled=Enabled

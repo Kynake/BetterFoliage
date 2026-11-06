@@ -586,7 +586,6 @@ public final class Configs {
         ConfigCategoryBuilder general = new ConfigCategoryBuilder(Configuration.CATEGORY_GENERAL, config);
         enabled = general.addProp("enabled", true);
         seed = general.addProp("seed", 402653189);
-        general.recentProp.setShowInGui(false);
         general.finalizeCategory();
 
         Blocks.init(config);
