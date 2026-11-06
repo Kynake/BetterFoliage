@@ -1,4 +1,4 @@
-# General Settings
+# General
 key.betterfoliage.gui=Open Settings
 
 betterfoliage.general=General Mod Configs
@@ -8,7 +8,7 @@ betterfoliage.general.enabled.tooltip=If set to false, all changes made by Bette
 betterfoliage.general.seed=Seed
 betterfoliage.general.seed.tooltip=Primary mod seed used as the base for pseudo-random placement of features.\nAllows features to be consistent across different players.\nChange it to a secret number to make it harder for someone to brute force your coordinates from a screenshot, if you care about that.\nFor this reason, this config is deliberately not shown in-game.
 
-## Generics
+# Generics
 betterfoliage.enabled=Enabled
 betterfoliage.enabled.tooltip=Is this feature enabled?
 betterfoliage.hOffset=Horizontal Offset
@@ -25,10 +25,12 @@ betterfoliage.threshold=Threshold
 betterfoliage.threshold.tooltip=Chance that an eligible block will have this feature.\nUsed as a cutoff value in a 3D noise generator.
 betterfoliage.maxLifetime=Maximum Particle Lifetime
 betterfoliage.maxLifetime.tooltip=Maximum lifetime of particle, in seconds. Minimum lifetime is 60 percent of this value.
+betterfoliage.shaderWind=Shader wind effects
+betterfoliage.shaderWind.tooltip=Apply wind effects from ShaderMod shaders to this element?
 betterfoliage.biomes=Biome Filters
 betterfoliage.biomes.tooltip=A list of biomes filters that determine if this feature is allowed to appear in a specific biome.\nCheck the wiki for more details on how biome filters work.
 
-# Blocks
+# Block Filters
 betterfoliage.blocks=Block Filter Lists
 betterfoliage.blocks.tooltip=Configure the lists of block filters that determine which blocks are considered valid for each of the mod's features.\nCheck the wiki for more details on how block filters work.
 betterfoliage.blocks.dirt=Filters: Dirt
@@ -60,7 +62,7 @@ betterfoliage.connectedGrass.snowEnabled.tooltip=If a connected grass block is c
 
 # Short Grass
 betterfoliage.shortGrass=Short Grass & Mycelium
-betterfoliage.shortGrass.tooltip=Tufts of grass/mycelium on top of appropriate blocks
+betterfoliage.shortGrass.tooltip=Tufts of grass/mycelium on top of appropriate blocks.
 betterfoliage.shortGrass.grassEnabled=Enable Grass
 betterfoliage.shortGrass.grassEnabled.tooltip=Is this feature enabled for Grass blocks?
 betterfoliage.shortGrass.myceliumEnabled=Enable Mycelium
@@ -92,7 +94,7 @@ betterfoliage.roundLogs.zProtection.tooltip=How much to shrink the radius of per
 
 # Extra Leaves
 betterfoliage.extraLeaves=Extra Leaves
-betterfoliage.extraLeaves.tooltip=Extra round leaves on leaf blocks
+betterfoliage.extraLeaves.tooltip=Extra round leaves on leaf blocks.
 betterfoliage.extraLeaves.snowEnabled=Enable snow
 betterfoliage.extraLeaves.snowEnabled.tooltip=Render an extra snow overlay on top of a leaf block if it is covered by a layer of snow.
 betterfoliage.extraLeaves.surfaceOnly=Surface only
@@ -160,49 +162,50 @@ betterfoliage.lilypad.flowerChance.tooltip=Chance of a lilypad having a flower o
 betterfoliage.lilypad.flowerSize=Flower Size
 betterfoliage.lilypad.flowerSize.tooltip=Size of the lilypad flowers.
 
-#################################### OLD #############################
-
-
-
-
-betterfoliage.shaderWind=Shader wind effects
-betterfoliage.shaderWind.tooltip=Apply wind effects from ShaderMod shaders to this element?
-
+# Cactus
 betterfoliage.cactus=Better Cactus
-betterfoliage.cactus.tooltip=Enhance cactus with extra bits and smooth shading
-betterfoliage.cactus.stem=Stem
-betterfoliage.cactus.stem.tooltip=Render extra textures in the main body of cacti 
-betterfoliage.cactus.arms=Arms
-betterfoliage.cactus.arms.tooltip=Render occasional arms in the sides of cactus blocks
-betterfoliage.cactus.sizeVariation=Size variation
-betterfoliage.cactus.sizeVariation.tooltip=Amount of random variation on cactus stem size
+betterfoliage.cactus.tooltip=Enhance cactus with extra bits.
+betterfoliage.cactus.renderStem=Stem
+betterfoliage.cactus.renderStem.tooltip=Render extra textures in the main body of cactus blocks. 
+betterfoliage.cactus.renderArms=Arms
+betterfoliage.cactus.renderArms.tooltip=Render occasional arms in the sides of cactus blocks.
+betterfoliage.cactus.armOffset=Arm Offset
+betterfoliage.cactus.armOffset.tooltip=Offset of the cactus arms along the horizontal and vertical axes of each side.
+betterfoliage.cactus.armSize=Arm Size
+betterfoliage.cactus.armSize.tooltip=Size of the cactus arms.
 betterfoliage.cactus.armChance=Arm chance
-betterfoliage.cactus.armChance.tooltip=Chance that each side of a cactus block will have an arm
+betterfoliage.cactus.armChance.tooltip=Chance that each side of a cactus block will have an arm.
+betterfoliage.cactus.stemSizeVariation=Stem Size Variation
+betterfoliage.cactus.stemSizeVariation.tooltip=Amount of random variation on cactus stem sizes.
 
+# Reeds
+betterfoliage.reeds=Reeds
+betterfoliage.reeds.tooltip=Should render reeds on dirt blocks in shallow water?
+betterfoliage.reeds.mixTextures=Mix Textures
+betterfoliage.reeds.mixTextures.tooltip=Allow mixing two different textures for each rendered reed.
 
-
-betterfoliage.reed=Reeds
-betterfoliage.reed.tooltip=Reeds on dirt blocks in shallow water
-betterfoliage.reed.biomes=Biome List
-betterfoliage.reed.biomes.tooltip=Configure which biomes reeds are allowed to appear in
-betterfoliage.reed.biomes.tooltip.element=Should reeds appear in the %s biome?
-
+# Algae
 betterfoliage.algae=Algae
-betterfoliage.algae.tooltip=Algae on dirt blocks in deep water
-betterfoliage.algae.biomes=Biome List
-betterfoliage.algae.biomes.tooltip=Configure which biomes algae is allowed to appear in
-betterfoliage.algae.biomes.tooltip.element=Should algae appear in the %s biome?
+betterfoliage.algae.tooltip=Render algae on dirt blocks in deep water?
+betterfoliage.algae.mixTextures=Mix Textures
+betterfoliage.algae.mixTextures.tooltip=Allow mixing two different textures for each rendered algae.
 
+# Coral
 betterfoliage.coral=Coral
-betterfoliage.coral.tooltip=Coral on sand blocks in deep water
-betterfoliage.coral.size=Coral size
-betterfoliage.coral.size.tooltip=Size of coral bits sticking out
-betterfoliage.coral.crustSize=Crust size
-betterfoliage.coral.crustSize.tooltip=Size of the flat coral part
-betterfoliage.coral.chance=Coral chance
-betterfoliage.coral.chance.tooltip=Chance (N in 64) of a specific face of the block to show coral
-betterfoliage.coral.biomes=Biome List
-betterfoliage.coral.biomes.tooltip=Configure which biomes coral is allowed to appear in
-betterfoliage.coral.biomes.tooltip.element=Should coral appear in the %s biome?
-betterfoliage.coral.shallowWater=Shallow water coral
-betterfoliage.coral.shallowWater.tooltip=Should coral appear in 1 block deep water?
+betterfoliage.coral.tooltip=Render coral on sand blocks in deep water?
+betterfoliage.coral.renderCoral=Render Coral Branches
+betterfoliage.coral.renderCoral.tooltip=Should render coral branches on underwater sand blocks?
+betterfoliage.coral.renderCrust=Render Coral Crust
+betterfoliage.coral.renderCrust.tooltip=Should render flat coral overlays on underwater sand blocks?
+betterfoliage.coral.shallowWater=Shallow Water Coral
+betterfoliage.coral.shallowWater.tooltip=Should coral also appear on shallow (1 block deep) water?
+betterfoliage.coral.coralSize=Coral Size
+betterfoliage.coral.coralSize.tooltip=Size of the coral branches that stick out.
+betterfoliage.coral.crustSize=Crust Size
+betterfoliage.coral.crustSize.tooltip=Size of the flat coral that covers the sand block.
+betterfoliage.coral.chance=Coral Chance
+betterfoliage.coral.chance.tooltip=Chance that each face of a block will render coral.
+betterfoliage.coral.mixCoral=Mix Coral
+betterfoliage.coral.mixCoral.tooltip=Allow mixing of two different textures for each rendered coral branch.
+betterfoliage.coral.mixCrust=Mix Crust
+betterfoliage.coral.mixCrust.tooltip=Allow use of different coral crust textures for each side of the host block.
