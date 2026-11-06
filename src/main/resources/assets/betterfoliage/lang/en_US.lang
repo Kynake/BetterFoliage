@@ -1,6 +1,10 @@
 # General
 key.betterfoliage.gui=Open Settings
 
+# FML default value langs behave weirdly, so we use our own
+betterfoliage.default.value=[default: %s]
+betterfoliage.default.minmax=[range: %s ~ %s, default: %s]
+
 betterfoliage.general=General Mod Configs
 betterfoliage.general.tooltip=Configs that affect all aspects of the mod.
 betterfoliage.general.enabled=Enable mod

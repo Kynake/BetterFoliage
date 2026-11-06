@@ -190,8 +190,8 @@ public class ConfigCategoryBuilder {
             }
         } catch (NumberFormatException ignored) {}
 
-        String res = hasMinMax ? I18n.format("fml.configgui.tooltip.defaultNumeric", defaultValue, min, max)
-            : I18n.format("fml.configgui.tooltip.default", defaultValue);
+        String res = hasMinMax ? I18n.format("betterfoliage.default.minmax", min, max, defaultValue)
+            : I18n.format("betterfoliage.default.value", defaultValue);
 
         return res.replace("\\", "");
     }

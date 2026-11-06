@@ -1,5 +1,8 @@
 key.betterfoliage.gui=Abrir Configurações
 
+betterfoliage.default.value=[padrão: %s]
+betterfoliage.default.minmax=[de %s a %s, padrão: %s]
+
 betterfoliage.global.enabled=Habilitar o Mod
 betterfoliage.global.enabled.tooltip=Caso falso, Better Foliage - Legacy Edition não irá renderizar nada
 
