@@ -5,14 +5,15 @@
 # Better Foliage - Legacy Edition
 
 A modern fork of [BetterFoliage](https://www.curseforge.com/minecraft/mc-mods/better-foliage) by octarine_noise for Minecraft 1.7.10.
-This mod alters the appearance of leaves, logs, grass and other natural miscellanea.
+This mod alters the appearance of leaves, logs, grass and other natural features.
 
-Requires [UniMixins](https://github.com/LegacyModdingMC/UniMixins/releases) and either [Forgelin: Legacy](https://github.com/LegacyModdingMC/Forgelin) or [GTNH's Forgelin](https://github.com/GTNewHorizons/Forgelin/releases). <br>
-(Use whichever one comes included in your modpack. If neither is present, I recommend Forgelin: Legacy over GTNH's Forgelin)
+Requires [UniMixins](https://github.com/LegacyModdingMC/UniMixins/releases).
 
 **Important:**
-If you're upgrading from a previous version of the mod or from the original Better Foliage mod you must delete the config file located at `config/BetterFoliage.cfg` and let the mod regenerate it on the next game launch for any updated fixes to be applied in-game.
-Make a backup of any settings you've changed before doing so.
+If you had any custom configs from versions 1.2.4 or earlier (or from the original Better Foliage mod) you will have to replicate them manually.<br>
+As of version 2.0.0 much of the mod's configurations have changed. The old config file in the located at `config/BetterFoliage.cfg` is no longer used, and instead the mod now uses a new file located at `config/BetterFoliage_LegacyEdition.cfg`.<br>
+Your old file will not be deleted, but not all configs are compatible with the new file. You can use it as a reference when replicating your custom configs or delete it.<br>
+This should be the last time a config change is ever required, as the mod now keeps its own up-to-date configs in a resourcepack, separate from the player's custom configs.
 
 This mod aims to enhance the visuals of your world by adding more detail to nature related blocks.
 
@@ -55,12 +56,16 @@ The full list is too big to fit in a short sentence, not to mention still improv
 
 ## Installation
 Place the mod's jar file inside the `mods` folder of your modded Minecraft instance.
-Make sure you've also installed the latest [Forge](https://files.minecraftforge.net/net/minecraftforge/forge/index_1.7.10.html) for Minecraft 1.7.10, [UniMixins](https://github.com/LegacyModdingMC/UniMixins/releases) and [Forgelin](https://github.com/LegacyModdingMC/Forgelin).
+Make sure you've also installed the latest [Forge](https://files.minecraftforge.net/net/minecraftforge/forge/index_1.7.10.html) for Minecraft 1.7.10 and [UniMixins](https://github.com/LegacyModdingMC/UniMixins/releases).
 
 ## Contributing
 You may contribute to this mod by reporting any [Issues](https://github.com/Kynake/BetterFoliage/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen) you find while using it or by submitting [Pull Requests](https://github.com/Kynake/BetterFoliage/pulls?q=sort%3Aupdated-desc+is%3Apr+is%3Aopen) with fixes or improvements.
 
 In particular, it'd be great to get the project translated into more languages.
+
+### Currently Supported Languages:
+- English US (en_US)
+- Português BR (pt_BR)
 
 To submit a pull request you should fork the project into your own GitHub account and build the project by cloning it locally and running this command in a terminal to build the initial project setup:
 
