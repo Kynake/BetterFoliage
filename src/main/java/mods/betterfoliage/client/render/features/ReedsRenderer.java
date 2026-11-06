@@ -34,7 +34,7 @@ public class ReedsRenderer extends BlockRenderer {
 
     public static ReedsRenderer getInstance() {
         if (instance == null) {
-            BetterFoliageMod.log.info("Registering NEW! Reeds Renderer");
+            BetterFoliageMod.log.info("Registering Reeds Renderer");
             instance = new ReedsRenderer();
         }
 

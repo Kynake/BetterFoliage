@@ -7,8 +7,6 @@ import mods.betterfoliage.utils.MathUtils;
 public final class ShadingInfo {
 
     private static final int BRIGHTNESS_ALPHA_MASK = 0xFF00FF;
-
-    // TODO: Make configurable
     private static final int DIAG_MIN_BRIGHTNESS = 0x5A0000;
     private static final float DIAG_MIN_AO = 0.25f;
 

@@ -6,7 +6,6 @@ import net.minecraft.world.gen.NoiseGeneratorSimplex;
 
 import mods.betterfoliage.config.Configs;
 
-// TODO: Experiment with other noise generators
 public class SimplexNoiseGenerator {
 
     private final NoiseGeneratorSimplex noise;

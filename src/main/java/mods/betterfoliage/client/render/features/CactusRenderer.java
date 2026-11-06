@@ -58,7 +58,7 @@ public class CactusRenderer extends BlockRenderer {
 
     public static CactusRenderer getInstance() {
         if (instance == null) {
-            BetterFoliageMod.log.info("Registering NEW! Cactus Renderer");
+            BetterFoliageMod.log.info("Registering Cactus Renderer");
             instance = new CactusRenderer();
         }
 
@@ -96,7 +96,7 @@ public class CactusRenderer extends BlockRenderer {
             double xOffset = x;
             double zOffset = z;
 
-            // TODO Move to static utils method
+            // Offset xyz by different amounts so they don't overlap and z-fight
             if ((y & 1) == 0) {
                 xOffset += OFFSET_EPSILON;
                 zOffset += OFFSET_EPSILON / 2.0;

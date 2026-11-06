@@ -98,7 +98,7 @@ public class LeafRenderer extends BlockRenderer {
 
     public static LeafRenderer getInstance() {
         if (instance == null) {
-            BetterFoliageMod.log.info("Registering NEW! Leaf Renderer");
+            BetterFoliageMod.log.info("Registering Leaf Renderer");
             instance = new LeafRenderer();
         }
 

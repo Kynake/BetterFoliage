@@ -54,7 +54,7 @@ public class GrassRenderer extends BlockRenderer {
 
     public static GrassRenderer getInstance() {
         if (instance == null) {
-            BetterFoliageMod.log.info("Registering NEW! GrassRenderer");
+            BetterFoliageMod.log.info("Registering GrassRenderer");
             instance = new GrassRenderer();
         }
 

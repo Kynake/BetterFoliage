@@ -23,7 +23,7 @@ public class LogRenderer extends BlockRenderer {
 
     public static LogRenderer getInstance() {
         if (instance == null) {
-            BetterFoliageMod.log.info("Registering NEW! Log Renderer");
+            BetterFoliageMod.log.info("Registering Log Renderer");
             instance = new LogRenderer();
         }
 

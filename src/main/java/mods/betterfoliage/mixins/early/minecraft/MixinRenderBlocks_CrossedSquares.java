@@ -62,7 +62,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
     private boolean betterfoliage$useBlockColor;
 
     @Unique
-    private ShadingInfo betterfoliage$crossedSquareShadingContainer = new ShadingInfo();
+    private final ShadingInfo betterfoliage$crossedSquareShadingContainer = new ShadingInfo();
 
     @Unique
     private int betterfoliage$AOx;
@@ -104,10 +104,6 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
 
     @Override
     public void betterfoliage$setAORender(Block block, int x, int y, int z, boolean useBlockColor) {
-        // TODO: Don't Apply AO if "Smooth Shadows: Off" or if Shaders are enabled.
-        // "Smooth Shadows: Off" -> Should use simpler "Color by Side" if AO is requested
-        // "Shaders" -> Don't use any AO or coloring at all? (maybe same as above)
-        // Validate with Angelica and Swansong for now
         betterfoliage$AOx = x;
         betterfoliage$AOy = y;
         betterfoliage$AOz = z;

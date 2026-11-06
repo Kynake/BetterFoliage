@@ -68,7 +68,6 @@ public class ClientRegistry {
             .register(eventListenerInstance);
     }
 
-    // TODO: Consider removing the singletons here maybe
     private static void initBlockRenderers() {
         blockRenderers = new BlockRenderer[] {
             // spotless:off
@@ -106,15 +105,6 @@ public class ClientRegistry {
 
     @SubscribeEvent
     public void onKeyPressed(InputEvent.KeyInputEvent event) {
-
-        // TODO Refactor the entire config system
-        // - Allow for config class to use static variables
-        // - Prevent unused-but-present configs from appearing in the menu. See Issue #23
-        // (possibly clear them from the config file too)
-        // - Complete overhaul of block lists:
-        // - Configurable by prioritized property files in resource packs (Like natural textures in RPMCPatcher)
-        // - Config menu should show these as read-only options.
-        // - Allow adding / removing options on top (which saves them to the user config list)
         if (openConfigMenu.isPressed()) {
             FMLClientHandler.instance()
                 .showGuiScreen(new ConfigsGui(Minecraft.getMinecraft().currentScreen));

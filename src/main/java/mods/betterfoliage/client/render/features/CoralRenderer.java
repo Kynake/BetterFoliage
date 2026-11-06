@@ -53,7 +53,7 @@ public class CoralRenderer extends BlockRenderer {
 
     public static CoralRenderer getInstance() {
         if (instance == null) {
-            BetterFoliageMod.log.info("Registering NEW! Coral Renderer");
+            BetterFoliageMod.log.info("Registering Coral Renderer");
             instance = new CoralRenderer();
         }
 

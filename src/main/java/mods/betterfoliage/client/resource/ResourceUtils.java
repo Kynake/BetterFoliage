@@ -110,7 +110,6 @@ public class ResourceUtils {
                 continue;
             }
 
-            // TODO Implement if needed
             // MC's default textures (mapped in memory)
             if (pack instanceof DefaultResourcePack) {
                 BetterFoliageMod.log.warn("DefaultResourcePack objects not supported");

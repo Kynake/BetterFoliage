@@ -27,7 +27,7 @@ public class NetherrackRenderer extends BlockRenderer {
 
     public static NetherrackRenderer getInstance() {
         if (instance == null) {
-            BetterFoliageMod.log.info("Registering NEW! Netherrack Renderer");
+            BetterFoliageMod.log.info("Registering Netherrack Renderer");
             instance = new NetherrackRenderer();
         }
 

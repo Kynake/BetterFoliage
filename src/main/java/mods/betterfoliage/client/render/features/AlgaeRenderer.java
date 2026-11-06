@@ -34,7 +34,7 @@ public class AlgaeRenderer extends BlockRenderer {
 
     public static AlgaeRenderer getInstance() {
         if (instance == null) {
-            BetterFoliageMod.log.info("Registering NEW! Algae Renderer");
+            BetterFoliageMod.log.info("Registering Algae Renderer");
             instance = new AlgaeRenderer();
         }
 

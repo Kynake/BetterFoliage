@@ -20,9 +20,6 @@ import mods.betterfoliage.utils.MathUtils;
 
 public class MyceliumRenderer extends BlockRenderer {
 
-    // TODO Reminder special cases:
-    // Grass shader wind
-
     private static MyceliumRenderer instance;
 
     private final ISpriteProvider myceliumGrass = new SpriteSet(
@@ -32,7 +29,7 @@ public class MyceliumRenderer extends BlockRenderer {
 
     public static MyceliumRenderer getInstance() {
         if (instance == null) {
-            BetterFoliageMod.log.info("Registering NEW! MyceliumRenderer");
+            BetterFoliageMod.log.info("Registering MyceliumRenderer");
             instance = new MyceliumRenderer();
         }
 

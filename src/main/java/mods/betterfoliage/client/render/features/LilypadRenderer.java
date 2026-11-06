@@ -36,7 +36,7 @@ public class LilypadRenderer extends BlockRenderer {
 
     public static LilypadRenderer getInstance() {
         if (instance == null) {
-            BetterFoliageMod.log.info("Registering NEW! Lilypad Renderer");
+            BetterFoliageMod.log.info("Registering Lilypad Renderer");
             instance = new LilypadRenderer();
         }
 

@@ -14,7 +14,7 @@ public class DirtGrassLogRenderer extends BlockRenderer {
 
     public static DirtGrassLogRenderer getInstance() {
         if (instance == null) {
-            BetterFoliageMod.log.info("Registering NEW! Connected Grass Log Renderer");
+            BetterFoliageMod.log.info("Registering Connected Grass Log Renderer");
             instance = new DirtGrassLogRenderer();
         }
 
