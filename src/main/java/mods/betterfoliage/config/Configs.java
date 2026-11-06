@@ -602,6 +602,8 @@ public final class Configs {
         Algae.init(config);
         Coral.init(config);
 
+        ConfigCategoryBuilder.finalizeCategoryOrdering();
+
         if (config.hasChanged()) {
             config.save();
         }

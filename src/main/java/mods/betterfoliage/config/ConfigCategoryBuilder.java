@@ -14,12 +14,23 @@ public class ConfigCategoryBuilder {
 
     private static final int MAX_DESC_LENGTH = 4096;
 
+    private static boolean isCategoryOrderingFinalized = false;
+    private static final List<String> guiOrderedCategories = new ArrayList<>();
+
     private final String category;
     private final Configuration backingConfigFile;
     private final List<String> propertyOrder = new ArrayList<>();
 
     /// Access the most recent property added to this category group, for setting custom attributes to it.
     public Property recentProp = null;
+
+    public static void finalizeCategoryOrdering() {
+        isCategoryOrderingFinalized = true;
+    }
+
+    public static List<String> getOrderedCategories() {
+        return guiOrderedCategories;
+    }
 
     public ConfigCategoryBuilder(final String category, final Configuration backingConfigFile) {
         this.category = category;
@@ -71,6 +82,10 @@ public class ConfigCategoryBuilder {
 
         final String comment = I18n.format(langKey + ".tooltip");
         fileCategory.setComment(parseFinalizedText(comment));
+
+        if (!isCategoryOrderingFinalized && !guiOrderedCategories.contains(category)) {
+            guiOrderedCategories.add(category);
+        }
     }
 
     public void setRecentDescription(String langKey) {
