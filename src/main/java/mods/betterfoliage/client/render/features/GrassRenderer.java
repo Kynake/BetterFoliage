@@ -29,7 +29,6 @@ public class GrassRenderer extends BlockRenderer {
     // TFC
     // Primal (Frodo's mod) <--- New Compat
 
-    // TODO make configurable? (per snow layer height maybe)
     public static final float SNOW_HEIGHT_OFFSET = 0.0625f;
 
     private static GrassRenderer instance;

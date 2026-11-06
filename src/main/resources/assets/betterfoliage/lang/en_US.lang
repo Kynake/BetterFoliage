@@ -99,14 +99,14 @@ betterfoliage.roundLogs.zProtection.tooltip=How much to shrink the radius of per
 # Extra Leaves
 betterfoliage.extraLeaves=Extra Leaves
 betterfoliage.extraLeaves.tooltip=Extra round leaves on leaf blocks.
-betterfoliage.extraLeaves.snowEnabled=Enable snow
+betterfoliage.extraLeaves.snowEnabled=Enable Snow
 betterfoliage.extraLeaves.snowEnabled.tooltip=Render an extra snow overlay on top of a leaf block if it is covered by a layer of snow.
-betterfoliage.extraLeaves.surfaceOnly=Surface only
+betterfoliage.extraLeaves.surfaceOnly=Surface Only
 betterfoliage.extraLeaves.surfaceOnly.tooltip=Extra Leaves will only be rendered on blocks with at least one exposed side.\nA side is marked as exposed if it's neighbor is not a full opaque block nor another leaf block.
-betterfoliage.extraLeaves.dense=Dense mode
+betterfoliage.extraLeaves.dense=Dense Mode
 betterfoliage.extraLeaves.dense.tooltip=Render a cross square of extra leaves on all three axes of a leaf block, not just the vertical axis.
-betterfoliage.extraLeaves.renderBaseBlock=Render base block
-betterfoliage.extraLeaves.renderBaseBlock.tooltip=Should the base leaf block be rendered alongside the extra leaves?\nWorks best with Dense mode enabled, otherwise the leaves will look a little lackluster when not viewed from the side.
+betterfoliage.extraLeaves.renderBaseBlock=Render Base Block
+betterfoliage.extraLeaves.renderBaseBlock.tooltip=Should the base leaf block be rendered alongside the extra leaves?\nWorks best with Dense Mode enabled, otherwise the leaves will look a little lackluster when not viewed from the side.
 
 # Falling Leaves
 betterfoliage.fallingLeaves=Falling Leaves
