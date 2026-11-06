@@ -244,7 +244,7 @@ public final class Configs {
             windStrength = fallingLeaves.addProp("windStrength", 0.5, 0.1, 2.0);
             stormStrength = fallingLeaves.addProp("stormStrength", 0.8, 0.1, 2.0);
 
-            size = (float) fallingLeaves.addProp("size", 0.7, 0.0, 1.0);
+            size = (float) fallingLeaves.addProp("size", 0.075, 0.025, 0.15);
             fallingLeaves.setRecentDescription("betterfoliage.size");
 
             chance = (float) fallingLeaves.addProp("chance", 0.05, 0.001, 1.0);
