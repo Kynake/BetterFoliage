@@ -1,7 +1,6 @@
 package mods.betterfoliage.mixins.early.minecraft;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
@@ -107,7 +106,7 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         betterfoliage$AOx = x;
         betterfoliage$AOy = y;
         betterfoliage$AOz = z;
-        betterfoliage$useAO = Minecraft.isAmbientOcclusionEnabled();
+        betterfoliage$useAO = true;
         betterfoliage$useBlockColor = useBlockColor;
     }
 

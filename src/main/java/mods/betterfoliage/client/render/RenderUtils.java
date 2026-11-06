@@ -139,7 +139,6 @@ public class RenderUtils {
         return color;
     }
 
-    // TODO: Rework offset selection
     public static void getShadingInfoForCrossedSquareVertex(RenderBlocks renderer, int x, int y, int z,
         ForgeDirection face, ForgeDirection hor, ForgeDirection vert, boolean useBlockColor,
         ShadingInfo shadingContainer) {
@@ -212,21 +211,22 @@ public class RenderUtils {
             }
         }
 
-        float colorMult = getColorMultiplierBySide(aoFace);
-
-        // TODO use FlatShader when renderAO == false?
-        getAOShadingInfoForBlockCorner(
-            renderer,
-            block,
-            aoX,
-            aoY,
-            aoZ,
-            aoFace,
-            aoHor,
-            aoVert,
-            color,
-            colorMult,
-            shadingContainer);
+        if (shouldRenderBlockWithAO(block)) {
+            getAOShadingInfoForBlockCorner(
+                renderer,
+                block,
+                aoX,
+                aoY,
+                aoZ,
+                aoFace,
+                aoHor,
+                aoVert,
+                color,
+                getColorMultiplierBySide(aoFace),
+                shadingContainer);
+        } else {
+            getFlatShadingInfoForBlockFace(renderer, block, aoX, aoY, aoZ, aoFace, color, shadingContainer);
+        }
     }
 
     public static void getAOShadingInfoForBlockCorner(RenderBlocks renderer, Block block, int x, int y, int z,
