@@ -21,7 +21,7 @@ public abstract class MixinLightDataCache {
     @Definition(id = "block", local = @Local(type = Block.class))
     @Definition(id = "getLightOpacity", method = "Lnet/minecraft/block/Block;getLightOpacity()I")
     @Expression("block.getLightOpacity() > 0")
-    @ModifyExpressionValue(method = "compute", remap = false, at = @At("MIXINEXTRAS:EXPRESSION"))
+    @ModifyExpressionValue(method = "compute", at = @At("MIXINEXTRAS:EXPRESSION"), remap = false)
     private boolean betterfoliage$overrideIsOpaqueCube(boolean isOpaque, @Local(argsOnly = true, name = "x") int x,
         @Local(argsOnly = true, name = "y") int y, @Local(argsOnly = true, name = "z") int z,
         @Local(name = "world") IBlockAccess world) {

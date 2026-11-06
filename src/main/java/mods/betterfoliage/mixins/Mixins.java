@@ -16,6 +16,7 @@ public enum Mixins implements IMixins {
     BETTER_FOLIAGE(new MixinBuilder()
         .addClientMixins(
             "minecraft.MixinBlock",
+            "minecraft.MixinChunkCache",
             "minecraft.MixinRenderBlocks",
             "minecraft.MixinWorldClient",
             "minecraft.MixinRenderBlocks_Grass",
@@ -25,6 +26,12 @@ public enum Mixins implements IMixins {
             "minecraft.MixinRenderBlocks_RoundLogs",
             "minecraft.MixinRenderBlocks_OffsetSprite")
         .setPhase(Phase.EARLY)),
+    ANGELICA(new MixinBuilder()
+        .addClientMixins(
+            "angelica.MixinLightDataCache",
+            "angelica.MixinWorldSlice")
+        .addRequiredMod(Mod.ANGELICA)
+        .setPhase(Phase.LATE)),
     GT6(new MixinBuilder()
         .addClientMixins(
             "gt6.accessors.MixinBlockTextureCopied",
@@ -45,10 +52,6 @@ public enum Mixins implements IMixins {
     NOTFINE_LATE(new MixinBuilder()
         .addClientMixins("notfine.MixinLeafRenderUtil")
         .addRequiredMod(Mod.NOTFINE)
-        .setPhase(Phase.LATE)),
-    ANGELICA_LATE(new MixinBuilder()
-        .addClientMixins("angelica.MixinLightDataCache")
-        .addRequiredMod(Mod.ANGELICA)
         .setPhase(Phase.LATE))
     ;
     // spotless:on
