@@ -71,8 +71,11 @@ You may contribute to this mod by reporting any [Issues](https://github.com/Kyna
 In particular, it'd be great to get the project translated into more languages.
 
 ### Currently Supported Languages:
-- English US (en_US)
-- Português BR (pt_BR)
+- English (en_US)
+- Português (pt_BR)
+- 中文 (zh_CN). OUT-OF-DATE, help wanted.
+- 한국어 (ko_KR). OUT-OF-DATE, help wanted.
+- Русский язык (ru_RU). OUT-OF-DATE help wanted.
 
 To submit a pull request you should fork the project into your own GitHub account and build the project by cloning it locally and running this command in a terminal to build the initial project setup:
 
