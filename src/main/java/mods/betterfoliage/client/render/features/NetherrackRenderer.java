@@ -36,8 +36,7 @@ public class NetherrackRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        return Configs.Netherrack.enabled
-            && world.isAirBlock(x, y - 1, z)
+        return Configs.Netherrack.enabled && world.isAirBlock(x, y - 1, z)
             && world.getBlock(x, y, z) == Blocks.netherrack;
     }
 
