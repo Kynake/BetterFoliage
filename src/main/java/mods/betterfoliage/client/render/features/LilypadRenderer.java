@@ -9,7 +9,6 @@ import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.Tags;
-import mods.betterfoliage.client.integration.GT5UIntegration;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
 import mods.betterfoliage.client.render.RenderUtils;
@@ -81,7 +80,7 @@ public class LilypadRenderer extends BlockRenderer {
         xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
         zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
-        final int flowerColor = GT5UIntegration.applyFlowerPollutionTint(RenderUtils.DEFAULT_COLOR_MULTIPLIER, x, z);
+        final int flowerColor = RenderUtils.DEFAULT_COLOR_MULTIPLIER;
         tessellator.setColorOpaque_I(flowerColor);
 
         sprite = flowers.getSpriteForCoord(x, y, z);
