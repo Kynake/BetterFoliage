@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 
 import org.apache.commons.lang3.StringUtils;
 
+import cpw.mods.fml.common.Loader;
 import mods.betterfoliage.client.resource.ResourceUtils;
 
 public class BlockFilterSet {
@@ -212,7 +214,17 @@ public class BlockFilterSet {
                 }
             }
 
+            // Mod not present
+            if (!(mod.equals("minecraft") || Loader.isModLoaded(mod))) {
+                return null;
+            }
+
             final Block block = (Block) Block.blockRegistry.getObject(mod + ":" + blockName);
+
+            // Mod is present, but object not found
+            if (block == Blocks.air) {
+                return null;
+            }
 
             return new BlockFilterRule(isBlocking, block, metadata);
         }
