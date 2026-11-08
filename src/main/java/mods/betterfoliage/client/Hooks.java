@@ -36,7 +36,13 @@ public class Hooks {
     // Used by rounded logs to prevent the adjacent blocks' side from being invisible,
     // and to fix lighting glitches when using Angelica.
     public static boolean overrideIsOpaqueCube(IBlockAccess world, int x, int y, int z, boolean isOpaque) {
-        return isOpaque && !LogRenderer.isRoundLog(world, x, y, z);
+        if (!isOpaque || LogRenderer.isRoundLog(world, x, y, z)) {
+            return false;
+        }
+
+        // Leaves are never opaque when not rendering the base block
+        return (!Configs.ExtraLeaves.enabled | Configs.ExtraLeaves.renderBaseBlock)
+            || !Configs.Blocks.extraLeaves.matches(world, x, y, z);
     }
 
     // What: Invoke BF code for every random display tick
