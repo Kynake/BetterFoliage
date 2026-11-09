@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.client.render.features.LeafRenderer;
 import mods.betterfoliage.client.render.features.LogRenderer;
 import mods.betterfoliage.client.render.particles.LeafParticleRenderer;
 import mods.betterfoliage.client.render.particles.SoulParticleRenderer;
@@ -40,9 +41,13 @@ public class Hooks {
             return false;
         }
 
-        // Leaves are never opaque when not rendering the base block
-        return (!Configs.ExtraLeaves.enabled | Configs.ExtraLeaves.renderBaseBlock)
-            || !Configs.Blocks.extraLeaves.matches(world, x, y, z);
+        // Leaves are always transparent when not rendering the base block and exposed
+        if ((!Configs.ExtraLeaves.enabled | Configs.ExtraLeaves.renderBaseBlock)
+            || !Configs.Blocks.extraLeaves.matches(world, x, y, z)) {
+            return true;
+        }
+
+        return Configs.ExtraLeaves.surfaceOnly && !LeafRenderer.isExposed(world, x, y, z);
     }
 
     // What: Invoke BF code for every random display tick

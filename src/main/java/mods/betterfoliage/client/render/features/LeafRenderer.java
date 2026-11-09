@@ -185,6 +185,10 @@ public class LeafRenderer extends BlockRenderer {
         return true;
     }
 
+    public static boolean isExposed(IBlockAccess world, int x, int y, int z) {
+        return isExposed(world, world.getBlock(x, y, z), x, y, z);
+    }
+
     private static boolean isExposed(IBlockAccess world, Block block, int x, int y, int z) {
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
             final int xSide = x + dir.offsetX;
