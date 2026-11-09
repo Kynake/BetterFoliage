@@ -26,7 +26,8 @@ public enum Mixins implements IMixins {
     ANGELICA(new MixinBuilder()
         .addClientMixins(
             "angelica.MixinLightDataCache",
-            "angelica.MixinWorldSlice")
+            "angelica.MixinWorldSlice",
+            "angelica.MixinAngelicaChunkBuilderMeshingTask")
         .addRequiredMod(Mod.ANGELICA)
         .setPhase(Phase.LATE)),
     GT6(new MixinBuilder()
