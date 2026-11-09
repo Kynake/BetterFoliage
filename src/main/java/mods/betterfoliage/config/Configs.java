@@ -2,7 +2,6 @@ package mods.betterfoliage.config;
 
 import java.io.File;
 
-import mods.betterfoliage.config.blockfilters.BlockFilterSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -13,6 +12,7 @@ import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import mods.betterfoliage.Tags;
+import mods.betterfoliage.config.blockfilters.BlockFilter;
 
 public final class Configs {
 
@@ -23,16 +23,16 @@ public final class Configs {
 
     public static class Blocks {
 
-        public static BlockFilterSet dirt;
-        public static BlockFilterSet grass;
-        public static BlockFilterSet obstructShortGrass;
-        public static BlockFilterSet extraLeaves;
-        public static BlockFilterSet fallingLeaves;
-        public static BlockFilterSet logs;
-        public static BlockFilterSet sand;
-        public static BlockFilterSet lilypad;
-        public static BlockFilterSet cactus;
-        public static BlockFilterSet soulsand;
+        public static BlockFilter dirt;
+        public static BlockFilter grass;
+        public static BlockFilter obstructShortGrass;
+        public static BlockFilter extraLeaves;
+        public static BlockFilter fallingLeaves;
+        public static BlockFilter logs;
+        public static BlockFilter sand;
+        public static BlockFilter lilypad;
+        public static BlockFilter cactus;
+        public static BlockFilter soulsand;
 
         public static void init(final Configuration config) {
             // Build category
@@ -49,38 +49,38 @@ public final class Configs {
             final String[] soulsandFilters = blocks.addProp("soulsand");
             blocks.finalizeCategory();
 
-            // Parse each String[] into a BlockFilterSet
-            dirt = BlockFilterSet
+            // Parse each String[] into a BlockFilter
+            dirt = BlockFilter
                 .parseBlockFilterSet(dirtFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksDirt.cfg"));
 
-            grass = BlockFilterSet
+            grass = BlockFilter
                 .parseBlockFilterSet(grassFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksGrass.cfg"));
 
-            obstructShortGrass = BlockFilterSet.parseBlockFilterSet(
+            obstructShortGrass = BlockFilter.parseBlockFilterSet(
                 obstructShortGrassFilters,
                 new ResourceLocation(Tags.MOD_DOMAIN, "blocksObstructShortGrass.cfg"));
 
-            extraLeaves = BlockFilterSet.parseBlockFilterSet(
+            extraLeaves = BlockFilter.parseBlockFilterSet(
                 extraLeavesFilters,
                 new ResourceLocation(Tags.MOD_DOMAIN, "blocksExtraLeaves.cfg"));
 
-            fallingLeaves = BlockFilterSet.parseBlockFilterSet(
+            fallingLeaves = BlockFilter.parseBlockFilterSet(
                 fallingLeavesFilters,
                 new ResourceLocation(Tags.MOD_DOMAIN, "blocksFallingLeaves.cfg"));
 
-            logs = BlockFilterSet
+            logs = BlockFilter
                 .parseBlockFilterSet(logsFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksLogs.cfg"));
 
-            sand = BlockFilterSet
+            sand = BlockFilter
                 .parseBlockFilterSet(sandFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksSand.cfg"));
 
-            lilypad = BlockFilterSet
+            lilypad = BlockFilter
                 .parseBlockFilterSet(lilypadFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksLilypad.cfg"));
 
-            cactus = BlockFilterSet
+            cactus = BlockFilter
                 .parseBlockFilterSet(cactusFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksCactus.cfg"));
 
-            soulsand = BlockFilterSet
+            soulsand = BlockFilter
                 .parseBlockFilterSet(soulsandFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksSoulSand.cfg"));
         }
     }
