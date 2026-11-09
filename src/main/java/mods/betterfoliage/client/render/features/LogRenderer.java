@@ -50,12 +50,12 @@ public class LogRenderer extends BlockRenderer {
             return renderer.renderStandardBlock(block, x, y, z);
         }
 
-        ForgeDirection axis = determineLogAxis(world, x, y, z, block);
+        ForgeDirection axis = determineLogAxis(world, x, y, z);
 
         return renderByConnectedSides(world, x, y, z, block, renderer, axis);
     }
 
-    private static ForgeDirection determineLogAxis(IBlockAccess world, int x, int y, int z, Block block) {
+    private static ForgeDirection determineLogAxis(IBlockAccess world, int x, int y, int z) {
         final int meta = world.getBlockMetadata(x, y, z);
 
         return switch ((meta >> 2) & 3) {
@@ -186,7 +186,7 @@ public class LogRenderer extends BlockRenderer {
             return Configs.RoundLogs.connectToSolids && sideBlock.isOpaqueCube();
         }
 
-        final ForgeDirection sideAxis = determineLogAxis(world, sideX, sideY, sideZ, sideBlock);
+        final ForgeDirection sideAxis = determineLogAxis(world, sideX, sideY, sideZ);
         if (sideAxis != axis) {
             return false;
         }
@@ -203,11 +203,11 @@ public class LogRenderer extends BlockRenderer {
         int diagZ = latZ + side.offsetZ;
 
         Block latBlock = world.getBlock(latX, latY, latZ);
-        ForgeDirection latAxis = determineLogAxis(world, latX, latY, latZ, latBlock);
+        ForgeDirection latAxis = determineLogAxis(world, latX, latY, latZ);
         boolean isLatLog = latAxis == axis && Configs.Blocks.logs.matches(latBlock, world, latX, latY, latZ);
 
         Block diagBlock = world.getBlock(diagX, diagY, diagZ);
-        ForgeDirection diagAxis = determineLogAxis(world, diagX, diagY, diagZ, diagBlock);
+        ForgeDirection diagAxis = determineLogAxis(world, diagX, diagY, diagZ);
         boolean isDiagLog = diagAxis == axis && Configs.Blocks.logs.matches(diagBlock, world, diagX, diagY, diagZ);
 
         if (Configs.RoundLogs.connectLenient) {
@@ -232,11 +232,11 @@ public class LogRenderer extends BlockRenderer {
         diagZ = latZ + side.offsetZ;
 
         latBlock = world.getBlock(latX, latY, latZ);
-        latAxis = determineLogAxis(world, latX, latY, latZ, latBlock);
+        latAxis = determineLogAxis(world, latX, latY, latZ);
         isLatLog = latAxis == axis && Configs.Blocks.logs.matches(latBlock, world, latX, latY, latZ);
 
         diagBlock = world.getBlock(diagX, diagY, diagZ);
-        diagAxis = determineLogAxis(world, diagX, diagY, diagZ, diagBlock);
+        diagAxis = determineLogAxis(world, diagX, diagY, diagZ);
         isDiagLog = diagAxis == axis && Configs.Blocks.logs.matches(diagBlock, world, diagX, diagY, diagZ);
 
         return Configs.RoundLogs.connectLenient ? isLatLog || isDiagLog : isLatLog && isDiagLog;
@@ -269,7 +269,7 @@ public class LogRenderer extends BlockRenderer {
             return false;
         }
 
-        final ForgeDirection sideAxis = determineLogAxis(world, sideX, sideY, sideZ, sideBlock);
+        final ForgeDirection sideAxis = determineLogAxis(world, sideX, sideY, sideZ);
         return !shouldConnectToSide(side.getOpposite(), world, sideX, sideY, sideZ, sideAxis);
     }
 
@@ -290,7 +290,7 @@ public class LogRenderer extends BlockRenderer {
             return false;
         }
 
-        final ForgeDirection sideAxis = determineLogAxis(world, sideX, sideY, sideZ, sideBlock);
+        final ForgeDirection sideAxis = determineLogAxis(world, sideX, sideY, sideZ);
         return sideAxis != side && sideAxis != side.getOpposite();
     }
 
@@ -308,7 +308,7 @@ public class LogRenderer extends BlockRenderer {
             return true;
         }
 
-        final ForgeDirection adjacentAxis = determineLogAxis(world, sideX, sideY, sideZ, sideBlock);
+        final ForgeDirection adjacentAxis = determineLogAxis(world, sideX, sideY, sideZ);
 
         if (side.getOpposite() == adjacentAxis) {
             side = side.getOpposite();
@@ -348,7 +348,7 @@ public class LogRenderer extends BlockRenderer {
             Block connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
 
             renderFront = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
-                && determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
+                && determineLogAxis(world, connectorX, connectorY, connectorZ) != axis);
             if (!renderFront) {
                 renderRoundLog(
                     world,
@@ -372,7 +372,7 @@ public class LogRenderer extends BlockRenderer {
 
             connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
             renderBack = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
-                && determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
+                && determineLogAxis(world, connectorX, connectorY, connectorZ) != axis);
             if (!renderBack) {
                 renderRoundLog(
                     world,
@@ -585,7 +585,7 @@ public class LogRenderer extends BlockRenderer {
         if (isConnector) {
             axisOffsetConnector = 0;
 
-            final ForgeDirection baseAxis = determineLogAxis(world, xBase, yBase, zBase, block);
+            final ForgeDirection baseAxis = determineLogAxis(world, xBase, yBase, zBase);
             final ForgeDirection transposeConnector = baseAxis.getRotation(axis);
 
             spriteCounter = renderer.getBlockIcon(
@@ -945,7 +945,7 @@ public class LogRenderer extends BlockRenderer {
 
             Block connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
             renderFront = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
-                && determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
+                && determineLogAxis(world, connectorX, connectorY, connectorZ) != axis);
             if (!renderFront) {
                 renderRoundHalfLog(
                     world,
@@ -970,7 +970,7 @@ public class LogRenderer extends BlockRenderer {
 
             connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
             renderBack = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
-                && determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
+                && determineLogAxis(world, connectorX, connectorY, connectorZ) != axis);
             if (!renderBack) {
                 renderRoundHalfLog(
                     world,
@@ -1531,7 +1531,7 @@ public class LogRenderer extends BlockRenderer {
         if (isConnector) {
             axisOffsetConnector = 0;
 
-            final ForgeDirection baseAxis = determineLogAxis(world, xBase, yBase, zBase, block);
+            final ForgeDirection baseAxis = determineLogAxis(world, xBase, yBase, zBase);
             final ForgeDirection transposeConnector = baseAxis.getRotation(axis);
 
             spriteMain = renderer.getBlockIcon(
@@ -2003,7 +2003,7 @@ public class LogRenderer extends BlockRenderer {
             Block connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
 
             renderFront = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
-                && determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
+                && determineLogAxis(world, connectorX, connectorY, connectorZ) != axis);
             if (!renderFront) {
                 renderRoundQuarterLog(
                     world,
@@ -2029,7 +2029,7 @@ public class LogRenderer extends BlockRenderer {
             connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
 
             renderBack = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
-                && determineLogAxis(world, connectorX, connectorY, connectorZ, connectorBlock) != axis);
+                && determineLogAxis(world, connectorX, connectorY, connectorZ) != axis);
             if (!renderBack) {
                 renderRoundQuarterLog(
                     world,
@@ -2955,7 +2955,7 @@ public class LogRenderer extends BlockRenderer {
         if (isConnector) {
             axisOffsetConnector = 0;
 
-            final ForgeDirection baseAxis = determineLogAxis(world, xBase, yBase, zBase, block);
+            final ForgeDirection baseAxis = determineLogAxis(world, xBase, yBase, zBase);
             final ForgeDirection transposeConnector = baseAxis.getRotation(axis);
 
             spriteClock = renderer.getBlockIcon(
