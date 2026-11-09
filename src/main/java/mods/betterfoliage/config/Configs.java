@@ -200,7 +200,8 @@ public final class Configs {
             extraLeaves.setRecentDescription("betterfoliage.size");
 
             dense = extraLeaves.addProp("dense", false);
-            renderBaseBlock = extraLeaves.addProp("renderBaseBlock", true);
+
+            renderBaseBlock = extraLeaves.addProp("renderBaseBlock", true) || !dense;
 
             extraLeaves.finalizeCategory();
         }

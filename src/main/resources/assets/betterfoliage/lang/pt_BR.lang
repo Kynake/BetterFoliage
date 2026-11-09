@@ -80,7 +80,7 @@ betterfoliage.shortGrass.useGenerated.tooltip=Gera a textura da Grama Curta dina
 
 # Round Logs
 betterfoliage.roundLogs=Troncos Arredondados
-betterfoliage.roundLogs.tooltip=Renderizar troncos com cantos chamfrados?
+betterfoliage.roundLogs.tooltip=Desenhar troncos com cantos chamfrados?
 betterfoliage.roundLogs.radiusSmall=Raio do chanfro pequeno
 betterfoliage.roundLogs.radiusSmall.tooltip=O Quão proeminente é o chamfro do canto do tronco?\nUse 0.292893218813 para obter um octógono com lados iguais.
 betterfoliage.roundLogs.radiusLarge=Raio do chanfro grande
@@ -92,7 +92,7 @@ betterfoliage.roundLogs.connectToSolids.tooltip=Conectar Troncos Arredondados a 
 betterfoliage.roundLogs.connectLenient=Conexão Leniente
 betterfoliage.roundLogs.connectLenient.tooltip=Permitir que Troncos Arredondados conectem-se quando estes estão em forma de L, não apenas em um grid 2x2.
 betterfoliage.roundLogs.connectPerpendicular=Conectar a troncos perpendiculares
-betterfoliage.roundLogs.connectPerpendicular.tooltip=Conectar troncos perpendiculares a outros? Uma peça de conexão será renderizada na mesma posição que o tronco adjacente.
+betterfoliage.roundLogs.connectPerpendicular.tooltip=Conectar troncos perpendiculares a outros? Uma peça de conexão será desenhada na mesma posição que o tronco adjacente.
 betterfoliage.roundLogs.connectGrass=Conectar Grama
 betterfoliage.roundLogs.connectGrass.tooltip=Substitui visualmente o bloco de terra abaixo de um tronco por um bloco de grama se houver grama na proximidade.
 betterfoliage.roundLogs.zProtection=Proteção contra Z-fighting
@@ -107,12 +107,12 @@ betterfoliage.extraLeaves.surfaceOnly=Apenas Superfície
 betterfoliage.extraLeaves.surfaceOnly.tooltip=Folhas Extras só aparecerão em blocos com pelo menos um lado exposto.\nUm lado é considerado exposto caso o bloco adjacente não seja inteiro e opaco e também não seja outro bloco de folha.
 betterfoliage.extraLeaves.dense=Modo Denso
 betterfoliage.extraLeaves.dense.tooltip=Desenha folhas em X em todos os três eixos do bloco de folha, não apenas no eixo vertical.
-betterfoliage.extraLeaves.renderBaseBlock=Render Base Block
-betterfoliage.extraLeaves.renderBaseBlock.tooltip=Should the base leaf block be rendered alongside the extra leaves?\nWorks best with Dense Mode enabled, otherwise the leaves will look a little lackluster when not viewed from the side.
+betterfoliage.extraLeaves.renderBaseBlock=Desenhar Bloco Base
+betterfoliage.extraLeaves.renderBaseBlock.tooltip=Desenhar o bloco de folha padrão juntamente com as folhas extras?\nFunciona apenas com o Modo Denso habilitado.
 
 # Falling Leaves
 betterfoliage.fallingLeaves=Folhas Cadentes
-betterfoliage.fallingLeaves.tooltip=Emitir partículas de folhas cadentes abaixo de blocos de folhas?
+betterfoliage.fallingLeaves.tooltip=Emitir partículas de folhas cadentes abaixo de blocos de folhas?1
 betterfoliage.fallingLeaves.speed=Velocidade da Partícula
 betterfoliage.fallingLeaves.speed.tooltip=Velocidade da partícula durante a queda.
 betterfoliage.fallingLeaves.rotationSpeed=Velocidade de Rotação

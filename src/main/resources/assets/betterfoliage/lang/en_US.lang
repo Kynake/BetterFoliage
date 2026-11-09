@@ -106,7 +106,7 @@ betterfoliage.extraLeaves.surfaceOnly.tooltip=Extra Leaves will only be rendered
 betterfoliage.extraLeaves.dense=Dense Mode
 betterfoliage.extraLeaves.dense.tooltip=Render a cross square of extra leaves on all three axes of a leaf block, not just the vertical axis.
 betterfoliage.extraLeaves.renderBaseBlock=Render Base Block
-betterfoliage.extraLeaves.renderBaseBlock.tooltip=Should the base leaf block be rendered alongside the extra leaves?\nWorks best with Dense Mode enabled, otherwise the leaves will look a little lackluster when not viewed from the side.
+betterfoliage.extraLeaves.renderBaseBlock.tooltip=Should the base leaf block be rendered alongside the extra leaves?\nOnly works with Dense Mode.
 
 # Falling Leaves
 betterfoliage.fallingLeaves=Falling Leaves
