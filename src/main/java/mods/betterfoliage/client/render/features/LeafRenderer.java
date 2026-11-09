@@ -189,23 +189,29 @@ public class LeafRenderer extends BlockRenderer {
         return isExposed(world, world.getBlock(x, y, z), x, y, z);
     }
 
-    private static boolean isExposed(IBlockAccess world, Block block, int x, int y, int z) {
-        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-            final int xSide = x + dir.offsetX;
-            final int ySide = y + dir.offsetY;
-            final int zSide = z + dir.offsetZ;
-
-            final Block blockSide = world.getBlock(xSide, ySide, zSide);
-            final int metaSide = world.getBlockMetadata(xSide, ySide, zSide);
-            if (!blocksLeafRendering(blockSide, metaSide, block)) return true;
-        }
-
-        return false;
+    private static boolean isExposed(IBlockAccess world, Block leaf, int x, int y, int z) {
+        // Loop Unrolled
+        return exposesLeafRendering(leaf, world, x, y + 1, z) // Up
+            || exposesLeafRendering(leaf, world, x, y - 1, z) // Down
+            || exposesLeafRendering(leaf, world, x, y, z + 1) // South
+            || exposesLeafRendering(leaf, world, x, y, z - 1) // North
+            || exposesLeafRendering(leaf, world, x + 1, y, z) // East
+            || exposesLeafRendering(leaf, world, x - 1, y, z); // West
     }
 
-    private static boolean blocksLeafRendering(Block visionBlocker, int visionBlockerMetadata, Block leaf) {
-        return visionBlocker == leaf || (visionBlocker.isOpaqueCube()
-            && !(Configs.RoundLogs.enabled && Configs.Blocks.logs.matches(visionBlocker, visionBlockerMetadata)));
+    private static boolean exposesLeafRendering(Block leaf, IBlockAccess world, int x, int y, int z) {
+        final Block blocker = world.getBlock(x, y, z);
+
+        if (blocker == leaf) {
+            return false;
+        }
+
+        final boolean isExposed = !blocker.isOpaqueCube();
+        if (!Configs.RoundLogs.enabled) {
+            return isExposed;
+        }
+
+        return isExposed || Configs.Blocks.logs.matches(blocker, world, x, y, z);
     }
 
     /// Redefines AO directions when extra leaves are rotated
