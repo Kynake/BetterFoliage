@@ -10,17 +10,18 @@ import net.minecraft.command.ICommandSender;
 
 import com.google.common.collect.ImmutableList;
 
-import mods.betterfoliage.BetterFoliageMod;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.RegistryNamespaced;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import org.apache.logging.log4j.Logger;
-
 public class InfoCommand extends CommandBase {
-    private static final String USAGE = "/betterfoliage {block|biome}";
+
+    private static final String USAGE = EnumChatFormatting.RED + "/betterfoliage <block|biome>";
+    private static final String SEPARATOR = EnumChatFormatting.GRAY + "-----------------------------------------------";
 
     @Override
     public String getCommandName() {
@@ -45,21 +46,25 @@ public class InfoCommand extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (args.length != 1) {
-            sender.addChatMessage(new ChatComponentText("§c" + I18n.format(USAGE)));
+            sender.addChatMessage(new ChatComponentText(USAGE));
             return;
         }
 
         if (args[0].equals("biome")) {
+            sender.addChatMessage(new ChatComponentText(SEPARATOR));
             processBiomeCommand(sender);
+            sender.addChatMessage(new ChatComponentText(SEPARATOR));
             return;
         }
 
         if (args[0].equals("block")) {
+            sender.addChatMessage(new ChatComponentText(SEPARATOR));
             processBlockCommand(sender);
+            sender.addChatMessage(new ChatComponentText(SEPARATOR));
             return;
         }
 
-        sender.addChatMessage(new ChatComponentText("§c" + I18n.format(USAGE)));
+        sender.addChatMessage(new ChatComponentText(USAGE));
     }
 
     private void processBiomeCommand(ICommandSender sender) {
@@ -68,15 +73,20 @@ public class InfoCommand extends CommandBase {
 
         BiomeGenBase biome = world.getBiomeGenForCoords(coords.posX, coords.posZ);
 
-        // TODO print to chat message
-        Logger log = BetterFoliageMod.log;
-        log.info("Biome: {}, ID: {}", biome.biomeName, biome.biomeID);
+        String line1 = I18n.format("commands.betterfoliage.biome.line1", biome.biomeName, biome.biomeID);
+        sender.addChatMessage(new ChatComponentText(line1));
 
         boolean snow = biome.getEnableSnow();
         boolean rain = !snow && biome.canSpawnLightningBolt();
-        log.info("Rain? {}, Snow? {}", rain ? "YES" : "NO", snow ? "YES" : "NO");
 
-        log.info("Temperature: {}, Humidity: {}", biome.temperature, biome.rainfall);
+        String rainLang = I18n.format(rain ? "commands.betterfoliage.yes" : "commands.betterfoliage.no");
+        String snowLang = I18n.format(snow ? "commands.betterfoliage.yes" : "commands.betterfoliage.no");
+        String line2 = I18n.format("commands.betterfoliage.biome.line2", rainLang, snowLang);
+        sender.addChatMessage(new ChatComponentText(line2));
+
+        String line3 = I18n.format("commands.betterfoliage.biome.line3", biome.temperature, biome.rainfall);
+        sender.addChatMessage(new ChatComponentText(line3));
+
         printClassHierarchy(biome.getClass(), BiomeGenBase.class, sender);
     }
 
@@ -91,16 +101,17 @@ public class InfoCommand extends CommandBase {
         int meta = world.getBlockMetadata(target.blockX, target.blockY, target.blockZ);
 
         RegistryNamespaced registry = Block.blockRegistry;
-        String name = registry.getNameForObject(block) + ":" + meta;
+        String name = "<" + registry.getNameForObject(block) + ":" + meta + ">";
 
-        // TODO print to chat message
-        BetterFoliageMod.log.info("<{}>, ID: {}", name, registry.getIDForObject(block));
+        String line = I18n.format("commands.betterfoliage.block", name, registry.getIDForObject(block));
+        sender.addChatMessage(new ChatComponentText(line));
+
         printClassHierarchy(block.getClass(), Block.class, sender);
     }
 
     private static void printClassHierarchy(Class<?> leafClass, Class<?> baseClass, ICommandSender sender) {
-        Logger log = BetterFoliageMod.log;
-        log.info("Class hierarchy:");
+        sender.addChatMessage(new ChatComponentText(""));
+        sender.addChatMessage(new ChatComponentTranslation("commands.betterfoliage.class.title"));
 
         int i = 0;
         Class<?> current = leafClass;
@@ -108,20 +119,24 @@ public class InfoCommand extends CommandBase {
         do {
             String classpath = current.getCanonicalName();
             if (classpath == null || classpath.isEmpty()) {
-                classpath = "<anonymous class>";
+                classpath = I18n.format("commands.betterfoliage.class.anonymous") + " " + current.getName();
             }
-            log.info("[{}]: {}", i++, classpath);
+
+            String line = I18n.format("commands.betterfoliage.class.line", i++, classpath);
+            sender.addChatMessage(new ChatComponentText(line));
+
             current = current.getSuperclass();
         } while (!(current == null || current == baseClass));
 
         if (current != null) {
             String classpath = current.getCanonicalName();
             if (classpath == null || classpath.isEmpty()) {
-                classpath = "<anonymous class>";
+                classpath = I18n.format("commands.betterfoliage.class.anonymous") + " " + current.getName();
             }
-            log.info("[{}]: {} [BASE CLASS]", i, classpath);
-        }
 
-        // TODO print to chat message
+            String line = I18n.format("commands.betterfoliage.class.line", i++, classpath);
+            line += " " + I18n.format("commands.betterfoliage.class.base");
+            sender.addChatMessage(new ChatComponentText(line));
+        }
     }
 }

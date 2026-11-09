@@ -1,5 +1,15 @@
 # General
 key.betterfoliage.gui=Open Settings
+commands.betterfoliage.yes=§aYES
+commands.betterfoliage.no=§cNO
+commands.betterfoliage.block=%s§7, ID:§r %s
+commands.betterfoliage.biome.line1=§7Biome:§r %s§7, ID:§r %s
+commands.betterfoliage.biome.line2=§7Rain?§r %s§7, Snow?§r %s
+commands.betterfoliage.biome.line3=§7Temperature:§r %s§7, Humidity:§r %s
+commands.betterfoliage.class.title=Class hierarchy:
+commands.betterfoliage.class.line=§7[%s]§r %s
+commands.betterfoliage.class.base=§7[BASE CLASS]
+commands.betterfoliage.class.anonymous=§e<anonymous class>§r
 
 # FML default value langs behave weirdly, so we use our own
 betterfoliage.default.value=[default: %s]

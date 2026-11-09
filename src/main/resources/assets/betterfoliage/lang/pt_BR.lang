@@ -1,5 +1,15 @@
 # General
 key.betterfoliage.gui=Abrir Configurações
+commands.betterfoliage.yes=§aSIM
+commands.betterfoliage.no=§cNÃO
+commands.betterfoliage.block=%s, §7ID:§r %s
+commands.betterfoliage.biome.line1=§7Bioma:§r %s§7, ID:§r %s
+commands.betterfoliage.biome.line2=§7Chuva?§r %s§7, Neve?§r %s
+commands.betterfoliage.biome.line3=§7Temperatura:§r %s§7, Humidade:§r %s
+commands.betterfoliage.class.title=Hierarquia de classes:
+commands.betterfoliage.class.line=§7[%s]§r %s
+commands.betterfoliage.class.base=§7[CLASSE BASE]
+commands.betterfoliage.class.anonymous=§e<classe anônima>§r
 
 betterfoliage.default.value=[padrão: %s]
 betterfoliage.default.minmax=[de %s a %s, padrão: %s]
