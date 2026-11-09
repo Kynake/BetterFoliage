@@ -7,9 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
-
-import com.google.common.collect.ImmutableList;
-
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
@@ -18,6 +15,9 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.RegistryNamespaced;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+
+import com.google.common.collect.ImmutableList;
+
 public class InfoCommand extends CommandBase {
 
     private static final String USAGE = EnumChatFormatting.RED + "/betterfoliage <block|biome>";

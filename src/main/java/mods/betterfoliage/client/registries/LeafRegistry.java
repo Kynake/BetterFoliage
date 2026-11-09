@@ -187,9 +187,7 @@ public final class LeafRegistry extends TextureGenerator {
         ResourceLocation nonMeta = ResourceUtils.getBaseForMcMeta(location);
         for (LeafInfo leaf : leaves.values()) {
             if (!nonMeta.equals(leaf.generatedLeafResource)) continue;
-            return ResourceUtils
-                .getResource(
-                    new ResourceLocation(leaf.baseLeafResource.getResourceDomain(), location.getResourcePath()))
+            return ResourceUtils.getResource(ResourceUtils.getResourceMcMeta(leaf.baseLeafResource))
                 .getInputStream();
         }
 

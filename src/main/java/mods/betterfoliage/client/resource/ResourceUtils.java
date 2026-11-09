@@ -136,6 +136,14 @@ public class ResourceUtils {
             .endsWith(".cfg");
     }
 
+    public static ResourceLocation getResourceMcMeta(ResourceLocation base) {
+        if (isMcMeta(base)) {
+            return base;
+        }
+
+        return new ResourceLocation(base.getResourceDomain(), base.getResourcePath() + ".mcmeta");
+    }
+
     public static ResourceLocation getBaseForMcMeta(ResourceLocation mcMeta) {
         int endIndex = mcMeta.getResourcePath()
             .lastIndexOf(".mcmeta");
@@ -153,8 +161,7 @@ public class ResourceUtils {
         for (IResourcePack pack : resourcePacks) {
             if (pack.resourceExists(location)) {
                 // Only the highest priority asset dictates whether it'll use a .mcmeta file or not
-                return pack.resourceExists(
-                    new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + ".mcmeta"));
+                return pack.resourceExists(getResourceMcMeta(location));
             }
         }
 
