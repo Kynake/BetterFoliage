@@ -3001,9 +3001,6 @@ public class LogRenderer extends BlockRenderer {
         final double clockFrontV = midV - axisOffsetHalf * lengthV;
         final double clockBackV = midV + axisOffsetConnector * lengthV;
 
-        // Clock Side
-        final boolean renderClock = shouldRenderFace(clockwise, world, x, y, z);
-
         if (useAO) {
             final float colorMultClock = RenderUtils.getColorMultiplierBySide(clockwise);
             final float colorMultCounter = RenderUtils.getColorMultiplierBySide(counterclockwise);
@@ -3117,6 +3114,9 @@ public class LogRenderer extends BlockRenderer {
             containers[5].updateAverageShadingInfo(containers[6], containers[5], backEdgeRatio);
             containers[4].updateAverageShadingInfo(containers[7], containers[4], frontEdgeRatio);
         }
+
+        // Clock Side
+        final boolean renderClock = shouldRenderFace(clockwise, world, x, y, z);
 
         if (renderClock) {
             if (useAO) {

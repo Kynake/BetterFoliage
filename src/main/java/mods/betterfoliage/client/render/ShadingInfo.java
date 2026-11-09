@@ -7,7 +7,6 @@ import mods.betterfoliage.utils.MathUtils;
 public final class ShadingInfo {
 
     private static final int BRIGHTNESS_ALPHA_MASK = 0xFF00FF;
-    private static final int DIAG_MIN_BRIGHTNESS = 0x5A0000;
     private static final float DIAG_MIN_AO = 0.25f;
 
     private float r;
@@ -46,11 +45,13 @@ public final class ShadingInfo {
         ShadingInfo topCounter) {
 
         // Brightness
-        final int topBrightness = Math.max(Math.max(topClock.brightness, topCounter.brightness), DIAG_MIN_BRIGHTNESS);
-        final int botBrightness = Math.max(Math.max(botClock.brightness, botCounter.brightness), DIAG_MIN_BRIGHTNESS);
+        final int topBrightness = Math.max(topClock.brightness, topCounter.brightness) & 0xFF0000;
+        final int botBrightness = Math.max(botClock.brightness, botCounter.brightness) & 0xFF0000;
 
-        topClock.brightness = topCounter.brightness = topBrightness;
-        botClock.brightness = botCounter.brightness = botBrightness;
+        topClock.brightness = topBrightness | (topClock.brightness & 0xFF);
+        botClock.brightness = botBrightness | (botClock.brightness & 0xFF);
+        topCounter.brightness = topBrightness | (topCounter.brightness & 0xFF);
+        botCounter.brightness = botBrightness | (botCounter.brightness & 0xFF);
 
         // AO
         topClock.ambientOcclusion = Math.max(topClock.ambientOcclusion, DIAG_MIN_AO);
