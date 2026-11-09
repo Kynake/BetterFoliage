@@ -1,4 +1,4 @@
-package mods.betterfoliage.config;
+package mods.betterfoliage.config.blockfilters;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -2,7 +2,7 @@ package mods.betterfoliage.client.integration;
 
 import ic2.core.block.BlockRubWood;
 import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.config.BlockFilterSet;
+import mods.betterfoliage.config.blockfilters.BlockFilterSet;
 
 public class IC2Integration {
 

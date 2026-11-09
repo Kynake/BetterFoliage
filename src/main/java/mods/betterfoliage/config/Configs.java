@@ -2,6 +2,7 @@ package mods.betterfoliage.config;
 
 import java.io.File;
 
+import mods.betterfoliage.config.blockfilters.BlockFilterSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
