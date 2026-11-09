@@ -2955,26 +2955,8 @@ public class LogRenderer extends BlockRenderer {
         if (isConnector) {
             axisOffsetConnector = 0;
 
-            final ForgeDirection baseAxis = determineLogAxis(world, xBase, yBase, zBase);
-            final ForgeDirection transposeConnector = baseAxis.getRotation(axis);
-
-            spriteClock = renderer.getBlockIcon(
-                block,
-                world,
-                xBase,
-                yBase,
-                zBase,
-                clockwise.getRotation(transposeConnector)
-                    .ordinal());
-
-            spriteCounter = renderer.getBlockIcon(
-                block,
-                world,
-                xBase,
-                yBase,
-                zBase,
-                counterclockwise.getRotation(transposeConnector)
-                    .ordinal());
+            spriteClock = getConnectorSprite(renderer, world, block, xBase, yBase, zBase, clockwise);
+            spriteCounter = getConnectorSprite(renderer, world, block, xBase, yBase, zBase, counterclockwise);
         } else {
             axisOffsetConnector = axisOffsetHalf;
 
@@ -3303,5 +3285,13 @@ public class LogRenderer extends BlockRenderer {
         }
 
         return didRender;
+    }
+
+    // Separate method to serve as easy target for mod compatibility mixins
+    private static IIcon getConnectorSprite(RenderBlocks renderer, IBlockAccess world, Block block, int x, int y, int z,
+        ForgeDirection side) {
+        final int meta = world.getBlockMetadata(x, y, z);
+        final IIcon res = block.getIcon(side.ordinal(), meta);
+        return renderer.getIconSafe(res);
     }
 }
