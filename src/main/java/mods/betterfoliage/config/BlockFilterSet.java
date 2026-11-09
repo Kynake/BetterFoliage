@@ -12,6 +12,8 @@ import net.minecraft.world.IBlockAccess;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.common.collect.ImmutableList;
+
 import cpw.mods.fml.common.Loader;
 import mods.betterfoliage.client.resource.ResourceUtils;
 
@@ -68,6 +70,12 @@ public class BlockFilterSet {
         }
 
         return new BlockFilterSet(rules);
+    }
+
+    // TODO covert into abstract base class + impls
+    public static BlockFilterSet createSingleClassFilter(Class<?> filterClass) {
+        BlockFilterRule rule = new BlockFilterRule(false, filterClass);
+        return new BlockFilterSet(ImmutableList.of(rule));
     }
 
     private BlockFilterSet(final List<BlockFilterRule> rules) {
@@ -229,14 +237,14 @@ public class BlockFilterSet {
             return new BlockFilterRule(isBlocking, block, metadata);
         }
 
-        private BlockFilterRule(final boolean isBlocking, final Block block, final int blockMetadata) {
+        public BlockFilterRule(final boolean isBlocking, final Block block, final int blockMetadata) {
             this.isBlockingRule = isBlocking;
             this.block = block;
             this.blockMetadata = blockMetadata;
             this.blockClass = null;
         }
 
-        private BlockFilterRule(final boolean isBlocking, final Class<?> blockClass) {
+        public BlockFilterRule(final boolean isBlocking, final Class<?> blockClass) {
             this.isBlockingRule = isBlocking;
             this.block = null;
             this.blockMetadata = -1;

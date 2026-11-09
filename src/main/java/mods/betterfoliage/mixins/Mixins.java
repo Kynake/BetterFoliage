@@ -43,6 +43,10 @@ public enum Mixins implements IMixins {
             "gt6.MixinTileEntityBase01Root")
         .addRequiredMod(Mod.GT6)
         .setPhase(Phase.LATE)),
+    IC2(new MixinBuilder()
+        .addClientMixins("betterfoliage.ic2.MixinLogRenderer")
+        .addRequiredMod(Mod.IC2)
+        .setPhase(Phase.LATE)),
     NOTFINE_EARLY(new MixinBuilder()
         .addClientMixins("notfine.MixinShouldSideBeRendered")
         .addRequiredMod(Mod.NOTFINE)
