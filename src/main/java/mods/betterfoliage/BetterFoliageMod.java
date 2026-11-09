@@ -53,10 +53,12 @@ public class BetterFoliageMod {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        if (event.getSide() == Side.CLIENT) {
-            Configs.postInit();
-            ClientRegistry.postInit();
+        if (event.getSide() != Side.CLIENT) {
+            return;
         }
+
+        Configs.postInit();
+        ClientRegistry.postInit();
     }
 
     /** Mod is cosmetic only, always allow connection. */

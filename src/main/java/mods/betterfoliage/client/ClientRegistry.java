@@ -3,6 +3,7 @@ package mods.betterfoliage.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.ClientCommandHandler;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -12,6 +13,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.Tags;
+import mods.betterfoliage.client.commands.InfoCommand;
 import mods.betterfoliage.client.registries.GrassRegistry;
 import mods.betterfoliage.client.registries.LeafRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
@@ -53,6 +55,8 @@ public class ClientRegistry {
 
     public static void postInit() {
         BetterFoliageMod.log.info("ClientRegistry postInit()");
+
+        ClientCommandHandler.instance.registerCommand(new InfoCommand());
 
         LeafRegistry.getInstance();
         GrassRegistry.getInstance();
