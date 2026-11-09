@@ -319,8 +319,8 @@ public class RenderUtils {
         final int meta = world.getBlockMetadata(x, y, z);
 
         final int sideX = x + face.offsetX;
-        final int sideY = x + face.offsetY;
-        final int sideZ = x + face.offsetZ;
+        final int sideY = y + face.offsetY;
+        final int sideZ = z + face.offsetZ;
 
         final Block side = world.getBlock(sideX, sideY, sideZ);
         final int sideMeta = world.getBlockMetadata(sideX, sideY, sideZ);
