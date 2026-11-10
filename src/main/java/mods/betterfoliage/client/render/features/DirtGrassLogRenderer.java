@@ -30,30 +30,27 @@ public class DirtGrassLogRenderer extends BlockRenderer {
         return Configs.Blocks.dirt.matches(world, x, y, z);
     }
 
+    // TODO refactor
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
         RenderBlocks renderer) {
         Block renderBlock = block;
 
         // East
-        Block sideBlock = world.getBlock(x + 1, y, z);
-        if (Configs.Blocks.grass.matches(sideBlock, world, x + 1, y, z)) {
-            renderBlock = sideBlock;
+        if (GrassRenderer.isEligibleAsGrassBase(world, x + 1, y, z)) {
+            renderBlock = world.getBlock(x + 1, y, z);
         } else {
             // West
-            sideBlock = world.getBlock(x - 1, y, z);
-            if (Configs.Blocks.grass.matches(sideBlock, world, x + 1, y, z)) {
-                renderBlock = sideBlock;
+            if (GrassRenderer.isEligibleAsGrassBase(world, x - 1, y, z)) {
+                renderBlock = world.getBlock(x - 1, y, z);
             } else {
                 // North
-                sideBlock = world.getBlock(x, y, z - 1);
-                if (Configs.Blocks.grass.matches(sideBlock, world, x, y, z - 1)) {
-                    renderBlock = sideBlock;
+                if (GrassRenderer.isEligibleAsGrassBase(world, x, y, z - 1)) {
+                    renderBlock = world.getBlock(x, y, z - 1);
                 } else {
                     // South
-                    sideBlock = world.getBlock(x, y, z + 1);
-                    if (Configs.Blocks.grass.matches(sideBlock, world, x, y, z + 1)) {
-                        renderBlock = sideBlock;
+                    if (GrassRenderer.isEligibleAsGrassBase(world, x, y, z + 1)) {
+                        renderBlock = world.getBlock(x, y, z + 1);
                     }
                 }
             }

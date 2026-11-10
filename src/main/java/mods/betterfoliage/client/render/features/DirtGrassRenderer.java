@@ -29,7 +29,7 @@ public class DirtGrassRenderer extends BlockRenderer {
             return false;
         }
 
-        if (!(Configs.Blocks.dirt.matches(world, x, y, z) && Configs.Blocks.grass.matches(world, x, y + 1, z))) {
+        if (!(GrassRenderer.isEligibleAsGrassBase(world, x, y + 1, z) && Configs.Blocks.dirt.matches(world, x, y, z))) {
             return false;
         }
 

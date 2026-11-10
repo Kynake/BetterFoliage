@@ -61,6 +61,11 @@ public class GrassRenderer extends BlockRenderer {
         return instance;
     }
 
+    /// Mixin target for blocking certain blocks from counting as grass as it's base block.
+    public static boolean isEligibleAsGrassBase(IBlockAccess world, int x, int y, int z) {
+        return Configs.Blocks.grass.matches(world, x, y, z);
+    }
+
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
         return (Configs.ConnectedGrass.enabled | Configs.ShortGrass.grassEnabled)
@@ -93,28 +98,16 @@ public class GrassRenderer extends BlockRenderer {
             }
         }
 
-        boolean renderResult;
-        if (isConnected) {
-            if (hasSnowAbove & Configs.ConnectedGrass.snowEnabled) {
-                IIcon snowTop = blockAbove.getIcon(world, x, y + 1, z, ForgeDirection.UP.ordinal());
-                renderer.setOverrideBlockTexture(snowTop);
-                renderResult = renderer.renderStandardBlock(block, x, y, z);
-                renderer.clearOverrideBlockTexture();
-            } else {
-                IGrassBlockRenderer grassRenderer = (IGrassBlockRenderer) renderer;
-
-                IIcon grassTop = block.getIcon(world, x, y, z, ForgeDirection.UP.ordinal());
-                renderer.setOverrideBlockTexture(grassTop);
-                grassRenderer.betterfoliage$setGrassRender(true);
-
-                renderResult = renderer.renderStandardBlock(block, x, y, z);
-
-                grassRenderer.betterfoliage$setGrassRender(false);
-                renderer.clearOverrideBlockTexture();
-            }
-        } else {
-            renderResult = renderer.renderStandardBlock(block, x, y, z);
-        }
+        boolean renderResult = renderBaseBlockWithOverrides(
+            world,
+            x,
+            y,
+            z,
+            block,
+            renderer,
+            isConnected,
+            hasSnowAbove,
+            blockAbove);
 
         // Render short grass
         if (!Configs.ShortGrass.grassEnabled) return renderResult;
@@ -176,6 +169,34 @@ public class GrassRenderer extends BlockRenderer {
         shortGrassRenderer.betterfoliage$resetVerticalScale();
 
         return true;
+    }
+
+    private static boolean renderBaseBlockWithOverrides(IBlockAccess world, int x, int y, int z, Block block,
+        RenderBlocks renderer, boolean isConnected, boolean hasSnowAbove, Block blockAbove) {
+        if (isConnected) {
+            if (hasSnowAbove & Configs.ConnectedGrass.snowEnabled) {
+                IIcon snowTop = blockAbove.getIcon(world, x, y + 1, z, ForgeDirection.UP.ordinal());
+                renderer.setOverrideBlockTexture(snowTop);
+                boolean res = renderer.renderStandardBlock(block, x, y, z);
+                renderer.clearOverrideBlockTexture();
+                return res;
+            }
+
+            IGrassBlockRenderer grassRenderer = (IGrassBlockRenderer) renderer;
+
+            IIcon grassTop = block.getIcon(world, x, y, z, ForgeDirection.UP.ordinal());
+            renderer.setOverrideBlockTexture(grassTop);
+            grassRenderer.betterfoliage$setGrassRender(true);
+
+            boolean res = renderer.renderStandardBlock(block, x, y, z);
+
+            grassRenderer.betterfoliage$setGrassRender(false);
+            renderer.clearOverrideBlockTexture();
+
+            return res;
+        }
+
+        return RenderUtils.renderBaseBlock(x, y, z, block, renderer);
     }
 
     private void setGrassColor(IBlockAccess world, Tessellator tessellator, Block grassBlock, int x, int y, int z) {
