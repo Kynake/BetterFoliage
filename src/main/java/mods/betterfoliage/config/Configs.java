@@ -53,6 +53,7 @@ public final class Configs {
             dirt = BlockFilter
                 .parseBlockFilterSet(dirtFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksDirt.cfg"));
 
+            // TODO: needs texture reload when changed
             grass = BlockFilter
                 .parseBlockFilterSet(grassFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksGrass.cfg"));
 
@@ -60,10 +61,12 @@ public final class Configs {
                 obstructShortGrassFilters,
                 new ResourceLocation(Tags.MOD_DOMAIN, "blocksObstructShortGrass.cfg"));
 
+            // TODO: needs texture reload when changed
             extraLeaves = BlockFilter.parseBlockFilterSet(
                 extraLeavesFilters,
                 new ResourceLocation(Tags.MOD_DOMAIN, "blocksExtraLeaves.cfg"));
 
+            // TODO: MIGHT need texture reload when changed, maybe not
             fallingLeaves = BlockFilter.parseBlockFilterSet(
                 fallingLeavesFilters,
                 new ResourceLocation(Tags.MOD_DOMAIN, "blocksFallingLeaves.cfg"));
