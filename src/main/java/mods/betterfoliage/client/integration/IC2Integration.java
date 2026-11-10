@@ -11,7 +11,7 @@ public class IC2Integration {
     static {
         BetterFoliageMod.log.info("Initializing mod integration: {}", Mod.IC2.modName);
         if (Mod.IC2.isLoaded()) {
-            rubberWoodFilter = BlockFilter.createSingleClassFilter(BlockRubWood.class);
+            rubberWoodFilter = BlockFilter.createClassOnlyFilter(BlockRubWood.class);
         } else {
             BetterFoliageMod.log.error("Tried to access IC2Integration class without {} present!", Mod.IC2.modName);
             rubberWoodFilter = null;
