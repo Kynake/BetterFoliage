@@ -19,10 +19,10 @@ import mods.betterfoliage.client.registries.LeafInfo;
 import mods.betterfoliage.client.registries.LeafRegistry;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
+import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.SpriteSet;
 import mods.betterfoliage.config.Configs;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
-import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
 import mods.betterfoliage.utils.BlockUtils;
 import mods.betterfoliage.utils.MathUtils;
 
@@ -125,8 +125,7 @@ public class LeafRenderer extends BlockRenderer {
         boolean didBaseRender = false;
 
         if (Configs.ExtraLeaves.renderBaseBlock) {
-            final IRendererByType baseRenderer = (IRendererByType) renderer;
-            didBaseRender = baseRenderer.betterfoliage$renderBaseBlock(block, x, y, z);
+            didBaseRender = RenderUtils.renderBaseBlock(x, y, z, block, renderer);
             if (!didBaseRender) return false;
         }
 
