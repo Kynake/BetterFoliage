@@ -17,7 +17,7 @@ import mods.betterfoliage.client.render.features.LogRenderer;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(LogRenderer.class)
-public class MixinLogRenderer {
+public abstract class MixinLogRenderer {
 
     @WrapMethod(method = "determineLogAxis", remap = false)
     private static ForgeDirection betterfoliage$ic2OverrideLogAxis(IBlockAccess world, int x, int y, int z,

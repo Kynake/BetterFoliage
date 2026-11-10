@@ -47,6 +47,14 @@ public enum Mixins implements IMixins {
         .addClientMixins("betterfoliage.ic2.MixinLogRenderer")
         .addRequiredMod(Mod.IC2)
         .setPhase(Phase.LATE)),
+    TFC(new MixinBuilder()
+        .addClientMixins(
+            "tfc.MixinBlockLogHoriz",
+            "tfc.MixinBlockLogHoriz2",
+            "betterfoliage.tfc.MixinLogRenderer",
+            "betterfoliage.tfc.MixinGrassRenderer")
+        .addRequiredMod(Mod.TFC)
+        .setPhase(Phase.LATE)),
     NOTFINE_EARLY(new MixinBuilder()
         .addClientMixins("notfine.MixinShouldSideBeRendered")
         .addRequiredMod(Mod.NOTFINE)
