@@ -23,6 +23,11 @@ public enum Mixins implements IMixins {
             "minecraft.MixinRenderBlocks_RoundLogs",
             "minecraft.MixinRenderBlocks_OffsetSprite")
         .setPhase(Phase.EARLY)),
+    // Multi-mod mixin, at least one of them must be present
+    BERRY_BUSH(new MixinBuilder()
+        .addClientMixins("betterfoliage.berrybush.MixinLeafRenderer")
+        .setApplyIf(() -> Mod.NATURA.isLoaded() || Mod.TCON.isLoaded())
+        .setPhase(Phase.LATE)),
     ANGELICA(new MixinBuilder()
         .addClientMixins(
             "angelica.MixinLightDataCache",

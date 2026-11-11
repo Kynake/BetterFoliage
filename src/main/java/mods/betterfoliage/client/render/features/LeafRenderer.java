@@ -140,8 +140,8 @@ public class LeafRenderer extends BlockRenderer {
         final int coordHash = MathUtils.hashCoords(x, y, z, SALT);
 
         final float vOffset = Configs.ExtraLeaves.vOffset;
-        final double yOffset = (double) y
-            + (MathUtils.hashToRange(coordHash, -vOffset, vOffset) + (1f - verticalScale) / 2f);
+        final float vDelta = MathUtils.hashToRange(coordHash, -vOffset, vOffset) + (1f - verticalScale) / 2f;
+        final double yOffset = y + vDelta;
 
         final float hOffset = Configs.ExtraLeaves.hOffset;
         final double xOffset = (double) x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
