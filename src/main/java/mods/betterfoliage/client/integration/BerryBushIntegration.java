@@ -42,11 +42,21 @@ public class BerryBushIntegration {
         }
     }
 
-    public static float applyScaleMultiplier(float baseScale, Block block) {
+    public static float applyScaleMultiplier(final float baseScale, final Block block) {
         if (!berryBush.matchesNoMeta(block)) {
             return baseScale;
         }
 
-        return baseScale * (float) (block.getBlockBoundsMaxY() - block.getBlockBoundsMinY());
+        // No need to getBlockBoundsMinY() because it's always 0 for this style of berry bush
+        return baseScale * (float) block.getBlockBoundsMaxY();
+    }
+
+    public static double getVerticalCenter(final double vertCenter, final Block block) {
+        if (!berryBush.matchesNoMeta(block)) {
+            return vertCenter;
+        }
+
+        // No need to getBlockBoundsMinY() because it's always 0 for this style of berry bush
+        return block.getBlockBoundsMaxY() / 2.0;
     }
 }
