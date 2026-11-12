@@ -50,6 +50,7 @@ public enum Mixins implements IMixins {
             "betterfoliage.gt6.MixinLeafRegistry",
             "betterfoliage.gt6.MixinLogRenderer")
         .addRequiredMod(Mod.GT6)
+        .addExcludedMod(Mod.GT5U) // GTNH's GT5U _also_ contains the id "gregtech", so we block the mixins in that case.
         .setPhase(Phase.LATE)),
     IC2(new MixinBuilder()
         .addClientMixins("betterfoliage.ic2.MixinLogRenderer")
