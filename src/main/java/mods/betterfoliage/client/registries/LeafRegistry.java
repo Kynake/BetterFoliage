@@ -94,10 +94,9 @@ public final class LeafRegistry extends TextureGenerator {
                 return original;
             });
         }
-
     }
 
-    private void registerLeaf(TextureMap atlas, IIcon baseLeafSprite) {
+    public void registerLeaf(TextureMap atlas, IIcon baseLeafSprite) {
 
         String maskType = maskTypes.getSpriteType(baseLeafSprite, "default");
         String particleType = particleTypes.getSpriteType(baseLeafSprite, "default");

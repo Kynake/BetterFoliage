@@ -21,7 +21,8 @@ public enum Mixins implements IMixins {
             "minecraft.MixinRenderBlocks_CustomSidePositions",
             "minecraft.MixinRenderBlocks_CrossedSquares",
             "minecraft.MixinRenderBlocks_RoundLogs",
-            "minecraft.MixinRenderBlocks_OffsetSprite")
+            "minecraft.MixinRenderBlocks_OffsetSprite",
+            "minecraftforge.MixinBlockFluidBase")
         .setPhase(Phase.EARLY)),
     // Multi-mod mixin, at least one of them must be present
     BERRY_BUSH(new MixinBuilder()
@@ -39,13 +40,14 @@ public enum Mixins implements IMixins {
         .addClientMixins(
             "gt6.accessors.MixinBlockTextureCopied",
             "gt6.accessors.MixinBlockTextureDefault",
-            "gt6.accessors.MixinBlockTextureFluid",
-            "gt6.accessors.MixinBlockTextureMulti",
-            "gt6.accessors.MixinBlockTextureSided",
             "gt6.accessors.MixinTileEntityBase06Covers",
-            "gt6.MixinITextureUtil",
+            "gt6.MixinBlockBase",
+            "gt6.MixinBlockWaterlike",
+            "gt6.MixinMultiTileEntityBlock",
             "gt6.MixinMultiTileEntityTreeHole",
-            "gt6.MixinTileEntityBase01Root")
+            "gt6.MixinTileEntityBase01Root",
+            "betterfoliage.gt6.MixinLeafRegistry",
+            "betterfoliage.gt6.MixinLogRenderer")
         .addRequiredMod(Mod.GT6)
         .setPhase(Phase.LATE)),
     IC2(new MixinBuilder()
