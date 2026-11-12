@@ -7,6 +7,7 @@ import net.minecraft.world.IBlockAccess;
 
 import gregapi.block.multitileentity.MultiTileEntityBlock;
 import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.client.registries.GrassRegistry;
 import mods.betterfoliage.client.registries.LeafRegistry;
 import mods.betterfoliage.config.blockfilters.BlockFilter;
 import mods.betterfoliage.mixins.interfaces.gt6.ITreeHoleMTE;
@@ -17,6 +18,8 @@ public class GT6Integration {
     private static final String[] leafTypes = { "BLUEMAHOE", "BLUESPRUCE", "BLUESPRUCE_XMAS", "CINNAMON", "COCONUT",
         "HAZEL", "MAPLE", "MAPLE_BROWN", "MAPLE_ORANGE", "MAPLE_RED", "MAPLE_YELLOW", "RAINBOWOOD", "RUBBER",
         "WILLOW" };
+
+    private static final String[] grassTypes = { "BROWN", "DARK", "LIGHT", "MEDIUM", "NORMAL", "YELLOW" };
 
     static {
         BetterFoliageMod.log.info("Initializing mod integration: {}", Mod.GT6.modName);
@@ -38,6 +41,17 @@ public class GT6Integration {
                     BetterFoliageMod.log.info("Registering {} leaf texture: {}", Mod.GT6.modName, location);
                     registry.registerLeaf(atlas, original);
                 }
+            }
+        }
+    }
+
+    public static void registerGT6Grass(TextureMap atlas, GrassRegistry registry) {
+        for (final String type : grassTypes) {
+            String location = Mod.GT6.modID + ":iconsets/GRASSBLOCK_TOP_" + type;
+            IIcon original = atlas.getTextureExtry(location);
+            if (original != null) {
+                BetterFoliageMod.log.info("Registering {} grass texture: {}", Mod.GT6.modName, location);
+                registry.registerGrass(original);
             }
         }
     }

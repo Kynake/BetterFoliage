@@ -62,7 +62,7 @@ public class GrassRegistry extends StitchListener {
         }
     }
 
-    private void registerGrass(IIcon sprite) {
+    public void registerGrass(IIcon sprite) {
         grasses.put(sprite, new GrassInfo(sprite));
     }
 }

@@ -46,6 +46,7 @@ public enum Mixins implements IMixins {
             "gt6.MixinMultiTileEntityBlock",
             "gt6.MixinMultiTileEntityTreeHole",
             "gt6.MixinTileEntityBase01Root",
+            "betterfoliage.gt6.MixinGrassRegistry",
             "betterfoliage.gt6.MixinLeafRegistry",
             "betterfoliage.gt6.MixinLogRenderer")
         .addRequiredMod(Mod.GT6)
