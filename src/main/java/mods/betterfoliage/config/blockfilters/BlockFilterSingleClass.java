@@ -5,7 +5,7 @@ import net.minecraft.world.IBlockAccess;
 
 public class BlockFilterSingleClass extends BlockFilter {
 
-    private final Class<?> filterClass;
+    protected final Class<?> filterClass;
 
     protected BlockFilterSingleClass(Class<?> filterClass) {
         this.filterClass = filterClass;
