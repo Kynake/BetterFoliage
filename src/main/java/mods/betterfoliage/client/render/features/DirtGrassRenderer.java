@@ -6,6 +6,7 @@ import net.minecraft.world.IBlockAccess;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.config.Configs;
 import mods.betterfoliage.mixins.interfaces.minecraft.IOffsetSpriteRenderer;
 import mods.betterfoliage.utils.BlockUtils;
@@ -49,7 +50,7 @@ public class DirtGrassRenderer extends BlockRenderer {
         IOffsetSpriteRenderer offsetRenderer = (IOffsetSpriteRenderer) renderer;
 
         offsetRenderer.betterfoliage$setSpriteOffset(0, 1, 0);
-        boolean renderResult = renderer.renderStandardBlock(grassAbove, x, y, z);
+        boolean renderResult = RenderUtils.renderBaseBlock(x, y, z, grassAbove, renderer);
         offsetRenderer.betterfoliage$setSpriteOffset(0, 0, 0);
 
         return renderResult;
