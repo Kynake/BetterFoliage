@@ -81,7 +81,7 @@ dependencies {
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Mantle:0.6.0:dev")
 
     // Twilight Forest
-    //runtimeOnlyNonPublishable("com.github.GTNewHorizons:twilightforest:2.8.0:dev")
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:twilightforest:2.8.0:dev")
 
     // Forestry
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:ForestryMC:4.12.0:dev")
@@ -91,9 +91,6 @@ dependencies {
 
     // Biomes O' Plenty
     //runtimeOnlyNonPublishable(rfg.deobf("curse.maven:biomes-o-plenty-220318:2499612"))
-
-    // The Lord of the Rings Mod: Legacy
-    //runtimeOnlyNonPublishable(rfg.deobf("curse.maven:the-lord-of-the-rings-mod-legacy-423748:4091561"))
 }
 
 def jarUrl(String sourceURL) {
