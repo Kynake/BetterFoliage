@@ -66,7 +66,7 @@ public class AlgaeRenderer extends BlockRenderer {
             return renderer.renderStandardBlock(block, x, y, z);
         }
 
-        boolean renderResult = renderer.renderStandardBlock(block, x, y, z);
+        boolean renderResult = RenderUtils.renderBaseBlock(x, y, z, block, renderer);
 
         if (!renderResult) return false;
 

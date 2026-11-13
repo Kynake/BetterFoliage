@@ -12,6 +12,7 @@ import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.Tags;
 import mods.betterfoliage.client.render.BlockRenderer;
 import mods.betterfoliage.client.render.ISpriteProvider;
+import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.client.resource.generators.ReedsGenerator;
 import mods.betterfoliage.config.Configs;
 import mods.betterfoliage.mixins.interfaces.minecraft.ICrossedSquaresRenderer;
@@ -70,7 +71,7 @@ public class ReedsRenderer extends BlockRenderer {
             return renderer.renderStandardBlock(block, x, y, z);
         }
 
-        boolean renderResult = renderer.renderStandardBlock(block, x, y, z);
+        boolean renderResult = RenderUtils.renderBaseBlock(x, y, z, block, renderer);
 
         if (!renderResult) return false;
 

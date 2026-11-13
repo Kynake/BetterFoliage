@@ -89,7 +89,7 @@ public class CoralRenderer extends BlockRenderer {
             return renderer.renderStandardBlock(block, x, y, z);
         }
 
-        final boolean renderResult = renderer.renderStandardBlock(block, x, y, z);
+        final boolean renderResult = RenderUtils.renderBaseBlock(x, y, z, block, renderer);
 
         if (!renderResult) return false;
 
@@ -108,6 +108,7 @@ public class CoralRenderer extends BlockRenderer {
                 true,
                 true);
 
+            // Renders the coral crust
             renderer.renderStandardBlock(block, x, y, z);
 
             customSpriteRenderer.betterfoliage$resetSpriteProvider();

@@ -3,12 +3,18 @@ package mods.betterfoliage.client.render.features;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.client.render.RenderUtils;
 import mods.betterfoliage.config.Configs;
+import mods.betterfoliage.mixins.interfaces.minecraft.IOffsetSpriteRenderer;
 
 public class DirtGrassLogRenderer extends BlockRenderer {
+
+    private static final ForgeDirection[] SIDES = { ForgeDirection.EAST, ForgeDirection.WEST, ForgeDirection.NORTH,
+        ForgeDirection.SOUTH };
 
     private static DirtGrassLogRenderer instance;
 
@@ -30,32 +36,26 @@ public class DirtGrassLogRenderer extends BlockRenderer {
         return Configs.Blocks.dirt.matches(world, x, y, z);
     }
 
-    // TODO refactor
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
         RenderBlocks renderer) {
-        Block renderBlock = block;
 
-        // East
-        if (GrassRenderer.isEligibleAsGrassBase(world, x + 1, y, z)) {
-            renderBlock = world.getBlock(x + 1, y, z);
-        } else {
-            // West
-            if (GrassRenderer.isEligibleAsGrassBase(world, x - 1, y, z)) {
-                renderBlock = world.getBlock(x - 1, y, z);
-            } else {
-                // North
-                if (GrassRenderer.isEligibleAsGrassBase(world, x, y, z - 1)) {
-                    renderBlock = world.getBlock(x, y, z - 1);
-                } else {
-                    // South
-                    if (GrassRenderer.isEligibleAsGrassBase(world, x, y, z + 1)) {
-                        renderBlock = world.getBlock(x, y, z + 1);
-                    }
-                }
+        for (final ForgeDirection side : SIDES) {
+            int sideX = x + side.offsetX;
+            int sideY = y + side.offsetY;
+            int sideZ = z + side.offsetZ;
+            if (GrassRenderer.isEligibleAsGrassBase(world, sideX, sideY, sideZ)) {
+                IOffsetSpriteRenderer offsetRenderer = (IOffsetSpriteRenderer) renderer;
+                Block sideBlock = world.getBlock(sideX, sideY, sideZ);
+
+                offsetRenderer.betterfoliage$setSpriteOffset(side.offsetX, side.offsetY, side.offsetZ);
+                boolean renderResult = RenderUtils.renderBaseBlock(x, y, z, sideBlock, renderer);
+                offsetRenderer.betterfoliage$setSpriteOffset(0, 0, 0);
+
+                return renderResult;
             }
         }
 
-        return renderer.renderStandardBlock(renderBlock, x, y, z);
+        return RenderUtils.renderBaseBlock(x, y, z, block, renderer);
     }
 }
