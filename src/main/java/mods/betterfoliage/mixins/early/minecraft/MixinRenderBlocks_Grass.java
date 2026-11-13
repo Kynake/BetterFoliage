@@ -73,7 +73,8 @@ public abstract class MixinRenderBlocks_Grass implements IGrassBlockRenderer {
         at = @At(
             value = "INVOKE_ASSIGN",
             ordinal = 2,
-            target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIcon(Lnet/minecraft/block/Block;Lnet/minecraft/world/IBlockAccess;IIII)Lnet/minecraft/util/IIcon;"))
+            target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIcon(Lnet/minecraft/block/Block;Lnet/minecraft/world/IBlockAccess;IIII)Lnet/minecraft/util/IIcon;"),
+        require = 1)
     private IIcon betterfoliage$applyAOColorNorth(IIcon icon, @Local(argsOnly = true, ordinal = 0) float r,
         @Local(argsOnly = true, ordinal = 1) float g, @Local(argsOnly = true, ordinal = 2) float b) {
         betterfoliage$applyAOBlockColor(r, g, b);
@@ -86,7 +87,8 @@ public abstract class MixinRenderBlocks_Grass implements IGrassBlockRenderer {
         at = @At(
             value = "INVOKE_ASSIGN",
             ordinal = 3,
-            target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIcon(Lnet/minecraft/block/Block;Lnet/minecraft/world/IBlockAccess;IIII)Lnet/minecraft/util/IIcon;"))
+            target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIcon(Lnet/minecraft/block/Block;Lnet/minecraft/world/IBlockAccess;IIII)Lnet/minecraft/util/IIcon;"),
+        require = 1)
     private IIcon betterfoliage$applyAOColorSouth(IIcon icon, @Local(argsOnly = true, ordinal = 0) float r,
         @Local(argsOnly = true, ordinal = 1) float g, @Local(argsOnly = true, ordinal = 2) float b) {
         betterfoliage$applyAOBlockColor(r, g, b);
@@ -99,7 +101,8 @@ public abstract class MixinRenderBlocks_Grass implements IGrassBlockRenderer {
         at = @At(
             value = "INVOKE_ASSIGN",
             ordinal = 5,
-            target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIcon(Lnet/minecraft/block/Block;Lnet/minecraft/world/IBlockAccess;IIII)Lnet/minecraft/util/IIcon;"))
+            target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIcon(Lnet/minecraft/block/Block;Lnet/minecraft/world/IBlockAccess;IIII)Lnet/minecraft/util/IIcon;"),
+        require = 1)
     private IIcon betterfoliage$applyAOColorWest(IIcon icon, @Local(argsOnly = true, ordinal = 0) float r,
         @Local(argsOnly = true, ordinal = 1) float g, @Local(argsOnly = true, ordinal = 2) float b) {
         betterfoliage$applyAOBlockColor(r, g, b);
@@ -112,7 +115,8 @@ public abstract class MixinRenderBlocks_Grass implements IGrassBlockRenderer {
         at = @At(
             value = "INVOKE_ASSIGN",
             ordinal = 6,
-            target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIcon(Lnet/minecraft/block/Block;Lnet/minecraft/world/IBlockAccess;IIII)Lnet/minecraft/util/IIcon;"))
+            target = "Lnet/minecraft/client/renderer/RenderBlocks;getBlockIcon(Lnet/minecraft/block/Block;Lnet/minecraft/world/IBlockAccess;IIII)Lnet/minecraft/util/IIcon;"),
+        require = 1)
     private IIcon betterfoliage$applyAOColorEast(IIcon icon, @Local(argsOnly = true, ordinal = 0) float r,
         @Local(argsOnly = true, ordinal = 1) float g, @Local(argsOnly = true, ordinal = 2) float b) {
         betterfoliage$applyAOBlockColor(r, g, b);
@@ -138,7 +142,8 @@ public abstract class MixinRenderBlocks_Grass implements IGrassBlockRenderer {
         at = @At(
             value = "INVOKE",
             ordinal = 2,
-            target = "Lnet/minecraft/client/renderer/Tessellator;setColorOpaque_F(FFF)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;setColorOpaque_F(FFF)V"),
+        require = 1)
     private boolean betterfoliage$applyMultColorNorth(Tessellator tessellator, float rBase, float gBase, float bBase,
         @Local(argsOnly = true, ordinal = 0) float r, @Local(argsOnly = true, ordinal = 1) float g,
         @Local(argsOnly = true, ordinal = 2) float b) {
@@ -150,7 +155,8 @@ public abstract class MixinRenderBlocks_Grass implements IGrassBlockRenderer {
         at = @At(
             value = "INVOKE",
             ordinal = 4,
-            target = "Lnet/minecraft/client/renderer/Tessellator;setColorOpaque_F(FFF)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;setColorOpaque_F(FFF)V"),
+        require = 1)
     private boolean betterfoliage$applyMultColorSouth(Tessellator tessellator, float rBase, float gBase, float bBase,
         @Local(argsOnly = true, ordinal = 0) float r, @Local(argsOnly = true, ordinal = 1) float g,
         @Local(argsOnly = true, ordinal = 2) float b) {
@@ -162,7 +168,8 @@ public abstract class MixinRenderBlocks_Grass implements IGrassBlockRenderer {
         at = @At(
             value = "INVOKE",
             ordinal = 6,
-            target = "Lnet/minecraft/client/renderer/Tessellator;setColorOpaque_F(FFF)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;setColorOpaque_F(FFF)V"),
+        require = 1)
     private boolean betterfoliage$applyMultColorWest(Tessellator tessellator, float rBase, float gBase, float bBase,
         @Local(argsOnly = true, ordinal = 0) float r, @Local(argsOnly = true, ordinal = 1) float g,
         @Local(argsOnly = true, ordinal = 2) float b) {
@@ -174,7 +181,8 @@ public abstract class MixinRenderBlocks_Grass implements IGrassBlockRenderer {
         at = @At(
             value = "INVOKE",
             ordinal = 8,
-            target = "Lnet/minecraft/client/renderer/Tessellator;setColorOpaque_F(FFF)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;setColorOpaque_F(FFF)V"),
+        require = 1)
     private boolean betterfoliage$applyMultColorEast(Tessellator tessellator, float rBase, float gBase, float bBase,
         @Local(argsOnly = true, ordinal = 0) float r, @Local(argsOnly = true, ordinal = 1) float g,
         @Local(argsOnly = true, ordinal = 2) float b) {

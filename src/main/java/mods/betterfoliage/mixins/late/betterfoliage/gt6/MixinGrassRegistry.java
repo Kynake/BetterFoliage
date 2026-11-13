@@ -14,7 +14,7 @@ import mods.betterfoliage.client.registries.GrassRegistry;
 @Mixin(GrassRegistry.class)
 public abstract class MixinGrassRegistry {
 
-    @Inject(method = "onSpriteStitch", at = @At("TAIL"), remap = false)
+    @Inject(method = "onSpriteStitch", at = @At("TAIL"), remap = false, require = 1)
     private void betterfoliage$gt6RegisterGrass(TextureMap atlas, CallbackInfo ci) {
         GT6Integration.registerGT6Grass(atlas, (GrassRegistry) (Object) this);
     }

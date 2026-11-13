@@ -14,7 +14,7 @@ import mods.betterfoliage.client.Hooks;
 @Mixin(BlockWaterlike.class)
 public class MixinBlockWaterlike {
 
-    @ModifyReturnValue(method = "shouldSideBeRendered", at = @At("RETURN"))
+    @ModifyReturnValue(method = "shouldSideBeRendered", at = @At("RETURN"), require = 1)
     private boolean betterfoliage$shouldRenderBlockSideOverride(boolean original, IBlockAccess world, int x, int y,
         int z, int side) {
         return Hooks.overrideIsPartialBlock(world, x, y, z, original);

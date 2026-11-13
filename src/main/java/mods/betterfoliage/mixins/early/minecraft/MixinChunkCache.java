@@ -21,7 +21,8 @@ public abstract class MixinChunkCache {
 
     @ModifyExpressionValue(
         method = "getSkyBlockTypeBrightness",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getUseNeighborBrightness()Z"))
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getUseNeighborBrightness()Z"),
+        require = 1)
     private boolean betterfoliage$overrideUseNeighborBrightness(boolean original,
         @Local(argsOnly = true, ordinal = 0) int x, @Local(argsOnly = true, ordinal = 1) int y,
         @Local(argsOnly = true, ordinal = 2) int z) {

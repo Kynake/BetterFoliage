@@ -18,7 +18,7 @@ public abstract class MixinLeafRenderUtil {
     // Why: NotFine / Angelica has a helper class that overrides the default shouldRenderSide() method
     // for vanilla and modded leaf blocks. This inhibits the default mixin that fixes
     // rendering for blocks next to rounded logs, resulting in holes in leaf blocks.
-    @ModifyReturnValue(method = "shouldSideBeRendered", at = @At("RETURN"), remap = false)
+    @ModifyReturnValue(method = "shouldSideBeRendered", at = @At("RETURN"), remap = false, require = 1)
     private static boolean betterfoliage$shouldRenderBlockSideOverride(boolean original, IBlockAccess world, int x,
         int y, int z, int side) {
         return Hooks.overrideIsPartialBlock(world, x, y, z, original);

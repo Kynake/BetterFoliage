@@ -21,7 +21,7 @@ public abstract class MixinBlockLogHoriz {
     @Shadow(remap = false)
     protected int offset;
 
-    @WrapMethod(method = "getIcon")
+    @WrapMethod(method = "getIcon", require = 1)
     private IIcon betterfoliage$unrotateHorizontalLogSprites(int side, int meta, Operation<IIcon> original) {
         if (!Configs.RoundLogs.enabled) {
             return original.call(side, meta);

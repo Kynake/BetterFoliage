@@ -16,7 +16,7 @@ import mods.betterfoliage.client.Hooks;
 @Mixin(value = Block.class, priority = 1500)
 public abstract class MixinBlock {
 
-    @ModifyReturnValue(method = "shouldSideBeRendered", at = @At("RETURN"))
+    @ModifyReturnValue(method = "shouldSideBeRendered", at = @At("RETURN"), require = 1)
     private boolean betterfoliage$shouldRenderBlockSideOverride(boolean original, IBlockAccess world, int x, int y,
         int z, int side) {
         return Hooks.overrideIsPartialBlock(world, x, y, z, original);

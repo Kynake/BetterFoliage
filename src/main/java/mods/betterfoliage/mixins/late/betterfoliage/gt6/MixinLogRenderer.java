@@ -18,7 +18,7 @@ import mods.betterfoliage.client.render.features.LogRenderer;
 @Mixin(LogRenderer.class)
 public abstract class MixinLogRenderer {
 
-    @WrapMethod(method = "getConnectorSprite", remap = false)
+    @WrapMethod(method = "getConnectorSprite", remap = false, require = 1)
     private static IIcon betterfoliage$gt6OverrideConnectorSprite(RenderBlocks renderer, IBlockAccess world,
         Block block, int x, int y, int z, ForgeDirection side, Operation<IIcon> original) {
         if (!GT6Integration.treeHole.matches(world, x, y, z)) {

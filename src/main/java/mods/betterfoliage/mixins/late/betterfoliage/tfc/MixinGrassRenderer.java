@@ -18,7 +18,7 @@ import mods.betterfoliage.client.render.features.GrassRenderer;
 @Mixin(GrassRenderer.class)
 public abstract class MixinGrassRenderer {
 
-    @WrapMethod(method = "isEligibleAsGrassBase", remap = false)
+    @WrapMethod(method = "isEligibleAsGrassBase", remap = false, require = 1)
     private static boolean betterfoliage$tfcOverrideGrassTest(IBlockAccess world, int x, int y, int z,
         Operation<Boolean> original) {
         return !TFCIntegration.grass.matches(world, x, y, z) && original.call(world, x, y, z);
@@ -29,7 +29,8 @@ public abstract class MixinGrassRenderer {
         name = "isConnected",
         at = @At("HEAD"),
         argsOnly = true,
-        remap = false)
+        remap = false,
+        require = 1)
     private static boolean betterfoliage$tfcOverrideBaseRenderer(boolean isConnected,
         @Local(argsOnly = true, name = "block") Block block) {
         return isConnected && !TFCIntegration.grass.matchesNoMeta(block);

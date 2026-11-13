@@ -15,7 +15,7 @@ import mods.betterfoliage.client.Hooks;
 @Mixin(LightDataCache.class)
 public abstract class MixinLightDataCache {
 
-    @ModifyVariable(method = "compute", name = "op", at = @At("STORE"), remap = false)
+    @ModifyVariable(method = "compute", name = "op", at = @At("STORE"), remap = false, require = 1)
     private boolean betterfoliage$overrideIsOpaqueCube(boolean isOpaque, @Local(argsOnly = true, name = "x") int x,
         @Local(argsOnly = true, name = "y") int y, @Local(argsOnly = true, name = "z") int z,
         @Local(name = "world") IBlockAccess world) {

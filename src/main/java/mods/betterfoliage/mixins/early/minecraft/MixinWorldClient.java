@@ -19,7 +19,8 @@ public abstract class MixinWorldClient {
         method = "doVoidFogParticles",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/multiplayer/WorldClient;getBlock(III)Lnet/minecraft/block/Block;"))
+            target = "Lnet/minecraft/client/multiplayer/WorldClient;getBlock(III)Lnet/minecraft/block/Block;"),
+        require = 1)
     private Block betterfoliage$onRandomDisplayTick(Block original, @Local(name = "i1") int x,
         @Local(name = "j1") int y, @Local(name = "k1") int z) {
         Hooks.onRandomDisplayTick(original, (WorldClient) (Object) this, x, y, z);

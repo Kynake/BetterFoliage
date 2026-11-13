@@ -18,7 +18,7 @@ import mods.betterfoliage.client.render.features.LogRenderer;
 @Mixin(LogRenderer.class)
 public abstract class MixinLogRenderer {
 
-    @WrapMethod(method = "determineLogAxis", remap = false)
+    @WrapMethod(method = "determineLogAxis", remap = false, require = 1)
     private static ForgeDirection betterfoliage$ic2OverrideLogAxis(IBlockAccess world, int x, int y, int z,
         Operation<ForgeDirection> original) {
         if (IC2Integration.rubberWoodFilter.matches(world, x, y, z)) {
@@ -28,7 +28,7 @@ public abstract class MixinLogRenderer {
         return original.call(world, x, y, z);
     }
 
-    @WrapMethod(method = "getConnectorSprite", remap = false)
+    @WrapMethod(method = "getConnectorSprite", remap = false, require = 1)
     private static IIcon betterfoliage$ic2OverrideConnectorSprite(RenderBlocks renderer, IBlockAccess world,
         Block block, int x, int y, int z, ForgeDirection side, Operation<IIcon> original) {
         return IC2Integration.rubberWoodFilter.matchesNoMeta(block)

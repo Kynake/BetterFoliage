@@ -54,7 +54,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleBottomMinX(double minX) {
         return betterfoliage$customBottom ? minX - betterfoliage$perSideScale : minX;
     }
@@ -65,7 +66,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleBottomMaxX(double maxX) {
         return betterfoliage$customBottom ? maxX + betterfoliage$perSideScale : maxX;
     }
@@ -76,7 +78,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleBottomMinZ(double minZ) {
         return betterfoliage$customBottom ? minZ - betterfoliage$perSideScale : minZ;
     }
@@ -87,7 +90,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleBottomMaxZ(double maxZ) {
         return betterfoliage$customBottom ? maxZ + betterfoliage$perSideScale : maxZ;
     }
@@ -98,7 +102,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$bottomYSeparation(double y) {
         return betterfoliage$customBottom ? y - betterfoliage$separation : y;
     }
@@ -110,7 +115,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleTopMinX(double minX) {
         return betterfoliage$customTop ? minX - betterfoliage$perSideScale : minX;
     }
@@ -121,7 +127,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleTopMaxX(double maxX) {
         return betterfoliage$customTop ? maxX + betterfoliage$perSideScale : maxX;
     }
@@ -132,7 +139,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleTopMinZ(double minZ) {
         return betterfoliage$customTop ? minZ - betterfoliage$perSideScale : minZ;
     }
@@ -143,7 +151,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleTopMaxZ(double maxZ) {
         return betterfoliage$customTop ? maxZ + betterfoliage$perSideScale : maxZ;
     }
@@ -154,7 +163,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$topYSeparation(double y) {
         return betterfoliage$customTop ? y + betterfoliage$separation : y;
     }
@@ -166,7 +176,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleNorthMinX(double minX) {
         return betterfoliage$customSides ? minX - betterfoliage$perSideScale : minX;
     }
@@ -177,7 +188,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleNorthMaxX(double maxX) {
         return betterfoliage$customSides ? maxX + betterfoliage$perSideScale : maxX;
     }
@@ -188,7 +200,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleNorthMinY(double minY) {
         return betterfoliage$customSides ? minY - betterfoliage$perSideScale : minY;
     }
@@ -199,7 +212,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleNorthMaxY(double maxY) {
         return betterfoliage$customSides ? maxY + betterfoliage$perSideScale : maxY;
     }
@@ -210,7 +224,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$northZSeparation(double z) {
         return betterfoliage$customSides ? z - betterfoliage$separation : z;
     }
@@ -222,7 +237,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleSouthMinX(double minX) {
         return betterfoliage$customSides ? minX - betterfoliage$perSideScale : minX;
     }
@@ -233,7 +249,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleSouthMaxX(double maxX) {
         return betterfoliage$customSides ? maxX + betterfoliage$perSideScale : maxX;
     }
@@ -244,7 +261,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleSouthMinY(double minY) {
         return betterfoliage$customSides ? minY - betterfoliage$perSideScale : minY;
     }
@@ -255,7 +273,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleSouthMaxY(double maxY) {
         return betterfoliage$customSides ? maxY + betterfoliage$perSideScale : maxY;
     }
@@ -266,7 +285,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$southZSeparation(double z) {
         return betterfoliage$customSides ? z + betterfoliage$separation : z;
     }
@@ -278,7 +298,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleWestMinY(double minY) {
         return betterfoliage$customSides ? minY - betterfoliage$perSideScale : minY;
     }
@@ -289,7 +310,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleWestMaxY(double maxY) {
         return betterfoliage$customSides ? maxY + betterfoliage$perSideScale : maxY;
     }
@@ -300,7 +322,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleWestMinZ(double minZ) {
         return betterfoliage$customSides ? minZ - betterfoliage$perSideScale : minZ;
     }
@@ -311,7 +334,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleWestMaxZ(double maxZ) {
         return betterfoliage$customSides ? maxZ + betterfoliage$perSideScale : maxZ;
     }
@@ -322,7 +346,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$westXSeparation(double x) {
         return betterfoliage$customSides ? x - betterfoliage$separation : x;
     }
@@ -334,7 +359,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleEastMinY(double minY) {
         return betterfoliage$customSides ? minY - betterfoliage$perSideScale : minY;
     }
@@ -345,7 +371,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleEastMaxY(double maxY) {
         return betterfoliage$customSides ? maxY + betterfoliage$perSideScale : maxY;
     }
@@ -356,7 +383,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleEastMinZ(double minZ) {
         return betterfoliage$customSides ? minZ - betterfoliage$perSideScale : minZ;
     }
@@ -367,7 +395,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$scaleEastMaxZ(double maxZ) {
         return betterfoliage$customSides ? maxZ + betterfoliage$perSideScale : maxZ;
     }
@@ -378,7 +407,8 @@ public abstract class MixinRenderBlocks_CustomSidePositions implements ICustomSi
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-            opcode = Opcodes.GETFIELD))
+            opcode = Opcodes.GETFIELD),
+        require = 1)
     private double betterfoliage$eastXSeparation(double x) {
         return betterfoliage$customSides ? x + betterfoliage$separation : x;
     }

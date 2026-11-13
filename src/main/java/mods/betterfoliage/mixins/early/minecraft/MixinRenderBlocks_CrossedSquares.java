@@ -125,7 +125,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         method = "drawCrossedSquares",
         ordinal = 0,
         argsOnly = true,
-        at = @At(shift = At.Shift.AFTER, value = "MIXINEXTRAS:EXPRESSION"))
+        at = @At(shift = At.Shift.AFTER, value = "MIXINEXTRAS:EXPRESSION"),
+        require = 1)
     private float betterfoliage$overrideVerticalScale(float original) {
         return betterfoliage$isUsingCustomVerticalScale ? betterfoliage$crossedSquaresVerticalScale : original;
     }
@@ -138,7 +139,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
             value = "INVOKE",
             ordinal = 7,
             shift = At.Shift.AFTER,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private double betterfoliage$secondSpriteMinU(double minU) {
         return betterfoliage$crossedSquareSecondSprite != null ? betterfoliage$crossedSquareSecondSprite.getMinU()
             : minU;
@@ -151,7 +153,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
             value = "INVOKE",
             ordinal = 7,
             shift = At.Shift.AFTER,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private double betterfoliage$secondSpriteMinV(double minV) {
         return betterfoliage$crossedSquareSecondSprite != null ? betterfoliage$crossedSquareSecondSprite.getMinV()
             : minV;
@@ -164,7 +167,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
             value = "INVOKE",
             ordinal = 7,
             shift = At.Shift.AFTER,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private double betterfoliage$secondSpriteMaxU(double maxU) {
         return betterfoliage$crossedSquareSecondSprite != null ? betterfoliage$crossedSquareSecondSprite.getMaxU()
             : maxU;
@@ -177,7 +181,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
             value = "INVOKE",
             ordinal = 7,
             shift = At.Shift.AFTER,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private double betterfoliage$secondSpriteMaxV(double maxV) {
         return betterfoliage$crossedSquareSecondSprite != null ? betterfoliage$crossedSquareSecondSprite.getMaxV()
             : maxV;
@@ -190,7 +195,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 0,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert0(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
@@ -210,7 +216,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 1,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert1(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
@@ -230,7 +237,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 2,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert2(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
@@ -250,7 +258,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 3,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert3(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
@@ -272,7 +281,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 4,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert4(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
@@ -292,7 +302,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 5,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert5(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
@@ -312,7 +323,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 6,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert6(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
@@ -332,7 +344,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 7,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert7(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
@@ -354,7 +367,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 8,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert8(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
@@ -374,7 +388,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 9,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert9(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
@@ -394,7 +409,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 10,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert10(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
@@ -414,7 +430,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 11,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert11(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
@@ -436,7 +453,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 12,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert12(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
@@ -456,7 +474,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 13,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert13(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
@@ -476,7 +495,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 14,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert14(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);
@@ -496,7 +516,8 @@ public abstract class MixinRenderBlocks_CrossedSquares implements ICrossedSquare
         at = @At(
             value = "INVOKE",
             ordinal = 15,
-            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+            target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"),
+        require = 1)
     private void betterfoliage$wrapVert15(Tessellator instance, double x, double y, double z, double u, double v,
         Operation<Void> original) {
         betterfoliage$applyRotation(x, y, z);

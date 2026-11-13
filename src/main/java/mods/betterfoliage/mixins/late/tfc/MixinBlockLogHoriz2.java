@@ -18,7 +18,7 @@ import mods.betterfoliage.config.Configs;
 @Mixin(BlockLogHoriz2.class)
 public abstract class MixinBlockLogHoriz2 extends MixinBlockLogHoriz {
 
-    @WrapMethod(method = "getIcon")
+    @WrapMethod(method = "getIcon", require = 1)
     private IIcon betterfoliage$unrotateHorizontalLogSprites(int side, int meta, Operation<IIcon> original) {
         if (!Configs.RoundLogs.enabled) {
             return original.call(side, meta);

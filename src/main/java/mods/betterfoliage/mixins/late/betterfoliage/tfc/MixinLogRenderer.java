@@ -16,7 +16,7 @@ import mods.betterfoliage.client.render.features.LogRenderer;
 @Mixin(LogRenderer.class)
 public abstract class MixinLogRenderer {
 
-    @WrapMethod(method = "determineLogAxis", remap = false)
+    @WrapMethod(method = "determineLogAxis", remap = false, require = 1)
     private static ForgeDirection betterfoliage$tfcOverrideLogAxis(IBlockAccess world, int x, int y, int z,
         Operation<ForgeDirection> original) {
         final Block log = world.getBlock(x, y, z);

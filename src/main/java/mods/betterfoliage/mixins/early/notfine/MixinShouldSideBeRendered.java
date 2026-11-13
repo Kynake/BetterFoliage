@@ -36,7 +36,11 @@ public abstract class MixinShouldSideBeRendered {
     // for specific blocks. This inhibits the default mixin that fixes
     // rendering for blocks next to rounded logs, resulting in holes in the world.
     @Dynamic("Added dynamically by NotFine / Angelica via Mixin")
-    @ModifyReturnValue(method = { "shouldSideBeRendered", "func_149646_a" }, at = @At("RETURN"), remap = false)
+    @ModifyReturnValue(
+        method = { "shouldSideBeRendered", "func_149646_a" },
+        at = @At("RETURN"),
+        remap = false,
+        require = 1)
     private boolean betterfoliage$shouldSideBeRenderedNotFineOverride(boolean original, IBlockAccess world, int x,
         int y, int z, int side) {
         return Hooks.overrideIsPartialBlock(world, x, y, z, original);

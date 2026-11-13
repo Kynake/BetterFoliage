@@ -15,7 +15,7 @@ import mods.betterfoliage.client.integration.GT6Integration;
 @Mixin(MultiTileEntityBlock.class)
 public abstract class MixinMultiTileEntityBlock {
 
-    @WrapMethod(method = "getIcon(Lnet/minecraft/world/IBlockAccess;IIII)Lnet/minecraft/util/IIcon;")
+    @WrapMethod(method = "getIcon(Lnet/minecraft/world/IBlockAccess;IIII)Lnet/minecraft/util/IIcon;", require = 1)
     private IIcon betterfoliage$overrideGetIconWithWorld(IBlockAccess world, int x, int y, int z, int side,
         Operation<IIcon> original) {
         if (!GT6Integration.treeHole.matches(world, x, y, z)) {
