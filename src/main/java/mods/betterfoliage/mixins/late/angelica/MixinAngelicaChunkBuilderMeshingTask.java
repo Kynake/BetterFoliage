@@ -16,9 +16,10 @@ import mods.betterfoliage.client.Hooks;
 public class MixinAngelicaChunkBuilderMeshingTask {
 
     @ModifyExpressionValue(
-        remap = false,
         method = "execute(Lorg/embeddedt/embeddium/impl/render/chunk/compile/ChunkBuildContext;Lorg/embeddedt/embeddium/impl/util/task/CancellationToken;)Lorg/embeddedt/embeddium/impl/render/chunk/compile/ChunkBuildOutput;",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;isOpaqueCube()Z"))
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;isOpaqueCube()Z", remap = true),
+        remap = false,
+        require = 1)
     private boolean betterfoliage$overrideIsOpaqueCube(boolean original, @Local(name = "mcWorld") World world,
         @Local(name = "x") int x, @Local(name = "y") int y, @Local(name = "z") int z) {
         return Hooks.overrideIsOpaqueCube(world, x, y, z, original);

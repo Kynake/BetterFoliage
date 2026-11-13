@@ -15,8 +15,9 @@ public abstract class MixinWorldSlice {
 
     @ModifyExpressionValue(
         method = "getSkyBlockTypeBrightness",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getUseNeighborBrightness()Z", remap = true),
         remap = false,
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getUseNeighborBrightness()Z"))
+        require = 1)
     private boolean betterfoliage$overrideUseNeighborBrightness(boolean original,
         @Local(argsOnly = true, name = "x") int x, @Local(argsOnly = true, name = "y") int y,
         @Local(argsOnly = true, name = "z") int z) {
