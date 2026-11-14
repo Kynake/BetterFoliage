@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.Tags;
@@ -144,7 +143,7 @@ public class GrassRenderer extends BlockRenderer {
         if (hasSnowAbove) {
             tessellator.setColorOpaque(0xFF, 0xFF, 0xFF);
         } else {
-            setGrassColor(world, tessellator, block, x, y, z);
+            setGrassColor(x, y, z, world, tessellator, block);
         }
 
         float hOffset = Configs.ShortGrass.hOffset;
@@ -175,7 +174,7 @@ public class GrassRenderer extends BlockRenderer {
         RenderBlocks renderer, boolean isConnected, boolean hasSnowAbove, Block blockAbove) {
         if (isConnected) {
             if (hasSnowAbove & Configs.ConnectedGrass.snowEnabled) {
-                IIcon snowTop = blockAbove.getIcon(world, x, y + 1, z, ForgeDirection.UP.ordinal());
+                IIcon snowTop = blockAbove.getIcon(world, x, y + 1, z, 1);
                 renderer.setOverrideBlockTexture(snowTop);
                 boolean res = renderer.renderStandardBlock(block, x, y, z);
                 renderer.clearOverrideBlockTexture();
@@ -184,7 +183,7 @@ public class GrassRenderer extends BlockRenderer {
 
             IGrassBlockRenderer grassRenderer = (IGrassBlockRenderer) renderer;
 
-            IIcon grassTop = block.getIcon(world, x, y, z, ForgeDirection.UP.ordinal());
+            IIcon grassTop = block.getIcon(world, x, y, z, 1);
             renderer.setOverrideBlockTexture(grassTop);
             grassRenderer.betterfoliage$setGrassRender(true);
 
@@ -199,7 +198,7 @@ public class GrassRenderer extends BlockRenderer {
         return RenderUtils.renderBaseBlock(x, y, z, block, renderer);
     }
 
-    private void setGrassColor(IBlockAccess world, Tessellator tessellator, Block grassBlock, int x, int y, int z) {
+    private void setGrassColor(int x, int y, int z, IBlockAccess world, Tessellator tessellator, Block grassBlock) {
         final IIcon grassTopTexture = grassBlock.getIcon(world, x, y, z, 1);
 
         final int blockMultiplier = BlockUtils.getStandardColorMultiplier(world, grassBlock, x, y, z);

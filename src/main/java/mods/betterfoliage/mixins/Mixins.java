@@ -36,6 +36,13 @@ public enum Mixins implements IMixins {
             "angelica.MixinAngelicaChunkBuilderMeshingTask")
         .addRequiredMod(Mod.ANGELICA)
         .setPhase(Phase.LATE)),
+    GT5U(new MixinBuilder()
+        .addClientMixins(
+            "betterfoliage.gt5u.MixinAlgaeRenderer",
+            "betterfoliage.gt5u.MixinBlockUtils",
+            "betterfoliage.gt5u.MixinLilypadRenderer")
+        .addRequiredMod(Mod.GT5U)
+        .setPhase(Phase.LATE)),
     GT6(new MixinBuilder()
         .addClientMixins(
             "gt6.accessors.MixinBlockTextureCopied",
