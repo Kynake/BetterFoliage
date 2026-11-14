@@ -68,7 +68,7 @@ public class GrassRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        return (Configs.ConnectedGrass.enabled | Configs.ShortGrass.grassEnabled)
+        return (RenderBlocks.fancyGrass && (Configs.ConnectedGrass.enabled | Configs.ShortGrass.grassEnabled))
             && Configs.Blocks.grass.matches(world, x, y, z);
     }
 

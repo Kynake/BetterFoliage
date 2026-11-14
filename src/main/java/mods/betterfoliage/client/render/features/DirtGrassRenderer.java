@@ -26,7 +26,7 @@ public class DirtGrassRenderer extends BlockRenderer {
 
     @Override
     public boolean isEligible(IBlockAccess world, int x, int y, int z) {
-        if (!Configs.ConnectedGrass.enabled) {
+        if (!(RenderBlocks.fancyGrass & Configs.ConnectedGrass.enabled)) {
             return false;
         }
 

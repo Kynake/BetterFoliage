@@ -70,7 +70,7 @@ betterfoliage.blocks.soulsand.tooltip=A list of block filters that determine whi
 
 # Connected Grass
 betterfoliage.connectedGrass=Connected Grass
-betterfoliage.connectedGrass.tooltip=Use grass top texture on all sides of the Grass block if a dirt block is beneath it?
+betterfoliage.connectedGrass.tooltip=Use grass top texture on all sides of the Grass block if a dirt block is beneath it?\nRequires grass to be set to "Fancy" to work.
 betterfoliage.connectedGrass.snowEnabled=Connected Snow
 betterfoliage.connectedGrass.snowEnabled.tooltip=If a connected grass block is covered by snow, use the snow's texture for the grass sides instead of the grass texture.
 

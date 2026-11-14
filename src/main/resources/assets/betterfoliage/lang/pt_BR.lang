@@ -70,7 +70,7 @@ betterfoliage.blocks.soulsand.tooltip=Uma lista de filtros que determinam quais 
 
 # Connected Grass
 betterfoliage.connectedGrass=Grama Conectada
-betterfoliage.connectedGrass.tooltip=Usar a textura do topo do bloco de grama em todos os lados caso esse tenha um bloco de terra embaixo?
+betterfoliage.connectedGrass.tooltip=Usar a textura do topo do bloco de grama em todos os lados caso esse tenha um bloco de terra embaixo?\nNecessita que a grama esteja no modo "Bonito".
 betterfoliage.connectedGrass.snowEnabled=Neve Conectada
 betterfoliage.connectedGrass.snowEnabled.tooltip=Permite com que blocos de grama cobertos por neve utilizem a textura da neve em suas laterais.
 
