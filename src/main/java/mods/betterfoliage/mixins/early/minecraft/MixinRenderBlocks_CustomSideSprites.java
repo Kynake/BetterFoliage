@@ -75,6 +75,7 @@ public abstract class MixinRenderBlocks_CustomSideSprites implements ICustomSide
         method = { "renderStandardBlockWithAmbientOcclusion", "renderStandardBlockWithColorMultiplier" },
         at = @At(
             value = "INVOKE",
+            ordinal = 0,
             target = "Lnet/minecraft/client/renderer/RenderBlocks;renderFaceZNeg(Lnet/minecraft/block/Block;DDDLnet/minecraft/util/IIcon;)V"),
         require = 2)
     private void betterfoliage$OverrideSpriteNorth(RenderBlocks instance, Block block, double xPos, double yPos,
@@ -94,6 +95,7 @@ public abstract class MixinRenderBlocks_CustomSideSprites implements ICustomSide
         method = { "renderStandardBlockWithAmbientOcclusion", "renderStandardBlockWithColorMultiplier" },
         at = @At(
             value = "INVOKE",
+            ordinal = 0,
             target = "Lnet/minecraft/client/renderer/RenderBlocks;renderFaceZPos(Lnet/minecraft/block/Block;DDDLnet/minecraft/util/IIcon;)V"),
         require = 2)
     private void betterfoliage$OverrideSpriteSouth(RenderBlocks instance, Block block, double xPos, double yPos,
@@ -113,6 +115,7 @@ public abstract class MixinRenderBlocks_CustomSideSprites implements ICustomSide
         method = { "renderStandardBlockWithAmbientOcclusion", "renderStandardBlockWithColorMultiplier" },
         at = @At(
             value = "INVOKE",
+            ordinal = 0,
             target = "Lnet/minecraft/client/renderer/RenderBlocks;renderFaceXNeg(Lnet/minecraft/block/Block;DDDLnet/minecraft/util/IIcon;)V"),
         require = 2)
     private void betterfoliage$OverrideSpriteWest(RenderBlocks instance, Block block, double xPos, double yPos,
@@ -132,6 +135,7 @@ public abstract class MixinRenderBlocks_CustomSideSprites implements ICustomSide
         method = { "renderStandardBlockWithAmbientOcclusion", "renderStandardBlockWithColorMultiplier" },
         at = @At(
             value = "INVOKE",
+            ordinal = 0,
             target = "Lnet/minecraft/client/renderer/RenderBlocks;renderFaceXPos(Lnet/minecraft/block/Block;DDDLnet/minecraft/util/IIcon;)V"),
         require = 2)
     private void betterfoliage$OverrideSpriteEast(RenderBlocks instance, Block block, double xPos, double yPos,
