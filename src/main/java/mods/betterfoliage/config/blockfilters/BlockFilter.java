@@ -11,6 +11,7 @@ import net.minecraft.world.IBlockAccess;
 import org.apache.commons.lang3.StringUtils;
 
 import cpw.mods.fml.common.Loader;
+import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.client.resource.ResourceUtils;
 
 public abstract class BlockFilter {
@@ -104,6 +105,8 @@ public abstract class BlockFilter {
             if (filter.startsWith("-")) {
                 isBlocking = true;
                 if (filter.length() == 1) {
+                    BetterFoliageMod.log
+                        .error("Unable to parse Block Filter entry. Only contains a '-' character", filter);
                     return null;
                 }
 
@@ -116,13 +119,15 @@ public abstract class BlockFilter {
                     final Class<?> biomeClass = Class.forName(filter);
                     return new BlockFilterRule(isBlocking, biomeClass);
                 } catch (Throwable ignored) {
-                    // Class not found, rule won't ever be valid
+                    BetterFoliageMod.log
+                        .info("Skipping block filter, class not found (probably a missing mod): {}", filter);
                     return null;
                 }
             }
 
             // Block filter
             if (!filter.endsWith(">")) {
+                BetterFoliageMod.log.error("Unable to parse Block Filter entry, must end with '>': <{}", filter);
                 return null;
             }
 
@@ -134,6 +139,7 @@ public abstract class BlockFilter {
             // <mod:block> - Applies for all block metas
             // <block:metadata> - Assumes "mod" is "minecraft"
             if (parts.length < 2 || parts.length > 3 || parts[0].isEmpty() || parts[1].isEmpty()) {
+                BetterFoliageMod.log.error("Unable to parse Block Filter entry: <{}>", filter);
                 return null;
             }
 
@@ -145,13 +151,14 @@ public abstract class BlockFilter {
                 mod = parts[0];
                 blockName = parts[1];
                 try {
-                    metadata = Integer.parseInt(parts[2]);
+                    metadata = Math.max(Integer.parseInt(parts[2]), 0);
                 } catch (NumberFormatException ignored) {
+                    BetterFoliageMod.log.error("Unable to parse metadata from Block Filter entry: <{}>", filter);
                     return null;
                 }
             } else {
                 try {
-                    metadata = Integer.parseInt(parts[1]);
+                    metadata = Math.max(Integer.parseInt(parts[1]), 0);
                     // Is <block:metadata> format
                     mod = "minecraft";
                     blockName = parts[0];
@@ -165,6 +172,7 @@ public abstract class BlockFilter {
 
             // Mod not present
             if (!(mod.equals("minecraft") || Loader.isModLoaded(mod))) {
+                BetterFoliageMod.log.info("Skipping block filter, mod {} not found: <{}>", mod, filter);
                 return null;
             }
 
@@ -172,6 +180,11 @@ public abstract class BlockFilter {
 
             // Mod is present, but object not found
             if (block == Blocks.air) {
+                BetterFoliageMod.log.error(
+                    "Unable to generate Block Filter for mod {}, could not find the block {}: <{}>",
+                    mod,
+                    blockName,
+                    filter);
                 return null;
             }
 
