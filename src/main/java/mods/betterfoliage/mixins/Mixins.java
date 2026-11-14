@@ -40,6 +40,7 @@ public enum Mixins implements IMixins {
         .addClientMixins(
             "betterfoliage.gt5u.MixinAlgaeRenderer",
             "betterfoliage.gt5u.MixinBlockUtils",
+            "betterfoliage.gt5u.MixinLeafParticleRenderer",
             "betterfoliage.gt5u.MixinLilypadRenderer")
         .addRequiredMod(Mod.GT5U)
         .setPhase(Phase.LATE)),
