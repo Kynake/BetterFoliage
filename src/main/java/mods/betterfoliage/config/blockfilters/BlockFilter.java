@@ -206,27 +206,15 @@ public abstract class BlockFilter {
         }
 
         public boolean matchesBlock(final Block block, final int metadata) {
-            if (blockClass != null) {
-                return blockClass.isAssignableFrom(block.getClass());
-            }
-
-            return this.block == block && (blockMetadata == -1 || blockMetadata == metadata);
-        }
-
-        public boolean matchesGeneral(final Block block) {
-            if (!isGeneralRule()) {
+            if (blockMetadata != -1 && blockMetadata != metadata) {
                 return false;
             }
 
-            if (blockClass != null) {
-                return blockClass.isAssignableFrom(block.getClass());
-            }
-
-            return this.block == block;
+            return matchesBlockAnyMeta(block);
         }
 
-        public boolean isGeneralRule() {
-            return blockMetadata == -1;
+        public boolean matchesBlockAnyMeta(final Block block) {
+            return blockClass != null ? blockClass.isAssignableFrom(block.getClass()) : this.block == block;
         }
     }
 }

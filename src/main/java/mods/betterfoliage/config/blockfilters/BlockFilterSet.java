@@ -61,9 +61,8 @@ public class BlockFilterSet extends BlockFilter {
     @Override
     public boolean matchesNoMeta(final Block block) {
         for (BlockFilterRule rule : rules) {
-            if (rule.matchesGeneral(block)) {
+            if (rule.matchesBlockAnyMeta(block)) {
                 return !rule.isBlockingRule;
-
             }
         }
 
