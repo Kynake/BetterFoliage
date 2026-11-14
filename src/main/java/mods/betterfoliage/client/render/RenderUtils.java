@@ -25,6 +25,8 @@ import mods.betterfoliage.utils.MathUtils;
 
 public class RenderUtils {
 
+    public static final int ALPHA_MASK = 0xFF_00_00_00;
+
     /// The default color multiplier for blocks that don't use custom coloring, like standard grass.
     /// If a block's value for this is different from the default, then we should _not_ use customColor.
     public static final int DEFAULT_COLOR_MULTIPLIER = 0xFF_FF_FF;
@@ -80,7 +82,7 @@ public class RenderUtils {
         final int g = (int) (ratio * (colorA >> 8 & 0xFF) + invRatio * (colorB >> 8 & 0xFF));
         final int b = (int) (ratio * (colorA & 0xFF) + invRatio * (colorB & 0xFF));
 
-        return (colorA & 0xFF_00_00_00) | (r << 16) | (g << 8) | b;
+        return (colorA & ALPHA_MASK) | (r << 16) | (g << 8) | b;
     }
 
     /// Calculates the average alpha channel between two colors in ARGB format. RGB channels are copied from first color
@@ -89,7 +91,7 @@ public class RenderUtils {
         final float alphaB = ((colorB >> 24) & 0xFF) / (float) 0xFF;
         final int alpha = (int) (alphaA * alphaB * 0xFF);
 
-        return (alpha << 24) | (colorA & 0x00_FF_FF_FF);
+        return (alpha << 24) | (colorA & DEFAULT_COLOR_MULTIPLIER);
     }
 
     /// Average visible colors in a Sprite using their squares
@@ -116,7 +118,7 @@ public class RenderUtils {
                 final int pixel = spriteImage.getRGB(x, y);
 
                 // Only fully opaque pixels are considered
-                if ((pixel & 0xFF_00_00_00) != 0xFF_00_00_00) continue;
+                if ((pixel & ALPHA_MASK) != ALPHA_MASK) continue;
 
                 opaquePixelsCount++;
 
@@ -130,7 +132,7 @@ public class RenderUtils {
             }
         }
 
-        int color = 0xFF_00_00_00;
+        int color = ALPHA_MASK;
         color |= (int) (Math.sqrt(rSqr / opaquePixelsCount) * 255.0) << 16;
         color |= (int) (Math.sqrt(gSqr / opaquePixelsCount) * 255.0) << 8;
         color |= (int) (Math.sqrt(bSqr / opaquePixelsCount) * 255.0);

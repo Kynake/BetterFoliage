@@ -1,11 +1,11 @@
 package mods.betterfoliage.client.integration;
 
 import net.minecraft.block.Block;
-import net.minecraft.world.IBlockAccess;
 
 import gregtech.common.pollution.ColorOverrideType;
 import gregtech.common.pollution.Pollution;
 import gregtech.common.pollution.PollutionConfig;
+import mods.betterfoliage.client.render.RenderUtils;
 
 public final class GT5UIntegration {
 
@@ -18,10 +18,15 @@ public final class GT5UIntegration {
         return colorOverride.getColor(baseColor, x, z);
     }
 
-    public static boolean isStandardBlockClean(IBlockAccess world, int x, int y, int z) {
-        Block block = world.getBlock(x, y, z);
-        int baseColor = block.colorMultiplier(world, x, y, z);
-        return baseColor == applyPollutionTintStandard(baseColor, block, x, z);
+    public static int getPollutedTintColorMask(int baseColor, Block block, int x, int z) {
+        int pollutedColor = applyPollutionTintStandard(baseColor, block, x, z);
+        if (pollutedColor == baseColor) {
+            // Not polluted, set alpha to 0xFF
+            return baseColor | RenderUtils.ALPHA_MASK;
+        }
+
+        // Polluted
+        return pollutedColor;
     }
 
     public static int applyPollutionTintFlower(int baseColor, int x, int z) {

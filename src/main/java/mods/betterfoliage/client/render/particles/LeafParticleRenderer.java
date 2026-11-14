@@ -51,8 +51,9 @@ public class LeafParticleRenderer extends ParticleRenderer {
         rotationPerTick = Configs.FallingLeaves.rotationSpeed * ROTATION_MULTIPLIER;
         changeRandomRotation();
 
+        particleAlpha = 1f;
+
         setParticleColor(leafInfo.averageColor, BlockUtils.getStandardColorMultiplier(world, x, y, z));
-        particleAlpha = 1.0f;
     }
 
     protected void setParticleColor(int spriteAverageColor, int blockColor) {
