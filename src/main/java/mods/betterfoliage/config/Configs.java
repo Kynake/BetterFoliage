@@ -111,7 +111,7 @@ public final class Configs {
             enabled = connectedGrass.addProp("enabled", true);
             connectedGrass.setRecentDescription("betterfoliage.enabled");
 
-            snowEnabled = connectedGrass.addProp("snowEnabled", true);
+            snowEnabled = connectedGrass.addProp("snowEnabled", false);
 
             connectedGrass.finalizeCategory();
         }

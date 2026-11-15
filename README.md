@@ -55,6 +55,7 @@ The full list is too big to fit in a short sentence, not to mention still improv
 - Tinker's Construct
 - TerraFirmaCraft
 - GregTech 6
+- Biomes O' Plenty
 - Witchery
 - The Twilight Forest
 - The Lord of the Rings Mod
