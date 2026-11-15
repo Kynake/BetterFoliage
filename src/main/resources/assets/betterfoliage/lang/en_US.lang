@@ -50,13 +50,13 @@ betterfoliage.blocks.tooltip=Configure lists of filters that determine which blo
 betterfoliage.blocks.dirt=Filters: Dirt
 betterfoliage.blocks.dirt.tooltip=A list of block filters that determine which blocks are recognized as Dirt.\nAffects Reeds, Algae and Connected Grass.
 betterfoliage.blocks.grass=Filters: Grass
-betterfoliage.blocks.grass.tooltip=A list of block filters that determine which blocks are recognized as Grass.\nAffects Short Grass and Connected Grass.
+betterfoliage.blocks.grass.tooltip=A list of block filters that determine which blocks are recognized as Grass.\nAffects Short Grass and Connected Grass.\n§6Adding to or reordering this list while in-game will trigger a resource pack reload.
 betterfoliage.blocks.obstructShortGrass=Filters: Obstructs Short Grass
 betterfoliage.blocks.obstructShortGrass.tooltip=A list of block filters that determine which blocks will prevent Short Grass from rendering if placed on top of a grass block.\nNote that a non-transparent full block will ALWAYS block rendering, even if it's not listed. 
 betterfoliage.blocks.extraLeaves=Filters: Extra Leaves
-betterfoliage.blocks.extraLeaves.tooltip=A list of Block filters that determine which blocks can render Extra Leaves.\nThis list is separate from the list of blocks that can render Falling Leaf particles.
+betterfoliage.blocks.extraLeaves.tooltip=A list of Block filters that determine which blocks can render Extra Leaves.\nThis list is separate from the list of blocks that can render Falling Leaf particles.\n§6Adding to or reordering this list while in-game will trigger a resource pack reload.
 betterfoliage.blocks.fallingLeaves=Filters: Falling Leaves
-betterfoliage.blocks.fallingLeaves.tooltip=A list of Block filters that determine which blocks can render Falling Leaf particles.\nThis is separate from the blocks that can render Extra Leaves.
+betterfoliage.blocks.fallingLeaves.tooltip=A list of Block filters that determine which blocks can render Falling Leaf particles.\nThis is separate from the blocks that can render Extra Leaves.\n§6Adding to or reordering this list while in-game will trigger a resource pack reload.
 betterfoliage.blocks.logs=Filters: Logs
 betterfoliage.blocks.logs.tooltip=A list of block filters that determine which blocks are recognized as Logs.\nAffects Round Logs.
 betterfoliage.blocks.sand=Filters: Sand
@@ -70,7 +70,7 @@ betterfoliage.blocks.soulsand.tooltip=A list of block filters that determine whi
 
 # Connected Grass
 betterfoliage.connectedGrass=Connected Grass
-betterfoliage.connectedGrass.tooltip=Use grass top texture on all sides of the Grass block if a dirt block is beneath it?\nRequires grass to be set to "Fancy" to work.
+betterfoliage.connectedGrass.tooltip=Use grass top texture on all sides of the Grass block if a dirt block is beneath it?\n§6Requires grass to be set to "Fancy" to work.
 betterfoliage.connectedGrass.snowEnabled=Connected Snow
 betterfoliage.connectedGrass.snowEnabled.tooltip=If a connected grass block is covered by snow, use the snow's texture for the grass sides instead of the grass texture.
 

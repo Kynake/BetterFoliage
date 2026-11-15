@@ -16,7 +16,8 @@ import mods.betterfoliage.client.resource.ResourceUtils;
 
 public abstract class BlockFilter {
 
-    public static BlockFilterSet parseBlockFilterSet(final String[] userConfigs, final ResourceLocation location) {
+    public static BlockFilterSet parseBlockFilterSet(final String[] userConfigs, final ResourceLocation location,
+        final BlockFilterSet previous) {
         List<BlockFilterRule> rules = new ArrayList<>();
 
         // Get filters from player's config file (highest priority)
@@ -61,7 +62,7 @@ public abstract class BlockFilter {
             }
         }
 
-        return new BlockFilterSet(rules);
+        return new BlockFilterSet(rules, previous);
     }
 
     public static BlockFilter createClassOnlyFilter(Class<?>... filterClasses) {
@@ -215,6 +216,13 @@ public abstract class BlockFilter {
 
         public boolean matchesBlockAnyMeta(final Block block) {
             return blockClass != null ? blockClass.isAssignableFrom(block.getClass()) : this.block == block;
+        }
+
+        public boolean equalsRule(BlockFilterRule other) {
+            return isBlockingRule == other.isBlockingRule &&
+                blockMetadata == other.blockMetadata &&
+                block == other.block &&
+                blockClass == other.blockClass;
         }
     }
 }

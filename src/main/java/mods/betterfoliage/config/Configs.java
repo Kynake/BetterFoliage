@@ -2,6 +2,8 @@ package mods.betterfoliage.config;
 
 import java.io.File;
 
+import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.config.blockfilters.BlockFilterSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -23,16 +25,16 @@ public final class Configs {
 
     public static class Blocks {
 
-        public static BlockFilter dirt;
-        public static BlockFilter grass;
-        public static BlockFilter obstructShortGrass;
-        public static BlockFilter extraLeaves;
-        public static BlockFilter fallingLeaves;
-        public static BlockFilter logs;
-        public static BlockFilter sand;
-        public static BlockFilter lilypad;
-        public static BlockFilter cactus;
-        public static BlockFilter soulsand;
+        public static BlockFilterSet dirt;
+        public static BlockFilterSet grass;
+        public static BlockFilterSet obstructShortGrass;
+        public static BlockFilterSet extraLeaves;
+        public static BlockFilterSet fallingLeaves;
+        public static BlockFilterSet logs;
+        public static BlockFilterSet sand;
+        public static BlockFilterSet lilypad;
+        public static BlockFilterSet cactus;
+        public static BlockFilterSet soulsand;
 
         public static void init(final Configuration config) {
             // Build category
@@ -51,40 +53,50 @@ public final class Configs {
 
             // Parse each String[] into a BlockFilter
             dirt = BlockFilter
-                .parseBlockFilterSet(dirtFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksDirt.cfg"));
+                .parseBlockFilterSet(dirtFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksDirt.cfg"), null);
 
-            // TODO: needs texture reload when changed
             grass = BlockFilter
-                .parseBlockFilterSet(grassFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksGrass.cfg"));
+                .parseBlockFilterSet(grassFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksGrass.cfg"), grass);
 
             obstructShortGrass = BlockFilter.parseBlockFilterSet(
                 obstructShortGrassFilters,
-                new ResourceLocation(Tags.MOD_DOMAIN, "blocksObstructShortGrass.cfg"));
+                new ResourceLocation(Tags.MOD_DOMAIN, "blocksObstructShortGrass.cfg"),
+                null);
 
-            // TODO: needs texture reload when changed
             extraLeaves = BlockFilter.parseBlockFilterSet(
                 extraLeavesFilters,
-                new ResourceLocation(Tags.MOD_DOMAIN, "blocksExtraLeaves.cfg"));
+                new ResourceLocation(Tags.MOD_DOMAIN, "blocksExtraLeaves.cfg"),
+                extraLeaves);
 
-            // TODO: MIGHT need texture reload when changed, maybe not
             fallingLeaves = BlockFilter.parseBlockFilterSet(
                 fallingLeavesFilters,
-                new ResourceLocation(Tags.MOD_DOMAIN, "blocksFallingLeaves.cfg"));
+                new ResourceLocation(Tags.MOD_DOMAIN, "blocksFallingLeaves.cfg"),
+                fallingLeaves);
 
             logs = BlockFilter
-                .parseBlockFilterSet(logsFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksLogs.cfg"));
+                .parseBlockFilterSet(logsFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksLogs.cfg"), null);
 
             sand = BlockFilter
-                .parseBlockFilterSet(sandFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksSand.cfg"));
+                .parseBlockFilterSet(sandFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksSand.cfg"), null);
 
-            lilypad = BlockFilter
-                .parseBlockFilterSet(lilypadFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksLilypad.cfg"));
+            lilypad = BlockFilter.parseBlockFilterSet(
+                lilypadFilters,
+                new ResourceLocation(Tags.MOD_DOMAIN, "blocksLilypad.cfg"),
+                lilypad);
 
             cactus = BlockFilter
-                .parseBlockFilterSet(cactusFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksCactus.cfg"));
+                .parseBlockFilterSet(cactusFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksCactus.cfg"), null);
 
-            soulsand = BlockFilter
-                .parseBlockFilterSet(soulsandFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksSoulSand.cfg"));
+            soulsand = BlockFilter.parseBlockFilterSet(
+                soulsandFilters,
+                new ResourceLocation(Tags.MOD_DOMAIN, "blocksSoulSand.cfg"),
+                null);
+        }
+
+        public static boolean requiresResourceReload() {
+            return grass.requiresResourceReload
+                || extraLeaves.requiresResourceReload
+                || fallingLeaves.requiresResourceReload;
         }
     }
 
@@ -524,6 +536,7 @@ public final class Configs {
     public static final String CONFIG_FILE_NAME = Tags.MOD_ID + "_LegacyEdition.cfg";
 
     private static Configs instance = null;
+    private static boolean isReloadingResources = false;
 
     private Configuration attachedConfig = null;
 
@@ -540,8 +553,8 @@ public final class Configs {
 
     @SubscribeEvent
     public void onConfigChange(final ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.modID.equals(Tags.MOD_ID)) {
-            onConfigChange();
+        if (!isReloadingResources && event.modID.equals(Tags.MOD_ID)) {
+            onConfigChange(false);
             Minecraft.getMinecraft().renderGlobal.loadRenderers();
         }
     }
@@ -549,17 +562,12 @@ public final class Configs {
     @SubscribeEvent
     public void onStitchEvent(final TextureStitchEvent.Pre event) {
         // Only reload configs via F3 + T if the player is in-game (aka not the Main Menu)
-        if (Minecraft.getMinecraft().theWorld != null) {
-            onConfigChange();
+        if (!isReloadingResources && Minecraft.getMinecraft().theWorld != null) {
+            onConfigChange(false);
         }
     }
 
-    /// Reinitialize configs after a change or reload while the game is already running
-    private void onConfigChange() {
-        postInit();
-    }
-
-    /// Fist time initializer. Only runs once when opening the game
+    /// Fist time pre-initializer. Only runs once when opening the game
     public static void preInit(final File configDir) {
         final File configFile = new File(configDir, CONFIG_FILE_NAME);
         Configuration configs = new Configuration(configFile, null, true);
@@ -571,8 +579,13 @@ public final class Configs {
         instance.attachedConfig = configs;
     }
 
-    /// Runs on post init startup and whenever configs are reloaded while the game is open
+    /// Fist time pre-initializer. Only runs once when opening the game
     public static void postInit() {
+        onConfigChange(true);
+    }
+
+    /// Runs whenever configs are loaded for the first time or reloaded while the game is open;
+    public static void onConfigChange(boolean isFirstLoad) {
         final Configuration config = instance.attachedConfig;
         if (config == null) {
             return;
@@ -605,6 +618,15 @@ public final class Configs {
 
         if (config.hasChanged()) {
             config.save();
+        }
+
+        if (!isReloadingResources && !isFirstLoad && Blocks.requiresResourceReload()) {
+            isReloadingResources = true;
+            synchronized (Configs.class) {
+                BetterFoliageMod.log.info("At least one modified setting requires a resource pack reload. Performing it now...");
+                Minecraft.getMinecraft().refreshResources();
+                isReloadingResources = false;
+            }
         }
     }
 }

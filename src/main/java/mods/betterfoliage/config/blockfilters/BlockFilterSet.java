@@ -11,11 +11,13 @@ public class BlockFilterSet extends BlockFilter {
     private final Map<Long, Boolean> blockCache;
     private final List<BlockFilterRule> rules;
 
+    public final boolean requiresResourceReload;
     private boolean isAlteringCache = false;
 
-    protected BlockFilterSet(final List<BlockFilterRule> rules) {
+    protected BlockFilterSet(final List<BlockFilterRule> rules, BlockFilterSet previous) {
         this.rules = rules;
         blockCache = new HashMap<>();
+        requiresResourceReload = isDifferentRuleOrderFromPrevious(previous);
     }
 
     @Override
@@ -63,6 +65,35 @@ public class BlockFilterSet extends BlockFilter {
         for (BlockFilterRule rule : rules) {
             if (rule.matchesBlockAnyMeta(block)) {
                 return !rule.isBlockingRule;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isDifferentRuleOrderFromPrevious(BlockFilterSet prev) {
+        if (prev == null) return false;
+        if (prev.rules == null || rules.size() > prev.rules.size()) return true;
+
+        int offset = 0;
+        for (int i = 0; i < rules.size(); i++) {
+
+            BlockFilterRule rule = rules.get(i);
+
+            int prevIndex = i + offset;
+            while (prevIndex < prev.rules.size()) {
+                BlockFilterRule prevRule = prev.rules.get(prevIndex);
+                if (rule.equalsRule(prevRule)) {
+                    break;
+                }
+
+                offset++;
+                prevIndex++;
+            }
+
+            if (prevIndex >= prev.rules.size()) {
+                // Did not match any previous rule
+                return true;
             }
         }
 

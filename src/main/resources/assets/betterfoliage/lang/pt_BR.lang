@@ -50,13 +50,13 @@ betterfoliage.blocks.tooltip=Configure listas de filtros que determinam quais bl
 betterfoliage.blocks.dirt=Filtros: Terra
 betterfoliage.blocks.dirt.tooltip=Uma lista de filtros que determinam quais blocos são considerados Terra.\nAfeta Juncos, Algas e Grama Conectada.
 betterfoliage.blocks.grass=Filtros: Grama
-betterfoliage.blocks.grass.tooltip=Uma lista de filtros que determinam quais blocos são considerados Grama.\Afeta Grama Curta e Grama Conectada.
+betterfoliage.blocks.grass.tooltip=Uma lista de filtros que determinam quais blocos são considerados Grama.\Afeta Grama Curta e Grama Conectada.\n§6Acrescentar elementos à lista ou reordená-los durante o jogo forçará um recarregamento dos pacotes de recurso.
 betterfoliage.blocks.obstructShortGrass=Filtros: Obstrui Grama Curta
 betterfoliage.blocks.obstructShortGrass.tooltip=Uma lista de filtros que determinam quais blocos impedem a aparência de Grama Curta caso estejam acima de um bloco de grama.\nNota: Um bloco inteiro não transparente SEMPRE impedirá que apareça, mesmo se não listado. 
 betterfoliage.blocks.extraLeaves=Filtros: Folhas Extras
-betterfoliage.blocks.extraLeaves.tooltip=Uma lista de filtros que determinam quais blocos podem conter Folhas Extras.\nEssa lista é distinta da lista de blocos que geram partículas de Folhas Cadentes.
+betterfoliage.blocks.extraLeaves.tooltip=Uma lista de filtros que determinam quais blocos podem conter Folhas Extras.\nEssa lista é distinta da lista de blocos que geram partículas de Folhas Cadentes.\n§6Acrescentar elementos à lista ou reordená-los durante o jogo forçará um recarregamento dos pacotes de recurso.
 betterfoliage.blocks.fallingLeaves=Filtros: Folhas Cadentes
-betterfoliage.blocks.fallingLeaves.tooltip=Uma lista de filtros que determinam quais blocos podem gerar partículas de Folhas Cadentes.\nEssa lista é distinta da lista de blocos que podem conter Folhas Extras.
+betterfoliage.blocks.fallingLeaves.tooltip=Uma lista de filtros que determinam quais blocos podem gerar partículas de Folhas Cadentes.\nEssa lista é distinta da lista de blocos que podem conter Folhas Extras.\n§6Acrescentar elementos à lista ou reordená-los durante o jogo forçará um recarregamento dos pacotes de recurso.
 betterfoliage.blocks.logs=Filtros: Troncos
 betterfoliage.blocks.logs.tooltip=Uma lista de filtros que determinam quais blocos são considerados Troncos.\nAfeta Troncos Arredondados.
 betterfoliage.blocks.sand=Filtros: Areia
@@ -70,7 +70,7 @@ betterfoliage.blocks.soulsand.tooltip=Uma lista de filtros que determinam quais 
 
 # Connected Grass
 betterfoliage.connectedGrass=Grama Conectada
-betterfoliage.connectedGrass.tooltip=Usar a textura do topo do bloco de grama em todos os lados caso esse tenha um bloco de terra embaixo?\nNecessita que a grama esteja no modo "Bonito".
+betterfoliage.connectedGrass.tooltip=Usar a textura do topo do bloco de grama em todos os lados caso esse tenha um bloco de terra embaixo?\n§6Necessita que a grama esteja no modo "Bonito".
 betterfoliage.connectedGrass.snowEnabled=Neve Conectada
 betterfoliage.connectedGrass.snowEnabled.tooltip=Permite com que blocos de grama cobertos por neve utilizem a textura da neve em suas laterais.
 
@@ -224,6 +224,6 @@ betterfoliage.coral.crustSize.tooltip=Tamanho da parte plana do coral que cobre 
 betterfoliage.coral.chance=Probabilidade de Corais
 betterfoliage.coral.chance.tooltip=Probabilidade de uma face específica do bloco ter um coral.
 betterfoliage.coral.mixCoral=Misturar Coral
-betterfoliage.coral.mixCoral.tooltip=Permite que duas texturas diferentes sejam utilizadas para cada ramos do Coral.
+betterfoliage.coral.mixCoral.tooltip=Permite que duas texturas diferentes sejam utilizadas para cada ramo do Coral.
 betterfoliage.coral.mixCrust=Misturar Crosta
 betterfoliage.coral.mixCrust.tooltip=Permite que cada lado do bloco utilize uma textura de Crosta de Coral diferente.
