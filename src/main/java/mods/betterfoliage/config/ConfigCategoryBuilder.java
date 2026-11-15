@@ -20,7 +20,7 @@ public class ConfigCategoryBuilder {
 
     private final String category;
     private final Configuration backingConfigFile;
-    private final List<String> propertyOrder = new ArrayList<>();
+    private final List<Property> properties = new ArrayList<>();
 
     /// Access the most recent property added to this category group, for setting custom attributes to it.
     public Property recentProp = null;
@@ -69,14 +69,26 @@ public class ConfigCategoryBuilder {
     }
 
     public void finalizeCategory() {
-        if (propertyOrder.isEmpty()) {
+        if (properties.isEmpty()) {
             BetterFoliageMod.log.warn("Config category {} is empty! Skipping creation...", category);
             return;
         }
 
         final ConfigCategory fileCategory = backingConfigFile.getCategory(category);
 
+        // A category should be hidden in GUI if all configs inside it are too.
+        boolean hideCategory = true;
+
+        List<String> propertyOrder = new ArrayList<>(properties.size());
+        for (final Property prop : properties) {
+            if (prop.showInGui()) {
+                hideCategory = false;
+            }
+            propertyOrder.add(prop.getName());
+        }
+
         fileCategory.setPropertyOrder(propertyOrder);
+        fileCategory.setShowInGui(!hideCategory);
 
         final String langKey = getCategoryLangKey();
         fileCategory.setLanguageKey(langKey);
@@ -107,7 +119,7 @@ public class ConfigCategoryBuilder {
 
         setDescription(langKey, prop);
 
-        propertyOrder.add(name);
+        properties.add(prop);
         recentProp = prop;
     }
 

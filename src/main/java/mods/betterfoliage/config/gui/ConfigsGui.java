@@ -29,6 +29,8 @@ public class ConfigsGui extends GuiConfig {
         for (final String categoryName : ConfigCategoryBuilder.getOrderedCategories()) {
             final ConfigCategory category = configFile.getCategory(categoryName);
 
+            if (!category.showInGui()) continue;
+
             if (categoryName.equals(Configuration.CATEGORY_GENERAL)) {
                 // Flatten general settings into primary config screen.
                 for (final Property generalConfig : category.getOrderedValues()) {
