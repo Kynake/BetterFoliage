@@ -1,0 +1,58 @@
+package mods.betterfoliage.client.render.features;
+
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.world.IBlockAccess;
+
+import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.client.render.RenderUtils;
+import mods.betterfoliage.config.Configs;
+import mods.betterfoliage.mixins.interfaces.minecraft.IOffsetSpriteRenderer;
+import mods.betterfoliage.utils.BlockUtils;
+
+public class DirtGrassRenderer extends BlockRenderer {
+
+    private static DirtGrassRenderer instance;
+
+    public static DirtGrassRenderer getInstance() {
+        if (instance == null) {
+            BetterFoliageMod.log.info("Registering Connected Grass Renderer");
+            instance = new DirtGrassRenderer();
+        }
+
+        return instance;
+    }
+
+    @Override
+    public boolean isEligible(IBlockAccess world, int x, int y, int z) {
+        if (!(RenderBlocks.fancyGrass & Configs.ConnectedGrass.enabled)) {
+            return false;
+        }
+
+        if (!(GrassRenderer.isEligibleAsGrassBase(world, x, y + 1, z) && Configs.Blocks.dirt.matches(world, x, y, z))) {
+            return false;
+        }
+
+        // If snow grass is disabled, don't render if the grass block above is rendering normally
+        if (!Configs.ConnectedGrass.snowEnabled) {
+            return !BlockUtils.isSnow(world.getBlock(x, y + 2, z));
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
+        RenderBlocks renderer) {
+        Block grassAbove = world.getBlock(x, y + 1, z);
+
+        IOffsetSpriteRenderer offsetRenderer = (IOffsetSpriteRenderer) renderer;
+
+        offsetRenderer.betterfoliage$setSpriteOffset(0, 1, 0);
+        boolean renderResult = RenderUtils.renderBaseBlock(x, y, z, grassAbove, renderer);
+        offsetRenderer.betterfoliage$setSpriteOffset(0, 0, 0);
+
+        return renderResult;
+    }
+}

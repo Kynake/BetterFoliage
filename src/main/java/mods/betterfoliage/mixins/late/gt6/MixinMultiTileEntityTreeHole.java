@@ -3,7 +3,6 @@ package mods.betterfoliage.mixins.late.gt6;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -25,13 +24,19 @@ public abstract class MixinMultiTileEntityTreeHole implements ITreeHoleMTE {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IIcon betterFoliage$getTextureForSide(ForgeDirection side) {
+    public IIcon betterFoliage$getSpriteForSide(int side) {
         Block block = ((TileEntity) (Object) this).getBlockType();
 
         // We skip all the messing with render passes from getTexture() and go
         // straight to GT6's getTexture2(), which handles the IIcons for logs
         ITexture texture = ((ITexture2Accessor) this)
-            .betterfoliage$getTexture2(block, 0, (byte) side.ordinal(), betterfoliage$allSidesRender);
-        return ((IIconAccessor) texture).betterfoliage$getIconForSide(side.ordinal());
+            .betterfoliage$getTexture2(block, 0, (byte) side, betterfoliage$allSidesRender);
+        return ((IIconAccessor) texture).betterfoliage$getIconForSide(side);
+    }
+
+    @Override
+    public IIcon betterFoliage$getDefaultSprite() {
+        byte facingAway = ((MultiTileEntityTreeHole) (Object) this).mFacing == (byte) 2 ? (byte) 3 : (byte) 2;
+        return betterFoliage$getSpriteForSide(facingAway);
     }
 }

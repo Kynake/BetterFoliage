@@ -1,0 +1,93 @@
+package mods.betterfoliage.client.render.features;
+
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
+
+import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.Tags;
+import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.client.render.ISpriteProvider;
+import mods.betterfoliage.client.render.RenderUtils;
+import mods.betterfoliage.client.resource.SpriteSet;
+import mods.betterfoliage.config.Configs;
+import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
+import mods.betterfoliage.utils.MathUtils;
+
+public class LilypadRenderer extends BlockRenderer {
+
+    private static final float LILYPAD_HEIGHT = 0.015625f;
+
+    private static LilypadRenderer instance;
+
+    private final ISpriteProvider roots = new SpriteSet(
+        Tags.MOD_LEGACY_DOMAIN,
+        "textures/blocks/better_lilypad_roots_",
+        ".png");
+
+    private final ISpriteProvider flowers = new SpriteSet(
+        Tags.MOD_LEGACY_DOMAIN,
+        "textures/blocks/better_lilypad_flower_",
+        ".png");
+
+    public static LilypadRenderer getInstance() {
+        if (instance == null) {
+            BetterFoliageMod.log.info("Registering Lilypad Renderer");
+            instance = new LilypadRenderer();
+        }
+
+        return instance;
+    }
+
+    @Override
+    public boolean isEligible(IBlockAccess world, int x, int y, int z) {
+        return Configs.Lilypad.enabled && Configs.Blocks.lilypad.matches(world, x, y, z);
+    }
+
+    @Override
+    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
+        RenderBlocks renderer) {
+        final IRendererByType baseRenderer = (IRendererByType) renderer;
+        boolean renderResult = baseRenderer.betterfoliage$renderBaseBlock(block, x, y, z);
+
+        if (!renderResult) return false;
+
+        // Render Roots
+        final float hOffset = Configs.Lilypad.hOffset;
+
+        int coordHash = MathUtils.hashCoords(x, y - 1, z, 375);
+        double xOffset = (double) x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
+        double zOffset = (double) z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
+
+        IIcon sprite = roots.getSpriteForCoord(x, y - 1, z);
+
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.setColorOpaque(0xFF, 0xFF, 0xFF);
+
+        tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y - 1, z));
+        renderer.drawCrossedSquares(sprite, xOffset, y + LILYPAD_HEIGHT - 1, zOffset, 1.0f);
+
+        // Render Flower
+        coordHash = MathUtils.hashCoords(x, y, z, 375);
+
+        if (MathUtils.hashInverseLerp(coordHash) > Configs.Lilypad.flowerChance) {
+            return true;
+        }
+
+        xOffset = x + MathUtils.hashToRange(MathUtils.hash(coordHash + 1), -hOffset, hOffset);
+        zOffset = z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
+
+        final int flowerColor = RenderUtils.DEFAULT_COLOR_MULTIPLIER;
+        tessellator.setColorOpaque_I(flowerColor);
+
+        sprite = flowers.getSpriteForCoord(x, y, z);
+
+        tessellator.setBrightness(Blocks.red_flower.getMixedBrightnessForBlock(world, x, y, z));
+        renderer.drawCrossedSquares(sprite, xOffset, y + LILYPAD_HEIGHT, zOffset, Configs.Lilypad.flowerSize);
+
+        return true;
+    }
+}

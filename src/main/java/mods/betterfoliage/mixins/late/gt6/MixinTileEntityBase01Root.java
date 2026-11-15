@@ -15,15 +15,15 @@ import mods.betterfoliage.client.Hooks;
 @Mixin(TileEntityBase01Root.class)
 public abstract class MixinTileEntityBase01Root {
 
-    @WrapMethod(method = "shouldSideBeRendered", remap = false)
+    @WrapMethod(method = "shouldSideBeRendered", remap = false, require = 1)
     private boolean betterfoliage$shouldSideBeRendered(byte side, Operation<Boolean> original) {
         TileEntity te = ((TileEntity) (Object) this);
         ForgeDirection direction = ForgeDirection.getOrientation(side);
         return Hooks.overrideIsPartialBlock(
-            original.call(side),
             te.getWorldObj(),
             te.xCoord + direction.offsetX,
             te.yCoord + direction.offsetY,
-            te.zCoord + direction.offsetZ);
+            te.zCoord + direction.offsetZ,
+            original.call(side));
     }
 }

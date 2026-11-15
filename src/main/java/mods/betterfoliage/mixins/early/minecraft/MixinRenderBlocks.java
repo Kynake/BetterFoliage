@@ -1,35 +1,53 @@
 package mods.betterfoliage.mixins.early.minecraft;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import com.llamalad7.mixinextras.sugar.Local;
 
 import mods.betterfoliage.client.Hooks;
+import mods.betterfoliage.mixins.interfaces.minecraft.IRendererByType;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(RenderBlocks.class)
-public abstract class MixinRenderBlocks {
+public abstract class MixinRenderBlocks implements IRendererByType {
+
+    @Shadow()
+    public abstract boolean renderBlockByRenderType(Block block, int x, int y, int z);
 
     @Shadow()
     public IBlockAccess blockAccess;
 
-    // What: Invoke BF code to overrule the return value of Block.getRenderType()
-    // Why: Allows us to use custom block renderers for any block, without touching block code
+    @Unique
+    private boolean betterfoliage$shouldOverrideRenderType = true;
+
     @ModifyVariable(
         method = "renderBlockByRenderType",
-        ordinal = 3,
+        name = "l",
         at = @At(
             value = "INVOKE",
             shift = At.Shift.AFTER,
-            target = "Lnet/minecraft/client/renderer/RenderBlocks;setRenderBoundsFromBlock(Lnet/minecraft/block/Block;)V"))
+            target = "Lnet/minecraft/client/renderer/RenderBlocks;setRenderBoundsFromBlock(Lnet/minecraft/block/Block;)V"),
+        require = 1)
     private int betterfoliage$getRenderTypeOverride(int originalRenderType, @Local(ordinal = 0, argsOnly = true) int x,
         @Local(ordinal = 1, argsOnly = true) int y, @Local(ordinal = 2, argsOnly = true) int z) {
-        return Hooks.getRenderTypeOverride(blockAccess, x, y, z, originalRenderType);
+        return betterfoliage$shouldOverrideRenderType
+            ? Hooks.getRenderTypeOverride(blockAccess, x, y, z, originalRenderType)
+            : originalRenderType;
+    }
+
+    @Override
+    public boolean betterfoliage$renderBaseBlock(Block block, int x, int y, int z) {
+        betterfoliage$shouldOverrideRenderType = false;
+        final boolean didRender = renderBlockByRenderType(block, x, y, z);
+        betterfoliage$shouldOverrideRenderType = true;
+        return didRender;
     }
 }

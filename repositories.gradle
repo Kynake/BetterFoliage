@@ -3,10 +3,4 @@
 repositories {
     // JitPack
     maven { url 'https://www.jitpack.io' }
-
-    // LegacyModdingMC Forgelin
-    maven {
-        name = "mavenpattern"
-        url = "https://mvn.falsepattern.com/releases/"
-    }
 }

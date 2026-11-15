@@ -1,0 +1,3266 @@
+package mods.betterfoliage.client.render.features;
+
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import mods.betterfoliage.BetterFoliageMod;
+import mods.betterfoliage.client.render.BlockRenderer;
+import mods.betterfoliage.client.render.RenderUtils;
+import mods.betterfoliage.client.render.ShadingInfo;
+import mods.betterfoliage.client.render.UVPlane;
+import mods.betterfoliage.config.Configs;
+import mods.betterfoliage.mixins.interfaces.minecraft.IRoundLogRenderer;
+import mods.betterfoliage.utils.BlockUtils;
+import mods.betterfoliage.utils.MathUtils;
+
+public class LogRenderer extends BlockRenderer {
+
+    private static LogRenderer instance;
+
+    public static LogRenderer getInstance() {
+        if (instance == null) {
+            BetterFoliageMod.log.info("Registering Log Renderer");
+            instance = new LogRenderer();
+        }
+
+        return instance;
+    }
+
+    public static boolean isRoundLog(IBlockAccess world, int x, int y, int z) {
+        if (!(Configs.enabled & Configs.RoundLogs.enabled)) return false;
+        return Configs.Blocks.logs.matches(world, x, y, z);
+    }
+
+    @Override
+    public boolean isEligible(IBlockAccess world, int x, int y, int z) {
+        return isRoundLog(world, x, y, z);
+    }
+
+    @Override
+    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
+        RenderBlocks renderer) {
+
+        // Use original render path when rendering block breaking overlay
+        if (renderer.hasOverrideBlockTexture()) {
+            renderer.setRenderBoundsFromBlock(block);
+            return renderer.renderStandardBlock(block, x, y, z);
+        }
+
+        ForgeDirection axis = determineLogAxis(world, x, y, z);
+
+        return renderByConnectedSides(world, x, y, z, block, renderer, axis);
+    }
+
+    private static ForgeDirection determineLogAxis(IBlockAccess world, int x, int y, int z) {
+        final int meta = world.getBlockMetadata(x, y, z);
+
+        return switch ((meta >> 2) & 3) {
+            case 1 -> ForgeDirection.EAST;
+            case 2 -> ForgeDirection.SOUTH;
+            default -> ForgeDirection.UP;
+        };
+    }
+
+    private static boolean renderByConnectedSides(IBlockAccess world, int x, int y, int z, Block block,
+        RenderBlocks renderer, ForgeDirection axis) {
+
+        final ForgeDirection[] sides = UVPlane.getSides(axis);
+
+        final boolean connect1 = shouldConnectToSide(sides[0], world, x, y, z, axis);
+        final boolean connect2 = shouldConnectToSide(sides[1], world, x, y, z, axis);
+        final boolean connect3 = shouldConnectToSide(sides[2], world, x, y, z, axis);
+        final boolean connect4 = shouldConnectToSide(sides[3], world, x, y, z, axis);
+
+        if ((connect1 & connect3) || (connect2 & connect4)) {
+            return RenderUtils.renderBaseBlock(x, y, z, block, renderer);
+        }
+
+        final boolean useAO = RenderUtils.shouldRenderBlockWithAO(block);
+
+        if (connect1) {
+            if (connect2) {
+                return renderRoundQuarterLog(
+                    world,
+                    x,
+                    y,
+                    z,
+                    x,
+                    y,
+                    z,
+                    block,
+                    renderer,
+                    axis,
+                    sides[3],
+                    axis,
+                    false,
+                    useAO);
+            }
+
+            if (connect4) {
+                return renderRoundQuarterLog(
+                    world,
+                    x,
+                    y,
+                    z,
+                    x,
+                    y,
+                    z,
+                    block,
+                    renderer,
+                    axis,
+                    sides[2],
+                    axis,
+                    false,
+                    useAO);
+            }
+
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[2], axis, false, useAO);
+        }
+
+        if (connect2) {
+            if (connect3) {
+                return renderRoundQuarterLog(
+                    world,
+                    x,
+                    y,
+                    z,
+                    x,
+                    y,
+                    z,
+                    block,
+                    renderer,
+                    axis,
+                    sides[0],
+                    axis,
+                    false,
+                    useAO);
+            }
+
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[3], axis, false, useAO);
+        }
+
+        if (connect3) {
+            if (connect4) {
+                return renderRoundQuarterLog(
+                    world,
+                    x,
+                    y,
+                    z,
+                    x,
+                    y,
+                    z,
+                    block,
+                    renderer,
+                    axis,
+                    sides[1],
+                    axis,
+                    false,
+                    useAO);
+            }
+
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[0], axis, false, useAO);
+        }
+
+        if (connect4) {
+            return renderRoundHalfLog(world, x, y, z, x, y, z, block, renderer, axis, sides[1], axis, false, useAO);
+        }
+
+        return renderRoundLog(world, x, y, z, x, y, z, block, renderer, axis, axis, false, useAO);
+    }
+
+    private static boolean shouldConnectToSide(ForgeDirection side, IBlockAccess world, int x, int y, int z,
+        ForgeDirection axis) {
+
+        final int sideX = x + side.offsetX;
+        final int sideY = y + side.offsetY;
+        final int sideZ = z + side.offsetZ;
+
+        final Block sideBlock = world.getBlock(sideX, sideY, sideZ);
+        final boolean isSideLog = Configs.Blocks.logs.matches(sideBlock, world, sideX, sideY, sideZ);
+
+        if (!isSideLog) {
+            return Configs.RoundLogs.connectToSolids && sideBlock.isOpaqueCube();
+        }
+
+        final ForgeDirection sideAxis = determineLogAxis(world, sideX, sideY, sideZ);
+        if (sideAxis != axis) {
+            return false;
+        }
+
+        // Left
+        ForgeDirection lat = axis.getRotation(side);
+
+        int latX = x + lat.offsetX;
+        int latY = y + lat.offsetY;
+        int latZ = z + lat.offsetZ;
+
+        int diagX = latX + side.offsetX;
+        int diagY = latY + side.offsetY;
+        int diagZ = latZ + side.offsetZ;
+
+        Block latBlock = world.getBlock(latX, latY, latZ);
+        ForgeDirection latAxis = determineLogAxis(world, latX, latY, latZ);
+        boolean isLatLog = latAxis == axis && Configs.Blocks.logs.matches(latBlock, world, latX, latY, latZ);
+
+        Block diagBlock = world.getBlock(diagX, diagY, diagZ);
+        ForgeDirection diagAxis = determineLogAxis(world, diagX, diagY, diagZ);
+        boolean isDiagLog = diagAxis == axis && Configs.Blocks.logs.matches(diagBlock, world, diagX, diagY, diagZ);
+
+        if (Configs.RoundLogs.connectLenient) {
+            if (isLatLog || isDiagLog) {
+                return true;
+            }
+        } else {
+            if (isLatLog && isDiagLog) {
+                return true;
+            }
+        }
+
+        // Right
+        lat = lat.getOpposite();
+
+        latX = x + lat.offsetX;
+        latY = y + lat.offsetY;
+        latZ = z + lat.offsetZ;
+
+        diagX = latX + side.offsetX;
+        diagY = latY + side.offsetY;
+        diagZ = latZ + side.offsetZ;
+
+        latBlock = world.getBlock(latX, latY, latZ);
+        latAxis = determineLogAxis(world, latX, latY, latZ);
+        isLatLog = latAxis == axis && Configs.Blocks.logs.matches(latBlock, world, latX, latY, latZ);
+
+        diagBlock = world.getBlock(diagX, diagY, diagZ);
+        diagAxis = determineLogAxis(world, diagX, diagY, diagZ);
+        isDiagLog = diagAxis == axis && Configs.Blocks.logs.matches(diagBlock, world, diagX, diagY, diagZ);
+
+        return Configs.RoundLogs.connectLenient ? isLatLog || isDiagLog : isLatLog && isDiagLog;
+    }
+
+    /// Least aggressive render checking function, may render non-visible faces when next to other log blocks.
+    private static boolean shouldRenderFace(ForgeDirection side, IBlockAccess world, int x, int y, int z) {
+        final int sideX = x + side.offsetX;
+        final int sideY = y + side.offsetY;
+        final int sideZ = z + side.offsetZ;
+
+        final Block sideBlock = world.getBlock(sideX, sideY, sideZ);
+
+        return !sideBlock.isOpaqueCube() || Configs.Blocks.logs.matches(sideBlock, world, sideX, sideY, sideZ);
+    }
+
+    /// Medium aggression render check, for faces of connecting log blocks.
+    private static boolean shouldRenderFullFace(ForgeDirection side, IBlockAccess world, int x, int y, int z) {
+        final int sideX = x + side.offsetX;
+        final int sideY = y + side.offsetY;
+        final int sideZ = z + side.offsetZ;
+
+        final Block sideBlock = world.getBlock(sideX, sideY, sideZ);
+
+        if (!sideBlock.isOpaqueCube()) {
+            return true;
+        }
+
+        if (!Configs.Blocks.logs.matches(sideBlock, world, sideX, sideY, sideZ)) {
+            return false;
+        }
+
+        final ForgeDirection sideAxis = determineLogAxis(world, sideX, sideY, sideZ);
+        return !shouldConnectToSide(side.getOpposite(), world, sideX, sideY, sideZ, sideAxis);
+    }
+
+    /// Most aggressive render checking function for rounded corner faces, where some assumptions can be made.
+    /// In best-case scenarios saves up to 16 quad draws for a single log block!
+    private static boolean shouldRenderCornerFace(ForgeDirection side, IBlockAccess world, int x, int y, int z) {
+        final int sideX = x + side.offsetX;
+        final int sideY = y + side.offsetY;
+        final int sideZ = z + side.offsetZ;
+
+        final Block sideBlock = world.getBlock(sideX, sideY, sideZ);
+
+        if (!sideBlock.isOpaqueCube()) {
+            return true;
+        }
+
+        if (!Configs.Blocks.logs.matches(sideBlock, world, sideX, sideY, sideZ)) {
+            return false;
+        }
+
+        final ForgeDirection sideAxis = determineLogAxis(world, sideX, sideY, sideZ);
+        return sideAxis != side && sideAxis != side.getOpposite();
+    }
+
+    private static boolean shouldUseLargeAdjacentRadius(ForgeDirection side, ForgeDirection clock,
+        ForgeDirection counter, IBlockAccess world, int x, int y, int z) {
+
+        final int sideX = x + side.offsetX;
+        final int sideY = y + side.offsetY;
+        final int sideZ = z + side.offsetZ;
+
+        final Block sideBlock = world.getBlock(sideX, sideY, sideZ);
+        final boolean isSideLog = Configs.Blocks.logs.matches(sideBlock, world, sideX, sideY, sideZ);
+
+        if (!isSideLog) {
+            return true;
+        }
+
+        final ForgeDirection adjacentAxis = determineLogAxis(world, sideX, sideY, sideZ);
+
+        if (side.getOpposite() == adjacentAxis) {
+            side = side.getOpposite();
+        }
+
+        if (side != adjacentAxis) {
+            return true;
+        }
+
+        final boolean noExtraConnections = !shouldConnectToSide(clock, world, sideX, sideY, sideZ, side)
+            && !shouldConnectToSide(counter, world, sideX, sideY, sideZ, side);
+
+        if (!noExtraConnections) {
+            return true;
+        }
+
+        return shouldConnectToSide(clock.getOpposite(), world, sideX, sideY, sideZ, side)
+            && shouldConnectToSide(counter.getOpposite(), world, sideX, sideY, sideZ, side);
+    }
+
+    /// Renders a log block with all rounded corners
+    private static boolean renderRoundLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase,
+        Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection axisBase, boolean isConnector,
+        boolean useAO) {
+
+        boolean didRender = false;
+
+        boolean renderFront = !isConnector;
+        boolean renderBack = renderFront;
+
+        // Render connectors
+        if (Configs.RoundLogs.connectPerpendicular && !isConnector) {
+            int connectorX = x + axis.offsetX;
+            int connectorY = y + axis.offsetY;
+            int connectorZ = z + axis.offsetZ;
+
+            Block connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
+
+            renderFront = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
+                && determineLogAxis(world, connectorX, connectorY, connectorZ) != axis);
+            if (!renderFront) {
+                renderRoundLog(
+                    world,
+                    connectorX,
+                    connectorY,
+                    connectorZ,
+                    x,
+                    y,
+                    z,
+                    block,
+                    renderer,
+                    axis.getOpposite(),
+                    axisBase,
+                    true,
+                    useAO);
+            }
+
+            connectorX = x - axis.offsetX;
+            connectorY = y - axis.offsetY;
+            connectorZ = z - axis.offsetZ;
+
+            connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
+            renderBack = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
+                && determineLogAxis(world, connectorX, connectorY, connectorZ) != axis);
+            if (!renderBack) {
+                renderRoundLog(
+                    world,
+                    connectorX,
+                    connectorY,
+                    connectorZ,
+                    x,
+                    y,
+                    z,
+                    block,
+                    renderer,
+                    axis,
+                    axisBase,
+                    true,
+                    useAO);
+            }
+
+        }
+
+        // Render block
+        final ForgeDirection[] sides = UVPlane.getSides(axis);
+        for (final ForgeDirection clock : sides) {
+            final ForgeDirection counter = axis.getRotation(clock);
+            didRender |= renderRoundCorner(
+                world,
+                x,
+                y,
+                z,
+                xBase,
+                yBase,
+                zBase,
+                block,
+                renderer,
+                axis,
+                clock,
+                counter,
+                axisBase,
+                isConnector,
+                renderFront,
+                renderBack,
+                useAO);
+        }
+
+        return didRender;
+    }
+
+    /// Renders a log block with two adjacent rounded corners and two adjacent square corners
+    private static boolean renderRoundHalfLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase,
+        Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection side, ForgeDirection axisBase,
+        boolean isConnector, boolean useAO) {
+
+        boolean didRender = false;
+        final Tessellator tess = Tessellator.instance;
+
+        final ForgeDirection counterclockwise = axis.getRotation(side);
+        final ForgeDirection clock = counterclockwise.getOpposite();
+        final ForgeDirection back = side.getOpposite();
+
+        final double midX = x + 0.5;
+        final double midY = y + 0.5;
+        final double midZ = z + 0.5;
+
+        final double axisX = (axis.offsetX / 2.0);
+        final double axisY = (axis.offsetY / 2.0);
+        final double axisZ = (axis.offsetZ / 2.0);
+
+        final double sideX = (side.offsetX / 2.0);
+        final double sideY = (side.offsetY / 2.0);
+        final double sideZ = (side.offsetZ / 2.0);
+
+        final double counterX = (counterclockwise.offsetX / 2.0);
+        final double counterY = (counterclockwise.offsetY / 2.0);
+        final double counterZ = (counterclockwise.offsetZ / 2.0);
+
+        /// Coords
+        // Front
+        final double frontCenterX = midX + axisX;
+        final double frontCenterY = midY + axisY;
+        final double frontCenterZ = midZ + axisZ;
+
+        final double frontCenterCounterX = frontCenterX + counterX;
+        final double frontCenterCounterY = frontCenterY + counterY;
+        final double frontCenterCounterZ = frontCenterZ + counterZ;
+
+        final double frontCenterClockX = frontCenterX - counterX;
+        final double frontCenterClockY = frontCenterY - counterY;
+        final double frontCenterClockZ = frontCenterZ - counterZ;
+
+        final double frontCornerCounterX = frontCenterCounterX - sideX;
+        final double frontCornerCounterY = frontCenterCounterY - sideY;
+        final double frontCornerCounterZ = frontCenterCounterZ - sideZ;
+
+        final double frontCornerClockX = frontCenterClockX - sideX;
+        final double frontCornerClockY = frontCenterClockY - sideY;
+        final double frontCornerClockZ = frontCenterClockZ - sideZ;
+
+        // Back
+        final double backCenterX;
+        final double backCenterY;
+        final double backCenterZ;
+
+        final double backCenterCounterX;
+        final double backCenterCounterY;
+        final double backCenterCounterZ;
+
+        final double backCenterClockX;
+        final double backCenterClockY;
+        final double backCenterClockZ;
+
+        final double backCornerCounterX;
+        final double backCornerCounterY;
+        final double backCornerCounterZ;
+
+        final double backCornerClockX;
+        final double backCornerClockY;
+        final double backCornerClockZ;
+
+        if (isConnector) {
+            final double zCounterX = counterX * Configs.RoundLogs.zProtection;
+            final double zCounterY = counterY * Configs.RoundLogs.zProtection;
+            final double zCounterZ = counterZ * Configs.RoundLogs.zProtection;
+
+            final double zSideX = sideX * Configs.RoundLogs.zProtection;
+            final double zSideY = sideY * Configs.RoundLogs.zProtection;
+            final double zSideZ = sideZ * Configs.RoundLogs.zProtection;
+
+            backCenterX = midX;
+            backCenterY = midY;
+            backCenterZ = midZ;
+
+            backCenterCounterX = backCenterX + zCounterX;
+            backCenterCounterY = backCenterY + zCounterY;
+            backCenterCounterZ = backCenterZ + zCounterZ;
+
+            backCenterClockX = backCenterX - zCounterX;
+            backCenterClockY = backCenterY - zCounterY;
+            backCenterClockZ = backCenterZ - zCounterZ;
+
+            backCornerCounterX = backCenterCounterX - zSideX;
+            backCornerCounterY = backCenterCounterY - zSideY;
+            backCornerCounterZ = backCenterCounterZ - zSideZ;
+
+            backCornerClockX = backCenterClockX - zSideX;
+            backCornerClockY = backCenterClockY - zSideY;
+            backCornerClockZ = backCenterClockZ - zSideZ;
+        } else {
+            backCenterX = midX - axisX;
+            backCenterY = midY - axisY;
+            backCenterZ = midZ - axisZ;
+
+            backCenterCounterX = backCenterX + counterX;
+            backCenterCounterY = backCenterY + counterY;
+            backCenterCounterZ = backCenterZ + counterZ;
+
+            backCenterClockX = backCenterX - counterX;
+            backCenterClockY = backCenterY - counterY;
+            backCenterClockZ = backCenterZ - counterZ;
+
+            backCornerCounterX = backCenterCounterX - sideX;
+            backCornerCounterY = backCenterCounterY - sideY;
+            backCornerCounterZ = backCenterCounterZ - sideZ;
+
+            backCornerClockX = backCenterClockX - sideX;
+            backCornerClockY = backCenterClockY - sideY;
+            backCornerClockZ = backCenterClockZ - sideZ;
+        }
+
+        /// Square corners
+        double leftU;
+        double rightU;
+        double topV;
+        double botV;
+
+        double midU;
+        double midV;
+
+        double lengthU;
+        double lengthV;
+
+        double halfU;
+        double halfV;
+
+        UVPlane plane;
+
+        double halfOffsetU;
+        double halfOffsetV;
+
+        double halfCounterOffsetU;
+        double halfCounterOffsetV;
+
+        double centerCounterU;
+        double centerCounterV;
+
+        double centerClockU;
+        double centerClockV;
+
+        double cornerCounterU;
+        double cornerCounterV;
+
+        double cornerClockU;
+        double cornerClockV;
+
+        final double axisOffsetHalf = axisX + axisY + axisZ;
+        final double axisOffsetConnector;
+
+        final IIcon spriteCounter;
+        final IIcon spriteClock;
+        final IIcon spriteBack;
+
+        if (isConnector) {
+            axisOffsetConnector = 0;
+
+            spriteCounter = getConnectorSprite(renderer, world, block, xBase, yBase, zBase, counterclockwise);
+            spriteClock = getConnectorSprite(renderer, world, block, xBase, yBase, zBase, clock);
+
+            final ForgeDirection baseAxis = determineLogAxis(world, xBase, yBase, zBase);
+            final ForgeDirection transposeConnector = baseAxis.getRotation(axis);
+
+            spriteBack = getConnectorSprite(
+                renderer,
+                world,
+                block,
+                xBase,
+                yBase,
+                zBase,
+                transposeConnector.getRotation(side));
+
+        } else {
+            axisOffsetConnector = axisOffsetHalf;
+
+            spriteCounter = renderer.getBlockIcon(block, world, xBase, yBase, zBase, counterclockwise.ordinal());
+            spriteClock = renderer.getBlockIcon(block, world, xBase, yBase, zBase, clock.ordinal());
+            spriteBack = renderer.getBlockIcon(block, world, xBase, yBase, zBase, back.ordinal());
+        }
+
+        double frontV;
+        double backV;
+
+        final ForgeDirection opposite = axis.getOpposite();
+
+        final int blockColor = BlockUtils.getStandardColorMultiplier(world, block, xBase, yBase, zBase);
+        final ShadingInfo[] containers = ((IRoundLogRenderer) renderer).betterfoliage$getShadingContainers();
+
+        /// Sides
+
+        // Counter
+        if (shouldRenderFace(counterclockwise, world, x, y, z)) {
+            leftU = spriteCounter.getMinU();
+            rightU = spriteCounter.getMaxU();
+            topV = spriteCounter.getMinV();
+            botV = spriteCounter.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            centerCounterU = midU + axisOffsetHalf * lengthU;
+
+            frontV = midV - axisOffsetHalf * lengthV;
+            backV = midV + axisOffsetConnector * lengthV;
+
+            if (useAO) {
+                final float colorMult = RenderUtils.getColorMultiplierBySide(counterclockwise);
+
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    counterclockwise,
+                    side,
+                    axis,
+                    blockColor,
+                    colorMult,
+                    containers[0]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    counterclockwise,
+                    side,
+                    opposite,
+                    blockColor,
+                    colorMult,
+                    containers[1]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    counterclockwise,
+                    back,
+                    opposite,
+                    blockColor,
+                    colorMult,
+                    containers[2]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    counterclockwise,
+                    back,
+                    axis,
+                    blockColor,
+                    colorMult,
+                    containers[3]);
+
+                containers[0].applyAveragedShading(tess, containers[3], 0.5f);
+                tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, midU, frontV);
+
+                containers[1].applyAveragedShading(tess, containers[2], 0.5f);
+                tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, midU, backV);
+
+                containers[2].applyShading(tess);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, centerCounterU, backV);
+
+                containers[3].applyShading(tess);
+                tess.addVertexWithUV(
+                    frontCornerCounterX,
+                    frontCornerCounterY,
+                    frontCornerCounterZ,
+                    centerCounterU,
+                    frontV);
+            } else {
+                RenderUtils.getFlatShadingInfoForBlockFace(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    counterclockwise,
+                    blockColor,
+                    containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, midU, frontV);
+                tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, midU, backV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, centerCounterU, backV);
+                tess.addVertexWithUV(
+                    frontCornerCounterX,
+                    frontCornerCounterY,
+                    frontCornerCounterZ,
+                    centerCounterU,
+                    frontV);
+            }
+
+            didRender = true;
+        }
+
+        // Clock
+        if (shouldRenderFace(clock, world, x, y, z)) {
+            leftU = spriteClock.getMinU();
+            rightU = spriteClock.getMaxU();
+            topV = spriteClock.getMinV();
+            botV = spriteClock.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            cornerCounterU = midU - axisOffsetHalf * lengthU;
+
+            frontV = midV - axisOffsetHalf * lengthV;
+            backV = midV + axisOffsetConnector * lengthV;
+
+            if (useAO) {
+                final float colorMult = RenderUtils.getColorMultiplierBySide(clock);
+
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    clock,
+                    back,
+                    axis,
+                    blockColor,
+                    colorMult,
+                    containers[0]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    clock,
+                    back,
+                    opposite,
+                    blockColor,
+                    colorMult,
+                    containers[1]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    clock,
+                    side,
+                    opposite,
+                    blockColor,
+                    colorMult,
+                    containers[2]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    clock,
+                    side,
+                    axis,
+                    blockColor,
+                    colorMult,
+                    containers[3]);
+
+                containers[0].applyShading(tess);
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerCounterU, frontV);
+
+                containers[1].applyShading(tess);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerCounterU, backV);
+
+                containers[1].applyAveragedShading(tess, containers[2], 0.5f);
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, midU, backV);
+
+                containers[0].applyAveragedShading(tess, containers[3], 0.5f);
+                tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, midU, frontV);
+            } else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, clock, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerCounterU, frontV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerCounterU, backV);
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, midU, backV);
+                tess.addVertexWithUV(frontCenterClockX, frontCenterClockY, frontCenterClockZ, midU, frontV);
+            }
+
+            didRender = true;
+        }
+
+        // Back
+        if (shouldRenderFullFace(back, world, x, y, z)) {
+            leftU = spriteBack.getMinU();
+            rightU = spriteBack.getMaxU();
+            topV = spriteBack.getMinV();
+            botV = spriteBack.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            frontV = midV - axisOffsetHalf * lengthV;
+            backV = midV + axisOffsetConnector * lengthV;
+
+            final double offsetU = axisOffsetHalf * lengthU;
+            final double counterU = midU - offsetU;
+            final double clockU = midU + offsetU;
+
+            if (useAO) {
+                final float colorMult = RenderUtils.getColorMultiplierBySide(back);
+
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    back,
+                    counterclockwise,
+                    axis,
+                    blockColor,
+                    colorMult,
+                    containers[0]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    back,
+                    counterclockwise,
+                    opposite,
+                    blockColor,
+                    colorMult,
+                    containers[1]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    back,
+                    clock,
+                    opposite,
+                    blockColor,
+                    colorMult,
+                    containers[2]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    back,
+                    clock,
+                    axis,
+                    blockColor,
+                    colorMult,
+                    containers[3]);
+
+                containers[0].applyShading(tess);
+                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, counterU, frontV);
+
+                containers[1].applyShading(tess);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, counterU, backV);
+
+                containers[2].applyShading(tess);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, clockU, backV);
+
+                containers[3].applyShading(tess);
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, clockU, frontV);
+            } else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, back, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCornerCounterX, frontCornerCounterY, frontCornerCounterZ, counterU, frontV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, counterU, backV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, clockU, backV);
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, clockU, frontV);
+            }
+
+            didRender = true;
+        }
+
+        boolean renderFront = !isConnector;
+        boolean renderBack = renderFront;
+
+        // Use connectors?
+        if (Configs.RoundLogs.connectPerpendicular & didRender && !isConnector) {
+            int connectorX = x + axis.offsetX;
+            int connectorY = y + axis.offsetY;
+            int connectorZ = z + axis.offsetZ;
+
+            Block connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
+            renderFront = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
+                && determineLogAxis(world, connectorX, connectorY, connectorZ) != axis);
+            if (!renderFront) {
+                renderRoundHalfLog(
+                    world,
+                    connectorX,
+                    connectorY,
+                    connectorZ,
+                    x,
+                    y,
+                    z,
+                    block,
+                    renderer,
+                    opposite,
+                    side,
+                    axisBase,
+                    true,
+                    useAO);
+            }
+
+            connectorX = x - axis.offsetX;
+            connectorY = y - axis.offsetY;
+            connectorZ = z - axis.offsetZ;
+
+            connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
+            renderBack = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
+                && determineLogAxis(world, connectorX, connectorY, connectorZ) != axis);
+            if (!renderBack) {
+                renderRoundHalfLog(
+                    world,
+                    connectorX,
+                    connectorY,
+                    connectorZ,
+                    x,
+                    y,
+                    z,
+                    block,
+                    renderer,
+                    axis,
+                    side,
+                    axisBase,
+                    true,
+                    useAO);
+            }
+        }
+
+        // Faces
+        /// Front
+        if (renderFront && shouldRenderFace(axis, world, x, y, z)) {
+            final IIcon sprite = renderer.getBlockIcon(block, world, xBase, yBase, zBase, axis.ordinal());
+            leftU = sprite.getMinU();
+            rightU = sprite.getMaxU();
+            topV = sprite.getMinV();
+            botV = sprite.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            halfU = lengthU / 2.0;
+            halfV = lengthV / 2.0;
+
+            plane = UVPlane.toUVPlane(axis);
+
+            halfOffsetU = plane.getOffsetU(side) * halfU;
+            halfOffsetV = plane.getOffsetV(side) * halfV;
+
+            halfCounterOffsetU = plane.getOffsetU(counterclockwise) * halfU;
+            halfCounterOffsetV = plane.getOffsetV(counterclockwise) * halfV;
+
+            centerCounterU = midU + halfCounterOffsetU;
+            centerCounterV = midV + halfCounterOffsetV;
+
+            centerClockU = midU - halfCounterOffsetU;
+            centerClockV = midV - halfCounterOffsetV;
+
+            cornerCounterU = centerCounterU - halfOffsetU;
+            cornerCounterV = centerCounterV - halfOffsetV;
+
+            cornerClockU = centerClockU - halfOffsetU;
+            cornerClockV = centerClockV - halfOffsetV;
+
+            if (useAO) {
+                final float colorMult = RenderUtils.getColorMultiplierBySide(axis);
+
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    axis,
+                    counterclockwise,
+                    side,
+                    blockColor,
+                    colorMult,
+                    containers[0]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    axis,
+                    counterclockwise,
+                    back,
+                    blockColor,
+                    colorMult,
+                    containers[1]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    axis,
+                    clock,
+                    back,
+                    blockColor,
+                    colorMult,
+                    containers[2]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    axis,
+                    clock,
+                    side,
+                    blockColor,
+                    colorMult,
+                    containers[3]);
+
+                containers[0].applyAveragedShading(tess, containers[1], 0.5f);
+                tess.addVertexWithUV(
+                    frontCenterCounterX,
+                    frontCenterCounterY,
+                    frontCenterCounterZ,
+                    centerCounterU,
+                    centerCounterV);
+
+                containers[1].applyShading(tess);
+                tess.addVertexWithUV(
+                    frontCornerCounterX,
+                    frontCornerCounterY,
+                    frontCornerCounterZ,
+                    cornerCounterU,
+                    cornerCounterV);
+
+                containers[2].applyShading(tess);
+                tess.addVertexWithUV(
+                    frontCornerClockX,
+                    frontCornerClockY,
+                    frontCornerClockZ,
+                    cornerClockU,
+                    cornerClockV);
+
+                containers[2].applyAveragedShading(tess, containers[3], 0.5f);
+                tess.addVertexWithUV(
+                    frontCenterClockX,
+                    frontCenterClockY,
+                    frontCenterClockZ,
+                    centerClockU,
+                    centerClockV);
+            } else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, axis, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(
+                    frontCenterCounterX,
+                    frontCenterCounterY,
+                    frontCenterCounterZ,
+                    centerCounterU,
+                    centerCounterV);
+                tess.addVertexWithUV(
+                    frontCornerCounterX,
+                    frontCornerCounterY,
+                    frontCornerCounterZ,
+                    cornerCounterU,
+                    cornerCounterV);
+                tess.addVertexWithUV(
+                    frontCornerClockX,
+                    frontCornerClockY,
+                    frontCornerClockZ,
+                    cornerClockU,
+                    cornerClockV);
+                tess.addVertexWithUV(
+                    frontCenterClockX,
+                    frontCenterClockY,
+                    frontCenterClockZ,
+                    centerClockU,
+                    centerClockV);
+            }
+
+            didRender = true;
+        }
+
+        /// Back
+        if (renderBack && shouldRenderFace(opposite, world, x, y, z)) {
+            final IIcon sprite = renderer.getBlockIcon(block, world, xBase, yBase, zBase, opposite.ordinal());
+            leftU = sprite.getMinU();
+            rightU = sprite.getMaxU();
+            topV = sprite.getMinV();
+            botV = sprite.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            halfU = lengthU / 2.0;
+            halfV = lengthV / 2.0;
+
+            plane = UVPlane.toUVPlane(opposite);
+
+            halfOffsetU = plane.getOffsetU(side) * halfU;
+            halfOffsetV = plane.getOffsetV(side) * halfV;
+
+            halfCounterOffsetU = plane.getOffsetU(counterclockwise) * halfU;
+            halfCounterOffsetV = plane.getOffsetV(counterclockwise) * halfV;
+
+            centerCounterU = midU + halfCounterOffsetU;
+            centerCounterV = midV + halfCounterOffsetV;
+
+            centerClockU = midU - halfCounterOffsetU;
+            centerClockV = midV - halfCounterOffsetV;
+
+            cornerCounterU = centerCounterU - halfOffsetU;
+            cornerCounterV = centerCounterV - halfOffsetV;
+
+            cornerClockU = centerClockU - halfOffsetU;
+            cornerClockV = centerClockV - halfOffsetV;
+
+            if (useAO) {
+                final float colorMult = RenderUtils.getColorMultiplierBySide(opposite);
+
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    opposite,
+                    clock,
+                    side,
+                    blockColor,
+                    colorMult,
+                    containers[0]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    opposite,
+                    clock,
+                    back,
+                    blockColor,
+                    colorMult,
+                    containers[1]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    opposite,
+                    counterclockwise,
+                    back,
+                    blockColor,
+                    colorMult,
+                    containers[2]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    opposite,
+                    counterclockwise,
+                    side,
+                    blockColor,
+                    colorMult,
+                    containers[3]);
+
+                containers[0].applyAveragedShading(tess, containers[1], 0.5f);
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+
+                containers[1].applyShading(tess);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, cornerClockV);
+
+                containers[2].applyShading(tess);
+                tess.addVertexWithUV(
+                    backCornerCounterX,
+                    backCornerCounterY,
+                    backCornerCounterZ,
+                    cornerCounterU,
+                    cornerCounterV);
+
+                containers[2].applyAveragedShading(tess, containers[3], 0.5f);
+                tess.addVertexWithUV(
+                    backCenterCounterX,
+                    backCenterCounterY,
+                    backCenterCounterZ,
+                    centerCounterU,
+                    centerCounterV);
+            } else {
+                RenderUtils
+                    .getFlatShadingInfoForBlockFace(renderer, block, x, y, z, opposite, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, cornerClockV);
+                tess.addVertexWithUV(
+                    backCornerCounterX,
+                    backCornerCounterY,
+                    backCornerCounterZ,
+                    cornerCounterU,
+                    cornerCounterV);
+                tess.addVertexWithUV(
+                    backCenterCounterX,
+                    backCenterCounterY,
+                    backCenterCounterZ,
+                    centerCounterU,
+                    centerCounterV);
+            }
+
+            didRender = true;
+        }
+
+        /// Round corners
+        didRender |= renderRoundCorner(
+            world,
+            x,
+            y,
+            z,
+            xBase,
+            yBase,
+            zBase,
+            block,
+            renderer,
+            axis,
+            side,
+            counterclockwise,
+            axisBase,
+            isConnector,
+            renderFront,
+            renderBack,
+            useAO);
+
+        didRender |= renderRoundCorner(
+            world,
+            x,
+            y,
+            z,
+            xBase,
+            yBase,
+            zBase,
+            block,
+            renderer,
+            axis,
+            clock,
+            side,
+            axisBase,
+            isConnector,
+            renderFront,
+            renderBack,
+            useAO);
+
+        return didRender;
+    }
+
+    /// Renders a log block with one rounded corner and three square corners.
+    /// Rounded corner is always counterclockwise of side.
+    private static boolean renderRoundQuarterLog(IBlockAccess world, int x, int y, int z, int xBase, int yBase,
+        int zBase, Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection side,
+        ForgeDirection axisBase, boolean isConnector, boolean useAO) {
+
+        boolean didRender = false;
+        final Tessellator tess = Tessellator.instance;
+
+        final ForgeDirection opposite = axis.getOpposite();
+        final ForgeDirection counterclockwise = axis.getRotation(side);
+        final ForgeDirection clock = counterclockwise.getOpposite();
+        final ForgeDirection back = side.getOpposite();
+
+        final double midX = x + 0.5;
+        final double midY = y + 0.5;
+        final double midZ = z + 0.5;
+
+        final double axisX = (axis.offsetX / 2.0);
+        final double axisY = (axis.offsetY / 2.0);
+        final double axisZ = (axis.offsetZ / 2.0);
+
+        final double sideX = (side.offsetX / 2.0);
+        final double sideY = (side.offsetY / 2.0);
+        final double sideZ = (side.offsetZ / 2.0);
+
+        final double counterX = (counterclockwise.offsetX / 2.0);
+        final double counterY = (counterclockwise.offsetY / 2.0);
+        final double counterZ = (counterclockwise.offsetZ / 2.0);
+
+        /// Coords
+        // Front
+        final double frontCenterX = midX + axisX;
+        final double frontCenterY = midY + axisY;
+        final double frontCenterZ = midZ + axisZ;
+
+        final double frontCenterCounterX = frontCenterX + counterX;
+        final double frontCenterCounterY = frontCenterY + counterY;
+        final double frontCenterCounterZ = frontCenterZ + counterZ;
+
+        final double frontCenterClockX = frontCenterX - counterX;
+        final double frontCenterClockY = frontCenterY - counterY;
+        final double frontCenterClockZ = frontCenterZ - counterZ;
+
+        final double frontCornerCounterX = frontCenterCounterX - sideX;
+        final double frontCornerCounterY = frontCenterCounterY - sideY;
+        final double frontCornerCounterZ = frontCenterCounterZ - sideZ;
+
+        final double frontCornerClockX = frontCenterClockX - sideX;
+        final double frontCornerClockY = frontCenterClockY - sideY;
+        final double frontCornerClockZ = frontCenterClockZ - sideZ;
+
+        // Front quarter square
+        final double frontCenterSideX = frontCenterX + sideX;
+        final double frontCenterSideY = frontCenterY + sideY;
+        final double frontCenterSideZ = frontCenterZ + sideZ;
+
+        final double frontCornerSideX = frontCenterClockX + sideX;
+        final double frontCornerSideY = frontCenterClockY + sideY;
+        final double frontCornerSideZ = frontCenterClockZ + sideZ;
+
+        // Back
+        final double backCenterX;
+        final double backCenterY;
+        final double backCenterZ;
+
+        final double backCenterCounterX;
+        final double backCenterCounterY;
+        final double backCenterCounterZ;
+
+        final double backCenterClockX;
+        final double backCenterClockY;
+        final double backCenterClockZ;
+
+        final double backCornerCounterX;
+        final double backCornerCounterY;
+        final double backCornerCounterZ;
+
+        final double backCornerClockX;
+        final double backCornerClockY;
+        final double backCornerClockZ;
+
+        // Back quarter square
+        final double backCenterSideX;
+        final double backCenterSideY;
+        final double backCenterSideZ;
+
+        final double backCornerSideX;
+        final double backCornerSideY;
+        final double backCornerSideZ;
+
+        if (isConnector) {
+            final double zCounterX = counterX * Configs.RoundLogs.zProtection;
+            final double zCounterY = counterY * Configs.RoundLogs.zProtection;
+            final double zCounterZ = counterZ * Configs.RoundLogs.zProtection;
+
+            final double zSideX = sideX * Configs.RoundLogs.zProtection;
+            final double zSideY = sideY * Configs.RoundLogs.zProtection;
+            final double zSideZ = sideZ * Configs.RoundLogs.zProtection;
+
+            backCenterX = midX;
+            backCenterY = midY;
+            backCenterZ = midZ;
+
+            backCenterCounterX = backCenterX + zCounterX;
+            backCenterCounterY = backCenterY + zCounterY;
+            backCenterCounterZ = backCenterZ + zCounterZ;
+
+            backCenterClockX = backCenterX - zCounterX;
+            backCenterClockY = backCenterY - zCounterY;
+            backCenterClockZ = backCenterZ - zCounterZ;
+
+            backCornerCounterX = backCenterCounterX - zSideX;
+            backCornerCounterY = backCenterCounterY - zSideY;
+            backCornerCounterZ = backCenterCounterZ - zSideZ;
+
+            backCornerClockX = backCenterClockX - zSideX;
+            backCornerClockY = backCenterClockY - zSideY;
+            backCornerClockZ = backCenterClockZ - zSideZ;
+
+            backCenterSideX = backCenterX + zSideX;
+            backCenterSideY = backCenterY + zSideY;
+            backCenterSideZ = backCenterZ + zSideZ;
+
+            backCornerSideX = backCenterClockX + zSideX;
+            backCornerSideY = backCenterClockY + zSideY;
+            backCornerSideZ = backCenterClockZ + zSideZ;
+        } else {
+            backCenterX = midX - axisX;
+            backCenterY = midY - axisY;
+            backCenterZ = midZ - axisZ;
+
+            backCenterCounterX = backCenterX + counterX;
+            backCenterCounterY = backCenterY + counterY;
+            backCenterCounterZ = backCenterZ + counterZ;
+
+            backCenterClockX = backCenterX - counterX;
+            backCenterClockY = backCenterY - counterY;
+            backCenterClockZ = backCenterZ - counterZ;
+
+            backCornerCounterX = backCenterCounterX - sideX;
+            backCornerCounterY = backCenterCounterY - sideY;
+            backCornerCounterZ = backCenterCounterZ - sideZ;
+
+            backCornerClockX = backCenterClockX - sideX;
+            backCornerClockY = backCenterClockY - sideY;
+            backCornerClockZ = backCenterClockZ - sideZ;
+
+            backCenterSideX = backCenterX + sideX;
+            backCenterSideY = backCenterY + sideY;
+            backCenterSideZ = backCenterZ + sideZ;
+
+            backCornerSideX = backCenterClockX + sideX;
+            backCornerSideY = backCenterClockY + sideY;
+            backCornerSideZ = backCenterClockZ + sideZ;
+        }
+
+        /// Square corners
+        IIcon sprite;
+
+        double leftU;
+        double rightU;
+        double topV;
+        double botV;
+
+        double midU;
+        double midV;
+
+        double lengthU;
+        double lengthV;
+
+        double halfU;
+        double halfV;
+
+        UVPlane plane;
+
+        double halfOffsetU;
+        double halfOffsetV;
+
+        double halfCounterOffsetU;
+        double halfCounterOffsetV;
+
+        double centerCounterU;
+        double centerCounterV;
+
+        double centerClockU;
+        double centerClockV;
+
+        double cornerCounterU;
+        double cornerCounterV;
+
+        double cornerClockU;
+        double cornerClockV;
+
+        double centerSideU;
+        double centerSideV;
+
+        double cornerSideU;
+        double cornerSideV;
+
+        final double axisOffsetHalf = axisX + axisY + axisZ;
+        final double axisOffsetConnector;
+
+        final IIcon spriteMain;
+        final IIcon spriteCounter;
+        final IIcon spriteClock;
+        final IIcon spriteBack;
+
+        if (isConnector) {
+            axisOffsetConnector = 0;
+
+            spriteCounter = getConnectorSprite(renderer, world, block, xBase, yBase, zBase, counterclockwise);
+            spriteClock = getConnectorSprite(renderer, world, block, xBase, yBase, zBase, clock);
+
+            final ForgeDirection baseAxis = determineLogAxis(world, xBase, yBase, zBase);
+            final ForgeDirection transposeConnector = baseAxis.getRotation(axis);
+
+            spriteMain = getConnectorSprite(
+                renderer,
+                world,
+                block,
+                xBase,
+                yBase,
+                zBase,
+                side.getRotation(transposeConnector));
+
+            spriteBack = getConnectorSprite(
+                renderer,
+                world,
+                block,
+                xBase,
+                yBase,
+                zBase,
+                transposeConnector.getRotation(side));
+        } else {
+            axisOffsetConnector = axisOffsetHalf;
+
+            spriteMain = renderer.getBlockIcon(block, world, xBase, yBase, zBase, side.ordinal());
+            spriteCounter = renderer.getBlockIcon(block, world, xBase, yBase, zBase, counterclockwise.ordinal());
+            spriteClock = renderer.getBlockIcon(block, world, xBase, yBase, zBase, clock.ordinal());
+            spriteBack = renderer.getBlockIcon(block, world, xBase, yBase, zBase, back.ordinal());
+        }
+
+        final int blockColor = BlockUtils.getStandardColorMultiplier(world, block, xBase, yBase, zBase);
+        final ShadingInfo[] containers = ((IRoundLogRenderer) renderer).betterfoliage$getShadingContainers();
+
+        /// Sides
+
+        // Main Side
+        if (shouldRenderFace(side, world, x, y, z)) {
+            leftU = spriteMain.getMinU();
+            rightU = spriteMain.getMaxU();
+            topV = spriteMain.getMinV();
+            botV = spriteMain.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            centerCounterU = midU - axisOffsetHalf * lengthU;
+
+            final double frontV = midV - axisOffsetHalf * lengthV;
+            final double backV = midV + axisOffsetConnector * lengthV;
+
+            if (useAO) {
+                final float colorMult = RenderUtils.getColorMultiplierBySide(side);
+
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    side,
+                    clock,
+                    axis,
+                    blockColor,
+                    colorMult,
+                    containers[0]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    side,
+                    clock,
+                    opposite,
+                    blockColor,
+                    colorMult,
+                    containers[1]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    side,
+                    counterclockwise,
+                    opposite,
+                    blockColor,
+                    colorMult,
+                    containers[2]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    side,
+                    counterclockwise,
+                    axis,
+                    blockColor,
+                    colorMult,
+                    containers[3]);
+
+                containers[0].applyShading(tess);
+                tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, centerCounterU, frontV);
+
+                containers[1].applyShading(tess);
+                tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, centerCounterU, backV);
+
+                containers[1].applyAveragedShading(tess, containers[2], 0.5f);
+                tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, midU, backV);
+
+                containers[0].applyAveragedShading(tess, containers[3], 0.5f);
+                tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, midU, frontV);
+            } else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, side, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, centerCounterU, frontV);
+                tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, centerCounterU, backV);
+                tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, midU, backV);
+                tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, midU, frontV);
+            }
+
+            didRender = true;
+        }
+
+        // Counter
+        if (shouldRenderFace(counterclockwise, world, x, y, z)) {
+            leftU = spriteCounter.getMinU();
+            rightU = spriteCounter.getMaxU();
+            topV = spriteCounter.getMinV();
+            botV = spriteCounter.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            centerCounterU = midU + axisOffsetHalf * lengthU;
+
+            final double frontV = midV - axisOffsetHalf * lengthV;
+            final double backV = midV + axisOffsetConnector * lengthV;
+
+            if (useAO) {
+                final float colorMult = RenderUtils.getColorMultiplierBySide(counterclockwise);
+
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    counterclockwise,
+                    side,
+                    axis,
+                    blockColor,
+                    colorMult,
+                    containers[0]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    counterclockwise,
+                    side,
+                    opposite,
+                    blockColor,
+                    colorMult,
+                    containers[1]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    counterclockwise,
+                    back,
+                    opposite,
+                    blockColor,
+                    colorMult,
+                    containers[2]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    counterclockwise,
+                    back,
+                    axis,
+                    blockColor,
+                    colorMult,
+                    containers[3]);
+
+                containers[0].applyAveragedShading(tess, containers[3], 0.5f);
+                tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, midU, frontV);
+
+                containers[1].applyAveragedShading(tess, containers[2], 0.5f);
+                tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, midU, backV);
+
+                containers[2].applyShading(tess);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, centerCounterU, backV);
+
+                containers[3].applyShading(tess);
+                tess.addVertexWithUV(
+                    frontCornerCounterX,
+                    frontCornerCounterY,
+                    frontCornerCounterZ,
+                    centerCounterU,
+                    frontV);
+            } else {
+                RenderUtils.getFlatShadingInfoForBlockFace(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    counterclockwise,
+                    blockColor,
+                    containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCenterCounterX, frontCenterCounterY, frontCenterCounterZ, midU, frontV);
+                tess.addVertexWithUV(backCenterCounterX, backCenterCounterY, backCenterCounterZ, midU, backV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, centerCounterU, backV);
+                tess.addVertexWithUV(
+                    frontCornerCounterX,
+                    frontCornerCounterY,
+                    frontCornerCounterZ,
+                    centerCounterU,
+                    frontV);
+            }
+
+            didRender = true;
+        }
+
+        // Clock
+        if (shouldRenderFullFace(clock, world, x, y, z)) {
+            leftU = spriteClock.getMinU();
+            rightU = spriteClock.getMaxU();
+            topV = spriteClock.getMinV();
+            botV = spriteClock.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            final double axisU = axisOffsetHalf * lengthU;
+            cornerCounterU = midU - axisU;
+            cornerClockU = midU + axisU;
+
+            final double frontV = midV - axisOffsetHalf * lengthV;
+            final double backV = midV + axisOffsetConnector * lengthV;
+
+            if (useAO) {
+                final float colorMult = RenderUtils.getColorMultiplierBySide(clock);
+
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    clock,
+                    back,
+                    axis,
+                    blockColor,
+                    colorMult,
+                    containers[0]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    clock,
+                    back,
+                    opposite,
+                    blockColor,
+                    colorMult,
+                    containers[1]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    clock,
+                    side,
+                    opposite,
+                    blockColor,
+                    colorMult,
+                    containers[2]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    clock,
+                    side,
+                    axis,
+                    blockColor,
+                    colorMult,
+                    containers[3]);
+
+                containers[0].applyShading(tess);
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerCounterU, frontV);
+
+                containers[1].applyShading(tess);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerCounterU, backV);
+
+                containers[1].applyAveragedShading(tess, containers[2], 0.5f);
+                tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, cornerClockU, backV);
+
+                containers[0].applyAveragedShading(tess, containers[3], 0.5f);
+                tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, cornerClockU, frontV);
+            } else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, clock, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerCounterU, frontV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerCounterU, backV);
+                tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, cornerClockU, backV);
+                tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, cornerClockU, frontV);
+            }
+
+            didRender = true;
+        }
+
+        // Back
+        if (shouldRenderFullFace(back, world, x, y, z)) {
+            leftU = spriteBack.getMinU();
+            rightU = spriteBack.getMaxU();
+            topV = spriteBack.getMinV();
+            botV = spriteBack.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            final double axisU = axisOffsetHalf * lengthU;
+            cornerCounterU = midU - axisU;
+            cornerClockU = midU + axisU;
+
+            final double frontV = midV - axisOffsetHalf * lengthV;
+            final double backV = midV + axisOffsetConnector * lengthV;
+
+            if (useAO) {
+                final float colorMult = RenderUtils.getColorMultiplierBySide(back);
+
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    back,
+                    counterclockwise,
+                    axis,
+                    blockColor,
+                    colorMult,
+                    containers[0]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    back,
+                    counterclockwise,
+                    opposite,
+                    blockColor,
+                    colorMult,
+                    containers[1]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    back,
+                    clock,
+                    opposite,
+                    blockColor,
+                    colorMult,
+                    containers[2]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    back,
+                    clock,
+                    axis,
+                    blockColor,
+                    colorMult,
+                    containers[3]);
+
+                containers[0].applyShading(tess);
+                tess.addVertexWithUV(
+                    frontCornerCounterX,
+                    frontCornerCounterY,
+                    frontCornerCounterZ,
+                    cornerCounterU,
+                    frontV);
+
+                containers[1].applyShading(tess);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, backV);
+
+                containers[2].applyShading(tess);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, backV);
+
+                containers[3].applyShading(tess);
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, frontV);
+            } else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, back, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(
+                    frontCornerCounterX,
+                    frontCornerCounterY,
+                    frontCornerCounterZ,
+                    cornerCounterU,
+                    frontV);
+                tess.addVertexWithUV(backCornerCounterX, backCornerCounterY, backCornerCounterZ, cornerCounterU, backV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, backV);
+                tess.addVertexWithUV(frontCornerClockX, frontCornerClockY, frontCornerClockZ, cornerClockU, frontV);
+            }
+
+            didRender = true;
+        }
+
+        boolean renderFront = !isConnector;
+        boolean renderBack = renderFront;
+
+        // Use connectors?
+        if (Configs.RoundLogs.connectPerpendicular & didRender && !isConnector) {
+            int connectorX = x + axis.offsetX;
+            int connectorY = y + axis.offsetY;
+            int connectorZ = z + axis.offsetZ;
+
+            Block connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
+
+            renderFront = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
+                && determineLogAxis(world, connectorX, connectorY, connectorZ) != axis);
+            if (!renderFront) {
+                renderRoundQuarterLog(
+                    world,
+                    connectorX,
+                    connectorY,
+                    connectorZ,
+                    x,
+                    y,
+                    z,
+                    block,
+                    renderer,
+                    opposite,
+                    counterclockwise,
+                    axisBase,
+                    true,
+                    useAO);
+            }
+
+            connectorX = x - axis.offsetX;
+            connectorY = y - axis.offsetY;
+            connectorZ = z - axis.offsetZ;
+
+            connectorBlock = world.getBlock(connectorX, connectorY, connectorZ);
+
+            renderBack = !(Configs.Blocks.logs.matches(connectorBlock, world, connectorX, connectorY, connectorZ)
+                && determineLogAxis(world, connectorX, connectorY, connectorZ) != axis);
+            if (!renderBack) {
+                renderRoundQuarterLog(
+                    world,
+                    connectorX,
+                    connectorY,
+                    connectorZ,
+                    x,
+                    y,
+                    z,
+                    block,
+                    renderer,
+                    axis,
+                    side,
+                    axisBase,
+                    true,
+                    useAO);
+            }
+        }
+
+        /// Faces
+
+        // Front
+        if (renderFront && shouldRenderFace(axis, world, x, y, z)) {
+            sprite = renderer.getBlockIcon(block, world, x, y, z, axis.ordinal());
+            leftU = sprite.getMinU();
+            rightU = sprite.getMaxU();
+            topV = sprite.getMinV();
+            botV = sprite.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            halfU = lengthU / 2.0;
+            halfV = lengthV / 2.0;
+
+            plane = UVPlane.toUVPlane(axis);
+
+            halfOffsetU = plane.getOffsetU(side) * halfU;
+            halfOffsetV = plane.getOffsetV(side) * halfV;
+
+            halfCounterOffsetU = plane.getOffsetU(counterclockwise) * halfU;
+            halfCounterOffsetV = plane.getOffsetV(counterclockwise) * halfV;
+
+            centerCounterU = midU + halfCounterOffsetU;
+            centerCounterV = midV + halfCounterOffsetV;
+
+            centerClockU = midU - halfCounterOffsetU;
+            centerClockV = midV - halfCounterOffsetV;
+
+            cornerCounterU = centerCounterU - halfOffsetU;
+            cornerCounterV = centerCounterV - halfOffsetV;
+
+            cornerClockU = centerClockU - halfOffsetU;
+            cornerClockV = centerClockV - halfOffsetV;
+
+            centerSideU = midU + halfOffsetU;
+            centerSideV = midV + halfOffsetV;
+
+            cornerSideU = centerSideU - halfCounterOffsetU;
+            cornerSideV = centerSideV - halfCounterOffsetV;
+
+            if (useAO) {
+                final float colorMult = RenderUtils.getColorMultiplierBySide(axis);
+
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    axis,
+                    counterclockwise,
+                    side,
+                    blockColor,
+                    colorMult,
+                    containers[0]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    axis,
+                    counterclockwise,
+                    back,
+                    blockColor,
+                    colorMult,
+                    containers[1]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    axis,
+                    clock,
+                    back,
+                    blockColor,
+                    colorMult,
+                    containers[2]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    axis,
+                    clock,
+                    side,
+                    blockColor,
+                    colorMult,
+                    containers[3]);
+
+                // Side opposite face
+                containers[0].applyAveragedShading(tess, containers[1], 0.5f);
+                tess.addVertexWithUV(
+                    frontCenterCounterX,
+                    frontCenterCounterY,
+                    frontCenterCounterZ,
+                    centerCounterU,
+                    centerCounterV);
+
+                containers[1].applyShading(tess);
+                tess.addVertexWithUV(
+                    frontCornerCounterX,
+                    frontCornerCounterY,
+                    frontCornerCounterZ,
+                    cornerCounterU,
+                    cornerCounterV);
+
+                containers[2].applyShading(tess);
+                tess.addVertexWithUV(
+                    frontCornerClockX,
+                    frontCornerClockY,
+                    frontCornerClockZ,
+                    cornerClockU,
+                    cornerClockV);
+
+                containers[2].applyAveragedShading(tess, containers[3], 0.5f);
+                tess.addVertexWithUV(
+                    frontCenterClockX,
+                    frontCenterClockY,
+                    frontCenterClockZ,
+                    centerClockU,
+                    centerClockV);
+
+                // Quarter face
+                containers[0].applyAveragedShading(tess, containers[3], 0.5f);
+                tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, centerSideU, centerSideV);
+
+                /*
+                 * WHEN AVERAGING AO FOR THE CENTER
+                 * When calculating the center point AO instead of averaging across one of the diagonals, such as:
+                 * average(topLeft, bottomRight) or average(topRight, bottomLeft),
+                 * We apply shading operations such that the final result is equivalent to:
+                 * average(average(topLeft, bottomLeft), average(topRight, bottomRight)).
+                 * This is because the diagonals will average to different values depending on which corners are
+                 * occluded, while the other method will end up using the values of all corners.
+                 * This ensures that the AO color is the same no matter which rotation the log has.
+                 */
+
+                containers[1].updateAverageShadingInfo(containers[0], 0.5f);
+                containers[2].updateAverageShadingInfo(containers[3], 0.5f);
+
+                containers[1].applyAveragedShading(tess, containers[2], 0.5f);
+                tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+
+                containers[2].applyShading(tess);
+                tess.addVertexWithUV(
+                    frontCenterClockX,
+                    frontCenterClockY,
+                    frontCenterClockZ,
+                    centerClockU,
+                    centerClockV);
+
+                containers[3].applyShading(tess);
+                tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, cornerSideU, cornerSideV);
+            } else {
+                RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, axis, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                // Side opposite face
+                tess.addVertexWithUV(
+                    frontCenterCounterX,
+                    frontCenterCounterY,
+                    frontCenterCounterZ,
+                    centerCounterU,
+                    centerCounterV);
+                tess.addVertexWithUV(
+                    frontCornerCounterX,
+                    frontCornerCounterY,
+                    frontCornerCounterZ,
+                    cornerCounterU,
+                    cornerCounterV);
+                tess.addVertexWithUV(
+                    frontCornerClockX,
+                    frontCornerClockY,
+                    frontCornerClockZ,
+                    cornerClockU,
+                    cornerClockV);
+                tess.addVertexWithUV(
+                    frontCenterClockX,
+                    frontCenterClockY,
+                    frontCenterClockZ,
+                    centerClockU,
+                    centerClockV);
+
+                // Quarter face
+                tess.addVertexWithUV(frontCenterSideX, frontCenterSideY, frontCenterSideZ, centerSideU, centerSideV);
+                tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+                tess.addVertexWithUV(
+                    frontCenterClockX,
+                    frontCenterClockY,
+                    frontCenterClockZ,
+                    centerClockU,
+                    centerClockV);
+                tess.addVertexWithUV(frontCornerSideX, frontCornerSideY, frontCornerSideZ, cornerSideU, cornerSideV);
+            }
+
+            didRender = true;
+        }
+
+        // Back
+        if (renderBack && shouldRenderFace(opposite, world, x, y, z)) {
+            sprite = renderer.getBlockIcon(block, world, x, y, z, opposite.ordinal());
+            leftU = sprite.getMinU();
+            rightU = sprite.getMaxU();
+            topV = sprite.getMinV();
+            botV = sprite.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            halfU = lengthU / 2.0;
+            halfV = lengthV / 2.0;
+
+            plane = UVPlane.toUVPlane(opposite);
+
+            halfOffsetU = plane.getOffsetU(side) * halfU;
+            halfOffsetV = plane.getOffsetV(side) * halfV;
+
+            halfCounterOffsetU = plane.getOffsetU(counterclockwise) * halfU;
+            halfCounterOffsetV = plane.getOffsetV(counterclockwise) * halfV;
+
+            centerCounterU = midU + halfCounterOffsetU;
+            centerCounterV = midV + halfCounterOffsetV;
+
+            centerClockU = midU - halfCounterOffsetU;
+            centerClockV = midV - halfCounterOffsetV;
+
+            cornerCounterU = centerCounterU - halfOffsetU;
+            cornerCounterV = centerCounterV - halfOffsetV;
+
+            cornerClockU = centerClockU - halfOffsetU;
+            cornerClockV = centerClockV - halfOffsetV;
+
+            centerSideU = midU + halfOffsetU;
+            centerSideV = midV + halfOffsetV;
+
+            cornerSideU = centerSideU - halfCounterOffsetU;
+            cornerSideV = centerSideV - halfCounterOffsetV;
+
+            if (useAO) {
+                final float colorMult = RenderUtils.getColorMultiplierBySide(opposite);
+
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    opposite,
+                    clock,
+                    side,
+                    blockColor,
+                    colorMult,
+                    containers[0]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    opposite,
+                    clock,
+                    back,
+                    blockColor,
+                    colorMult,
+                    containers[1]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    opposite,
+                    counterclockwise,
+                    back,
+                    blockColor,
+                    colorMult,
+                    containers[2]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    opposite,
+                    counterclockwise,
+                    side,
+                    blockColor,
+                    colorMult,
+                    containers[3]);
+
+                // Side opposite face
+                containers[0].applyAveragedShading(tess, containers[1], 0.5f);
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+
+                containers[1].applyShading(tess);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, cornerClockV);
+
+                containers[2].applyShading(tess);
+                tess.addVertexWithUV(
+                    backCornerCounterX,
+                    backCornerCounterY,
+                    backCornerCounterZ,
+                    cornerCounterU,
+                    cornerCounterV);
+
+                containers[2].applyAveragedShading(tess, containers[3], 0.5f);
+                tess.addVertexWithUV(
+                    backCenterCounterX,
+                    backCenterCounterY,
+                    backCenterCounterZ,
+                    centerCounterU,
+                    centerCounterV);
+
+                // Quarter face
+                containers[0].applyShading(tess);
+                tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, cornerSideU, cornerSideV);
+
+                // Average point AOs
+                // See 'WHEN AVERAGING AO FOR THE CENTER' comment above
+                containers[1].updateAverageShadingInfo(containers[0], 0.5f);
+                containers[1].applyShading(tess);
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+
+                containers[2].updateAverageShadingInfo(containers[3], 0.5f);
+                containers[2].applyAveragedShading(tess, containers[1], 0.5f);
+                tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+
+                containers[0].applyAveragedShading(tess, containers[3], 0.5f);
+                tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, centerSideU, centerSideV);
+            } else {
+                RenderUtils
+                    .getFlatShadingInfoForBlockFace(renderer, block, x, y, z, opposite, blockColor, containers[0]);
+                containers[0].applyShading(tess);
+
+                // Side opposite face
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+                tess.addVertexWithUV(backCornerClockX, backCornerClockY, backCornerClockZ, cornerClockU, cornerClockV);
+                tess.addVertexWithUV(
+                    backCornerCounterX,
+                    backCornerCounterY,
+                    backCornerCounterZ,
+                    cornerCounterU,
+                    cornerCounterV);
+                tess.addVertexWithUV(
+                    backCenterCounterX,
+                    backCenterCounterY,
+                    backCenterCounterZ,
+                    centerCounterU,
+                    centerCounterV);
+
+                // Quarter face
+                tess.addVertexWithUV(backCornerSideX, backCornerSideY, backCornerSideZ, cornerSideU, cornerSideV);
+                tess.addVertexWithUV(backCenterClockX, backCenterClockY, backCenterClockZ, centerClockU, centerClockV);
+                tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+                tess.addVertexWithUV(backCenterSideX, backCenterSideY, backCenterSideZ, centerSideU, centerSideV);
+            }
+
+            didRender = true;
+        }
+
+        /// Round corner
+        didRender |= renderRoundCorner(
+            world,
+            x,
+            y,
+            z,
+            xBase,
+            yBase,
+            zBase,
+            block,
+            renderer,
+            axis,
+            side,
+            counterclockwise,
+            axisBase,
+            isConnector,
+            renderFront,
+            renderBack,
+            useAO);
+
+        return didRender;
+    }
+
+    private static boolean renderRoundCorner(IBlockAccess world, int x, int y, int z, int xBase, int yBase, int zBase,
+        Block block, RenderBlocks renderer, ForgeDirection axis, ForgeDirection clockwise,
+        ForgeDirection counterclockwise, ForgeDirection axisBase, boolean isConnector, boolean renderFront,
+        boolean renderBack, boolean useAO) {
+
+        final Tessellator tess = Tessellator.instance;
+
+        final ForgeDirection opposite = axis.getOpposite();
+        final ForgeDirection counterOpp = counterclockwise.getOpposite();
+        final ForgeDirection clockOpp = clockwise.getOpposite();
+
+        boolean didRender = false;
+
+        final double midX = x + 0.5;
+        final double midY = y + 0.5;
+        final double midZ = z + 0.5;
+
+        final double axisX = axis.offsetX / 2.0;
+        final double axisY = axis.offsetY / 2.0;
+        final double axisZ = axis.offsetZ / 2.0;
+
+        final double clockX = clockwise.offsetX / 2.0;
+        final double clockY = clockwise.offsetY / 2.0;
+        final double clockZ = clockwise.offsetZ / 2.0;
+
+        final double counterX = counterclockwise.offsetX / 2.0;
+        final double counterY = counterclockwise.offsetY / 2.0;
+        final double counterZ = counterclockwise.offsetZ / 2.0;
+
+        final boolean useLargeRadiusBase = shouldConnectToSide(clockOpp, world, xBase, yBase, zBase, axisBase)
+            && shouldConnectToSide(counterOpp, world, xBase, yBase, zBase, axisBase);
+
+        final boolean useLargeRadiusFront;
+        final boolean useLargeRadiusBack;
+
+        if (!isConnector) {
+            useLargeRadiusFront = useLargeRadiusBase
+                && shouldUseLargeAdjacentRadius(axis, clockwise, counterclockwise, world, x, y, z);
+
+            useLargeRadiusBack = useLargeRadiusBase
+                && shouldUseLargeAdjacentRadius(opposite, clockwise, counterclockwise, world, x, y, z);
+        } else {
+            useLargeRadiusFront = useLargeRadiusBase;
+            useLargeRadiusBack = useLargeRadiusBase;
+        }
+
+        final double frontRadius = useLargeRadiusFront ? Configs.RoundLogs.radiusLarge : Configs.RoundLogs.radiusSmall;
+        final double backRadius = useLargeRadiusBack ? Configs.RoundLogs.radiusLarge : Configs.RoundLogs.radiusSmall;
+
+        final double frontEdgeToCenter = 0.5 - frontRadius;
+        final double frontDiagToCenter = (frontRadius / 2.0) + frontEdgeToCenter;
+
+        final float frontEdgeRatio = (float) frontEdgeToCenter * 2f;
+        final float fronDiagRatio = (float) frontDiagToCenter * 2f * MathUtils.ROOT2;
+
+        final double backEdgeToCenter = 0.5 - backRadius;
+
+        final float backEdgeRatio = (float) backEdgeToCenter * 2f;
+        final float backDiagRatio;
+
+        /// COORDS
+        // Front
+        final double frontCenterX = midX + axisX;
+        final double frontCenterY = midY + axisY;
+        final double frontCenterZ = midZ + axisZ;
+
+        final double frontClockCenterX = frontCenterX + clockX;
+        final double frontClockCenterY = frontCenterY + clockY;
+        final double frontClockCenterZ = frontCenterZ + clockZ;
+
+        final double frontCounterCenterX = frontCenterX + counterX;
+        final double frontCounterCenterY = frontCenterY + counterY;
+        final double frontCounterCenterZ = frontCenterZ + counterZ;
+
+        final double frontClockEdgeX = frontClockCenterX + counterclockwise.offsetX * frontEdgeToCenter;
+        final double frontClockEdgeY = frontClockCenterY + counterclockwise.offsetY * frontEdgeToCenter;
+        final double frontClockEdgeZ = frontClockCenterZ + counterclockwise.offsetZ * frontEdgeToCenter;
+
+        final double frontCounterEdgeX = frontCounterCenterX + clockwise.offsetX * frontEdgeToCenter;
+        final double frontCounterEdgeY = frontCounterCenterY + clockwise.offsetY * frontEdgeToCenter;
+        final double frontCounterEdgeZ = frontCounterCenterZ + clockwise.offsetZ * frontEdgeToCenter;
+
+        final double frontDiagX = frontCenterX + frontDiagToCenter * (clockwise.offsetX + counterclockwise.offsetX);
+        final double frontDiagY = frontCenterY + frontDiagToCenter * (clockwise.offsetY + counterclockwise.offsetY);
+        final double frontDiagZ = frontCenterZ + frontDiagToCenter * (clockwise.offsetZ + counterclockwise.offsetZ);
+
+        // Back
+        final double backCenterX;
+        final double backCenterY;
+        final double backCenterZ;
+
+        final double backClockCenterX;
+        final double backClockCenterY;
+        final double backClockCenterZ;
+
+        final double backCounterCenterX;
+        final double backCounterCenterY;
+        final double backCounterCenterZ;
+
+        final double backDiagX;
+        final double backDiagY;
+        final double backDiagZ;
+
+        if (isConnector) {
+            final double backConnector = (backRadius * Configs.RoundLogs.zProtection / 2.0) + backEdgeToCenter;
+
+            backDiagRatio = (float) backConnector * 2f * MathUtils.ROOT2;
+
+            backCenterX = midX;
+            backCenterY = midY;
+            backCenterZ = midZ;
+
+            backClockCenterX = backCenterX + clockX * Configs.RoundLogs.zProtection;
+            backClockCenterY = backCenterY + clockY * Configs.RoundLogs.zProtection;
+            backClockCenterZ = backCenterZ + clockZ * Configs.RoundLogs.zProtection;
+
+            backCounterCenterX = backCenterX + counterX * Configs.RoundLogs.zProtection;
+            backCounterCenterY = backCenterY + counterY * Configs.RoundLogs.zProtection;
+            backCounterCenterZ = backCenterZ + counterZ * Configs.RoundLogs.zProtection;
+
+            backDiagX = backCenterX + backConnector * (clockwise.offsetX + counterclockwise.offsetX);
+            backDiagY = backCenterY + backConnector * (clockwise.offsetY + counterclockwise.offsetY);
+            backDiagZ = backCenterZ + backConnector * (clockwise.offsetZ + counterclockwise.offsetZ);
+        } else {
+            final double backDiagToCenter = (backRadius / 2.0) + backEdgeToCenter;
+
+            backDiagRatio = (float) backDiagToCenter * 2f * MathUtils.ROOT2;
+
+            backCenterX = midX - axisX;
+            backCenterY = midY - axisY;
+            backCenterZ = midZ - axisZ;
+
+            backClockCenterX = backCenterX + clockX;
+            backClockCenterY = backCenterY + clockY;
+            backClockCenterZ = backCenterZ + clockZ;
+
+            backCounterCenterX = backCenterX + counterX;
+            backCounterCenterY = backCenterY + counterY;
+            backCounterCenterZ = backCenterZ + counterZ;
+
+            backDiagX = backCenterX + backDiagToCenter * (clockwise.offsetX + counterclockwise.offsetX);
+            backDiagY = backCenterY + backDiagToCenter * (clockwise.offsetY + counterclockwise.offsetY);
+            backDiagZ = backCenterZ + backDiagToCenter * (clockwise.offsetZ + counterclockwise.offsetZ);
+        }
+
+        final double backClockEdgeX = backClockCenterX + counterclockwise.offsetX * backEdgeToCenter;
+        final double backClockEdgeY = backClockCenterY + counterclockwise.offsetY * backEdgeToCenter;
+        final double backClockEdgeZ = backClockCenterZ + counterclockwise.offsetZ * backEdgeToCenter;
+
+        final double backCounterEdgeX = backCounterCenterX + clockwise.offsetX * backEdgeToCenter;
+        final double backCounterEdgeY = backCounterCenterY + clockwise.offsetY * backEdgeToCenter;
+        final double backCounterEdgeZ = backCounterCenterZ + clockwise.offsetZ * backEdgeToCenter;
+
+        ////////// RENDER //////////
+        double leftU;
+        double rightU;
+        double topV;
+        double botV;
+
+        double midU;
+        double midV;
+
+        double lengthU;
+        double lengthV;
+
+        double halfU;
+        double halfV;
+
+        UVPlane plane;
+
+        double clockOffsetU;
+        double clockOffsetV;
+
+        double counterOffsetU;
+        double counterOffsetV;
+
+        double clockU;
+        double clockV;
+
+        double counterU;
+        double counterV;
+
+        double cornerU;
+        double cornerV;
+
+        double clockEdgeU;
+        double clockEdgeV;
+
+        double counterEdgeU;
+        double counterEdgeV;
+
+        final int blockColor = BlockUtils.getStandardColorMultiplier(world, block, xBase, yBase, zBase);
+        final ShadingInfo[] containers = ((IRoundLogRenderer) renderer).betterfoliage$getShadingContainers();
+
+        if (!useAO) {
+            RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, axis, blockColor, containers[0]);
+            RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, opposite, blockColor, containers[1]);
+            RenderUtils.getFlatShadingInfoForBlockFace(renderer, block, x, y, z, clockwise, blockColor, containers[2]);
+            RenderUtils
+                .getFlatShadingInfoForBlockFace(renderer, block, x, y, z, counterclockwise, blockColor, containers[3]);
+        }
+
+        // Faces
+        /// Front
+        renderFront = renderFront && shouldRenderCornerFace(axis, world, x, y, z);
+        if (renderFront) {
+            final IIcon spriteFront = renderer.getBlockIcon(block, world, xBase, yBase, zBase, axis.ordinal());
+
+            leftU = spriteFront.getMinU();
+            rightU = spriteFront.getMaxU();
+            topV = spriteFront.getMinV();
+            botV = spriteFront.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            halfU = lengthU / 2.0;
+            halfV = lengthV / 2.0;
+
+            plane = UVPlane.toUVPlane(axis);
+
+            clockOffsetU = plane.getOffsetU(clockwise);
+            clockOffsetV = plane.getOffsetV(clockwise);
+
+            counterOffsetU = plane.getOffsetU(counterclockwise);
+            counterOffsetV = plane.getOffsetV(counterclockwise);
+
+            clockU = midU + clockOffsetU * halfU;
+            clockV = midV + clockOffsetV * halfV;
+
+            counterU = midU + counterOffsetU * halfU;
+            counterV = midV + counterOffsetV * halfV;
+
+            cornerU = midU + (clockOffsetU + counterOffsetU) * halfU;
+            cornerV = midV + (clockOffsetV + counterOffsetV) * halfV;
+
+            clockEdgeU = cornerU - counterOffsetU * frontRadius * lengthU;
+            clockEdgeV = cornerV - counterOffsetV * frontRadius * lengthU;
+
+            counterEdgeU = cornerU - clockOffsetU * frontRadius * lengthU;
+            counterEdgeV = cornerV - clockOffsetV * frontRadius * lengthV;
+
+            if (useAO) {
+                final float colorMult = RenderUtils.getColorMultiplierBySide(axis);
+
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    axis,
+                    counterclockwise,
+                    clockwise,
+                    blockColor,
+                    colorMult,
+                    containers[0]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    axis,
+                    counterclockwise,
+                    clockOpp,
+                    blockColor,
+                    colorMult,
+                    containers[1]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    axis,
+                    counterOpp,
+                    clockOpp,
+                    blockColor,
+                    colorMult,
+                    containers[2]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    axis,
+                    counterOpp,
+                    clockwise,
+                    blockColor,
+                    colorMult,
+                    containers[3]);
+
+                // Average point AOs
+                // See 'WHEN AVERAGING AO FOR THE CENTER' comment above
+                containers[1].updateAverageShadingInfo(containers[0], 0.5f);
+                containers[2].updateAverageShadingInfo(containers[3], 0.5f);
+                containers[2].updateAverageShadingInfo(containers[1], 0.5f);
+                containers[3].updateAverageShadingInfo(containers[0], 0.5f);
+
+                // Clock pizza quad
+                containers[2].applyShading(tess);
+                tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+
+                containers[3].applyShading(tess);
+                tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, clockU, clockV);
+
+                containers[3].applyAveragedShading(tess, containers[0], frontEdgeRatio);
+                tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockEdgeU, clockEdgeV);
+
+                containers[2].applyAveragedShading(tess, containers[0], fronDiagRatio);
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
+
+                // Counter pizza quad
+                containers[2].applyShading(tess);
+                tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+
+                containers[2].applyAveragedShading(tess, containers[0], fronDiagRatio);
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
+
+                containers[1].applyAveragedShading(tess, containers[0], frontEdgeRatio);
+                tess.addVertexWithUV(
+                    frontCounterEdgeX,
+                    frontCounterEdgeY,
+                    frontCounterEdgeZ,
+                    counterEdgeU,
+                    counterEdgeV);
+
+                containers[1].applyShading(tess);
+                tess.addVertexWithUV(frontCounterCenterX, frontCounterCenterY, frontCounterCenterZ, counterU, counterV);
+            } else {
+
+                containers[0].applyShading(tess);
+
+                tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+                tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, clockU, clockV);
+                tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockEdgeU, clockEdgeV);
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
+
+                tess.addVertexWithUV(frontCenterX, frontCenterY, frontCenterZ, midU, midV);
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, cornerU, cornerV);
+                tess.addVertexWithUV(
+                    frontCounterEdgeX,
+                    frontCounterEdgeY,
+                    frontCounterEdgeZ,
+                    counterEdgeU,
+                    counterEdgeV);
+                tess.addVertexWithUV(frontCounterCenterX, frontCounterCenterY, frontCounterCenterZ, counterU, counterV);
+            }
+
+            didRender = true;
+        }
+
+        /// Back
+        renderBack = renderBack && shouldRenderCornerFace(opposite, world, x, y, z);
+        if (renderBack) {
+            final IIcon spriteBack = renderer.getBlockIcon(block, world, xBase, yBase, zBase, opposite.ordinal());
+
+            leftU = spriteBack.getMinU();
+            rightU = spriteBack.getMaxU();
+            topV = spriteBack.getMinV();
+            botV = spriteBack.getMaxV();
+
+            midU = (rightU + leftU) / 2.0;
+            midV = (botV + topV) / 2.0;
+
+            lengthU = rightU - leftU;
+            lengthV = botV - topV;
+
+            halfU = lengthU / 2.0;
+            halfV = lengthV / 2.0;
+
+            plane = UVPlane.toUVPlane(opposite);
+
+            clockOffsetU = plane.getOffsetU(clockwise);
+            clockOffsetV = plane.getOffsetV(clockwise);
+
+            counterOffsetU = plane.getOffsetU(counterclockwise);
+            counterOffsetV = plane.getOffsetV(counterclockwise);
+
+            clockU = midU + clockOffsetU * halfU;
+            clockV = midV + clockOffsetV * halfV;
+
+            counterU = midU + counterOffsetU * halfU;
+            counterV = midV + counterOffsetV * halfV;
+
+            cornerU = midU + (clockOffsetU + counterOffsetU) * halfU;
+            cornerV = midV + (clockOffsetV + counterOffsetV) * halfV;
+
+            clockEdgeU = cornerU - counterOffsetU * backRadius * lengthU;
+            clockEdgeV = cornerV - counterOffsetV * backRadius * lengthU;
+
+            counterEdgeU = cornerU - clockOffsetU * backRadius * lengthU;
+            counterEdgeV = cornerV - clockOffsetV * backRadius * lengthV;
+
+            if (useAO) {
+                final float colorMult = RenderUtils.getColorMultiplierBySide(opposite);
+
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    opposite,
+                    counterclockwise,
+                    clockwise,
+                    blockColor,
+                    colorMult,
+                    containers[0]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    opposite,
+                    counterclockwise,
+                    clockOpp,
+                    blockColor,
+                    colorMult,
+                    containers[1]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    opposite,
+                    counterOpp,
+                    clockOpp,
+                    blockColor,
+                    colorMult,
+                    containers[2]);
+                RenderUtils.getAOShadingInfoForBlockCorner(
+                    renderer,
+                    block,
+                    x,
+                    y,
+                    z,
+                    opposite,
+                    counterOpp,
+                    clockwise,
+                    blockColor,
+                    colorMult,
+                    containers[3]);
+
+                // Average point AOs
+                // See 'WHEN AVERAGING AO FOR THE CENTER' comment above
+                containers[1].updateAverageShadingInfo(containers[0], 0.5f);
+                containers[2].updateAverageShadingInfo(containers[3], 0.5f);
+                containers[2].updateAverageShadingInfo(containers[1], 0.5f);
+                containers[3].updateAverageShadingInfo(containers[0], 0.5f);
+
+                // Counter pizza quad
+                containers[2].applyShading(tess);
+                tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+
+                containers[1].applyShading(tess);
+                tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, counterU, counterV);
+
+                containers[1].applyAveragedShading(tess, containers[0], backEdgeRatio);
+                tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterEdgeU, counterEdgeV);
+
+                containers[2].applyAveragedShading(tess, containers[0], backDiagRatio);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
+
+                // Clock pizza quad
+                containers[2].applyShading(tess);
+                tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+
+                containers[2].applyAveragedShading(tess, containers[0], backDiagRatio);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
+
+                containers[3].applyAveragedShading(tess, containers[0], backEdgeRatio);
+                tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockEdgeU, clockEdgeV);
+
+                containers[3].applyShading(tess);
+                tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, clockU, clockV);
+            } else {
+                containers[1].applyShading(tess);
+
+                tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+                tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, counterU, counterV);
+                tess.addVertexWithUV(backCounterEdgeX, backCounterEdgeY, backCounterEdgeZ, counterEdgeU, counterEdgeV);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
+
+                tess.addVertexWithUV(backCenterX, backCenterY, backCenterZ, midU, midV);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, cornerU, cornerV);
+                tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockEdgeU, clockEdgeV);
+                tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, clockU, clockV);
+            }
+
+            didRender = true;
+        }
+
+        /// Sides
+        final double axisOffset = axis.offsetX + axis.offsetY + axis.offsetZ;
+        final double axisOffsetHalf = axisX + axisY + axisZ;
+
+        final double axisOffsetConnector;
+
+        final IIcon spriteClock;
+        final IIcon spriteCounter;
+
+        if (isConnector) {
+            axisOffsetConnector = 0;
+
+            spriteClock = getConnectorSprite(renderer, world, block, xBase, yBase, zBase, clockwise);
+            spriteCounter = getConnectorSprite(renderer, world, block, xBase, yBase, zBase, counterclockwise);
+        } else {
+            axisOffsetConnector = axisOffsetHalf;
+
+            spriteClock = renderer.getBlockIcon(block, world, xBase, yBase, zBase, clockwise.ordinal());
+            spriteCounter = renderer.getBlockIcon(block, world, xBase, yBase, zBase, counterclockwise.ordinal());
+        }
+
+        leftU = spriteClock.getMinU();
+        rightU = spriteClock.getMaxU();
+        topV = spriteClock.getMinV();
+        botV = spriteClock.getMaxV();
+
+        lengthU = rightU - leftU;
+        lengthV = botV - topV;
+
+        midU = (rightU + leftU) / 2.0;
+        midV = (botV + topV) / 2.0;
+
+        final double clockCornerU = midU + axisOffsetHalf * lengthU;
+
+        final double clockFrontEdgeU = midU + frontEdgeToCenter * axisOffset * lengthU;
+        final double clockBackEdgeU = midU + backEdgeToCenter * axisOffset * lengthU;
+
+        final double clockFrontV = midV - axisOffsetHalf * lengthV;
+        final double clockBackV = midV + axisOffsetConnector * lengthV;
+
+        if (useAO) {
+            final float colorMultClock = RenderUtils.getColorMultiplierBySide(clockwise);
+            final float colorMultCounter = RenderUtils.getColorMultiplierBySide(counterclockwise);
+
+            // Precalculate side AOs
+            RenderUtils.getAOShadingInfoForBlockCorner(
+                renderer,
+                block,
+                x,
+                y,
+                z,
+                clockwise,
+                counterOpp,
+                axis,
+                blockColor,
+                colorMultClock,
+                containers[0]);
+            RenderUtils.getAOShadingInfoForBlockCorner(
+                renderer,
+                block,
+                x,
+                y,
+                z,
+                clockwise,
+                counterOpp,
+                opposite,
+                blockColor,
+                colorMultClock,
+                containers[1]);
+            RenderUtils.getAOShadingInfoForBlockCorner(
+                renderer,
+                block,
+                x,
+                y,
+                z,
+                clockwise,
+                counterclockwise,
+                opposite,
+                blockColor,
+                colorMultClock,
+                containers[2]);
+            RenderUtils.getAOShadingInfoForBlockCorner(
+                renderer,
+                block,
+                x,
+                y,
+                z,
+                clockwise,
+                counterclockwise,
+                axis,
+                blockColor,
+                colorMultClock,
+                containers[3]);
+
+            containers[0].updateAverageShadingInfo(containers[3], 0.5f);
+            containers[1].updateAverageShadingInfo(containers[2], 0.5f);
+            containers[2].updateAverageShadingInfo(containers[1], containers[2], backEdgeRatio);
+            containers[3].updateAverageShadingInfo(containers[0], containers[3], frontEdgeRatio);
+
+            RenderUtils.getAOShadingInfoForBlockCorner(
+                renderer,
+                block,
+                x,
+                y,
+                z,
+                counterclockwise,
+                clockwise,
+                axis,
+                blockColor,
+                colorMultCounter,
+                containers[4]);
+            RenderUtils.getAOShadingInfoForBlockCorner(
+                renderer,
+                block,
+                x,
+                y,
+                z,
+                counterclockwise,
+                clockwise,
+                opposite,
+                blockColor,
+                colorMultCounter,
+                containers[5]);
+            RenderUtils.getAOShadingInfoForBlockCorner(
+                renderer,
+                block,
+                x,
+                y,
+                z,
+                counterclockwise,
+                clockOpp,
+                opposite,
+                blockColor,
+                colorMultCounter,
+                containers[6]);
+            RenderUtils.getAOShadingInfoForBlockCorner(
+                renderer,
+                block,
+                x,
+                y,
+                z,
+                counterclockwise,
+                clockOpp,
+                axis,
+                blockColor,
+                colorMultCounter,
+                containers[7]);
+
+            containers[7].updateAverageShadingInfo(containers[4], 0.5f);
+            containers[6].updateAverageShadingInfo(containers[5], 0.5f);
+            containers[5].updateAverageShadingInfo(containers[6], containers[5], backEdgeRatio);
+            containers[4].updateAverageShadingInfo(containers[7], containers[4], frontEdgeRatio);
+        }
+
+        // Clock Side
+        final boolean renderClock = shouldRenderFace(clockwise, world, x, y, z);
+
+        if (renderClock) {
+            if (useAO) {
+                containers[0].applyShading(tess);
+                tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, midU, clockFrontV);
+
+                containers[1].applyShading(tess);
+                tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, midU, clockBackV);
+
+                containers[2].applyShading(tess);
+                tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
+
+                containers[3].applyShading(tess);
+                tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
+            } else {
+                containers[2].applyShading(tess);
+
+                tess.addVertexWithUV(frontClockCenterX, frontClockCenterY, frontClockCenterZ, midU, clockFrontV);
+                tess.addVertexWithUV(backClockCenterX, backClockCenterY, backClockCenterZ, midU, clockBackV);
+                tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
+                tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
+            }
+
+            didRender = true;
+        }
+
+        leftU = spriteCounter.getMinU();
+        rightU = spriteCounter.getMaxU();
+        topV = spriteCounter.getMinV();
+        botV = spriteCounter.getMaxV();
+
+        lengthU = rightU - leftU;
+        lengthV = botV - topV;
+
+        midU = (rightU + leftU) / 2.0;
+        midV = (botV + topV) / 2.0;
+
+        final double counterCornerU = midU - axisOffsetHalf * lengthU;
+
+        final double counterFrontEdgeU = midU - frontEdgeToCenter * axisOffset * lengthU;
+        final double counterBackEdgeU = midU - backEdgeToCenter * axisOffset * lengthU;
+
+        final double counterFrontV = midV - lengthV * axisOffsetHalf;
+        final double counterBackV = midV + lengthV * axisOffsetConnector;
+
+        // Counter Side
+        final boolean renderCounter = shouldRenderFace(counterclockwise, world, x, y, z);
+
+        if (renderCounter) {
+            if (useAO) {
+                containers[4].applyShading(tess);
+                tess.addVertexWithUV(
+                    frontCounterEdgeX,
+                    frontCounterEdgeY,
+                    frontCounterEdgeZ,
+                    counterFrontEdgeU,
+                    counterFrontV);
+
+                containers[5].applyShading(tess);
+                tess.addVertexWithUV(
+                    backCounterEdgeX,
+                    backCounterEdgeY,
+                    backCounterEdgeZ,
+                    counterBackEdgeU,
+                    counterBackV);
+
+                containers[6].applyShading(tess);
+                tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, midU, counterBackV);
+
+                containers[7].applyShading(tess);
+                tess.addVertexWithUV(
+                    frontCounterCenterX,
+                    frontCounterCenterY,
+                    frontCounterCenterZ,
+                    midU,
+                    counterFrontV);
+            } else {
+                containers[3].applyShading(tess);
+
+                tess.addVertexWithUV(
+                    frontCounterEdgeX,
+                    frontCounterEdgeY,
+                    frontCounterEdgeZ,
+                    counterFrontEdgeU,
+                    counterFrontV);
+                tess.addVertexWithUV(
+                    backCounterEdgeX,
+                    backCounterEdgeY,
+                    backCounterEdgeZ,
+                    counterBackEdgeU,
+                    counterBackV);
+                tess.addVertexWithUV(backCounterCenterX, backCounterCenterY, backCounterCenterZ, midU, counterBackV);
+                tess.addVertexWithUV(
+                    frontCounterCenterX,
+                    frontCounterCenterY,
+                    frontCounterCenterZ,
+                    midU,
+                    counterFrontV);
+            }
+
+            didRender = true;
+        }
+
+        // Diagonals
+        boolean renderDiagonal = renderFront || renderBack || renderClock || renderCounter;
+
+        if (!renderDiagonal) {
+            // Test if front and back axis are themselves log blocks, if so we must render the diagonal
+            // even though none of the other sides were rendered.
+            renderDiagonal = shouldRenderFace(axis, world, x, y, z) || shouldRenderFace(opposite, world, x, y, z);
+        }
+
+        if (renderDiagonal) {
+            if (useAO) {
+                // Combined Corners: 3, 2, 5, 4
+                ShadingInfo.updateDiagonalAOShading(containers[3], containers[2], containers[5], containers[4]);
+
+                // Clock Diag
+
+                // Save for later
+                containers[0].updateAverageShadingInfo(containers[2], containers[5], 0.5f);
+
+                containers[3].applyShading(tess);
+                tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
+
+                containers[2].applyShading(tess);
+                tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
+
+                containers[0].applyShading(tess);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, clockCornerU, clockBackV);
+
+                containers[3].applyAveragedShading(tess, containers[4], 0.5f);
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, clockCornerU, clockFrontV);
+
+                // Counter Diag
+                // Skip, same as previous
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, counterCornerU, counterFrontV);
+
+                // Use the one saved before
+                containers[0].applyShading(tess);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, counterCornerU, counterBackV);
+
+                containers[5].applyShading(tess);
+                tess.addVertexWithUV(
+                    backCounterEdgeX,
+                    backCounterEdgeY,
+                    backCounterEdgeZ,
+                    counterBackEdgeU,
+                    counterBackV);
+
+                containers[4].applyShading(tess);
+                tess.addVertexWithUV(
+                    frontCounterEdgeX,
+                    frontCounterEdgeY,
+                    frontCounterEdgeZ,
+                    counterFrontEdgeU,
+                    counterFrontV);
+            } else {
+
+                ShadingInfo.applyFlatDiagonalShading(tess, containers[2], containers[3], containers[0], containers[1]);
+
+                // Clock Diag
+                tess.addVertexWithUV(frontClockEdgeX, frontClockEdgeY, frontClockEdgeZ, clockFrontEdgeU, clockFrontV);
+                tess.addVertexWithUV(backClockEdgeX, backClockEdgeY, backClockEdgeZ, clockBackEdgeU, clockBackV);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, clockCornerU, clockBackV);
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, clockCornerU, clockFrontV);
+
+                // Counter Diag
+                tess.addVertexWithUV(frontDiagX, frontDiagY, frontDiagZ, counterCornerU, counterFrontV);
+                tess.addVertexWithUV(backDiagX, backDiagY, backDiagZ, counterCornerU, counterBackV);
+                tess.addVertexWithUV(
+                    backCounterEdgeX,
+                    backCounterEdgeY,
+                    backCounterEdgeZ,
+                    counterBackEdgeU,
+                    counterBackV);
+                tess.addVertexWithUV(
+                    frontCounterEdgeX,
+                    frontCounterEdgeY,
+                    frontCounterEdgeZ,
+                    counterFrontEdgeU,
+                    counterFrontV);
+            }
+        }
+
+        return didRender;
+    }
+
+    // Separate method to serve as easy target for mod compatibility mixins
+    private static IIcon getConnectorSprite(RenderBlocks renderer, IBlockAccess world, Block block, int x, int y, int z,
+        ForgeDirection side) {
+        return renderer.getBlockIcon(block, world, x, y, z, side.ordinal());
+    }
+}
