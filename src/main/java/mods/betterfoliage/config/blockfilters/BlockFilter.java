@@ -219,10 +219,9 @@ public abstract class BlockFilter {
         }
 
         public boolean equalsRule(BlockFilterRule other) {
-            return isBlockingRule == other.isBlockingRule &&
-                blockMetadata == other.blockMetadata &&
-                block == other.block &&
-                blockClass == other.blockClass;
+            return isBlockingRule == other.isBlockingRule && blockMetadata == other.blockMetadata
+                && block == other.block
+                && blockClass == other.blockClass;
         }
     }
 }

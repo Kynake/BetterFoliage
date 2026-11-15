@@ -2,8 +2,6 @@ package mods.betterfoliage.config;
 
 import java.io.File;
 
-import mods.betterfoliage.BetterFoliageMod;
-import mods.betterfoliage.config.blockfilters.BlockFilterSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -13,8 +11,10 @@ import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.Tags;
 import mods.betterfoliage.config.blockfilters.BlockFilter;
+import mods.betterfoliage.config.blockfilters.BlockFilterSet;
 
 public final class Configs {
 
@@ -94,8 +94,7 @@ public final class Configs {
         }
 
         public static boolean requiresResourceReload() {
-            return grass.requiresResourceReload
-                || extraLeaves.requiresResourceReload
+            return grass.requiresResourceReload || extraLeaves.requiresResourceReload
                 || fallingLeaves.requiresResourceReload;
         }
     }
@@ -623,8 +622,10 @@ public final class Configs {
         if (!isReloadingResources && !isFirstLoad && Blocks.requiresResourceReload()) {
             isReloadingResources = true;
             synchronized (Configs.class) {
-                BetterFoliageMod.log.info("At least one modified setting requires a resource pack reload. Performing it now...");
-                Minecraft.getMinecraft().refreshResources();
+                BetterFoliageMod.log
+                    .info("At least one modified setting requires a resource pack reload. Performing it now...");
+                Minecraft.getMinecraft()
+                    .refreshResources();
                 isReloadingResources = false;
             }
         }

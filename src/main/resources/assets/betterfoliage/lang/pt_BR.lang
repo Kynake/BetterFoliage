@@ -2,7 +2,7 @@
 key.betterfoliage.gui=Abrir Configurações
 commands.betterfoliage.yes=§aSIM
 commands.betterfoliage.no=§cNÃO
-commands.betterfoliage.block=%s, §7ID:§r %s
+commands.betterfoliage.block=§7Bloco: §r%s
 commands.betterfoliage.block.none=§cVocê precisa estar olhando para um bloco para que este comando funcione!
 commands.betterfoliage.biome.line1=§7Bioma:§r %s§7, ID:§r %s
 commands.betterfoliage.biome.line2=§7Chuva?§r %s§7, Neve?§r %s

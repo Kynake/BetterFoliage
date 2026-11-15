@@ -109,7 +109,7 @@ public class InfoCommand extends CommandBase {
         RegistryNamespaced registry = Block.blockRegistry;
         String name = "<" + registry.getNameForObject(block) + ":" + meta + ">";
 
-        String line = I18n.format("commands.betterfoliage.block", name, registry.getIDForObject(block));
+        String line = I18n.format("commands.betterfoliage.block", name);
         sender.addChatMessage(new ChatComponentText(line));
 
         printClassHierarchy(block.getClass(), Block.class, sender);

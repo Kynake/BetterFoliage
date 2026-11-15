@@ -2,7 +2,7 @@
 key.betterfoliage.gui=Open Settings
 commands.betterfoliage.yes=§aYES
 commands.betterfoliage.no=§cNO
-commands.betterfoliage.block=%s§7, ID:§r %s
+commands.betterfoliage.block=§7Block: §r%s
 commands.betterfoliage.block.none=§cYou must be looking at a block for this command to work!
 commands.betterfoliage.biome.line1=§7Biome:§r %s§7, ID:§r %s
 commands.betterfoliage.biome.line2=§7Rain?§r %s§7, Snow?§r %s
