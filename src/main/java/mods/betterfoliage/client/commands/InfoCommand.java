@@ -58,6 +58,12 @@ public class InfoCommand extends CommandBase {
         }
 
         if (args[0].equals("block")) {
+            MovingObjectPosition target = Minecraft.getMinecraft().objectMouseOver;
+            if (target.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) {
+                sender.addChatMessage(new ChatComponentTranslation("commands.betterfoliage.block.none"));
+                return;
+            }
+
             sender.addChatMessage(new ChatComponentText(SEPARATOR));
             processBlockCommand(sender);
             sender.addChatMessage(new ChatComponentText(SEPARATOR));
