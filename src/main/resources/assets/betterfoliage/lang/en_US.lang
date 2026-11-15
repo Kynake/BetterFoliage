@@ -226,3 +226,9 @@ betterfoliage.coral.mixCoral=Mix Coral
 betterfoliage.coral.mixCoral.tooltip=Allow mixing of two different textures for each rendered coral branch.
 betterfoliage.coral.mixCrust=Mix Crust
 betterfoliage.coral.mixCrust.tooltip=Allow use of different coral crust textures for each side of the host block.
+
+# Mod Compat
+betterfoliage.modCompat=Mod Compatibility
+betterfoliage.modCompat.tooltip=Config settings related to compatibility with other mods.
+betterfoliage.modCompat.bopUseRoundLeaves=Biomes O' Plenty: Use rounded leaves
+betterfoliage.modCompat.bopUseRoundLeaves.tooltip=Allow Biomes O' Plenty to use leaf block textures with transparent corners.\n§6Changing this setting while in-game will trigger a resource pack reload.

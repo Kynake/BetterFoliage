@@ -228,3 +228,9 @@ betterfoliage.coral.mixCoral=Misturar Coral
 betterfoliage.coral.mixCoral.tooltip=Permite que duas texturas diferentes sejam utilizadas para cada ramo do Coral.
 betterfoliage.coral.mixCrust=Misturar Crosta
 betterfoliage.coral.mixCrust.tooltip=Permite que cada lado do bloco utilize uma textura de Crosta de Coral diferente.
+
+# Mod Compat
+betterfoliage.modCompat=Compatibilidade entre Mods
+betterfoliage.modCompat.tooltip=Configurações relacionadas à compatibilidade com outros mods.
+betterfoliage.modCompat.bopUseRoundLeaves=Biomes O' Plenty: Usar folhas arredondadas
+betterfoliage.modCompat.bopUseRoundLeaves.tooltip=Permitir que o Biomes O' Plenty utilize texturas com cantos transparentes para seus próprios blocos de folha.\n§6 Alterar esse opção durante o jogo forçará um recarregamento dos pacotes de recurso.

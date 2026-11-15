@@ -13,6 +13,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import mods.betterfoliage.BetterFoliageMod;
 import mods.betterfoliage.Tags;
+import mods.betterfoliage.client.integration.Mod;
 import mods.betterfoliage.config.blockfilters.BlockFilter;
 import mods.betterfoliage.config.blockfilters.BlockFilterSet;
 
@@ -532,6 +533,28 @@ public final class Configs {
         }
     }
 
+    public static class ModCompat {
+
+        public static boolean bopUseRoundLeaves;
+        private static boolean requiresReload = false;
+
+        public static void init(final Configuration config, boolean isFirstLoad) {
+            final ConfigCategoryBuilder modCompat = new ConfigCategoryBuilder("modCompat", config);
+
+            requiresReload = false;
+
+            final boolean bopPreviousFancyLeaves = bopUseRoundLeaves;
+            bopUseRoundLeaves = modCompat.addProp("bopUseRoundLeaves", true);
+            modCompat.recentProp.setShowInGui(Mod.BOP.isLoaded());
+
+            if (!isFirstLoad) {
+                requiresReload = bopPreviousFancyLeaves != bopUseRoundLeaves;
+            }
+
+            modCompat.finalizeCategory();
+        }
+    }
+
     public static final String CONFIG_FILE_NAME = Tags.MOD_ID + "_LegacyEdition.cfg";
 
     private static Configs instance = null;
@@ -612,6 +635,7 @@ public final class Configs {
         Reeds.init(config);
         Algae.init(config);
         Coral.init(config);
+        ModCompat.init(config, isFirstLoad);
 
         ConfigCategoryBuilder.finalizeCategoryOrdering();
 
@@ -619,7 +643,8 @@ public final class Configs {
             config.save();
         }
 
-        if (!isReloadingResources && !isFirstLoad && Blocks.requiresResourceReload()) {
+        final boolean configsRequireReload = Blocks.requiresResourceReload() || ModCompat.requiresReload;
+        if (!isReloadingResources && !isFirstLoad && configsRequireReload) {
             isReloadingResources = true;
             synchronized (Configs.class) {
                 BetterFoliageMod.log
