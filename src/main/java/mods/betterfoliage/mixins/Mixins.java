@@ -10,25 +10,33 @@ import mods.betterfoliage.client.integration.Mod;
 public enum Mixins implements IMixins {
 
     // spotless:off
+    // Base Mixins
     BETTER_FOLIAGE(new MixinBuilder()
         .addClientMixins(
             "minecraft.MixinBlock",
             "minecraft.MixinChunkCache",
             "minecraft.MixinRenderBlocks",
             "minecraft.MixinWorldClient",
-            "minecraft.MixinRenderBlocks_Grass",
-            "minecraft.MixinRenderBlocks_CustomSideSprites",
             "minecraft.MixinRenderBlocks_CustomSidePositions",
             "minecraft.MixinRenderBlocks_CrossedSquares",
             "minecraft.MixinRenderBlocks_RoundLogs",
             "minecraft.MixinRenderBlocks_OffsetSprite",
             "minecraftforge.MixinBlockFluidBase")
         .setPhase(Phase.EARLY)),
+    BETTER_FOLIAGE_AO(new MixinBuilder()
+        .addClientMixins(
+            "minecraft.MixinRenderBlocks_Grass",
+            "minecraft.MixinRenderBlocks_CustomSideSprites")
+        .addExcludedMod(Mod.FALSETWEAKS)
+        .setPhase(Phase.EARLY)),
+
     // Multi-mod mixin, at least one of them must be present
     BERRY_BUSH(new MixinBuilder()
         .addClientMixins("betterfoliage.berrybush.MixinLeafRenderer")
         .setApplyIf(() -> Mod.NATURA.isLoaded() || Mod.TCON.isLoaded())
         .setPhase(Phase.LATE)),
+
+    // Mod Mixins
     ANGELICA(new MixinBuilder()
         .addClientMixins(
             "angelica.MixinLightDataCache",
@@ -77,6 +85,14 @@ public enum Mixins implements IMixins {
             "betterfoliage.tfc.MixinGrassRenderer")
         .addRequiredMod(Mod.TFC)
         .setPhase(Phase.LATE)),
+    FALSETWEAKS_EARLY(new MixinBuilder()
+        .addClientMixins("falsetweaks.MixinRenderBlocks_AO")
+        .addRequiredMod(Mod.FALSETWEAKS)
+        .setPhase(Phase.EARLY)),
+//    FALSETWEAKS_LATE(new MixinBuilder()
+//        .addClientMixins()
+//        .addRequiredMod(Mod.FALSETWEAKS)
+//        .setPhase(Phase.LATE)),
     NOTFINE_EARLY(new MixinBuilder()
         .addClientMixins("notfine.MixinShouldSideBeRendered")
         .addRequiredMod(Mod.NOTFINE)
