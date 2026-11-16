@@ -54,19 +54,22 @@ public class MyceliumRenderer extends BlockRenderer {
         final IRendererByType baseRenderer = (IRendererByType) renderer;
         boolean renderResult = baseRenderer.betterfoliage$renderBaseBlock(block, x, y, z);
 
-        Block blockAbove = world.getBlock(x, y + 1, z);
+        int yAbove = y + 1;
+        Block blockAbove = world.getBlock(x, yAbove, z);
         boolean hasSnowAbove = BlockUtils.isSnow(blockAbove);
 
         if (hasSnowAbove && !Configs.ConnectedGrass.snowEnabled) return renderResult;
-        if (blockAbove.isOpaqueCube()) return renderResult;
+        if (blockAbove.isOpaqueCube() || Configs.Blocks.obstructShortGrass.matches(blockAbove, world, x, yAbove, z)) {
+            return renderResult;
+        }
 
         // Render short mycelium
-        float myceliumHeight = y + 1;
+        float myceliumHeight = yAbove;
         if (hasSnowAbove) {
             myceliumHeight += GrassRenderer.SNOW_HEIGHT_OFFSET;
         }
 
-        int coordHash = MathUtils.hashCoords(x, y + 1, z);
+        int coordHash = MathUtils.hashCoords(x, yAbove, z);
         float heightScale = MathUtils
             .hashToRange(coordHash, Configs.ShortGrass.heightMin, Configs.ShortGrass.heightMax);
 
@@ -75,15 +78,15 @@ public class MyceliumRenderer extends BlockRenderer {
         double zOffset = (double) z + MathUtils.hashToRange(MathUtils.hash(coordHash + 2), -hOffset, hOffset);
 
         Tessellator tessellator = Tessellator.instance;
-        tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, y + 1, z));
+        tessellator.setBrightness(Blocks.tallgrass.getMixedBrightnessForBlock(world, x, yAbove, z));
         tessellator.setColorOpaque(0xFF, 0xFF, 0xFF);
 
         final ICrossedSquaresRenderer myceliumRenderer = (ICrossedSquaresRenderer) renderer;
         myceliumRenderer.betterfoliage$setVerticalScale(heightScale);
 
-        IIcon sprite = myceliumGrass.getSpriteForCoord(x, y + 1, z);
+        IIcon sprite = myceliumGrass.getSpriteForCoord(x, yAbove, z);
         if (Configs.ShortGrass.mixTextures) {
-            IIcon secondSprite = myceliumGrass.getSpriteForCoord(x, y + 1, z, 6);
+            IIcon secondSprite = myceliumGrass.getSpriteForCoord(x, yAbove, z, 6);
 
             myceliumRenderer.betterfoliage$setSecondSprite(secondSprite);
             renderer.drawCrossedSquares(sprite, xOffset, myceliumHeight, zOffset, Configs.ShortGrass.size);
