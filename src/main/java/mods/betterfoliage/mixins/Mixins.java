@@ -89,10 +89,10 @@ public enum Mixins implements IMixins {
         .addClientMixins("falsetweaks.MixinRenderBlocks_AO")
         .addRequiredMod(Mod.FALSETWEAKS)
         .setPhase(Phase.EARLY)),
-//    FALSETWEAKS_LATE(new MixinBuilder()
-//        .addClientMixins()
-//        .addRequiredMod(Mod.FALSETWEAKS)
-//        .setPhase(Phase.LATE)),
+    FALSETWEAKS_LATE(new MixinBuilder()
+        .addClientMixins("falsetweaks.MixinAmbientOcclusionRenderer")
+        .addRequiredMod(Mod.FALSETWEAKS)
+        .setPhase(Phase.LATE)),
     NOTFINE_EARLY(new MixinBuilder()
         .addClientMixins("notfine.MixinShouldSideBeRendered")
         .addRequiredMod(Mod.NOTFINE)
