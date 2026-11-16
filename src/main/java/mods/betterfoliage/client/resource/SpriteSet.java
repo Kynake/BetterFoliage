@@ -23,8 +23,6 @@ public class SpriteSet extends StitchListener implements ISpriteProvider {
         this(domain, prefix, suffix, true);
     }
 
-    // TODO: Consider regex instead?
-    // Had to remove unused some mycelium textures so that they wouldn't be selected as valid
     public SpriteSet(String domain, String prefix, String suffix, boolean selfRegister) {
         super(selfRegister);
         this.domain = domain;
