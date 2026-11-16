@@ -14,6 +14,7 @@ public enum Mod implements ITargetMod {
     ANGELICA("angelica", "Angelica", "com.gtnewhorizons.angelica.loading.AngelicaTweaker", "com.gtnewhorizons.angelica.AngelicaMod"),
     BOP("BiomesOPlenty", "Biomes O' Plenty", null, "biomesoplenty.BiomesOPlenty"),
     EFR("etfuturum", "Et Futurum Requiem", "ganymedes01.etfuturum.mixinplugin.EtFuturumEarlyMixins", "ganymedes01.etfuturum.EtFuturum"),
+    FALSETWEAKS("falsetweaks", "FalseTweaks", "com.falsepattern.falsetweaks.asm.CoreLoadingPlugin", "com.falsepattern.falsetweaks.FalseTweaks"),
     FORESTRY("forestry", "Forestry", null, "forestry.Forestry"),
     GT5U("gregtech_nh", "GregTech GTNH", "gregtech.asm.GTCorePlugin", "gregtech.GTNHMod"),
     GT6("gregtech", "GregTech 6", "gregtech.asm.GT_ASM", "gregtech.GT6_Main"),
