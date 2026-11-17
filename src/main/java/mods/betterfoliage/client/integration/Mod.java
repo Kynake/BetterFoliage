@@ -6,6 +6,7 @@ import com.gtnewhorizon.gtnhmixins.builders.ITargetMod;
 import com.gtnewhorizon.gtnhmixins.builders.TargetModBuilder;
 
 import cpw.mods.fml.common.Loader;
+import mods.betterfoliage.utils.ClassUtils;
 
 public enum Mod implements ITargetMod {
 
@@ -52,22 +53,15 @@ public enum Mod implements ITargetMod {
         synchronized (this) {
             // If a field is null it is ignored, otherwise it is checked and MUST be true.
             if (modID != null) {
-
-                // We're too early, Loader isn't even initialized yet.
-                // Check only the core class and do not cache the result.
-                if (Loader.instance == null) {
-                    return coreModClass != null && isClassLoaded(coreModClass);
-                }
-
                 isLoadedCache = Loader.isModLoaded(modID);
             }
 
             if (isLoadedCache && coreModClass != null) {
-                isLoadedCache = isClassLoaded(coreModClass);
+                isLoadedCache = ClassUtils.isClassLoaded(coreModClass);
             }
 
             if (isLoadedCache && targetClass != null) {
-                isLoadedCache = isClassLoaded(targetClass);
+                isLoadedCache = ClassUtils.isClassLoaded(targetClass);
             }
 
             isChecked = true;
@@ -84,14 +78,5 @@ public enum Mod implements ITargetMod {
         }
 
         return builder;
-    }
-
-    private static boolean isClassLoaded(@Nonnull String targetClass) {
-        try {
-            Class.forName(targetClass);
-            return true;
-        } catch (Throwable ignored) {
-            return false;
-        }
     }
 }
