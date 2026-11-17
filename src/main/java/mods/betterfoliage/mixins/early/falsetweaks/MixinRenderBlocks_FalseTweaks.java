@@ -24,7 +24,7 @@ import mods.betterfoliage.mixins.interfaces.minecraft.IGrassBlockRenderer;
 
 @SuppressWarnings("UnusedMixin")
 @Mixin(RenderBlocks.class)
-public abstract class MixinRenderBlocks_AO implements IGrassBlockRenderer, ICustomSideSpritesRenderer {
+public abstract class MixinRenderBlocks_FalseTweaks implements IGrassBlockRenderer, ICustomSideSpritesRenderer {
 
     @Unique
     private boolean betterfoliage$isRenderingGrassNoAO = false;
@@ -36,7 +36,7 @@ public abstract class MixinRenderBlocks_AO implements IGrassBlockRenderer, ICust
     /// AmbientOcclusionRenderer bridge
     /// ===============================
 
-    @Dynamic // Added via mixin by FalseTweaks
+    @Dynamic("Added via mixin by FalseTweaks")
     @Shadow(remap = false)
     private AORenderer ft$ao$renderer;
 
@@ -76,9 +76,9 @@ public abstract class MixinRenderBlocks_AO implements IGrassBlockRenderer, ICust
         bridge.betterfoliage$setGrassRender(isRenderingGrass);
     }
 
-    /// ================================
-    /// Grass render mixins (Without AO)
-    /// ================================
+    /// ============================================================
+    /// Grass render mixins (Without AO, same as the default mixins)
+    /// ============================================================
     @Unique
     private boolean betterfoliage$ftOverrideTessellatorColor(Tessellator tessellator, float rBase, float gBase,
         float bBase, float r, float g, float b) {
