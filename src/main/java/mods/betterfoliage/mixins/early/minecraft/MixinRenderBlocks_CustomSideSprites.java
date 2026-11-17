@@ -20,7 +20,7 @@ import mods.betterfoliage.mixins.interfaces.minecraft.ICustomSideSpritesRenderer
 public abstract class MixinRenderBlocks_CustomSideSprites implements ICustomSideSpritesRenderer {
 
     @Unique
-    ISpriteProvider betterfoliage$customSpriteProvider = null;
+    private ISpriteProvider betterfoliage$customSpriteProvider = null;
 
     @Override
     public void betterfoliage$setSpriteProvider(ISpriteProvider provider) {
