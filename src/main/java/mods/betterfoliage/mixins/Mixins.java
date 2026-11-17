@@ -87,7 +87,7 @@ public enum Mixins implements IMixins {
         .addRequiredMod(Mod.TFC)
         .setPhase(Phase.LATE)),
     FALSETWEAKS_EARLY(new MixinBuilder()
-        .addClientMixins("falsetweaks.MixinRenderBlocks_AO")
+        .addClientMixins("falsetweaks.MixinRenderBlocks_FalseTweaks")
         .setApplyIf(FalseTweaksIntegration::isAOFixEnabled)
         .setPhase(Phase.EARLY)),
     FALSETWEAKS_LATE(new MixinBuilder()
