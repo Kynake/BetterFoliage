@@ -117,8 +117,9 @@ public abstract class BlockFilter {
             // Class filter
             if (!filter.startsWith("<")) {
                 try {
-                    final Class<?> biomeClass = Class.forName(filter);
-                    return new BlockFilterRule(isBlocking, biomeClass);
+                    final Class<?> blockClass = Class.forName(filter);
+                    BetterFoliageMod.log.info("Generated {}class filter for {}", isBlocking ? "blocking " : "", filter);
+                    return new BlockFilterRule(isBlocking, blockClass);
                 } catch (Throwable ignored) {
                     BetterFoliageMod.log
                         .debug("Skipping block filter, class not found (probably a missing mod): {}", filter);
@@ -189,6 +190,12 @@ public abstract class BlockFilter {
                 return null;
             }
 
+            BetterFoliageMod.log.info(
+                "Generated {}block filter for <{}:{}{}>",
+                isBlocking ? "blocking " : "",
+                mod,
+                blockName,
+                metadata != -1 ? ":" + metadata : "");
             return new BlockFilterRule(isBlocking, block, metadata);
         }
 

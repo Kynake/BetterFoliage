@@ -53,41 +53,51 @@ public final class Configs {
             blocks.finalizeCategory();
 
             // Parse each String[] into a BlockFilter
+            BetterFoliageMod.log.info("== Parsing Dirt filters ==");
             dirt = BlockFilter
                 .parseBlockFilterSet(dirtFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksDirt.cfg"), null);
 
+            BetterFoliageMod.log.info("== Parsing Grass filters ==");
             grass = BlockFilter
                 .parseBlockFilterSet(grassFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksGrass.cfg"), grass);
 
+            BetterFoliageMod.log.info("== Parsing Obstructs Short Grass filters ==");
             obstructShortGrass = BlockFilter.parseBlockFilterSet(
                 obstructShortGrassFilters,
                 new ResourceLocation(Tags.MOD_DOMAIN, "blocksObstructShortGrass.cfg"),
                 null);
 
+            BetterFoliageMod.log.info("== Parsing Extra Leaves filters ==");
             extraLeaves = BlockFilter.parseBlockFilterSet(
                 extraLeavesFilters,
                 new ResourceLocation(Tags.MOD_DOMAIN, "blocksExtraLeaves.cfg"),
                 extraLeaves);
 
+            BetterFoliageMod.log.info("== Parsing Falling Leaves filters ==");
             fallingLeaves = BlockFilter.parseBlockFilterSet(
                 fallingLeavesFilters,
                 new ResourceLocation(Tags.MOD_DOMAIN, "blocksFallingLeaves.cfg"),
                 fallingLeaves);
 
+            BetterFoliageMod.log.info("== Parsing Logs filters ==");
             logs = BlockFilter
                 .parseBlockFilterSet(logsFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksLogs.cfg"), null);
 
+            BetterFoliageMod.log.info("== Parsing Sand filters ==");
             sand = BlockFilter
                 .parseBlockFilterSet(sandFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksSand.cfg"), null);
 
+            BetterFoliageMod.log.info("== Parsing Lilypad filters ==");
             lilypad = BlockFilter.parseBlockFilterSet(
                 lilypadFilters,
                 new ResourceLocation(Tags.MOD_DOMAIN, "blocksLilypad.cfg"),
                 lilypad);
 
+            BetterFoliageMod.log.info("== Parsing Cactus filters ==");
             cactus = BlockFilter
                 .parseBlockFilterSet(cactusFilters, new ResourceLocation(Tags.MOD_DOMAIN, "blocksCactus.cfg"), null);
 
+            BetterFoliageMod.log.info("== Parsing Soul Sand filters ==");
             soulsand = BlockFilter.parseBlockFilterSet(
                 soulsandFilters,
                 new ResourceLocation(Tags.MOD_DOMAIN, "blocksSoulSand.cfg"),
