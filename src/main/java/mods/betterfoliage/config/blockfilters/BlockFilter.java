@@ -121,7 +121,7 @@ public abstract class BlockFilter {
                     return new BlockFilterRule(isBlocking, biomeClass);
                 } catch (Throwable ignored) {
                     BetterFoliageMod.log
-                        .info("Skipping block filter, class not found (probably a missing mod): {}", filter);
+                        .debug("Skipping block filter, class not found (probably a missing mod): {}", filter);
                     return null;
                 }
             }
@@ -173,7 +173,7 @@ public abstract class BlockFilter {
 
             // Mod not present
             if (!(mod.equals("minecraft") || Loader.isModLoaded(mod))) {
-                BetterFoliageMod.log.info("Skipping block filter, mod {} not found: <{}>", mod, filter);
+                BetterFoliageMod.log.debug("Skipping block filter, mod {} not found: <{}>", mod, filter);
                 return null;
             }
 
@@ -182,7 +182,7 @@ public abstract class BlockFilter {
             // Mod is present, but object not found
             if (block == Blocks.air) {
                 BetterFoliageMod.log.error(
-                    "Unable to generate Block Filter for mod {}, could not find the block {}: <{}>",
+                    "Unable to generate Block Filter. The mod {} exists, but the block {} could not be found: <{}>",
                     mod,
                     blockName,
                     filter);
