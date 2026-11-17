@@ -52,25 +52,22 @@ public enum Mod implements ITargetMod {
         synchronized (this) {
             // If a field is null it is ignored, otherwise it is checked and MUST be true.
             if (modID != null) {
+
+                // We're too early, Loader isn't even initialized yet.
+                // Check only the core class and do not cache the result.
+                if (Loader.instance == null) {
+                    return coreModClass != null && isClassLoaded(coreModClass);
+                }
+
                 isLoadedCache = Loader.isModLoaded(modID);
             }
 
             if (isLoadedCache && coreModClass != null) {
-                try {
-                    Class.forName(coreModClass);
-                    isLoadedCache = true;
-                } catch (Throwable t) {
-                    isLoadedCache = false;
-                }
+                isLoadedCache = isClassLoaded(coreModClass);
             }
 
             if (isLoadedCache && targetClass != null) {
-                try {
-                    Class.forName(targetClass);
-                    isLoadedCache = true;
-                } catch (Throwable t) {
-                    isLoadedCache = false;
-                }
+                isLoadedCache = isClassLoaded(targetClass);
             }
 
             isChecked = true;
@@ -87,5 +84,14 @@ public enum Mod implements ITargetMod {
         }
 
         return builder;
+    }
+
+    private static boolean isClassLoaded(@Nonnull String targetClass) {
+        try {
+            Class.forName(targetClass);
+            return true;
+        } catch (Throwable ignored) {
+            return false;
+        }
     }
 }
