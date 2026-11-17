@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 import com.gtnewhorizon.gtnhmixins.builders.MixinBuilder;
 
+import mods.betterfoliage.client.integration.FalseTweaksIntegration;
 import mods.betterfoliage.client.integration.Mod;
 
 public enum Mixins implements IMixins {
@@ -27,7 +28,7 @@ public enum Mixins implements IMixins {
         .addClientMixins(
             "minecraft.MixinRenderBlocks_Grass",
             "minecraft.MixinRenderBlocks_CustomSideSprites")
-        .addExcludedMod(Mod.FALSETWEAKS)
+        .setApplyIf(FalseTweaksIntegration::isAOFixDisabled)
         .setPhase(Phase.EARLY)),
 
     // Multi-mod mixin, at least one of them must be present
@@ -87,7 +88,7 @@ public enum Mixins implements IMixins {
         .setPhase(Phase.LATE)),
     FALSETWEAKS_EARLY(new MixinBuilder()
         .addClientMixins("falsetweaks.MixinRenderBlocks_AO")
-        .addRequiredMod(Mod.FALSETWEAKS)
+        .setApplyIf(FalseTweaksIntegration::isAOFixEnabled)
         .setPhase(Phase.EARLY)),
     FALSETWEAKS_LATE(new MixinBuilder()
         .addClientMixins("falsetweaks.MixinAmbientOcclusionRenderer")
