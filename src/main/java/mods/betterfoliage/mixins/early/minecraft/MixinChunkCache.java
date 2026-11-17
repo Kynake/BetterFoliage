@@ -19,6 +19,7 @@ public abstract class MixinChunkCache {
     @Shadow()
     private World worldObj;
 
+    // TODO: Revisit this and similar mixins. consider using mixin into Chunk.func_150808_b getLightOpacity and similars
     @ModifyExpressionValue(
         method = "getSkyBlockTypeBrightness",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getUseNeighborBrightness()Z"),
